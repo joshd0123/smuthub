@@ -5,9 +5,16 @@
 // deleted or renamed locally stop being served, so old copies of pages can't
 // linger on the live site. Files listed in .assetsignore are never uploaded.
 {
+  "$schema": "node_modules/wrangler/config-schema.json",
   "name": "smuthub",
-  "compatibility_date": "2025-10-01",
+  "compatibility_date": "2026-06-12",
+  "observability": {
+    "enabled": true
+  },
   "assets": {
     "directory": "."
-  }
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
 }
