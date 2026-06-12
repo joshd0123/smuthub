@@ -3,16 +3,32 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SmutHub — Sitemap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script defer src="auth.js"></script>
 <style>
 :root{--ink:#0c0708;--panel:#1c1316;--line:#2a1d22;--cream:#f4e8e3;--muted:#b69089;--amber:#ffab40;--grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%)}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;line-height:1.6;padding:60px 24px}
-.wrap{max-width:560px;margin:0 auto}
-.logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.4rem;text-decoration:none;color:var(--cream)}
-.logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em}
-h1{font-family:'Fraunces';font-weight:600;font-size:2rem;margin:24px 0 6px}
-p{color:var(--muted);margin-bottom:24px}
+body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;line-height:1.6}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+/* ── shared header (identical on every page) ── */
+.logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
+.logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
+header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap}
+.navlinks{display:flex;gap:18px}
+.navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none;transition:color .2s}
+.navlinks a.on,.navlinks a:hover{color:var(--cream)}
+@media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
+.authbox{display:flex;align-items:center;gap:8px}
+
+.page{max-width:560px;margin:0 auto;padding:48px 0 60px}
+h1{font-family:'Fraunces';font-weight:600;font-size:2rem;margin:0 0 6px}
+.page>p{color:var(--muted);margin-bottom:24px}
 .grp{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 22px;margin-bottom:14px}
 .grp h2{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:10px}
 .grp a{display:block;color:var(--cream);text-decoration:none;padding:.35em 0;font-weight:600}
@@ -21,21 +37,35 @@ p{color:var(--muted);margin-bottom:24px}
 </style>
 </head>
 <body>
+
+<header>
+  <div class="nav wrap">
+    <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
+    <nav class="navlinks">
+      <a href="smuthub-app.html">Search</a>
+      <a href="smuthub-bookcase.html">My Bookcase</a>
+      <a href="stores.html">Find a Store</a>
+    </nav>
+    <div class="authbox" id="authbox"></div>
+  </div>
+</header>
+
 <div class="wrap">
-  <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
-  <h1>Sitemap</h1>
-  <p>Every room in the house.</p>
-  <div class="grp"><h2>Main</h2>
-    <a href="index.html">Home <span class="d">— the front door</span></a>
-    <a href="smuthub-app.html">Search <span class="d">— find real books, rate the spice</span></a>
-    <a href="smuthub-bookcase.html">My Bookcase <span class="d">— your shelves, your themes</span></a>
-    <a href="stores.html">Find a Store <span class="d">— indie bookshops near you</span></a>
-  </div>
-  <div class="grp"><h2>Coming soon</h2>
-    <a href="#">Tropes &amp; Trending</a>
-    <a href="#">Newsletter</a>
-    <a href="#">Community</a>
-  </div>
+  <main class="page">
+    <h1>Sitemap</h1>
+    <p>Every room in the house.</p>
+    <div class="grp"><h2>Main</h2>
+      <a href="index.html">Home <span class="d">— the front door</span></a>
+      <a href="smuthub-app.html">Search <span class="d">— find real books, rate the spice</span></a>
+      <a href="smuthub-bookcase.html">My Bookcase <span class="d">— your shelves, your themes</span></a>
+      <a href="stores.html">Find a Store <span class="d">— indie bookshops near you</span></a>
+    </div>
+    <div class="grp"><h2>Coming soon</h2>
+      <a href="#">Tropes &amp; Trending</a>
+      <a href="#">Newsletter</a>
+      <a href="#">Community</a>
+    </div>
+  </main>
 </div>
 </body>
 </html>

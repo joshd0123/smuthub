@@ -30,16 +30,17 @@
   .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
   a{color:inherit;text-decoration:none}
 
-  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.45rem;letter-spacing:-.02em}
-  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em}
-  header{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);background:rgba(12,7,8,.78);border-bottom:1px solid var(--line)}
-  .nav{display:flex;align-items:center;justify-content:space-between;height:68px;gap:12px;flex-wrap:wrap}
-  .navlinks{display:flex;gap:18px}.navlinks a{color:var(--muted);font-weight:500;font-size:.92rem}.navlinks a.on,.navlinks a:hover{color:var(--cream)}
+  /* ── shared header (identical on every page) ── */
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap}
+  .navlinks{display:flex;gap:18px}
+  .navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none;transition:color .2s}
+  .navlinks a.on,.navlinks a:hover{color:var(--cream)}
+  @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
   .authbox{display:flex;align-items:center;gap:8px}
-  .authbox input{background:var(--ink-2);border:1px solid var(--line);color:var(--cream);font-family:inherit;border-radius:99px;padding:.5em .9em;font-size:.85rem;outline:none;width:160px}
   .btn{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:.55em 1.05em;border-radius:99px;cursor:pointer;font-size:.85rem}
-  .btn.ghost{background:none;border:1px solid var(--line);color:var(--muted)}
-  .who{font-size:.85rem;color:var(--muted)}.who b{color:var(--amber)}
   .setup{background:rgba(255,171,64,.1);border:1px solid rgba(255,171,64,.4);color:var(--amber);font-size:.85rem;text-align:center;padding:9px;display:none}
   .setup.show{display:block}
 
@@ -119,10 +120,14 @@
 <header>
   <div class="nav wrap">
     <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
-    <nav class="navlinks"><a href="smuthub-app.html">Search</a><a href="smuthub-bookcase.html" class="on">My Bookcase</a><a href="stores.html">Find a Store</a></nav>
+    <nav class="navlinks">
+      <a href="smuthub-app.html">Search</a>
+      <a href="smuthub-bookcase.html" class="on">My Bookcase</a>
+      <a href="stores.html">Find a Store</a>
+    </nav>
     <div class="authbox" id="authbox"></div>
   </div>
-  <div class="setup" id="setup">⚠️ Add your Supabase URL + anon key in the script to switch on accounts.</div>
+  <div class="setup" id="setup">⚠️ Supabase isn’t configured — add your keys to config.js to switch on accounts.</div>
 </header>
 
 <div class="wrap head">
@@ -195,13 +200,6 @@
       <p>Your shelves, ratings, and theme live here — just for you.</p>
       <div class="row" style="justify-content:center"><button class="btn" style="padding:.8em 1.6em" onclick="SH.openAuth()">Log in / Sign up</button></div>
     </div>`;
-  }
-
-  function bookCover(b,cls){
-    const h=120+(hash(b.book_key||b.key||'')%26); // 120–145px for a natural shelf line
-    return b.cover_i
-      ? `<img class="${cls}" src="https://covers.openlibrary.org/b/id/${b.cover_i}-L.jpg" style="height:${h}px" alt="" onerror="this.outerHTML='<div class=\\'${cls.replace('bcov','ph')}\\' style=\\'height:${h}px\\'>'+(this.alt||'')+'</div>'">`
-      : `<div class="ph" style="height:${h}px">${b.title||''}</div>`;
   }
 
   function renderCase(){
