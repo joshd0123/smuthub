@@ -1,0 +1,5 @@
+# Always revalidate with the edge so deploys show up immediately.
+# (Browsers/edge may still store a copy, but must check it's current before using it.)
+/*
+  Cache-Control: no-cache
+  X-Content-Type-Options: nosniff

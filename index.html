@@ -44,19 +44,16 @@
   }
   .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
 
-  /* ---------- LOGO ---------- */
-  .logo{display:inline-flex;align-items:center;font-family:'Hanken Grotesk';font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
+  /* ---------- SHARED HEADER (identical on every page) ---------- */
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
   .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
-
-  /* ---------- HEADER ---------- */
   header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
-  .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
-  .nav nav{display:flex;gap:30px}
-  .nav nav a{color:var(--muted);text-decoration:none;font-weight:500;font-size:.95rem;transition:color .2s}
-  .nav nav a:hover{color:var(--cream)}
-  .badge{font-size:.72rem;border:1px solid var(--line);color:var(--muted);padding:.4em .8em;border-radius:99px;white-space:nowrap}
-  .badge b{color:var(--amber)}
-  @media(max-width:780px){.nav nav,.badge{display:none}}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap}
+  .navlinks{display:flex;gap:18px}
+  .navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none;transition:color .2s}
+  .navlinks a.on,.navlinks a:hover{color:var(--cream)}
+  @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
+  .authbox{display:flex;align-items:center;gap:8px}
 
   /* ---------- HERO ---------- */
   .hero{padding:96px 0 70px;text-align:center;position:relative}
@@ -154,14 +151,14 @@
 <body>
 
 <header>
-  <div class="wrap nav">
+  <div class="nav wrap">
     <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
-    <nav>
+    <nav class="navlinks">
       <a href="smuthub-app.html">Search</a>
       <a href="smuthub-bookcase.html">My Bookcase</a>
       <a href="stores.html">Find a Store</a>
     </nav>
-    <div id="authbox" style="display:flex;align-items:center;gap:8px"></div>
+    <div class="authbox" id="authbox"></div>
   </div>
 </header>
 

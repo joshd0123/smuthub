@@ -1,0 +1,13 @@
+// smutHub — Cloudflare Workers static-assets config.
+// Deploy from THIS folder with:  npx wrangler deploy
+//
+// Every deploy uploads a complete manifest of this directory: files that were
+// deleted or renamed locally stop being served, so old copies of pages can't
+// linger on the live site. Files listed in .assetsignore are never uploaded.
+{
+  "name": "smuthub",
+  "compatibility_date": "2025-10-01",
+  "assets": {
+    "directory": "."
+  }
+}

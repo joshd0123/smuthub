@@ -1,0 +1,7 @@
+# Files that must never be uploaded/served as site assets
+.git
+.gitignore
+.assetsignore
+wrangler.jsonc
+README.md
+smuthub-profiles.sql

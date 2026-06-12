@@ -57,8 +57,12 @@
           </div>
         </div>`;
       const btn = document.getElementById('shUserBtn'), menu = document.getElementById('shMenu');
-      btn.onclick = (e)=>{ e.stopPropagation(); menu.style.display = menu.style.display==='none' ? 'block' : 'none'; };
-      document.addEventListener('click', ()=>{ menu.style.display='none'; }, { once:true });
+      btn.onclick = (e)=>{
+        e.stopPropagation();
+        const opening = menu.style.display==='none';
+        menu.style.display = opening ? 'block' : 'none';
+        if(opening) document.addEventListener('click', ()=>{ menu.style.display='none'; }, { once:true });
+      };
       menu.querySelectorAll('.shMenuItem').forEach(mi=>{
         mi.style.cssText = 'display:block;width:100%;text-align:left;background:none;border:0;color:#f4e8e3;font-family:inherit;font-size:.88rem;font-weight:600;padding:.75em 1.1em;cursor:pointer';
         mi.onmouseenter = ()=> mi.style.background='#1c1316';
