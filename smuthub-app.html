@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SmutHub — Your Account (Supabase)</title>
+<title>SmutHub — Search</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -24,22 +24,16 @@
   .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
   a{color:inherit}
 
-  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.45rem;letter-spacing:-.02em;text-decoration:none}
-  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em}
-  header{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
-  .nav{display:flex;align-items:center;justify-content:space-between;height:70px;gap:12px;flex-wrap:wrap}
-
-  /* auth area */
+  /* ── shared header (identical on every page) ── */
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap}
   .navlinks{display:flex;gap:18px}
-  .navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none}
+  .navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none;transition:color .2s}
   .navlinks a.on,.navlinks a:hover{color:var(--cream)}
   @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
   .authbox{display:flex;align-items:center;gap:8px}
-  .authbox input{background:var(--ink-2);border:1px solid var(--line);color:var(--cream);font-family:inherit;border-radius:99px;padding:.5em .9em;font-size:.85rem;outline:none;width:190px}
-  .btn{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:.55em 1.05em;border-radius:99px;cursor:pointer;font-size:.85rem}
-  .btn.ghost{background:none;border:1px solid var(--line);color:var(--muted)}
-  .who{font-size:.85rem;color:var(--muted)}
-  .who b{color:var(--amber)}
 
   .setup{background:rgba(255,171,64,.1);border:1px solid rgba(255,171,64,.4);color:var(--amber);font-size:.85rem;text-align:center;padding:10px;display:none}
   .setup.show{display:block}
@@ -85,9 +79,9 @@
       <a href="smuthub-bookcase.html">My Bookcase</a>
       <a href="stores.html">Find a Store</a>
     </nav>
-    <div class="authbox" id="authbox"><!-- filled by JS --></div>
+    <div class="authbox" id="authbox"></div>
   </div>
-  <div class="setup" id="setup">⚠️ Add your Supabase URL + anon key at the top of the script to switch on accounts. Search works without it; saving needs it.</div>
+  <div class="setup" id="setup">⚠️ Supabase isn’t configured — add your keys to config.js. Search works without it; saving needs it.</div>
 </header>
 
 <div class="wrap head">
@@ -108,7 +102,8 @@
 
 <script>
   // Shared auth (config.js + auth.js). This page just listens.
-  let sb=null, user=null;
+  let sb=null, user=null, lastDocs=[];
+  const spiceMap={}, shelfSet=new Set();
   window.addEventListener('sh-auth', async (e)=>{
     sb = window.SH.sb; user = e.detail.user;
     if(window.SH && !window.SH.configured) document.getElementById('setup').classList.add('show');
@@ -166,7 +161,7 @@
       lastDocs = docs.slice(0,16);
       st.innerHTML = lastDocs.length ? `Showing <b style="color:var(--cream)">${lastDocs.length}</b> real books` : "No books found.";
       render();
-    }catch(e){ st.textContent="Couldn't reach the catalog from this preview — works live on your site."; }
+    }catch(e){ console.error('search failed', e); st.textContent="Couldn't reach the book catalog — try again in a moment."; }
   }
 
   function coverHTML(b){
