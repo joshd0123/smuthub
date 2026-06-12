@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmutHub — Where Romantasy Gets Its Spice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,500&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0c0708;
+    --ink-2:#150e10;
+    --panel:#1c1316;
+    --line:#2a1d22;
+    --cream:#f4e8e3;
+    --muted:#b69089;
+    --rose:#ff3d76;
+    --amber:#ffab40;
+    --grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%);
+    --shadow:0 24px 60px -20px rgba(255,61,118,.4);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink);
+    color:var(--cream);
+    font-family:'Hanken Grotesk',sans-serif;
+    line-height:1.5;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* atmospheric background */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-2;
+    background:
+      radial-gradient(800px 500px at 12% -5%, rgba(255,61,118,.18), transparent 60%),
+      radial-gradient(700px 500px at 95% 10%, rgba(255,171,64,.12), transparent 55%),
+      radial-gradient(900px 700px at 50% 120%, rgba(255,61,118,.10), transparent 60%);
+  }
+  body::after{ /* grain */
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+  /* ---------- LOGO ---------- */
+  .logo{display:inline-flex;align-items:center;font-family:'Hanken Grotesk';font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
+
+  /* ---------- HEADER ---------- */
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .nav nav{display:flex;gap:30px}
+  .nav nav a{color:var(--muted);text-decoration:none;font-weight:500;font-size:.95rem;transition:color .2s}
+  .nav nav a:hover{color:var(--cream)}
+  .badge{font-size:.72rem;border:1px solid var(--line);color:var(--muted);padding:.4em .8em;border-radius:99px;white-space:nowrap}
+  .badge b{color:var(--amber)}
+  @media(max-width:780px){.nav nav,.badge{display:none}}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:96px 0 70px;text-align:center;position:relative}
+  .eyebrow{display:inline-block;font-size:.78rem;letter-spacing:.28em;text-transform:uppercase;color:var(--amber);margin-bottom:22px;opacity:0}
+  h1{font-family:'Fraunces';font-weight:600;font-size:clamp(2.8rem,7vw,5.4rem);line-height:1.02;letter-spacing:-.02em;max-width:14ch;margin:0 auto}
+  h1 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
+  .sub{max-width:46ch;margin:26px auto 0;color:var(--muted);font-size:1.12rem}
+  .search{margin:38px auto 0;max-width:560px;display:flex;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:7px 7px 7px 22px;box-shadow:var(--shadow)}
+  .search input{flex:1;background:none;border:0;color:var(--cream);font-family:inherit;font-size:1rem;outline:none}
+  .search input::placeholder{color:#7d5d5b}
+  .search button{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:0 26px;border-radius:99px;cursor:pointer;font-size:.95rem;transition:transform .15s}
+  .search button:hover{transform:scale(1.04)}
+  .hero-tags{margin-top:18px;color:#7d5d5b;font-size:.85rem}
+  .hero-tags span{color:var(--muted)}
+
+  /* fade-up animation */
+  .fu{opacity:0;transform:translateY(22px);animation:fu .8s cubic-bezier(.2,.7,.2,1) forwards}
+  @keyframes fu{to{opacity:1;transform:none}}
+  .d1{animation-delay:.05s}.d2{animation-delay:.18s}.d3{animation-delay:.32s}.d4{animation-delay:.46s}.d5{animation-delay:.6s}
+
+  /* ---------- SECTION SHELL ---------- */
+  section{padding:64px 0}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:32px;gap:16px;flex-wrap:wrap}
+  .sec-head h2{font-family:'Fraunces';font-weight:500;font-size:clamp(1.7rem,3.5vw,2.5rem);letter-spacing:-.01em}
+  .sec-head h2 .hot{color:var(--rose)}
+  .sec-head a{color:var(--amber);text-decoration:none;font-weight:600;font-size:.95rem}
+  .sec-head a:hover{text-decoration:underline}
+
+  /* ---------- TROPES (the "categories" gag) ---------- */
+  .tropes{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:860px){.tropes{grid-template-columns:repeat(2,1fr)}}
+  .trope{position:relative;border:1px solid var(--line);background:var(--ink-2);border-radius:16px;padding:20px 18px;min-height:120px;display:flex;flex-direction:column;justify-content:space-between;text-decoration:none;color:var(--cream);overflow:hidden;transition:transform .18s,border-color .18s}
+  .trope:hover{transform:translateY(-4px);border-color:var(--rose)}
+  .trope::after{content:"";position:absolute;right:-30px;top:-30px;width:90px;height:90px;background:var(--grad);filter:blur(34px);opacity:.18;transition:opacity .2s}
+  .trope:hover::after{opacity:.4}
+  .trope .emoji{font-size:1.5rem}
+  .trope .name{font-family:'Fraunces';font-size:1.18rem;font-weight:500;line-height:1.15}
+  .trope .count{color:var(--muted);font-size:.8rem;margin-top:4px}
+
+  /* ---------- TRENDING (book cards) ---------- */
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  @media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .2s,box-shadow .2s}
+  .card:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+  .cover{aspect-ratio:3/4;display:flex;align-items:flex-end;padding:18px;position:relative;color:#fff}
+  .cover .ribbon{position:absolute;top:12px;left:12px;background:rgba(12,7,8,.6);backdrop-filter:blur(6px);font-size:.7rem;font-weight:700;padding:.35em .7em;border-radius:99px;letter-spacing:.04em}
+  .cover h3{font-family:'Fraunces';font-style:italic;font-weight:500;font-size:1.5rem;line-height:1.05;text-shadow:0 2px 14px rgba(0,0,0,.5)}
+  .card .meta{padding:14px 16px 18px}
+  .card .author{color:var(--muted);font-size:.85rem}
+  .spice{margin-top:8px;font-size:.95rem;letter-spacing:.08em}
+  .spice .off{filter:grayscale(1);opacity:.28}
+  .card .tag{display:inline-block;margin-top:10px;font-size:.72rem;color:var(--amber);border:1px solid var(--line);padding:.25em .6em;border-radius:99px}
+
+  /* cover colorways */
+  .c1{background:linear-gradient(160deg,#3a0d2a,#7a1238)}
+  .c2{background:linear-gradient(160deg,#1d1140,#5a2bbf)}
+  .c3{background:linear-gradient(160deg,#3d1208,#a8431a)}
+  .c4{background:linear-gradient(160deg,#0c2a2a,#1f7a6b)}
+
+  /* ---------- SPICE METER ---------- */
+  .meter{background:var(--ink-2);border:1px solid var(--line);border-radius:24px;padding:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+  @media(max-width:780px){.meter{grid-template-columns:1fr;padding:28px}}
+  .meter h2{font-family:'Fraunces';font-size:2rem;font-weight:500;margin-bottom:12px}
+  .meter p{color:var(--muted);margin-bottom:8px}
+  .scale{display:flex;flex-direction:column;gap:12px}
+  .lvl{display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+  .lvl .chilis{font-size:1.05rem;min-width:96px;letter-spacing:.06em}
+  .lvl .chilis .off{filter:grayscale(1);opacity:.25}
+  .lvl .desc{font-size:.92rem}
+  .lvl .desc b{font-family:'Fraunces';font-weight:600;font-style:italic}
+
+  /* ---------- CTA ---------- */
+  .cta{text-align:center;background:var(--ink-2);border:1px solid var(--line);border-radius:24px;padding:60px 28px;position:relative;overflow:hidden}
+  .cta::before{content:"";position:absolute;inset:0;background:var(--grad);opacity:.08}
+  .cta h2{font-family:'Fraunces';font-weight:500;font-size:clamp(1.8rem,4vw,2.8rem);position:relative}
+  .cta p{color:var(--muted);max-width:42ch;margin:14px auto 28px;position:relative}
+  .cta .join{display:inline-flex;gap:10px;position:relative;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:6px 6px 6px 20px;box-shadow:var(--shadow)}
+  .cta .join input{background:none;border:0;color:var(--cream);font-family:inherit;outline:none;width:220px}
+  .cta .join input::placeholder{color:#7d5d5b}
+  .cta .join button{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:.7em 1.4em;border-radius:99px;cursor:pointer;transition:transform .15s}
+  .cta .join button:hover{transform:scale(1.04)}
+
+  /* ---------- FOOTER ---------- */
+  footer{border-top:1px solid var(--line);padding:56px 0 64px;margin-top:110px}
+  .foot{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap}
+  .foot .cols{display:flex;gap:54px;flex-wrap:wrap}
+  .foot h4{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+  .foot a{display:block;color:var(--muted);text-decoration:none;font-size:.92rem;margin-bottom:9px;transition:color .2s}
+  .foot a:hover{color:var(--cream)}
+  .disclaim{margin-top:36px;color:#6b4f4d;font-size:.82rem;line-height:1.7;max-width:60ch}
+  .disclaim b{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
+    <nav>
+      <a href="smuthub-app.html">Search</a>
+      <a href="smuthub-bookcase.html">My Bookcase</a>
+      <a href="stores.html">Find a Store</a>
+    </nav>
+    <div id="authbox" style="display:flex;align-items:center;gap:8px"></div>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <span class="eyebrow fu d1">✨ Launching soon · Romantasy · Spice · Yearning</span>
+    <h1 class="fu d2">The hub for <em>spicy</em> fantasy reads you can't put down.</h1>
+    <p class="sub fu d3">Browse by trope, sort by heat, and find your next fictional situationship. Dragons optional. Pining mandatory.</p>
+    <div class="search fu d4">
+      <input type="text" placeholder="Search by trope, vibe, or fae man who would never…">
+      <button type="button" onclick="document.getElementById('shelf').scrollIntoView({behavior:'smooth'})">Find heat</button>
+    </div>
+    <p class="hero-tags fu d5">🚧 <span>We're still stocking the shelves —</span> drop your email below to get first access. 💌</p>
+  </section>
+
+  <section id="tropes" class="wrap">
+    <div class="sec-head">
+      <h2>Browse by trope</h2>
+      <a href="#">All 240 tropes →</a>
+    </div>
+    <div class="tropes">
+      <a class="trope" href="#"><span class="emoji">⚔️</span><div><div class="name">Enemies to Lovers</div><div class="count">3,420 reads</div></div></a>
+      <a class="trope" href="#"><span class="emoji">🐉</span><div><div class="name">Fae &amp; Dragon Princes</div><div class="count">2,981 reads</div></div></a>
+      <a class="trope" href="#"><span class="emoji">🛏️</span><div><div class="name">Only One Bed</div><div class="count">2,114 reads</div></div></a>
+      <a class="trope" href="#"><span class="emoji">🌙</span><div><div class="name">Fated Mates</div><div class="count">1,877 reads</div></div></a>
+      <a class="trope" href="#"><span class="emoji">🗡️</span><div><div class="name">Touch Her &amp; You Die</div><div class="count">1,650 reads</div></div></a>
+      <a class="trope" href="#"><span class="emoji">👑</span><div><div class="name">Marriage of Convenience</div><div class="count">1,402 reads</div></div></a>
+      <a class="trope" href="#"><span class="emoji">🩸</span><div><div class="name">Morally Grey Villain</div><div class="count">1,290 reads</div></div></a>
+      <a class="trope" href="#"><span class="emoji">🔒</span><div><div class="name">Slow Burn</div><div class="count">1,108 reads</div></div></a>
+    </div>
+  </section>
+
+  <section id="trending" class="wrap">
+    <div class="sec-head">
+      <h2>🔥 <span class="hot">Trending</span> this week</h2>
+      <a href="#">See the charts →</a>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="cover c1"><span class="ribbon">#1 Hot</span><h3>A Court of Bad Decisions</h3></div>
+        <div class="meta">
+          <div class="author">by E. V. Thornwood</div>
+          <div class="spice">🌶️🌶️🌶️🌶️<span class="off">🌶️</span></div>
+          <span class="tag">enemies-to-lovers</span>
+        </div>
+      </article>
+      <article class="card">
+        <div class="cover c2"><span class="ribbon">↑ Rising</span><h3>The Pining Hours</h3></div>
+        <div class="meta">
+          <div class="author">by Marin Vale</div>
+          <div class="spice">🌶️🌶️🌶️<span class="off">🌶️🌶️</span></div>
+          <span class="tag">slow burn</span>
+        </div>
+      </article>
+      <article class="card">
+        <div class="cover c3"><span class="ribbon">🔥 5-chili</span><h3>Touch Her &amp; You Die</h3></div>
+        <div class="meta">
+          <div class="author">by R. Ashgrove</div>
+          <div class="spice">🌶️🌶️🌶️🌶️🌶️</div>
+          <span class="tag">morally grey</span>
+        </div>
+      </article>
+      <article class="card">
+        <div class="cover c4"><span class="ribbon">New</span><h3>Only One Tent</h3></div>
+        <div class="meta">
+          <div class="author">by Sage Lockheart</div>
+          <div class="spice">🌶️🌶️🌶️🌶️<span class="off">🌶️</span></div>
+          <span class="tag">forced proximity</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="meter" class="wrap">
+    <div class="meter">
+      <div>
+        <h2>The Spice Meter™</h2>
+        <p>No guesswork, no surprises. Every title is rated chili-by-chili so you know exactly how much to clutch your pearls.</p>
+        <p style="color:var(--amber);font-weight:600">From a slow simmer to a full kitchen fire.</p>
+      </div>
+      <div class="scale">
+        <div class="lvl"><span class="chilis">🌶️<span class="off">🌶️🌶️🌶️🌶️</span></span><span class="desc"><b>Sweet.</b> Hand-holding and tension. Bring tea.</span></div>
+        <div class="lvl"><span class="chilis">🌶️🌶️<span class="off">🌶️🌶️🌶️</span></span><span class="desc"><b>Warm.</b> A kiss in the rain. Maybe two.</span></div>
+        <div class="lvl"><span class="chilis">🌶️🌶️🌶️<span class="off">🌶️🌶️</span></span><span class="desc"><b>Spicy.</b> Fade-to-black optional.</span></div>
+        <div class="lvl"><span class="chilis">🌶️🌶️🌶️🌶️<span class="off">🌶️</span></span><span class="desc"><b>Hot.</b> Read with the lights low.</span></div>
+        <div class="lvl"><span class="chilis">🌶️🌶️🌶️🌶️🌶️</span><span class="desc"><b>Inferno.</b> Hydrate. Maybe pray.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="shelf" class="wrap">
+    <div class="cta">
+      <h2>Be first through the door.</h2>
+      <p>We're building the hub for romantasy readers — shelves, spice ratings, the whole thing. Join the list and you'll be the first in (and get founding-member perks).</p>
+      <div class="join" id="signup">
+        <input id="emailInput" type="email" placeholder="your@email.com" autocomplete="email">
+        <button type="button" id="joinBtn" onclick="joinHub()">Join the Hub</button>
+      </div>
+      <p id="signupMsg" style="margin-top:14px;color:var(--amber);font-weight:600;min-height:1.2em;position:relative"></p>
+    </div>
+  </section>
+</main>
+
+<script>
+  // ── EMAIL SIGNUP ──────────────────────────────────────────────
+  // To actually RECEIVE emails: get a free access key at https://web3forms.com
+  // (they email it to you), then paste it between the quotes below.
+  const WEB3FORMS_KEY = (window.SMUTHUB_CONFIG||{}).WEB3FORMS_KEY || "";
+
+  async function joinHub(){
+    const input = document.getElementById('emailInput');
+    const msg = document.getElementById('signupMsg');
+    const email = input.value.trim();
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+      msg.style.color = '#ff7a8f';
+      msg.textContent = "Hmm, that email looks a little fictional. Try again? 👀";
+      return;
+    }
+    document.getElementById('joinBtn').textContent = "Joining…";
+    try{
+      if(WEB3FORMS_KEY && WEB3FORMS_KEY !== "YOUR_WEB3FORMS_KEY"){
+        await fetch("https://api.web3forms.com/submit",{
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({ access_key: WEB3FORMS_KEY, email, subject: "New SmutHub waitlist signup" })
+        });
+      }
+      msg.style.color = 'var(--amber)';
+      msg.textContent = "You're on the list 💌 Welcome to the Hub.";
+      input.value = "";
+      document.getElementById('joinBtn').textContent = "You're in ✓";
+    }catch(e){
+      msg.style.color = '#ff7a8f';
+      msg.textContent = "Something glitched — try again in a sec.";
+      document.getElementById('joinBtn').textContent = "Join the Hub";
+    }
+  }
+  document.getElementById('emailInput').addEventListener('keydown', e=>{ if(e.key==='Enter') joinHub(); });
+</script>
+
+<footer class="wrap">
+  <div class="foot">
+    <div>
+      <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
+      <p style="color:var(--muted);max-width:30ch;margin-top:14px;font-size:.92rem">The cheekiest little corner of the romantasy internet.</p>
+    </div>
+    <div class="cols">
+      <div>
+        <h4>Browse</h4>
+        <a href="#">Tropes</a><a href="#">Trending</a><a href="#">New &amp; Hot</a><a href="#">Charts</a>
+      </div>
+      <div>
+        <h4>The Hub</h4>
+        <a href="#">My Shelf</a><a href="#">Spice Meter</a><a href="#">Newsletter</a><a href="#">Community</a>
+      </div>
+      <div>
+        <h4>Boring Bits</h4>
+        <a href="#">About</a><a href="#">Contact</a><a href="#">Terms</a><a href="#">Privacy</a><a href="sitemap.html">Sitemap</a>
+      </div>
+      <div>
+        <h4>Account</h4>
+        <a href="#" onclick="SH.openAuth();return false">Log In / Sign Up</a><a href="smuthub-bookcase.html">My Bookcase</a>
+      </div>
+    </div>
+  </div>
+  <p class="disclaim">
+    <b>18+ for the spice, ageless for the yearning.</b> All characters fictional. All emotional damage real.<br>
+    smuthub.ca is a parody fan hub made by and for romance-fiction lovers — not affiliated with anyone you're thinking of. 😇
+  </p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script defer src="auth.js"></script>
+</body>
+</html>

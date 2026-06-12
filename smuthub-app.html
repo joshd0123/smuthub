@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmutHub — Your Account (Supabase)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<!-- Supabase client (loads from CDN in the browser) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script defer src="auth.js"></script>
+<style>
+  :root{
+    --ink:#0c0708;--ink-2:#150e10;--panel:#1c1316;--line:#2a1d22;
+    --cream:#f4e8e3;--muted:#b69089;--rose:#ff3d76;--amber:#ffab40;
+    --grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%);
+    --shadow:0 24px 60px -20px rgba(255,61,118,.4);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(800px 500px at 10% -5%,rgba(255,61,118,.14),transparent 60%)}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  a{color:inherit}
+
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.45rem;letter-spacing:-.02em;text-decoration:none}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em}
+  header{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:70px;gap:12px;flex-wrap:wrap}
+
+  /* auth area */
+  .navlinks{display:flex;gap:18px}
+  .navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none}
+  .navlinks a.on,.navlinks a:hover{color:var(--cream)}
+  @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
+  .authbox{display:flex;align-items:center;gap:8px}
+  .authbox input{background:var(--ink-2);border:1px solid var(--line);color:var(--cream);font-family:inherit;border-radius:99px;padding:.5em .9em;font-size:.85rem;outline:none;width:190px}
+  .btn{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:.55em 1.05em;border-radius:99px;cursor:pointer;font-size:.85rem}
+  .btn.ghost{background:none;border:1px solid var(--line);color:var(--muted)}
+  .who{font-size:.85rem;color:var(--muted)}
+  .who b{color:var(--amber)}
+
+  .setup{background:rgba(255,171,64,.1);border:1px solid rgba(255,171,64,.4);color:var(--amber);font-size:.85rem;text-align:center;padding:10px;display:none}
+  .setup.show{display:block}
+
+  .head{padding:34px 0 4px;text-align:center}
+  h1{font-family:'Fraunces';font-weight:600;font-size:clamp(2rem,5vw,3rem);line-height:1.05}
+  h1 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
+  .sub{color:var(--muted);margin-top:10px;font-size:.95rem}
+  .search{display:flex;max-width:600px;margin:20px auto 0;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:8px 8px 8px 22px;box-shadow:var(--shadow)}
+  .search input{flex:1;background:none;border:0;color:var(--cream);font-family:inherit;font-size:1rem;outline:none}
+  .search input::placeholder{color:#7d5d5b}
+  .search button{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:0 24px;border-radius:99px;cursor:pointer}
+  .status{text-align:center;color:var(--muted);margin:18px 0 4px;min-height:1.1em;font-size:.92rem}
+
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:10px 0 60px}
+  @media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+  .cover{aspect-ratio:3/4;position:relative;background:var(--ink-2)}
+  .cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;font-family:'Fraunces';font-style:italic;color:#fff;background:linear-gradient(160deg,#3a0d2a,#7a1238)}
+  .meta{padding:14px 16px 16px;display:flex;flex-direction:column;gap:2px;flex:1}
+  .title{font-family:'Fraunces';font-weight:500;font-size:1.08rem;line-height:1.15}
+  .author{color:var(--muted);font-size:.82rem}
+  .spice{margin-top:8px;font-size:1rem;letter-spacing:.06em;cursor:pointer;user-select:none}
+  .spice span{filter:grayscale(1);opacity:.3}
+  .spice span.on{filter:none;opacity:1}
+  .shelfbtn{margin-top:10px;background:none;border:1px solid var(--line);color:var(--muted);font-family:inherit;font-weight:700;font-size:.82rem;padding:.5em;border-radius:10px;cursor:pointer}
+  .shelfbtn.on{background:var(--grad);color:#1a0c10;border-color:transparent}
+
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink-2);border:1px solid var(--rose);color:var(--cream);padding:.7em 1.2em;border-radius:99px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:90}
+  .toast.show{opacity:1}
+  .note{text-align:center;color:#6b4f4d;font-size:.82rem;padding-bottom:50px;max-width:60ch;margin:0 auto}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav wrap">
+    <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
+    <nav class="navlinks">
+      <a href="smuthub-app.html" class="on">Search</a>
+      <a href="smuthub-bookcase.html">My Bookcase</a>
+      <a href="stores.html">Find a Store</a>
+    </nav>
+    <div class="authbox" id="authbox"><!-- filled by JS --></div>
+  </div>
+  <div class="setup" id="setup">⚠️ Add your Supabase URL + anon key at the top of the script to switch on accounts. Search works without it; saving needs it.</div>
+</header>
+
+<div class="wrap head">
+  <h1>Your <em>shelf</em>, saved for real.</h1>
+  <p class="sub" id="sub">Log in, then your 🌶️ ratings and 📚 shelf stick — across devices, forever.</p>
+  <div class="search">
+    <input id="q" type="text" placeholder="Search title, author, or trope…">
+    <button onclick="run()">Search</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="status" id="status"></div>
+  <div class="grid" id="grid"></div>
+  <p class="note">Log in once with a password and you stay logged in on this device. Your data is private to your account.</p>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  // Shared auth (config.js + auth.js). This page just listens.
+  let sb=null, user=null;
+  window.addEventListener('sh-auth', async (e)=>{
+    sb = window.SH.sb; user = e.detail.user;
+    if(window.SH && !window.SH.configured) document.getElementById('setup').classList.add('show');
+    if(user){ await loadMine(); } else { Object.keys(spiceMap).forEach(k=>delete spiceMap[k]); shelfSet.clear(); }
+    render();
+  });
+
+  function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+
+  async function loadMine(){
+    const [{data:tags}, {data:shelf}] = await Promise.all([
+      sb.from('book_tags').select('book_key,spice'),
+      sb.from('shelf').select('book_key')
+    ]);
+    (tags||[]).forEach(t=>{ if(t.spice) spiceMap[t.book_key]=t.spice; });
+    (shelf||[]).forEach(s=>shelfSet.add(s.book_key));
+  }
+
+  // ── SEARCH: fresh defaults each visit + relevance-sorted results ──
+  const DEFAULT_QUERIES = ['fantasy romance','romantasy','enemies to lovers romance','fae romance novel','dragon rider romance','paranormal romance','dark fantasy romance'];
+
+  function scoreDoc(b, q){
+    const t=(b.title||'').toLowerCase(), a=((b.author_name&&b.author_name[0])||'').toLowerCase();
+    let sc=0;
+    if(t===q) sc+=120; else if(t.startsWith(q)) sc+=90; else if(t.includes(q)) sc+=65;
+    if(a===q) sc+=70; else if(a.includes(q)) sc+=45;
+    const words=q.split(/\s+/).filter(Boolean);
+    sc += words.filter(w=>t.includes(w)).length*6;
+    sc += words.filter(w=>a.includes(w)).length*4;
+    if(b.cover_i) sc+=18;            // prefer books with real covers
+    return sc;
+  }
+
+  async function run(){
+    const typed = document.getElementById('q').value.trim();
+    const st=document.getElementById('status');
+    st.textContent="Pulling real books…";
+    try{
+      let url;
+      if(typed){
+        url = `https://openlibrary.org/search.json?q=${encodeURIComponent(typed)}&fields=key,title,author_name,cover_i&limit=30`;
+      } else {
+        const q = DEFAULT_QUERIES[Math.floor(Math.random()*DEFAULT_QUERIES.length)];
+        const offset = [0,20,40][Math.floor(Math.random()*3)];
+        url = `https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&fields=key,title,author_name,cover_i&limit=30&offset=${offset}`;
+      }
+      const r=await fetch(url); const d=await r.json();
+      let docs=(d.docs||[]).filter(x=>x.title);
+      if(typed){
+        const q=typed.toLowerCase();
+        docs = docs.map(b=>[scoreDoc(b,q),b]).sort((x,y)=>y[0]-x[0]).map(x=>x[1]);
+      } else {
+        docs = docs.sort((x,y)=>(y.cover_i?1:0)-(x.cover_i?1:0)); // covers first for browsing
+      }
+      lastDocs = docs.slice(0,16);
+      st.innerHTML = lastDocs.length ? `Showing <b style="color:var(--cream)">${lastDocs.length}</b> real books` : "No books found.";
+      render();
+    }catch(e){ st.textContent="Couldn't reach the catalog from this preview — works live on your site."; }
+  }
+
+  function coverHTML(b){
+    return b.cover_i
+      ? `<img src="https://covers.openlibrary.org/b/id/${b.cover_i}-L.jpg" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="ph" style="display:none">${b.title}</div>`
+      : `<div class="ph">${b.title}</div>`;
+  }
+  const idOf=k=>'b_'+k.replace(/[^a-z0-9]/gi,'');
+
+  function render(){
+    document.getElementById('grid').innerHTML = lastDocs.map(b=>{
+      const id=idOf(b.key), sp=spiceMap[b.key]||0, on=shelfSet.has(b.key);
+      const author=(b.author_name&&b.author_name[0])||"Unknown";
+      const chilis=[1,2,3,4,5].map(n=>`<span data-n="${n}" class="${sp>=n?'on':''}">🌶️</span>`).join('');
+      return `<article class="card" data-key="${encodeURIComponent(b.key)}">
+        <div class="cover">${coverHTML(b)}</div>
+        <div class="meta">
+          <div class="title">${b.title}</div>
+          <div class="author">by ${author}</div>
+          <div class="spice" id="sp_${id}">${chilis}</div>
+          <button class="shelfbtn ${on?'on':''}" id="sh_${id}">${on?'✓ On your shelf':'＋ Add to shelf'}</button>
+        </div></article>`;
+    }).join('');
+  }
+
+  // ── SAVE TO SUPABASE (one central click listener — nothing embedded in HTML) ──
+  document.getElementById('grid').addEventListener('click', async (e)=>{
+    const card = e.target.closest('article.card');
+    if(!card) return;
+    const key = decodeURIComponent(card.dataset.key);
+    const book = lastDocs.find(x=>x.key===key) || {};
+    const id = idOf(key);
+
+    // chili tap
+    const chip = e.target.closest('span[data-n]');
+    if(chip){
+      const n = +chip.dataset.n;
+      if(!user){ toast("Log in to save your spice rating"); return; }
+      const {error} = await sb.from('book_tags').upsert({book_key:key, spice:n},{onConflict:'user_id,book_key'});
+      if(error){ toast("Save failed: "+error.message); console.error('spice save', error); return; }
+      spiceMap[key]=n;
+      document.querySelectorAll('#sp_'+id+' span').forEach(s=>s.classList.toggle('on',+s.dataset.n<=n));
+      toast("Saved "+"🌶️".repeat(n));
+      return;
+    }
+
+    // shelf button tap
+    if(e.target.closest('.shelfbtn')){
+      if(!user){ toast("Log in to build your shelf"); return; }
+      const btn = document.getElementById('sh_'+id);
+      if(shelfSet.has(key)){
+        const {error} = await sb.from('shelf').delete().eq('book_key',key);
+        if(error){ toast("Couldn't remove: "+error.message); console.error('shelf delete', error); return; }
+        shelfSet.delete(key); btn.classList.remove('on'); btn.textContent='＋ Add to shelf';
+        toast("Removed from shelf");
+      } else {
+        const {error} = await sb.from('shelf').upsert({book_key:key, status:'want', title:book.title||null, author:(book.author_name&&book.author_name[0])||null, cover_i:book.cover_i||null},{onConflict:'user_id,book_key'});
+        if(error){ toast("Save failed: "+error.message); console.error('shelf save', error); return; }
+        shelfSet.add(key); btn.classList.add('on'); btn.textContent='✓ On your shelf';
+        toast("Added to your shelf 📚");
+      }
+    }
+  });
+
+  document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')run();});
+  run();
+</script>
+</body>
+</html>

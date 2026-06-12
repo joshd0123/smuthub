@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmutHub — Find Your Local Spice Dealer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root{
+    --ink:#0c0708;--ink-2:#150e10;--panel:#1c1316;--line:#2a1d22;
+    --cream:#f4e8e3;--muted:#b69089;--rose:#ff3d76;--amber:#ffab40;
+    --grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%);
+    --shadow:0 24px 60px -20px rgba(255,61,118,.4);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;
+    background:radial-gradient(800px 500px at 12% -5%,rgba(255,61,118,.16),transparent 60%),
+               radial-gradient(700px 500px at 95% 8%,rgba(255,171,64,.10),transparent 55%)}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  a{color:inherit}
+
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
+  header{position:sticky;top:0;z-index:600;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .badge{font-size:.72rem;border:1px solid var(--line);color:var(--muted);padding:.4em .8em;border-radius:99px}
+  .badge b{color:var(--amber)}
+  @media(max-width:640px){.badge{display:none}}
+
+  .head{padding:50px 0 26px;text-align:center}
+  .eyebrow{font-size:.78rem;letter-spacing:.28em;text-transform:uppercase;color:var(--amber)}
+  h1{font-family:'Fraunces';font-weight:600;font-size:clamp(2.2rem,5vw,3.4rem);line-height:1.05;margin:14px auto 0;max-width:18ch}
+  h1 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
+  .sub{color:var(--muted);margin:14px auto 0;max-width:50ch}
+
+  .searchbar{display:flex;gap:10px;max-width:620px;margin:26px auto 0;flex-wrap:wrap;justify-content:center}
+  .searchbar .field{flex:1;min-width:240px;display:flex;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:7px 7px 7px 20px}
+  .searchbar input{flex:1;background:none;border:0;color:var(--cream);font-family:inherit;font-size:1rem;outline:none}
+  .searchbar input::placeholder{color:#7d5d5b}
+  .searchbar .go{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:0 22px;border-radius:99px;cursor:pointer}
+  .locbtn{background:var(--panel);border:1px solid var(--line);color:var(--cream);font-family:inherit;font-weight:700;padding:0 18px;border-radius:99px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:border-color .2s}
+  .locbtn:hover{border-color:var(--rose)}
+
+  .layout{display:grid;grid-template-columns:380px 1fr;gap:20px;padding:30px 0 60px;align-items:stretch}
+  @media(max-width:880px){.layout{grid-template-columns:1fr}}
+
+  .list{display:flex;flex-direction:column;gap:12px;max-height:560px;overflow-y:auto;padding-right:6px}
+  .list::-webkit-scrollbar{width:8px}
+  .list::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+  .store{text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px;cursor:pointer;transition:transform .15s,border-color .15s;color:var(--cream);font-family:inherit}
+  .store:hover,.store.active{border-color:var(--rose);transform:translateX(3px)}
+  .store .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .store h3{font-family:'Fraunces';font-weight:500;font-size:1.25rem}
+  .store .dist{color:var(--amber);font-weight:700;font-size:.85rem;white-space:nowrap}
+  .store .addr{color:var(--muted);font-size:.9rem;margin-top:3px}
+  .store .tags{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
+  .store .tag{font-size:.72rem;color:var(--cream);border:1px solid var(--line);padding:.25em .6em;border-radius:99px}
+  .store .tag.hot{color:#1a0c10;background:var(--grad);border:0;font-weight:700}
+
+  #map{height:560px;border-radius:18px;border:1px solid var(--line);overflow:hidden;z-index:1}
+  @media(max-width:880px){#map{height:380px;order:-1}}
+
+  /* custom map pin */
+  .pin{width:30px;height:30px;border-radius:50% 50% 50% 0;background:var(--grad);transform:rotate(-45deg);border:2px solid #1a0c10;box-shadow:0 4px 12px rgba(0,0,0,.5)}
+  .pin span{transform:rotate(45deg);display:block;text-align:center;line-height:26px;font-size:13px}
+  .me{width:18px;height:18px;border-radius:50%;background:#4dd2ff;border:3px solid #fff;box-shadow:0 0 0 6px rgba(77,210,255,.3)}
+  .leaflet-popup-content-wrapper{background:var(--panel);color:var(--cream);border-radius:12px}
+  .leaflet-popup-tip{background:var(--panel)}
+  .leaflet-popup-content{font-family:'Hanken Grotesk',sans-serif;margin:12px 14px}
+  .leaflet-popup-content b{font-family:'Fraunces'}
+  .leaflet-container a.leaflet-popup-close-button{color:var(--muted)}
+
+  .note{color:#6b4f4d;font-size:.82rem;text-align:center;padding-bottom:50px;max-width:60ch;margin:0 auto}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
+    <nav style="display:flex;gap:18px"><a href="smuthub-app.html" style="color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none">Search</a><a href="smuthub-bookcase.html" style="color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none">My Bookcase</a><a href="stores.html" style="color:var(--cream);font-weight:500;font-size:.92rem;text-decoration:none">Find a Store</a></nav>
+    <div id="authbox" style="display:flex;align-items:center;gap:8px"></div>
+  </div>
+</header>
+
+<div class="wrap head">
+  <span class="eyebrow">Stores Near You</span>
+  <h1>Find your local <em>spice dealer</em>.</h1>
+  <p class="sub">Indie bookshops with the romance shelf you deserve — sorted by distance, tagged by vibe.</p>
+  <div class="searchbar">
+    <div class="field"><input id="q" type="text" placeholder="Enter your city or postal code…"></div>
+    <button class="go" onclick="fakeSearch()">Search</button>
+    <button class="locbtn" onclick="useMyLocation()">📍 Use my location</button>
+  </div>
+</div>
+
+<div class="wrap layout">
+  <div class="list" id="list"></div>
+  <div id="map"></div>
+</div>
+
+<p class="note">Demo uses sample shops on a free OpenStreetMap map. In the live site this list comes from a places API filtered to bookstores near the visitor. 😇</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script defer src="auth.js"></script>
+<script>
+  const stores = [
+    {name:"The Velvet Page", lat:43.6545, lng:-79.4005, addr:"Kensington Market", dist:"0.8 km", phone:"+1 416 555 0114", tags:["💋 huge romance shelf","indie"], hot:true},
+    {name:"Thornwood Books", lat:43.6677, lng:-79.4103, addr:"The Annex", dist:"1.6 km", phone:"+1 416 555 0188", tags:["fantasy specialist","has a cat"]},
+    {name:"Fated & Found", lat:43.6628, lng:-79.3350, addr:"Leslieville", dist:"2.9 km", phone:"+1 416 555 0142", tags:["💋 spicy picks","book club"]},
+    {name:"Moonlit Reads", lat:43.6465, lng:-79.4007, addr:"Queen West", dist:"1.2 km", phone:"+1 416 555 0167", tags:["late hours","indie"]},
+    {name:"Only One Shelf", lat:43.6489, lng:-79.4490, addr:"Roncesvalles", dist:"3.4 km", phone:"+1 416 555 0129", tags:["cozy","signed copies"]},
+    {name:"Pinecrest & Pine", lat:43.6503, lng:-79.3596, addr:"Distillery District", dist:"2.4 km", phone:"+1 416 555 0193", tags:["💋 romance events","cafe"]},
+  ];
+
+  const map = L.map('map',{scrollWheelZoom:false}).setView([43.6532,-79.3832],13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    maxZoom:19, attribution:'© OpenStreetMap'
+  }).addTo(map);
+
+  const markers = [];
+  stores.forEach((s,i)=>{
+    const icon = L.divIcon({className:'',html:`<div class="pin"><span>📚</span></div>`,iconSize:[30,30],iconAnchor:[15,30],popupAnchor:[0,-30]});
+    const m = L.marker([s.lat,s.lng],{icon}).addTo(map)
+      .bindPopup(`<b>${s.name}</b><br>${s.addr} · <span style="color:#ffab40">${s.dist}</span>`);
+    m.on('click',()=>highlight(i));
+    markers.push(m);
+  });
+
+  const listEl = document.getElementById('list');
+  stores.forEach((s,i)=>{
+    const el = document.createElement('button');
+    el.className='store'; el.id='store-'+i;
+    el.innerHTML = `<div class="top"><h3>${s.name}</h3><span class="dist">${s.dist}</span></div>
+      <div class="addr">${s.addr}</div>
+      <div class="tags">${s.tags.map(t=>`<span class="tag ${t.startsWith('💋')?'hot':''}">${t}</span>`).join('')}</div>
+      <div style="display:flex;gap:8px;margin-top:11px;justify-content:flex-end">
+        <a href="https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-size:.78rem;font-weight:800;text-decoration:none;color:#1a0c10;background:var(--grad);padding:.45em .85em;border-radius:99px">🧭 Directions</a>
+        <a href="tel:${s.phone.replace(/\s/g,'')}" onclick="event.stopPropagation()" style="font-size:.78rem;font-weight:700;text-decoration:none;color:var(--cream);border:1px solid var(--line);padding:.45em .85em;border-radius:99px">📞 Call</a>
+      </div>`;
+    el.onclick=()=>{ map.flyTo([s.lat,s.lng],15); markers[i].openPopup(); highlight(i); };
+    listEl.appendChild(el);
+  });
+
+  function highlight(i){
+    document.querySelectorAll('.store').forEach(e=>e.classList.remove('active'));
+    const a=document.getElementById('store-'+i); if(a){a.classList.add('active');a.scrollIntoView({block:'nearest',behavior:'smooth'});}
+  }
+
+  function useMyLocation(){
+    if(!navigator.geolocation){ alert("Your browser won't share location — type a city instead!"); return; }
+    navigator.geolocation.getCurrentPosition(
+      pos=>{
+        const {latitude:lat,longitude:lng}=pos.coords;
+        const me=L.divIcon({className:'',html:'<div class="me"></div>',iconSize:[18,18],iconAnchor:[9,9]});
+        L.marker([lat,lng],{icon:me}).addTo(map).bindPopup("You are here 💕").openPopup();
+        map.flyTo([lat,lng],13);
+      },
+      ()=>alert("Couldn't grab your location (it's often blocked in previews). On the live site this re-centers the map on you.")
+    );
+  }
+  function fakeSearch(){
+    const q=document.getElementById('q').value.trim();
+    if(q) alert(`On the live site this searches bookstores near "${q}". This demo is centered on sample Toronto shops.`);
+  }
+</script>
+</body>
+</html>

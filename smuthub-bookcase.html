@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmutHub — My Bookcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script defer src="auth.js"></script>
+<style>
+  :root{
+    --ink:#0c0708;--ink-2:#150e10;--panel:#1c1316;--line:#2a1d22;
+    --cream:#f4e8e3;--muted:#b69089;--rose:#ff3d76;--amber:#ffab40;
+    --grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%);
+    /* themed (set by .theme-* below) */
+    --case:#1c130c;--wood:#7a4e2a;--wood-dk:#3d2614;--plate:#c9a063;--plate-tx:#2a1a0c;--accent:#ffab40;
+  }
+  /* ── BOOKCASE THEMES ── */
+  .theme-walnut {--case:#1c130c;--wood:#7a4e2a;--wood-dk:#3d2614;--plate:#c9a063;--plate-tx:#2a1a0c;--accent:#ffab40;}
+  .theme-noir   {--case:#0c0c0e;--wood:#34343c;--wood-dk:#16161a;--plate:#9a9aa4;--plate-tx:#0c0c0e;--accent:#ff3d76;}
+  .theme-faerie {--case:#0c1a14;--wood:#2f5a44;--wood-dk:#163026;--plate:#d8c06a;--plate-tx:#0c1a14;--accent:#4fd1a5;}
+  .theme-academia{--case:#170f0c;--wood:#6e3c2a;--wood-dk:#3a2018;--plate:#bd9152;--plate-tx:#170f0c;--accent:#d9a05b;}
+  .theme-boudoir{--case:#1a0c12;--wood:#6e2c46;--wood-dk:#3a1626;--plate:#e6b86a;--plate-tx:#1a0c12;--accent:#ff5a8c;}
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  a{color:inherit;text-decoration:none}
+
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.45rem;letter-spacing:-.02em}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em}
+  header{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);background:rgba(12,7,8,.78);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:68px;gap:12px;flex-wrap:wrap}
+  .navlinks{display:flex;gap:18px}.navlinks a{color:var(--muted);font-weight:500;font-size:.92rem}.navlinks a.on,.navlinks a:hover{color:var(--cream)}
+  .authbox{display:flex;align-items:center;gap:8px}
+  .authbox input{background:var(--ink-2);border:1px solid var(--line);color:var(--cream);font-family:inherit;border-radius:99px;padding:.5em .9em;font-size:.85rem;outline:none;width:160px}
+  .btn{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:.55em 1.05em;border-radius:99px;cursor:pointer;font-size:.85rem}
+  .btn.ghost{background:none;border:1px solid var(--line);color:var(--muted)}
+  .who{font-size:.85rem;color:var(--muted)}.who b{color:var(--amber)}
+  .setup{background:rgba(255,171,64,.1);border:1px solid rgba(255,171,64,.4);color:var(--amber);font-size:.85rem;text-align:center;padding:9px;display:none}
+  .setup.show{display:block}
+
+  .head{padding:26px 0 6px;text-align:center}
+  h1{font-family:'Fraunces';font-weight:600;font-size:clamp(1.9rem,5vw,2.7rem)}
+  h1 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
+  .sub{color:var(--muted);margin-top:6px;font-size:.95rem}
+
+  /* theme picker */
+  .themes{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0 6px}
+  .swatch{display:flex;align-items:center;gap:8px;background:var(--ink-2);border:1px solid var(--line);border-radius:99px;padding:6px 14px 6px 6px;cursor:pointer;font-weight:700;font-size:.83rem;transition:all .15s}
+  .swatch:hover{border-color:var(--rose)}
+  .swatch.on{border-color:var(--cream)}
+  .swatch .dot{width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.2)}
+  .swatch .gem{font-size:.72rem;opacity:.8}
+  .themenote{text-align:center;color:#6b4f4d;font-size:.8rem;margin-top:2px}
+
+  /* gate */
+  .gate{max-width:420px;margin:46px auto;background:var(--ink-2);border:1px solid var(--line);border-radius:18px;padding:30px;text-align:center}
+  .gate h2{font-family:'Fraunces';font-weight:600;font-size:1.4rem;margin-bottom:6px}
+  .gate p{color:var(--muted);font-size:.92rem;margin-bottom:16px}
+  .gate .row{display:flex;gap:8px}
+  .gate input{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--cream);font-family:inherit;border-radius:99px;padding:.65em 1em;outline:none}
+
+  /* ── THE BOOKCASE ── */
+  .case{margin:18px 0 60px;background:
+      linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.55)), var(--case);
+    border:16px solid var(--wood-dk);border-radius:12px;
+    box-shadow:inset 0 0 70px rgba(0,0,0,.7), 0 30px 60px -20px rgba(0,0,0,.8);
+    padding:8px 16px 18px}
+  .shelf{margin-top:14px}
+  .plate{display:inline-flex;align-items:center;gap:8px;background:var(--plate);color:var(--plate-tx);
+    font-family:'Fraunces';font-weight:600;font-size:.95rem;padding:.18em .8em;border-radius:4px;
+    box-shadow:0 2px 0 rgba(0,0,0,.3);margin:0 0 6px 4px}
+  .plate .ct{font-family:'Hanken Grotesk';font-weight:800;font-size:.78rem;opacity:.8}
+  .row{position:relative}
+  .books{display:flex;gap:14px;align-items:flex-end;overflow-x:auto;padding:6px 6px 0;min-height:150px;scrollbar-width:thin}
+  .books::-webkit-scrollbar{height:6px}.books::-webkit-scrollbar-thumb{background:var(--wood);border-radius:99px}
+  .book{flex:0 0 auto;width:92px;cursor:pointer;transition:transform .18s ease;position:relative;
+    filter:drop-shadow(0 10px 8px rgba(0,0,0,.55))}
+  .book:hover{transform:translateY(-12px) rotate(-1deg)}
+  .book .bcov{width:100%;border-radius:2px 5px 5px 2px;display:block;object-fit:cover;
+    border-left:3px solid rgba(0,0,0,.35);box-shadow:inset -6px 0 10px -6px rgba(0,0,0,.6)}
+  .book .ph{width:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;
+    font-family:'Fraunces';font-style:italic;font-size:.72rem;color:#fff;border-radius:2px 5px 5px 2px;
+    background:linear-gradient(160deg,#3a0d2a,#7a1238);border-left:3px solid rgba(0,0,0,.35)}
+  .book .sp{position:absolute;top:5px;right:5px;font-size:.6rem;background:rgba(8,4,5,.78);color:#fff;padding:.1em .35em;border-radius:4px}
+  .plank{height:18px;background:linear-gradient(var(--wood),var(--wood-dk));border-radius:3px;
+    box-shadow:0 10px 16px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.1);margin-top:-2px}
+  .empty-shelf{color:var(--muted);opacity:.7;font-style:italic;font-size:.85rem;padding:40px 0 46px;text-align:center;width:100%}
+
+  /* book detail sheet */
+  .sheetbg{position:fixed;inset:0;z-index:80;background:rgba(6,3,4,.75);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px}
+  .sheetbg.open{display:flex}
+  .sheet{background:var(--ink-2);border:1px solid var(--line);border-radius:20px;max-width:440px;width:100%;overflow:hidden}
+  .sheet .top{display:flex;gap:16px;padding:20px}
+  .sheet .bigcov{width:110px;flex:0 0 auto;border-radius:6px;overflow:hidden;box-shadow:0 12px 24px rgba(0,0,0,.5)}
+  .sheet .bigcov img,.sheet .bigcov .ph{width:100%;display:block}
+  .sheet .bigcov .ph{aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-family:'Fraunces';font-style:italic;font-size:.8rem;color:#fff;background:linear-gradient(160deg,#3a0d2a,#7a1238)}
+  .sheet h3{font-family:'Fraunces';font-weight:500;font-size:1.3rem;line-height:1.1}
+  .sheet .au{color:var(--muted);font-size:.88rem;margin-top:2px}
+  .sheet .rate{margin-top:10px;font-size:1.15rem;letter-spacing:.08em;cursor:pointer;user-select:none}
+  .sheet .rate span{filter:grayscale(1);opacity:.3}.sheet .rate span.on{filter:none;opacity:1}
+  .sheet .acts{border-top:1px solid var(--line);padding:14px 20px;display:flex;gap:8px;flex-wrap:wrap}
+  .pillbtn{font-family:inherit;font-weight:700;font-size:.82rem;border:1px solid var(--line);background:none;color:var(--cream);padding:.5em .9em;border-radius:99px;cursor:pointer}
+  .pillbtn:hover{border-color:var(--rose)}
+  .pillbtn.on{background:var(--grad);color:#1a0c10;border-color:transparent}
+  .pillbtn.rec{background:var(--grad);color:#1a0c10;border:0;margin-left:auto}
+  .pillbtn.rm{color:#c99}
+
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink-2);border:1px solid var(--rose);color:var(--cream);padding:.7em 1.2em;border-radius:99px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:90}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body class="theme-walnut">
+
+<header>
+  <div class="nav wrap">
+    <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
+    <nav class="navlinks"><a href="smuthub-app.html">Search</a><a href="smuthub-bookcase.html" class="on">My Bookcase</a><a href="stores.html">Find a Store</a></nav>
+    <div class="authbox" id="authbox"></div>
+  </div>
+  <div class="setup" id="setup">⚠️ Add your Supabase URL + anon key in the script to switch on accounts.</div>
+</header>
+
+<div class="wrap head">
+  <h1>My <em>Bookcase</em></h1>
+  <p class="sub" id="sub">Decorate your shelves. Show off your spice.</p>
+  <div class="themes" id="themes"></div>
+  <div class="themenote">🧪 Beta: all themes unlocked — pick one and it saves to your account</div>
+</div>
+
+<div class="wrap" id="body"></div>
+<div class="sheetbg" id="sheetbg" onclick="if(event.target===this)closeSheet()"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+  // Shared auth via config.js + auth.js — this page just listens.
+  const THEMES=[
+    {id:'walnut',  name:'Walnut',           color:'#7a4e2a'},
+    {id:'noir',    name:'Noir',             color:'#34343c'},
+    {id:'faerie',  name:'Faerie Court',     color:'#2f5a44'},
+    {id:'academia',name:'Dark Academia',    color:'#6e3c2a'},
+    {id:'boudoir', name:'Candlelit Boudoir',color:'#6e2c46'},
+  ]; // beta: all themes unlocked
+  const STATUSES=[['want','Want to Read'],['reading','Currently Reading'],['read','Read & Rated']];
+  let sb=null, user=null, shelf=[], spiceMap={}, theme='walnut';
+
+  // theme picker
+  document.getElementById('themes').innerHTML = THEMES.map(t=>`
+    <div class="swatch ${t.id==='walnut'?'on':''}" data-t="${t.id}" onclick="setTheme('${t.id}')">
+      <span class="dot" style="background:${t.color}"></span>${t.name}
+    </div>`).join('');
+  window.addEventListener('sh-auth', async (e)=>{
+    sb = window.SH.sb; user = e.detail.user;
+    if(window.SH && !window.SH.configured) document.getElementById('setup').classList.add('show');
+    if(!user){ renderGate(); return; }
+    if(e.detail.profile && e.detail.profile.theme) setTheme(e.detail.profile.theme, true);
+    try{ await loadShelf(); renderCase(); }
+    catch(err){
+      console.error('bookcase load failed:', err);
+      document.getElementById('body').innerHTML =
+        `<div class="gate"><h2>Hmm, the bookcase hit a snag</h2><p style="color:#ff9aa8">${(err&&err.message)||err}</p><p>Screenshot this message — it tells us exactly what to fix.</p></div>`;
+    }
+  });
+
+  function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1700);}
+  const idOf=k=>'b_'+k.replace(/[^a-z0-9]/gi,'');
+  const hash=s=>{let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;};
+
+  function setTheme(id, silent){
+    theme=id;
+    document.body.className='theme-'+id;
+    document.querySelectorAll('.swatch').forEach(s=>s.classList.toggle('on',s.dataset.t===id));
+    if(!silent && window.SH && SH.user){ SH.saveTheme(id); toast("Theme saved to your account ✨"); }
+  }
+
+  // ── AUTH ──
+  async function loadShelf(){
+    const [r1, r2]=await Promise.all([
+      sb.from('shelf').select('*').order('created_at',{ascending:false}),
+      sb.from('book_tags').select('book_key,spice')
+    ]);
+    if(r1.error) throw r1.error;
+    if(r2.error) throw r2.error;
+    shelf=r1.data||[]; spiceMap={};
+    (r2.data||[]).forEach(t=>{ if(t.spice) spiceMap[t.book_key]=t.spice; });
+  }
+
+  function renderGate(){
+    document.getElementById('body').innerHTML=`<div class="gate">
+      <h2>Log in to open your bookcase 📚</h2>
+      <p>Your shelves, ratings, and theme live here — just for you.</p>
+      <div class="row" style="justify-content:center"><button class="btn" style="padding:.8em 1.6em" onclick="SH.openAuth()">Log in / Sign up</button></div>
+    </div>`;
+  }
+
+  function bookCover(b,cls){
+    const h=120+(hash(b.book_key||b.key||'')%26); // 120–145px for a natural shelf line
+    return b.cover_i
+      ? `<img class="${cls}" src="https://covers.openlibrary.org/b/id/${b.cover_i}-L.jpg" style="height:${h}px" alt="" onerror="this.outerHTML='<div class=\\'${cls.replace('bcov','ph')}\\' style=\\'height:${h}px\\'>'+(this.alt||'')+'</div>'">`
+      : `<div class="ph" style="height:${h}px">${b.title||''}</div>`;
+  }
+
+  function renderCase(){
+    const total=shelf.length;
+    document.getElementById('sub').textContent = total ? `${total} book${total>1?'s':''} on your shelves — decorate them, show them off.` : "Empty shelves… for now. Go find some trouble.";
+    document.getElementById('body').innerHTML = `<div class="case">${STATUSES.map(([st,label])=>{
+      const items=shelf.filter(b=>b.status===st);
+      const books = items.length
+        ? items.map(b=>{
+            const sp=spiceMap[b.book_key]||0;
+            const cov = b.cover_i
+              ? `<img class="bcov" src="https://covers.openlibrary.org/b/id/${b.cover_i}-L.jpg" style="height:${120+hash(b.book_key)%26}px" alt="${(b.title||'').replace(/"/g,'')}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="ph" style="height:${120+hash(b.book_key)%26}px;display:none">${b.title||''}</div>`
+              : `<div class="ph" style="height:${120+hash(b.book_key)%26}px">${b.title||''}</div>`;
+            return `<div class="book" onclick="openBook('${b.book_key}')">${cov}${sp?`<span class="sp">${sp}🌶️</span>`:''}</div>`;
+          }).join('')
+        : `<div class="empty-shelf">This shelf is bare.</div>`;
+      return `<div class="shelf">
+        <div class="plate">${label} <span class="ct">${items.length}</span></div>
+        <div class="row"><div class="books">${books}</div><div class="plank"></div></div>
+      </div>`;
+    }).join('')}</div>`;
+  }
+
+  // ── BOOK DETAIL SHEET ──
+  function openBook(key){
+    const b=shelf.find(x=>x.book_key===key); if(!b) return;
+    const sp=spiceMap[key]||0;
+    const cov = b.cover_i
+      ? `<img src="https://covers.openlibrary.org/b/id/${b.cover_i}-L.jpg" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="ph" style="display:none">${b.title||''}</div>`
+      : `<div class="ph">${b.title||''}</div>`;
+    const chilis=[1,2,3,4,5].map(n=>`<span data-n="${n}" class="${sp>=n?'on':''}">🌶️</span>`).join('');
+    const moves=STATUSES.filter(([s])=>s!==b.status).map(([s,l])=>`<button class="pillbtn" onclick="setStatus('${key}','${s}')">→ ${l}</button>`).join('');
+    document.getElementById('sheetbg').innerHTML = `<div class="sheet">
+      <div class="top">
+        <div class="bigcov">${cov}</div>
+        <div>
+          <h3>${b.title||'Untitled'}</h3>
+          <div class="au">by ${b.author||'Unknown'}</div>
+          <div class="rate" id="srate" onclick="rate(event,'${key}')">${chilis}</div>
+        </div>
+      </div>
+      <div class="acts">
+        ${moves}
+        <button class="pillbtn rec" onclick="recommend('${key}')">↗ Recommend</button>
+        <button class="pillbtn rm" onclick="removeBook('${key}')">Remove</button>
+      </div></div>`;
+    document.getElementById('sheetbg').classList.add('open');
+  }
+  function closeSheet(){ document.getElementById('sheetbg').classList.remove('open'); }
+
+  async function setStatus(key,status){
+    const row=shelf.find(b=>b.book_key===key); if(row) row.status=status;
+    closeSheet(); renderCase();
+    await sb.from('shelf').update({status}).eq('book_key',key);
+    toast("Moved to "+STATUSES.find(s=>s[0]===status)[1]);
+  }
+  async function removeBook(key){
+    shelf=shelf.filter(b=>b.book_key!==key); closeSheet(); renderCase();
+    await sb.from('shelf').delete().eq('book_key',key);
+    toast("Removed from your bookcase");
+  }
+  async function rate(e,key){
+    const span=e.target.closest('span[data-n]'); if(!span) return;
+    const n=+span.dataset.n; spiceMap[key]=n;
+    document.querySelectorAll('#srate span').forEach(s=>s.classList.toggle('on',+s.dataset.n<=n));
+    await sb.from('book_tags').upsert({book_key:key,spice:n},{onConflict:'user_id,book_key'});
+    toast("Saved "+"🌶️".repeat(n));
+  }
+  function recommend(key){
+    const b=shelf.find(x=>x.book_key===key);
+    toast(`Reccing "${b?.title||'this'}" — shareable rec cards coming soon ↗`);
+  }
+</script>
+</body>
+</html>
