@@ -10,16 +10,34 @@
   const SH = window.SH = { sb:null, user:null, profile:null, configured, openAuth, saveTheme, logout };
 
   if (configured && window.supabase) {
-    SH.sb = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_KEY);
+    // Storage probe: privacy modes/extensions can block localStorage. Without it,
+    // login works on the current page (in memory) but is gone after navigation.
+    let storageOK = false;
+    try { localStorage.setItem('sh-probe','1'); storageOK = localStorage.getItem('sh-probe')==='1'; localStorage.removeItem('sh-probe'); } catch(e) {}
+    let savedSession = 'none';
+    if (storageOK) { try { savedSession = Object.keys(localStorage).some(k=>k.startsWith('sb-')&&k.includes('-auth-token')) ? 'yes' : 'none'; } catch(e) {} }
+    console.log('[smuthub auth] storage:', storageOK ? 'ok' : 'BLOCKED', '| saved session:', savedSession);
+    if (!storageOK) document.addEventListener('DOMContentLoaded', ()=>{
+      const s = document.getElementById('setup');
+      if (s) { s.textContent = "⚠️ Your browser is blocking site storage, so logins can't stick between pages. Allow site data for this site (or pause privacy extensions) and log in again."; s.classList.add('show'); }
+    });
+
+    SH.sb = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    });
     let booted = false;
-    SH.sb.auth.onAuthStateChange(async (event, session) => {
+    SH.sb.auth.onAuthStateChange((event, session) => {
       console.log('[smuthub auth]', event, session?.user?.email || 'no session');
       if (['INITIAL_SESSION','SIGNED_IN','SIGNED_OUT','TOKEN_REFRESHED','USER_UPDATED'].includes(event)) {
         booted = true;
-        SH.user = session ? session.user : null;
-        SH.profile = SH.user ? await loadProfile() : null;
-        renderAuthbox();
-        window.dispatchEvent(new CustomEvent('sh-auth', { detail: { user: SH.user, profile: SH.profile } }));
+        // Supabase holds an internal lock while dispatching auth events; awaiting
+        // other supabase calls inside this callback can deadlock. Defer all work.
+        setTimeout(async () => {
+          SH.user = session ? session.user : null;
+          SH.profile = SH.user ? await loadProfile() : null;
+          renderAuthbox();
+          window.dispatchEvent(new CustomEvent('sh-auth', { detail: { user: SH.user, profile: SH.profile } }));
+        }, 0);
       }
       if (location.hash.includes('access_token') || location.search.includes('code=')) {
         history.replaceState(null, '', location.pathname);
