@@ -373,37 +373,52 @@
   }
 
   // ── trending ──────────────────────────────────────────
-  async function loadTrending(){
-    if (trendingFetched){ renderTrending(trendingFetched); return; }
+  // Covers are resolved live from Open Library by title+author (cached per session),
+  // so trending.json only needs title/author/badge — no brittle, wrong cover IDs.
+  async function resolveCover(title, author){
+    const ck = 'sh_cov_' + title + '|' + (author||'');
+    try{ const c = sessionStorage.getItem(ck); if(c!==null) return c==='0' ? null : +c; }catch(_){}
     try{
-      const r = await fetch('trending.json',{cache:'no-cache'});
-      const d = await r.json();
-      trendingFetched = d.books || [];
-    }catch(e){
-      trendingFetched = [
-        { rank:1,key:'t1',title:'Powerless',author:'Lauren Roberts',cover_i:14627025,badge:'hot' },
-        { rank:2,key:'t2',title:'Quicksilver',author:'Callie Hart',cover_i:14820011,badge:'rising' },
-        { rank:3,key:'t3',title:'Wind & Truth',author:'Brandon Sanderson',cover_i:14688200,badge:'rising' },
-        { rank:4,key:'t4',title:'Serpent & Wings',author:'Carissa Broadbent',cover_i:13075729,badge:'rising' },
-        { rank:5,key:'t5',title:'Iron Flame',author:'Rebecca Yarros',cover_i:13986891,badge:'new' },
-        { rank:6,key:'t6',title:'Crescent City',author:'Sarah J. Maas',cover_i:10470548,badge:'rising' }
-      ];
+      const u = `https://openlibrary.org/search.json?title=${encodeURIComponent(title)}${author?`&author=${encodeURIComponent(author)}`:''}&fields=cover_i&limit=1`;
+      const d = await (await fetch(u)).json();
+      const ci = (d.docs && d.docs[0] && d.docs[0].cover_i) || null;
+      try{ sessionStorage.setItem(ck, ci?String(ci):'0'); }catch(_){}
+      return ci;
+    }catch(_){ return null; }
+  }
+  async function loadTrending(){
+    if (!trendingFetched){
+      try{
+        const d = await (await fetch('trending.json',{cache:'no-cache'})).json();
+        trendingFetched = d.books || [];
+      }catch(e){
+        trendingFetched = [
+          { rank:1,title:'Powerless',author:'Lauren Roberts',badge:'hot' },
+          { rank:2,title:'Quicksilver',author:'Callie Hart',badge:'rising' },
+          { rank:3,title:'Wind and Truth',author:'Brandon Sanderson',badge:'rising' },
+          { rank:4,title:'The Serpent and the Wings of Night',author:'Carissa Broadbent',badge:'rising' },
+          { rank:5,title:'Iron Flame',author:'Rebecca Yarros',badge:'new' },
+          { rank:6,title:'House of Earth and Blood',author:'Sarah J. Maas',badge:'rising' }
+        ];
+      }
     }
+    await Promise.all(trendingFetched.map(async b=>{ if(b._cover===undefined) b._cover = await resolveCover(b.title, b.author); }));
     renderTrending(trendingFetched);
   }
   function renderTrending(books){
-    $('trending').innerHTML = books.slice(0,6).map(b=>{
-      const cov = coverUrl(b.cover_i);
+    const withCovers = books.filter(b=>b._cover);   // only show books that have a real cover
+    $('trending').innerHTML = (withCovers.length?withCovers:books).slice(0,6).map(b=>{
+      const cov = coverUrl(b._cover);
       const badgeText = b.badge==='hot' ? `#${b.rank} HOT` : b.badge==='new' ? 'NEW' : `↑ #${b.rank}`;
       const badgeClass = b.badge==='hot' || b.badge==='new' ? 'hot' : '';
-      return `<div class="tile" onclick="openTrending('${esc(b.key)}','${esc(b.title)}')">
+      return `<div class="tile" onclick="openTrending('${esc(b.title)}')">
         ${cov?`<img src="${cov}" alt="" onerror="this.style.display='none'">`:''}
         <span class="badge rank ${badgeClass}">${badgeText}</span>
         <span class="ttitle">${esc(b.title)}</span>
       </div>`;
     }).join('');
   }
-  function openTrending(key,title){
+  function openTrending(title){
     if (!user){ if (window.SH) SH.openAuth(); return; }
     location.href = 'smuthub-app.html?q=' + encodeURIComponent(title);
   }

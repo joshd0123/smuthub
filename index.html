@@ -335,11 +335,16 @@
 <script src="config.js"></script>
 <script defer src="auth.js"></script>
 <script>
-  // Logged-in visitors who land on the marketing homepage get sent to their dashboard.
-  // Only fires on the bare homepage ('/' or '/index.html') so other pages never loop.
+  // Usher logged-in visitors to their dashboard ONLY on a cold arrival at the
+  // homepage (typed URL or external link). Internal navigation — e.g. clicking the
+  // smutHub logo from any page — keeps you here, so the logo always leads home.
   window.addEventListener('sh-auth', (e)=>{
+    if (!(e.detail && e.detail.user)) return;
     const onHome = location.pathname === '/' || location.pathname.endsWith('/index.html');
-    if (e.detail && e.detail.user && onHome) location.replace('dashboard.html');
+    if (!onHome) return;
+    let internal = false;
+    try { internal = !!document.referrer && new URL(document.referrer).origin === location.origin; } catch(_) {}
+    if (!internal) location.replace('dashboard.html');
   });
 </script>
 </body>

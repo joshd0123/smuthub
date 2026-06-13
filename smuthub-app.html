@@ -48,12 +48,12 @@
   .search button{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:0 24px;border-radius:99px;cursor:pointer}
   .status{text-align:center;color:var(--muted);margin:18px 0 4px;min-height:1.1em;font-size:.92rem}
 
-  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:10px 0 60px}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:10px 0 60px;align-items:start}
   @media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:520px){.grid{grid-template-columns:1fr}}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
-  .cover{aspect-ratio:3/4;position:relative;background:var(--ink-2)}
-  .cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .cover{aspect-ratio:3/4;position:relative;background:var(--ink-2);overflow:hidden}
+  .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
   .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;font-family:'Fraunces';font-style:italic;color:#fff;background:linear-gradient(160deg,#3a0d2a,#7a1238)}
   .meta{padding:14px 16px 16px;display:flex;flex-direction:column;gap:2px;flex:1}
   .title{font-family:'Fraunces';font-weight:500;font-size:1.08rem;line-height:1.15}
@@ -124,7 +124,10 @@
   }
 
   // ── SEARCH: fresh defaults each visit + relevance-sorted results ──
-  const DEFAULT_QUERIES = ['fantasy romance','romantasy','enemies to lovers romance','fae romance novel','dragon rider romance','paranormal romance','dark fantasy romance'];
+  const DEFAULT_QUERIES = ['subject:"fantasy romance"','subject:"paranormal romance"','subject:romance subject:fantasy','subject:romance subject:dragons','subject:romance subject:fae'];
+  // Browse results must read as romantasy — not just any book the catalog returns.
+  const ROMANCE_RX = /romance|romantasy|fantasy|fae|dragon|paranormal|vampire|werewolf/i;
+  function isRomantasy(b){ return Array.isArray(b.subject) && b.subject.some(s=>ROMANCE_RX.test(s)); }
 
   function scoreDoc(b, q){
     const t=(b.title||'').toLowerCase(), a=((b.author_name&&b.author_name[0])||'').toLowerCase();
@@ -145,11 +148,11 @@
     try{
       let url;
       if(typed){
-        url = `https://openlibrary.org/search.json?q=${encodeURIComponent(typed)}&fields=key,title,author_name,cover_i&limit=30`;
+        url = `https://openlibrary.org/search.json?q=${encodeURIComponent(typed)}&fields=key,title,author_name,cover_i,subject&limit=30`;
       } else {
         const q = DEFAULT_QUERIES[Math.floor(Math.random()*DEFAULT_QUERIES.length)];
         const offset = [0,20,40][Math.floor(Math.random()*3)];
-        url = `https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&fields=key,title,author_name,cover_i&limit=30&offset=${offset}`;
+        url = `https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&fields=key,title,author_name,cover_i,subject&limit=40&offset=${offset}`;
       }
       const r=await fetch(url); const d=await r.json();
       let docs=(d.docs||[]).filter(x=>x.title);
@@ -157,10 +160,11 @@
         const q=typed.toLowerCase();
         docs = docs.map(b=>[scoreDoc(b,q),b]).sort((x,y)=>y[0]-x[0]).map(x=>x[1]);
       } else {
-        docs = docs.sort((x,y)=>(y.cover_i?1:0)-(x.cover_i?1:0)); // covers first for browsing
+        // Browsing: romantasy only, and only books that actually have a cover.
+        docs = docs.filter(b=>b.cover_i && isRomantasy(b));
       }
       lastDocs = docs.slice(0,16);
-      st.innerHTML = lastDocs.length ? `Showing <b style="color:var(--cream)">${lastDocs.length}</b> real books` : "No books found.";
+      st.innerHTML = lastDocs.length ? `Showing <b style="color:var(--cream)">${lastDocs.length}</b> real books` : "No books found — try a title or author.";
       render();
     }catch(e){ console.error('search failed', e); st.textContent="Couldn't reach the book catalog — try again in a moment."; }
   }
