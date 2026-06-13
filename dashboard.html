@@ -271,6 +271,15 @@
   function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1700); }
   function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   function coverUrl(cover_i){ return cover_i ? `https://covers.openlibrary.org/b/id/${cover_i}-L.jpg` : null; }
+  // Shelf order: manual sort_order ascending; un-ordered (new) books float to the
+  // top by recency until the next reorder on the bookshelf.
+  function shelfCmp(a,b){
+    const ao=a.sort_order, bo=b.sort_order;
+    if(ao==null && bo==null) return (b.created_at||'').localeCompare(a.created_at||'');
+    if(ao==null) return -1;
+    if(bo==null) return 1;
+    return ao-bo;
+  }
   function pickQuip(){
     const used = JSON.parse(sessionStorage.getItem('sh_used_quips')||'[]');
     let pool = QUIPS.filter(q=>!used.includes(q));
@@ -295,11 +304,8 @@
     sessionStorage.setItem('sh_quip_hidden','1');
   };
 
-  // ── feedback gate ─────────────────────────────────────
-  $('fbBtn').onclick = ()=>{
-    if (user){ toast("Feedback form coming in v2 — for now, the button just smiles back at you 💌"); return; }
-    if (window.SH && SH.openAuth) SH.openAuth();
-  };
+  // ── feedback gate (members only — handled by the shared auth layer) ──
+  $('fbBtn').onclick = ()=>{ if (window.SH && SH.openFeedback) SH.openFeedback(); };
 
   // ── auth wiring ───────────────────────────────────────
   window.addEventListener('sh-auth', async (e)=>{
@@ -315,10 +321,10 @@
     } else if (sb){
       try{
         const [{data:s},{data:t}] = await Promise.all([
-          sb.from('shelf').select('book_key,status,title,author,cover_i,created_at').order('created_at',{ascending:false}),
+          sb.from('shelf').select('*'),
           sb.from('book_tags').select('book_key,spice')
         ]);
-        myShelf = s || [];
+        myShelf = (s || []).sort(shelfCmp);
         mySpice = Object.fromEntries((t||[]).filter(r=>r.spice).map(r=>[r.book_key,r.spice]));
       }catch(err){ console.warn('shelf load', err); myShelf = []; mySpice = {}; }
     }

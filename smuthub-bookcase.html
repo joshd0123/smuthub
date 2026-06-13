@@ -79,9 +79,11 @@
   .row{position:relative}
   .books{display:flex;gap:14px;align-items:flex-end;overflow-x:auto;padding:6px 6px 0;min-height:150px;scrollbar-width:thin}
   .books::-webkit-scrollbar{height:6px}.books::-webkit-scrollbar-thumb{background:var(--wood);border-radius:99px}
-  .book{flex:0 0 auto;width:92px;cursor:pointer;transition:transform .18s ease;position:relative;
+  .book{flex:0 0 auto;width:92px;cursor:grab;transition:transform .18s ease;position:relative;
     filter:drop-shadow(0 10px 8px rgba(0,0,0,.55))}
   .book:hover{transform:translateY(-12px) rotate(-1deg)}
+  .book.dragging{opacity:.35;cursor:grabbing}
+  .books.dropok{outline:2px dashed var(--accent);outline-offset:6px;border-radius:6px}
   .book .bcov{width:100%;border-radius:2px 5px 5px 2px;display:block;object-fit:cover;
     border-left:3px solid rgba(0,0,0,.35);box-shadow:inset -6px 0 10px -6px rgba(0,0,0,.6)}
   .book .ph{width:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;
@@ -151,7 +153,7 @@
     {id:'academia',name:'Dark Academia',    color:'#6e3c2a'},
     {id:'boudoir', name:'Candlelit Boudoir',color:'#6e2c46'},
   ]; // beta: all themes unlocked
-  const STATUSES=[['want','Want to Read'],['reading','Currently Reading'],['read','Read & Rated']];
+  const STATUSES=[['want','Want to Read'],['reading','Currently Reading'],['read','Read & Rated'],['dnf','Did Not Finish']];
   let sb=null, user=null, shelf=[], spiceMap={}, theme='walnut';
 
   // theme picker
@@ -186,12 +188,12 @@
   // ── AUTH ──
   async function loadShelf(){
     const [r1, r2]=await Promise.all([
-      sb.from('shelf').select('*').order('created_at',{ascending:false}),
+      sb.from('shelf').select('*'),
       sb.from('book_tags').select('book_key,spice')
     ]);
     if(r1.error) throw r1.error;
     if(r2.error) throw r2.error;
-    shelf=r1.data||[]; spiceMap={};
+    shelf=(r1.data||[]).sort(shelfCmp); spiceMap={};
     (r2.data||[]).forEach(t=>{ if(t.spice) spiceMap[t.book_key]=t.spice; });
   }
 
@@ -206,22 +208,85 @@
   function renderCase(){
     const total=shelf.length;
     document.getElementById('sub').textContent = total ? `${total} book${total>1?'s':''} on your shelves — decorate them, show them off.` : "Empty shelves… for now. Go find some trouble.";
+    const ordered=[...shelf].sort(shelfCmp);
     document.getElementById('body').innerHTML = `<div class="case">${STATUSES.map(([st,label])=>{
-      const items=shelf.filter(b=>b.status===st);
+      const items=ordered.filter(b=>b.status===st);
       const books = items.length
         ? items.map(b=>{
             const sp=spiceMap[b.book_key]||0;
             const cov = b.cover_i
               ? `<img class="bcov" src="https://covers.openlibrary.org/b/id/${b.cover_i}-L.jpg" style="height:${120+hash(b.book_key)%26}px" alt="${(b.title||'').replace(/"/g,'')}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="ph" style="height:${120+hash(b.book_key)%26}px;display:none">${b.title||''}</div>`
               : `<div class="ph" style="height:${120+hash(b.book_key)%26}px">${b.title||''}</div>`;
-            return `<div class="book" onclick="openBook('${b.book_key}')">${cov}${sp?`<span class="sp">${sp}🌶️</span>`:''}</div>`;
+            return `<div class="book" draggable="true" data-key="${b.book_key}" onclick="openBook('${b.book_key}')">${cov}${sp?`<span class="sp">${sp}🌶️</span>`:''}</div>`;
           }).join('')
         : `<div class="empty-shelf">This shelf is bare.</div>`;
       return `<div class="shelf">
         <div class="plate">${label} <span class="ct">${items.length}</span></div>
-        <div class="row"><div class="books">${books}</div><div class="plank"></div></div>
+        <div class="row"><div class="books" data-status="${st}">${books}</div><div class="plank"></div></div>
       </div>`;
-    }).join('')}</div>`;
+    }).join('')}</div>
+    ${total?`<p class="themenote">✋ Drag books to reorder, or drop them on another shelf to move them. Whatever sits first shows on your dashboard.</p>`:''}`;
+    attachDnD();
+  }
+
+  // ── DRAG & DROP (reorder within a shelf, or move between shelves) ──
+  let draggedEl=null;
+  function shelfCmp(a,b){
+    const ao=a.sort_order, bo=b.sort_order;
+    if(ao==null && bo==null) return (b.created_at||'').localeCompare(a.created_at||'');
+    if(ao==null) return -1;
+    if(bo==null) return 1;
+    return ao-bo;
+  }
+  function attachDnD(){
+    document.querySelectorAll('#body .book').forEach(el=>{
+      el.addEventListener('dragstart', ()=>{ draggedEl=el; setTimeout(()=>el.classList.add('dragging'),0); });
+      el.addEventListener('dragend', onDragEnd);
+    });
+    document.querySelectorAll('#body .books').forEach(c=>{
+      c.addEventListener('dragover', e=>{
+        e.preventDefault();
+        if(!draggedEl) return;
+        document.querySelectorAll('#body .books.dropok').forEach(x=>{ if(x!==c) x.classList.remove('dropok'); });
+        c.classList.add('dropok');
+        const empty=c.querySelector('.empty-shelf'); if(empty) empty.remove();
+        const after=dragAfterElement(c, e.clientX);
+        if(after==null) c.appendChild(draggedEl); else c.insertBefore(draggedEl, after);
+      });
+    });
+  }
+  function dragAfterElement(container, x){
+    const els=[...container.querySelectorAll('.book:not(.dragging)')];
+    let closest={offset:-Infinity, el:null};
+    for(const el of els){ const box=el.getBoundingClientRect(); const offset=x-(box.left+box.width/2); if(offset<0 && offset>closest.offset) closest={offset, el}; }
+    return closest.el;
+  }
+  async function onDragEnd(){
+    if(draggedEl) draggedEl.classList.remove('dragging');
+    document.querySelectorAll('#body .books.dropok').forEach(x=>x.classList.remove('dropok'));
+    draggedEl=null;
+    const changed=commitOrder();
+    renderCase();
+    if(changed.length) await persistOrder(changed);
+  }
+  function commitOrder(){
+    let idx=0; const changed=[];
+    document.querySelectorAll('#body .books').forEach(c=>{
+      const status=c.dataset.status;
+      c.querySelectorAll('.book').forEach(el=>{
+        const row=shelf.find(b=>b.book_key===el.dataset.key);
+        if(row && (row.sort_order!==idx || row.status!==status)){ row.sort_order=idx; row.status=status; changed.push(row); }
+        idx++;
+      });
+    });
+    return changed;
+  }
+  async function persistOrder(changed){
+    for(const row of changed){
+      const { error } = await sb.from('shelf').update({ sort_order: row.sort_order, status: row.status }).eq('book_key', row.book_key);
+      if(error){ console.error('reorder save', error); toast(/sort_order|column/i.test(error.message) ? "Run smuthub-add-sort-order.sql in Supabase to save ordering" : "Couldn't save order: "+error.message); return; }
+    }
+    toast("Order saved ✨");
   }
 
   // ── BOOK DETAIL SHEET ──

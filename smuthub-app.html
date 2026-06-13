@@ -63,6 +63,9 @@
   .spice span.on{filter:none;opacity:1}
   .shelfbtn{margin-top:10px;background:none;border:1px solid var(--line);color:var(--muted);font-family:inherit;font-weight:700;font-size:.82rem;padding:.5em;border-radius:10px;cursor:pointer}
   .shelfbtn.on{background:var(--grad);color:#1a0c10;border-color:transparent}
+  .addrow{margin-top:10px;display:flex;gap:6px}
+  .addrow .shelfbtn{margin-top:0;flex:0 0 auto}
+  .statussel{flex:1;min-width:0;background:var(--ink-2);border:1px solid var(--line);color:var(--cream);font-family:inherit;font-weight:700;font-size:.78rem;padding:.5em;border-radius:10px;cursor:pointer}
 
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink-2);border:1px solid var(--rose);color:var(--cream);padding:.7em 1.2em;border-radius:99px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:90}
   .toast.show{opacity:1}
@@ -104,11 +107,12 @@
 <script>
   // Shared auth (config.js + auth.js). This page just listens.
   let sb=null, user=null, lastDocs=[];
-  const spiceMap={}, shelfSet=new Set();
+  const spiceMap={}, shelfSet=new Set(), shelfStatus={};
+  const STATUS_LABEL={want:'Want',reading:'Reading',read:'Read',dnf:'DNF'};
   window.addEventListener('sh-auth', async (e)=>{
     sb = window.SH.sb; user = e.detail.user;
     if(window.SH && !window.SH.configured) document.getElementById('setup').classList.add('show');
-    if(user){ await loadMine(); } else { Object.keys(spiceMap).forEach(k=>delete spiceMap[k]); shelfSet.clear(); }
+    if(user){ await loadMine(); } else { Object.keys(spiceMap).forEach(k=>delete spiceMap[k]); shelfSet.clear(); Object.keys(shelfStatus).forEach(k=>delete shelfStatus[k]); }
     render();
   });
 
@@ -117,10 +121,10 @@
   async function loadMine(){
     const [{data:tags}, {data:shelf}] = await Promise.all([
       sb.from('book_tags').select('book_key,spice'),
-      sb.from('shelf').select('book_key')
+      sb.from('shelf').select('book_key,status')
     ]);
     (tags||[]).forEach(t=>{ if(t.spice) spiceMap[t.book_key]=t.spice; });
-    (shelf||[]).forEach(s=>shelfSet.add(s.book_key));
+    (shelf||[]).forEach(s=>{ shelfSet.add(s.book_key); shelfStatus[s.book_key]=s.status||'want'; });
   }
 
   // ── SEARCH: fresh defaults each visit + relevance-sorted results ──
@@ -176,6 +180,22 @@
   }
   const idOf=k=>'b_'+k.replace(/[^a-z0-9]/gi,'');
 
+  function addControlHTML(key, id, on){
+    const cur = shelfStatus[key]||'';
+    const opts = [['want','Want to Read'],['reading','Currently Reading'],['read','Read'],['dnf','DNF']]
+      .map(([v,l])=>`<option value="${v}" ${cur===v?'selected':''}>${l}</option>`).join('');
+    if(on){
+      return `<div class="addrow">
+        <button class="shelfbtn on" data-act="remove" id="sh_${id}" title="Tap to remove">✓ ${STATUS_LABEL[cur]||'Shelved'}</button>
+        <select class="statussel" aria-label="Change shelf">${opts}</select>
+      </div>`;
+    }
+    return `<div class="addrow">
+      <button class="shelfbtn" data-act="quickread" id="sh_${id}">✓ Read</button>
+      <select class="statussel" aria-label="Add to shelf"><option value="" selected>＋ Shelf as…</option>${opts}</select>
+    </div>`;
+  }
+
   function render(){
     document.getElementById('grid').innerHTML = lastDocs.map(b=>{
       const id=idOf(b.key), sp=spiceMap[b.key]||0, on=shelfSet.has(b.key);
@@ -187,7 +207,7 @@
           <div class="title">${b.title}</div>
           <div class="author">by ${author}</div>
           <div class="spice" id="sp_${id}">${chilis}</div>
-          <button class="shelfbtn ${on?'on':''}" id="sh_${id}">${on?'✓ On your shelf':'＋ Add to shelf'}</button>
+          ${addControlHTML(b.key, id, on)}
         </div></article>`;
     }).join('');
   }
@@ -213,23 +233,39 @@
       return;
     }
 
-    // shelf button tap
-    if(e.target.closest('.shelfbtn')){
+    // shelf button tap — quick "Read" add, or remove
+    const sbtn = e.target.closest('.shelfbtn');
+    if(sbtn){
       if(!user){ toast("Log in to build your shelf"); return; }
-      const btn = document.getElementById('sh_'+id);
-      if(shelfSet.has(key)){
-        const {error} = await sb.from('shelf').delete().eq('book_key',key);
-        if(error){ toast("Couldn't remove: "+error.message); console.error('shelf delete', error); return; }
-        shelfSet.delete(key); btn.classList.remove('on'); btn.textContent='＋ Add to shelf';
-        toast("Removed from shelf");
-      } else {
-        const {error} = await sb.from('shelf').upsert({book_key:key, status:'want', title:book.title||null, author:(book.author_name&&book.author_name[0])||null, cover_i:book.cover_i||null},{onConflict:'user_id,book_key'});
-        if(error){ toast("Save failed: "+error.message); console.error('shelf save', error); return; }
-        shelfSet.add(key); btn.classList.add('on'); btn.textContent='✓ On your shelf';
-        toast("Added to your shelf 📚");
-      }
+      if(sbtn.dataset.act==='remove') await removeFromShelf(key);
+      else await shelveBook(key, 'read', book);
     }
   });
+
+  // status dropdown → add (or move) the book to the chosen shelf
+  document.getElementById('grid').addEventListener('change', async (e)=>{
+    const sel = e.target.closest('.statussel'); if(!sel) return;
+    const card = e.target.closest('article.card'); if(!card) return;
+    if(!user){ toast("Log in to build your shelf"); sel.value=''; return; }
+    const key = decodeURIComponent(card.dataset.key);
+    const book = lastDocs.find(x=>x.key===key) || {};
+    if(sel.value) await shelveBook(key, sel.value, book);
+  });
+
+  async function shelveBook(key, status, book){
+    const payload = { book_key:key, status };
+    if(book){ payload.title=book.title||null; payload.author=(book.author_name&&book.author_name[0])||null; payload.cover_i=book.cover_i||null; }
+    const { error } = await sb.from('shelf').upsert(payload,{onConflict:'user_id,book_key'});
+    if(error){ toast("Save failed: "+error.message); console.error('shelf save', error); return; }
+    shelfSet.add(key); shelfStatus[key]=status; render();
+    toast("Shelved as "+(STATUS_LABEL[status]||status)+" 📚");
+  }
+  async function removeFromShelf(key){
+    const { error } = await sb.from('shelf').delete().eq('book_key',key);
+    if(error){ toast("Couldn't remove: "+error.message); console.error('shelf delete', error); return; }
+    shelfSet.delete(key); delete shelfStatus[key]; render();
+    toast("Removed from shelf");
+  }
 
   document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')run();});
   // Pre-fill the search from ?q= (deep links from the dashboard land here).
