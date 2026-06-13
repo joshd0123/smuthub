@@ -75,8 +75,9 @@
   <div class="nav wrap">
     <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
+      <a href="dashboard.html">Dashboard</a>
       <a href="smuthub-app.html" class="on">Search</a>
-      <a href="smuthub-bookcase.html">My Bookcase</a>
+      <a href="smuthub-bookcase.html">My Bookshelf</a>
       <a href="stores.html">Find a Store</a>
     </nav>
     <div class="authbox" id="authbox"></div>
@@ -227,6 +228,9 @@
   });
 
   document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')run();});
+  // Pre-fill the search from ?q= (deep links from the dashboard land here).
+  const qParam = new URLSearchParams(location.search).get('q');
+  if(qParam) document.getElementById('q').value = qParam;
   run();
 </script>
 </body>

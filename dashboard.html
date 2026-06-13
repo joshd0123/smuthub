@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmutHub — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script defer src="auth.js"></script>
+<style>
+  :root{
+    --ink:#0c0708;--bar:#120c0e;--panel:#1c1316;--ink-2:#150e10;--line:#2a1d22;
+    --cream:#f4e8e3;--muted:#a98a82;--dim:#6b4f4d;
+    --rose:#ff3d76;--amber:#ffab40;--green:#7adc96;
+    --grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%);
+    --ph:linear-gradient(160deg,#3a0d2a,#7a1238);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(800px 500px at 10% -5%,rgba(255,61,118,.12),transparent 60%)}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+
+  /* ── shared header (identical on every page) ── */
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap}
+  .navlinks{display:flex;gap:18px}
+  .navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none;transition:color .2s}
+  .navlinks a.on,.navlinks a:hover{color:var(--cream)}
+  @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
+  .authbox{display:flex;align-items:center;gap:8px}
+
+  /* ── SEARCH BAR (shelf-first) ── */
+  .searchwrap{padding:20px 0 6px}
+  .sbar{background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:7px 7px 7px 18px;display:flex;align-items:center;gap:10px}
+  .sbar .ic{font-size:1rem;color:var(--muted)}
+  .sbar input{flex:1;background:none;border:0;color:var(--cream);font-family:inherit;font-size:.95rem;outline:none;padding:.4em 0}
+  .sbar input::placeholder{color:var(--muted);opacity:.7}
+  .sbar button{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:.55em 1.2em;border-radius:99px;font-size:.84rem;cursor:pointer}
+  .shelfhint{margin-top:6px;color:var(--dim);font-size:.74rem;padding-left:18px}
+  .shelfhint em{color:var(--muted);font-style:italic}
+
+  /* Search results panel */
+  .results{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;display:none}
+  .results.show{display:block}
+  .rgroup h4{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin:6px 4px 8px;font-weight:800}
+  .rrow{display:flex;align-items:center;gap:12px;padding:8px;border-radius:10px;cursor:pointer;transition:background .12s}
+  .rrow:hover{background:var(--ink-2)}
+  .rcov{width:36px;height:48px;border-radius:4px;flex-shrink:0;background:var(--ink-2);overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-style:italic;font-size:.6rem;color:#fff;background:var(--ph);text-align:center;padding:2px}
+  .rcov img{width:100%;height:100%;object-fit:cover}
+  .rinfo{flex:1;min-width:0}
+  .rinfo .t{font-family:'Fraunces',serif;font-weight:500;font-size:.95rem;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rinfo .a{color:var(--muted);font-size:.78rem}
+  .rstat{font-size:.7rem;font-weight:700;padding:.22em .6em;border-radius:99px;white-space:nowrap}
+  .rstat.read{background:rgba(122,220,150,.18);color:var(--green)}
+  .rstat.reading{background:rgba(255,61,118,.18);color:var(--rose)}
+  .rstat.want{background:rgba(255,171,64,.18);color:var(--amber)}
+  .rstat.dnf{background:rgba(255,255,255,.12);color:var(--muted)}
+  .rstat.none{background:none;color:var(--amber);border:1px solid var(--line)}
+
+  /* ── WELCOME ── */
+  .welcome{padding:14px 0 4px}
+  .welcome h1{font-family:'Fraunces',serif;font-weight:500;font-size:1.55rem;letter-spacing:-.01em}
+  .welcome h1 em{font-style:italic;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text;font-weight:400}
+  .quipbar{margin-top:4px;display:flex;gap:8px;align-items:center}
+  .quip{color:var(--muted);font-style:italic;font-size:.9rem;flex:1}
+  .iconbtn{background:none;border:1px solid var(--line);color:var(--muted);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:.85rem;transition:all .15s}
+  .iconbtn:hover{border-color:var(--rose);color:var(--cream)}
+  .iconbtn:disabled{opacity:.4;cursor:not-allowed}
+  .pills{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+  .pill{font-size:.7rem;font-weight:700;letter-spacing:.04em;padding:.3em .7em;border-radius:99px}
+  .pill.a{background:rgba(255,171,64,.16);color:var(--amber)}
+  .pill.b{background:rgba(255,61,118,.16);color:#ff7a8f}
+  .pill.c{background:rgba(122,220,150,.16);color:var(--green)}
+
+  /* ── SECTIONS ── */
+  section{padding:20px 0 4px}
+  .sechead{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;gap:10px;flex-wrap:wrap}
+  .sechead h2{font-family:'Fraunces',serif;font-size:1.15rem;font-weight:600}
+  .sechead .note{font-size:.78rem;color:var(--muted);font-style:italic;margin-left:8px}
+  .sechead a{color:var(--amber);font-weight:700;font-size:.78rem}
+
+  .row6{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+  @media(max-width:880px){.row6{grid-template-columns:repeat(4,1fr)}}
+  @media(max-width:520px){.row6{grid-template-columns:repeat(3,1fr)}}
+
+  .tile{position:relative;aspect-ratio:3/4;border-radius:8px;overflow:hidden;display:flex;align-items:flex-end;padding:6px;color:#fff;font-family:'Fraunces',serif;font-style:italic;font-size:.7rem;text-shadow:0 1px 6px rgba(0,0,0,.6);cursor:pointer;background:var(--ph)}
+  .tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+  .tile .ttitle{position:relative;z-index:2;line-height:1.1}
+  .tile.dnf{filter:grayscale(.5)}
+  .tile.empty{cursor:default;background:none;border:1.5px dashed rgba(255,171,64,.55);color:var(--amber);align-items:center;justify-content:center;text-align:center;font-family:inherit;font-style:normal;text-shadow:none}
+  .tile.empty:hover{border-color:var(--amber);background:rgba(255,171,64,.06)}
+  .tile.empty .plus{font-size:1.3rem;line-height:1}
+  .tile.empty .lab{font-size:.7rem;font-weight:700;margin-top:3px}
+  .tile.empty .sub{font-size:.6rem;color:var(--muted);margin-top:2px}
+  .badge{position:absolute;font-size:.55rem;font-weight:800;padding:.15em .42em;border-radius:3px;z-index:3;letter-spacing:.04em}
+  .badge.status{top:5px;right:5px;color:#fff}
+  .badge.status.reading{background:rgba(255,61,118,.85)}
+  .badge.status.want{background:rgba(255,171,64,.9);color:#1a0c10}
+  .badge.status.read{background:rgba(122,220,150,.85);color:#0a2014}
+  .badge.status.dnf{background:rgba(255,255,255,.22);color:#fff}
+  .badge.rank{top:5px;left:5px;color:#fff;background:rgba(8,4,5,.78)}
+  .badge.rank.hot{background:var(--grad);color:#1a0c10}
+  .badge.rank.new{background:var(--grad);color:#1a0c10}
+  .spice{position:absolute;bottom:5px;right:5px;font-size:.6rem;letter-spacing:.04em;z-index:3}
+
+  /* ── PLACEHOLDER ROOMS ── */
+  .rooms{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  @media(max-width:760px){.rooms{grid-template-columns:repeat(2,1fr)}}
+  .room{background:var(--ink-2);border:1px dashed var(--line);border-radius:10px;padding:12px;text-align:center}
+  .room .ico{font-size:1.1rem;margin-bottom:4px}
+  .room .nm{font-weight:700;font-size:.84rem}
+  .room .sb{color:var(--muted);font-size:.7rem;margin-top:2px}
+  .room .gem{color:var(--amber)}
+
+  /* ── FEEDBACK ── */
+  .feedback{margin:22px 0 0;padding:18px 20px;background:linear-gradient(100deg,rgba(255,61,118,.08),rgba(255,171,64,.08));border:1px solid rgba(255,171,64,.25);border-radius:14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .feedback .em{font-size:1.5rem}
+  .feedback .copy{flex:1;min-width:200px}
+  .feedback .ti{font-family:'Fraunces',serif;font-weight:600;font-size:1rem}
+  .feedback .ti em{font-style:italic;color:var(--amber)}
+  .feedback .sb{color:var(--muted);font-size:.84rem;margin-top:2px}
+  .feedback button{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:.6em 1.2em;border-radius:99px;font-size:.85rem;cursor:pointer}
+
+  /* ── FOOTER ── */
+  footer{border-top:1px solid var(--line);padding:22px;color:var(--dim);font-size:.78rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:36px}
+  footer a{color:var(--muted)}
+
+  /* ── DEMO BANNER (logged-out) ── */
+  .demobar{display:none;background:linear-gradient(100deg,rgba(255,61,118,.12),rgba(255,171,64,.12));border-bottom:1px solid rgba(255,171,64,.35);padding:10px 22px;font-size:.86rem;text-align:center;color:var(--cream)}
+  .demobar.show{display:block}
+  .demobar b{color:var(--amber)}
+  .demobar button{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:.4em 1em;border-radius:99px;font-size:.78rem;cursor:pointer;margin-left:8px}
+
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink-2);border:1px solid var(--rose);color:var(--cream);padding:.7em 1.2em;border-radius:99px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:90}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
+    <nav class="navlinks">
+      <a href="dashboard.html" class="on">Dashboard</a>
+      <a href="smuthub-app.html">Search</a>
+      <a href="smuthub-bookcase.html">My Bookshelf</a>
+      <a href="stores.html">Find a Store</a>
+    </nav>
+    <div id="authbox" style="display:flex;align-items:center;gap:8px"></div>
+  </div>
+</header>
+
+<div class="demobar" id="demobar">
+  👀 You're viewing a <b>demo dashboard</b> — sign up to make this yours.
+  <button onclick="SH.openAuth()">Join free</button>
+</div>
+
+<main class="wrap">
+
+  <!-- SEARCH -->
+  <div class="searchwrap">
+    <div class="sbar">
+      <span class="ic">🔍</span>
+      <input id="q" type="text" placeholder="Have you read this? Search any title or author…" autocomplete="off">
+      <button onclick="runSearch()">Search</button>
+    </div>
+    <div class="shelfhint">Searches your shelf <em>first</em>, then everything else.</div>
+    <div class="results" id="results"></div>
+  </div>
+
+  <!-- WELCOME -->
+  <div class="welcome">
+    <h1>Welcome back, <em id="hellName">friend</em></h1>
+    <div class="quipbar" id="quipbar">
+      <span class="quip" id="quip"></span>
+      <button class="iconbtn" id="quipRefresh" title="Another one">↻</button>
+      <button class="iconbtn" id="quipHide" title="Hide">✕</button>
+    </div>
+    <div class="pills" id="pills"></div>
+  </div>
+
+  <!-- YOUR READING -->
+  <section>
+    <div class="sechead">
+      <div><h2>📖 Your reading <span class="note">pick up where you left off</span></h2></div>
+      <a href="smuthub-bookcase.html">My bookshelf →</a>
+    </div>
+    <div class="row6" id="reading"></div>
+  </section>
+
+  <!-- TRENDING -->
+  <section>
+    <div class="sechead">
+      <div><h2>🔥 Trending this week <span class="note">the romantasy internet collectively lost it</span></h2></div>
+      <a href="smuthub-app.html">See more →</a>
+    </div>
+    <div class="row6" id="trending"></div>
+  </section>
+
+  <!-- ROOMS -->
+  <section>
+    <div class="sechead">
+      <div><h2>🏛️ More rooms coming to the Hub <span class="note">construction in progress · drag a plant in if you want</span></h2></div>
+    </div>
+    <div class="rooms">
+      <div class="room"><div class="ico">🐉</div><div class="nm">Trope of the Week</div><div class="sb">themed mini-lists</div></div>
+      <div class="room"><div class="ico">🎯</div><div class="nm">For You</div><div class="sb">your daily rec</div></div>
+      <div class="room"><div class="ico">💬</div><div class="nm">Community Pulse</div><div class="sb">polls &amp; hot takes</div></div>
+      <div class="room"><div class="ico">📸</div><div class="nm">Scan to Add</div><div class="sb">camera → shelf <span class="gem">💎</span></div></div>
+    </div>
+  </section>
+
+  <!-- FEEDBACK -->
+  <div class="feedback">
+    <div class="em">💌</div>
+    <div class="copy">
+      <div class="ti"><em>Feedback's a members-only club.</em></div>
+      <div class="sb">Bugs, hot takes, missing tropes — we read every note.</div>
+    </div>
+    <button id="fbBtn">Send feedback →</button>
+  </div>
+
+</main>
+
+<footer class="wrap">
+  <span>© SmutHub · the cheekiest corner of the romantasy internet</span>
+  <div style="display:flex;gap:14px">
+    <a href="sitemap.html">Sitemap</a>
+    <a href="#">Terms</a>
+    <a href="#">Privacy</a>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── data ──────────────────────────────────────────────
+  const QUIPS = [
+    "still pretending you're not feral over a fae prince. We see you.",
+    "your TBR called. It's getting jealous of your fictional husbands.",
+    "remember to drink water between chapters. We worry.",
+    "you said \"one more chapter\" three days ago. We're keeping the receipts.",
+    "your spice tolerance is concerning in the best way.",
+    "ready for another emotional injury? Right this way.",
+    "the morally grey men are getting restless. Come decide.",
+    "we promise the slow burn is worth it. Probably."
+  ];
+  const STATUS_LABELS = { reading:'📖 reading', want:'📌 want', read:'✓ read', dnf:'🪦 DNF' };
+  const DEMO_READING = [
+    { key:'demo-fw',     title:'Fourth Wing',  author:'Rebecca Yarros',  status:'reading', spice:4, cover_i:13986891 },
+    { key:'demo-acotar', title:'ACOTAR',       author:'Sarah J. Maas',   status:'want',    spice:0, cover_i:10470548 },
+    { key:'demo-onyx',   title:'Onyx Storm',   author:'Rebecca Yarros',  status:'read',    spice:5, cover_i:14627025 },
+    { key:'demo-dnf',    title:'That Other One', author:'Various',       status:'dnf',     spice:2, cover_i:null      }
+  ];
+
+  // ── state ─────────────────────────────────────────────
+  let sb=null, user=null;
+  let myShelf = [];          // logged-in user's shelf rows
+  let mySpice = {};          // book_key -> spice
+  let usedFreeRefresh = false;
+  let trendingFetched = null;
+
+  // ── helpers ───────────────────────────────────────────
+  const $ = id => document.getElementById(id);
+  function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1700); }
+  function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function coverUrl(cover_i){ return cover_i ? `https://covers.openlibrary.org/b/id/${cover_i}-L.jpg` : null; }
+  function pickQuip(){
+    const used = JSON.parse(sessionStorage.getItem('sh_used_quips')||'[]');
+    let pool = QUIPS.filter(q=>!used.includes(q));
+    if(!pool.length){ pool = QUIPS; sessionStorage.setItem('sh_used_quips','[]'); }
+    const q = pool[Math.floor(Math.random()*pool.length)];
+    sessionStorage.setItem('sh_used_quips', JSON.stringify([...used, q]));
+    return q;
+  }
+
+  // ── quip controls ─────────────────────────────────────
+  function setQuip(text){ $('quip').textContent = '— ' + text; }
+  setQuip(pickQuip());
+  // restore hidden state
+  if (sessionStorage.getItem('sh_quip_hidden')==='1') $('quipbar').style.display='none';
+  $('quipRefresh').onclick = ()=>{
+    if (usedFreeRefresh) { toast('That was your free refresh — more come with Premium ✨'); $('quipRefresh').disabled=true; return; }
+    usedFreeRefresh = true;
+    setQuip(pickQuip());
+  };
+  $('quipHide').onclick = ()=>{
+    $('quipbar').style.display='none';
+    sessionStorage.setItem('sh_quip_hidden','1');
+  };
+
+  // ── feedback gate ─────────────────────────────────────
+  $('fbBtn').onclick = ()=>{
+    if (user){ toast("Feedback form coming in v2 — for now, the button just smiles back at you 💌"); return; }
+    if (window.SH && SH.openAuth) SH.openAuth();
+  };
+
+  // ── auth wiring ───────────────────────────────────────
+  window.addEventListener('sh-auth', async (e)=>{
+    sb = window.SH ? window.SH.sb : null;
+    user = e.detail.user;
+    const display = user ? ((e.detail.profile && e.detail.profile.username) || user.email.split('@')[0]) : 'friend';
+    $('hellName').textContent = display;
+
+    if (!user){
+      $('demobar').classList.add('show');
+      myShelf = DEMO_READING;
+      mySpice = Object.fromEntries(DEMO_READING.filter(b=>b.spice).map(b=>[b.key,b.spice]));
+    } else if (sb){
+      try{
+        const [{data:s},{data:t}] = await Promise.all([
+          sb.from('shelf').select('book_key,status,title,author,cover_i,created_at').order('created_at',{ascending:false}),
+          sb.from('book_tags').select('book_key,spice')
+        ]);
+        myShelf = s || [];
+        mySpice = Object.fromEntries((t||[]).filter(r=>r.spice).map(r=>[r.book_key,r.spice]));
+      }catch(err){ console.warn('shelf load', err); myShelf = []; mySpice = {}; }
+    }
+
+    renderPills();
+    renderReading();
+    loadTrending();
+  });
+
+  // safety net for un-configured local opens
+  setTimeout(()=>{ if(!myShelf.length && !user){ $('demobar').classList.add('show'); myShelf = DEMO_READING; mySpice = Object.fromEntries(DEMO_READING.filter(b=>b.spice).map(b=>[b.key,b.spice])); renderPills(); renderReading(); loadTrending(); } }, 2800);
+
+  // ── pills ─────────────────────────────────────────────
+  function renderPills(){
+    const total = myShelf.length;
+    const spices = Object.values(mySpice);
+    const avg = spices.length ? (spices.reduce((a,b)=>a+b,0)/spices.length).toFixed(1) : '—';
+    $('pills').innerHTML = `
+      <span class="pill a">📚 ${total} ON YOUR SHELF</span>
+      <span class="pill b">🌶️ AVG SPICE ${avg}</span>
+      <span class="pill c">🔥 ROMANTASY READER</span>`;
+  }
+
+  // ── your reading ──────────────────────────────────────
+  function readingTileHTML(b){
+    const status = b.status || 'want';
+    const spice = mySpice[b.key] || mySpice[b.book_key] || b.spice;
+    const cov = coverUrl(b.cover_i);
+    const img = cov ? `<img src="${cov}" alt="" onerror="this.style.display='none'">` : '';
+    return `<div class="tile ${status==='dnf'?'dnf':''}" onclick="openBook('${esc(b.key||b.book_key)}')">
+      ${img}
+      <span class="badge status ${status}">${STATUS_LABELS[status]||status}</span>
+      ${spice?`<span class="spice">🌶️${spice}</span>`:''}
+      <span class="ttitle">${esc(b.title)}</span>
+    </div>`;
+  }
+  function renderReading(){
+    const slots = [...myShelf].slice(0,5);
+    const slotsHTML = slots.map(readingTileHTML).join('');
+    const nextTile = `<div class="tile empty" onclick="goAddNext()">
+      <div><div class="plus">+</div><div class="lab">Next Read</div><div class="sub">add to TBR</div></div>
+    </div>`;
+    $('reading').innerHTML = slotsHTML + nextTile;
+  }
+  function openBook(key){
+    if (!user){ if (window.SH) SH.openAuth(); return; }
+    location.href = 'smuthub-bookcase.html'; // detail sheet lives there for now
+  }
+  function goAddNext(){
+    if (!user){ if (window.SH) SH.openAuth(); return; }
+    location.href = 'smuthub-app.html'; // search → add
+  }
+
+  // ── trending ──────────────────────────────────────────
+  async function loadTrending(){
+    if (trendingFetched){ renderTrending(trendingFetched); return; }
+    try{
+      const r = await fetch('trending.json',{cache:'no-cache'});
+      const d = await r.json();
+      trendingFetched = d.books || [];
+    }catch(e){
+      trendingFetched = [
+        { rank:1,key:'t1',title:'Powerless',author:'Lauren Roberts',cover_i:14627025,badge:'hot' },
+        { rank:2,key:'t2',title:'Quicksilver',author:'Callie Hart',cover_i:14820011,badge:'rising' },
+        { rank:3,key:'t3',title:'Wind & Truth',author:'Brandon Sanderson',cover_i:14688200,badge:'rising' },
+        { rank:4,key:'t4',title:'Serpent & Wings',author:'Carissa Broadbent',cover_i:13075729,badge:'rising' },
+        { rank:5,key:'t5',title:'Iron Flame',author:'Rebecca Yarros',cover_i:13986891,badge:'new' },
+        { rank:6,key:'t6',title:'Crescent City',author:'Sarah J. Maas',cover_i:10470548,badge:'rising' }
+      ];
+    }
+    renderTrending(trendingFetched);
+  }
+  function renderTrending(books){
+    $('trending').innerHTML = books.slice(0,6).map(b=>{
+      const cov = coverUrl(b.cover_i);
+      const badgeText = b.badge==='hot' ? `#${b.rank} HOT` : b.badge==='new' ? 'NEW' : `↑ #${b.rank}`;
+      const badgeClass = b.badge==='hot' || b.badge==='new' ? 'hot' : '';
+      return `<div class="tile" onclick="openTrending('${esc(b.key)}','${esc(b.title)}')">
+        ${cov?`<img src="${cov}" alt="" onerror="this.style.display='none'">`:''}
+        <span class="badge rank ${badgeClass}">${badgeText}</span>
+        <span class="ttitle">${esc(b.title)}</span>
+      </div>`;
+    }).join('');
+  }
+  function openTrending(key,title){
+    if (!user){ if (window.SH) SH.openAuth(); return; }
+    location.href = 'smuthub-app.html?q=' + encodeURIComponent(title);
+  }
+
+  // ── search (shelf-first) ──────────────────────────────
+  let searchTimer = null;
+  $('q').addEventListener('input', ()=>{
+    clearTimeout(searchTimer);
+    const q = $('q').value.trim();
+    if (!q){ $('results').classList.remove('show'); return; }
+    searchTimer = setTimeout(()=>runSearch(), 220);
+  });
+  $('q').addEventListener('keydown', e=>{ if(e.key==='Enter') runSearch(); });
+
+  async function runSearch(){
+    const q = $('q').value.trim();
+    if (!q){ $('results').classList.remove('show'); return; }
+
+    const ql = q.toLowerCase();
+    // 1) shelf matches (instant — already in memory)
+    const onShelf = myShelf.filter(b =>
+      (b.title||'').toLowerCase().includes(ql) ||
+      (b.author||'').toLowerCase().includes(ql)
+    ).slice(0,5);
+
+    let html = '';
+    if (onShelf.length){
+      html += `<div class="rgroup"><h4>📚 On your shelf</h4>` +
+        onShelf.map(b=>{
+          const cov = coverUrl(b.cover_i);
+          const st = b.status||'want';
+          return `<div class="rrow" onclick="openBook('${esc(b.book_key||b.key)}')">
+            <div class="rcov">${cov?`<img src="${cov}" alt="" onerror="this.style.display='none'">`:esc(b.title)}</div>
+            <div class="rinfo"><div class="t">${esc(b.title)}</div><div class="a">by ${esc(b.author||'Unknown')}</div></div>
+            <span class="rstat ${st}">${STATUS_LABELS[st]||st}</span>
+          </div>`;
+        }).join('') + `</div>`;
+    }
+
+    // 2) Open Library results (filter out books already on shelf)
+    html += `<div class="rgroup"><h4>🔍 Out in the world</h4><div id="olres" style="color:var(--muted);font-size:.85rem;padding:8px 4px">Searching…</div></div>`;
+    $('results').innerHTML = html;
+    $('results').classList.add('show');
+
+    try{
+      const r = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&fields=key,title,author_name,cover_i&limit=12`);
+      const d = await r.json();
+      const shelfKeys = new Set(myShelf.map(b=>b.book_key||b.key));
+      const docs = (d.docs||[]).filter(b=>b.title && !shelfKeys.has(b.key)).slice(0,5);
+      if (!docs.length){
+        $('olres').innerHTML = `<div style="color:var(--muted);font-size:.85rem;padding:8px 4px">No new results — looks like you've covered it.</div>`;
+        return;
+      }
+      $('olres').outerHTML = docs.map(b=>{
+        const cov = coverUrl(b.cover_i);
+        const author = (b.author_name && b.author_name[0]) || 'Unknown';
+        return `<div class="rrow" onclick="addFromSearch('${esc(b.key)}','${esc(b.title)}','${esc(author)}',${b.cover_i||'null'})">
+          <div class="rcov">${cov?`<img src="${cov}" alt="" onerror="this.style.display='none'">`:esc(b.title)}</div>
+          <div class="rinfo"><div class="t">${esc(b.title)}</div><div class="a">by ${esc(author)}</div></div>
+          <span class="rstat none">+ add</span>
+        </div>`;
+      }).join('');
+    }catch(e){
+      $('olres').innerHTML = `<div style="color:var(--muted);font-size:.85rem;padding:8px 4px">Catalog unreachable — try again in a moment.</div>`;
+    }
+  }
+  function addFromSearch(key,title,author,cover_i){
+    if (!user){ if (window.SH) SH.openAuth(); return; }
+    location.href = 'smuthub-app.html?q=' + encodeURIComponent(title);
+  }
+
+  // click outside to close results
+  document.addEventListener('click', e=>{
+    if (!e.target.closest('.searchwrap')) $('results').classList.remove('show');
+  });
+</script>
+</body>
+</html>

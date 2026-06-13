@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SmutHub — My Bookcase</title>
+<title>SmutHub — My Bookshelf</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -121,8 +121,9 @@
   <div class="nav wrap">
     <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
+      <a href="dashboard.html">Dashboard</a>
       <a href="smuthub-app.html">Search</a>
-      <a href="smuthub-bookcase.html" class="on">My Bookcase</a>
+      <a href="smuthub-bookcase.html" class="on">My Bookshelf</a>
       <a href="stores.html">Find a Store</a>
     </nav>
     <div class="authbox" id="authbox"></div>
@@ -131,7 +132,7 @@
 </header>
 
 <div class="wrap head">
-  <h1>My <em>Bookcase</em></h1>
+  <h1>My <em>Bookshelf</em></h1>
   <p class="sub" id="sub">Decorate your shelves. Show off your spice.</p>
   <div class="themes" id="themes"></div>
   <div class="themenote">🧪 Beta: all themes unlocked — pick one and it saves to your account</div>
@@ -167,7 +168,7 @@
     catch(err){
       console.error('bookcase load failed:', err);
       document.getElementById('body').innerHTML =
-        `<div class="gate"><h2>Hmm, the bookcase hit a snag</h2><p style="color:#ff9aa8">${(err&&err.message)||err}</p><p>Screenshot this message — it tells us exactly what to fix.</p></div>`;
+        `<div class="gate"><h2>Hmm, the bookshelf hit a snag</h2><p style="color:#ff9aa8">${(err&&err.message)||err}</p><p>Screenshot this message — it tells us exactly what to fix.</p></div>`;
     }
   });
 
@@ -196,7 +197,7 @@
 
   function renderGate(){
     document.getElementById('body').innerHTML=`<div class="gate">
-      <h2>Log in to open your bookcase 📚</h2>
+      <h2>Log in to open your bookshelf 📚</h2>
       <p>Your shelves, ratings, and theme live here — just for you.</p>
       <div class="row" style="justify-content:center"><button class="btn" style="padding:.8em 1.6em" onclick="SH.openAuth()">Log in / Sign up</button></div>
     </div>`;
@@ -259,7 +260,7 @@
   async function removeBook(key){
     shelf=shelf.filter(b=>b.book_key!==key); closeSheet(); renderCase();
     await sb.from('shelf').delete().eq('book_key',key);
-    toast("Removed from your bookcase");
+    toast("Removed from your bookshelf");
   }
   async function rate(e,key){
     const span=e.target.closest('span[data-n]'); if(!span) return;

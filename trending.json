@@ -1,0 +1,12 @@
+{
+  "_comment": "Edit this file to update the dashboard's Trending This Week. Commit & push — Cloudflare auto-deploys. 'key' is the Open Library work key (e.g. /works/OL27448W); 'cover_i' is the Open Library cover id; 'badge' is one of: 'hot' | 'rising' | 'new'.",
+  "updated": "2026-06-12",
+  "books": [
+    { "rank": 1, "key": "/works/OL27448W",  "title": "Powerless",            "author": "Lauren Roberts",  "cover_i": 14627025, "badge": "hot",    "tease": "She's the prophecy. He's the problem." },
+    { "rank": 2, "key": "/works/OL36042W",  "title": "Quicksilver",          "author": "Callie Hart",     "cover_i": 14820011, "badge": "rising", "tease": "Fae prince energy. Zero impulse control." },
+    { "rank": 3, "key": "/works/OL27506W",  "title": "Wind and Truth",       "author": "Brandon Sanderson","cover_i": 14688200, "badge": "rising", "tease": "An epic with a body count and a heart." },
+    { "rank": 4, "key": "/works/OL27448X",  "title": "The Serpent & the Wings of Night", "author": "Carissa Broadbent", "cover_i": 13075729, "badge": "rising", "tease": "Touch her and the realm burns." },
+    { "rank": 5, "key": "/works/OL27448Y",  "title": "Iron Flame",           "author": "Rebecca Yarros",  "cover_i": 13986891, "badge": "new",    "tease": "Year two. The bedroom door is open." },
+    { "rank": 6, "key": "/works/OL27448Z",  "title": "House of Earth and Blood", "author": "Sarah J. Maas", "cover_i": 10470548, "badge": "rising", "tease": "Half-fae, all attitude." }
+  ]
+}
