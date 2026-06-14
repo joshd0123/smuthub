@@ -48,9 +48,8 @@
   .search button{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:0 24px;border-radius:99px;cursor:pointer}
   .status{text-align:center;color:var(--muted);margin:18px 0 4px;min-height:1.1em;font-size:.92rem}
 
-  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:10px 0 60px;align-items:start}
-  @media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:520px){.grid{grid-template-columns:1fr}}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:16px;padding:10px 0 60px;align-items:start}
+  @media(max-width:520px){.grid{grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:12px}}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
   .cover{aspect-ratio:3/4;position:relative;background:var(--ink-2);overflow:hidden}
   .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
@@ -128,18 +127,31 @@
   }
 
   // ── SEARCH: Google Books first, Open Library as fallback ──
-  const DEFAULT_QUERIES = ['romantasy','fantasy romance','paranormal romance','fae romance','dragon rider romance','enemies to lovers romance'];
-  const ROMANCE_RX = /romance|romantasy|fantasy|fae|dragon|paranormal|vampire|werewolf/i;
-  // soft filter: if a result carries no category info, don't exclude it
-  function isRomantasy(b){ const s=[].concat(b.subject||[]); return s.length ? s.some(x=>ROMANCE_RX.test(x)) : true; }
+  const DEFAULT_QUERIES = ['romantasy','fae romance','dragon rider romance','fated mates romance','enemies to lovers fantasy','vampire romance'];
+  // exclude books *about* romance (writing guides, academic, collectibles) — we want novels
+  const NONFIC_RX = /language arts|literary criticism|education|reference|study aids|biography|history|technology|science|antiques|collectibl|business|self-help|cooking|travel|religion|crafts|music|games/i;
+  function isNovel(b){ const s=[].concat(b.subject||[]); return !s.some(x=>NONFIC_RX.test(x)); }
   const coverSrc=b=>b.cover_url||(b.cover_i?('https://covers.openlibrary.org/b/id/'+b.cover_i+'-L.jpg'):null);
+  // Google thumbnails default to a tiny zoom=1; request a larger, clean image
+  function gImg(u){ return u ? u.replace(/^http:/,'https:').replace('&edge=curl','').replace(/zoom=\d/,'zoom=2') : null; }
+  // collapse duplicate editions of the same book (prefer the one that has a cover)
+  function dedupe(docs){
+    const seen=new Map();
+    for(const b of docs){
+      const k=((b.title||'')+'|'+((b.author_name&&b.author_name[0])||'')).toLowerCase().replace(/[^a-z0-9]/g,'');
+      const ex=seen.get(k);
+      if(!ex || (coverSrc(b)&&!coverSrc(ex))) seen.set(k,b);
+    }
+    return [...seen.values()];
+  }
 
-  // popularity/quality signal — pushes mainstream, recent, cover-bearing books up
+  // popularity/quality signal — pushes mainstream, recent, novel, cover-bearing books up
   function quality(b){
     let s=0;
     if(coverSrc(b)) s+=30;
     s += Math.min(45,(b.ratings||0));
     if(b.year>=2010) s+=12; else if(b.year && b.year<1995) s-=22;
+    if(!isNovel(b)) s-=60;   // writing guides / academic / price guides sink
     return s;
   }
   function scoreDoc(b, q){
@@ -161,7 +173,7 @@
     const d = await (await fetch(url)).json();
     return (d.items||[]).map(it=>{
       const v=it.volumeInfo||{}, img=v.imageLinks&&(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail);
-      return { key:'gb:'+it.id, title:v.title, author_name:v.authors||[], cover_url:img?img.replace(/^http:/,'https:'):null, cover_i:null,
+      return { key:'gb:'+it.id, title:v.title, author_name:v.authors||[], cover_url:gImg(img), cover_i:null,
                subject:v.categories||[], ratings:v.ratingsCount||0, year:parseInt((v.publishedDate||'').slice(0,4))||0 };
     }).filter(b=>b.title);
   }
@@ -180,8 +192,10 @@
     try{
       const browseQ = DEFAULT_QUERIES[Math.floor(Math.random()*DEFAULT_QUERIES.length)];
       let docs=[];
-      try{ docs = await googleBooks(typed || browseQ); }catch(e){ docs=[]; }
+      // browse biases to fiction so we get novels, not "how to write romance" guides
+      try{ docs = await googleBooks(typed ? typed : (browseQ+' subject:fiction')); }catch(e){ docs=[]; }
       if(!docs.length){ docs = await openLib(typed || browseQ, typed?0:[0,20,40][Math.floor(Math.random()*3)]); }
+      docs = dedupe(docs);
       if(typed){
         const q=typed.toLowerCase();
         docs = docs.map(b=>[scoreDoc(b,q),b]).sort((x,y)=>y[0]-x[0]).map(x=>x[1]);
@@ -189,9 +203,8 @@
         const withC=docs.filter(coverSrc), without=docs.filter(b=>!coverSrc(b));
         docs = withC.concat(without.slice(0,2));
       } else {
-        const covered = docs.filter(coverSrc);
-        const onTheme = covered.filter(isRomantasy);
-        docs = (onTheme.length ? onTheme : covered).map(b=>[quality(b),b]).sort((x,y)=>y[0]-x[0]).map(x=>x[1]);
+        // browse: novels with covers only, ranked by popularity/recency
+        docs = docs.filter(b=>coverSrc(b) && isNovel(b)).map(b=>[quality(b),b]).sort((x,y)=>y[0]-x[0]).map(x=>x[1]);
       }
       lastDocs = docs.slice(0,16);
       st.innerHTML = lastDocs.length ? `Showing <b style="color:var(--cream)">${lastDocs.length}</b> real books` : "No books found — try a title or author.";
