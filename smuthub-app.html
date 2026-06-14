@@ -153,11 +153,11 @@
     return sc + quality(b);
   }
 
+  const GB_KEY=(window.SMUTHUB_CONFIG||{}).GOOGLE_BOOKS_KEY||'';
   async function googleBooks(q){
-    // country + langRestrict are REQUIRED-ish: without country Google returns 403,
-    // and we'd silently fall back to Open Library's old/obscure catalogue.
+    if(!GB_KEY) return [];   // keyless Google quota is shared + permanently exhausted (429) → use Open Library
     const url='https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)
-      +'&maxResults=24&printType=books&langRestrict=en&country=US&orderBy=relevance';
+      +'&maxResults=24&printType=books&langRestrict=en&country=US&orderBy=relevance&key='+GB_KEY;
     const d = await (await fetch(url)).json();
     return (d.items||[]).map(it=>{
       const v=it.volumeInfo||{}, img=v.imageLinks&&(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail);
@@ -166,9 +166,11 @@
     }).filter(b=>b.title);
   }
   async function openLib(q, offset){
-    const r = await fetch('https://openlibrary.org/search.json?q='+encodeURIComponent(q)+'&fields=key,title,author_name,cover_i,subject&limit=30'+(offset?'&offset='+offset:''));
+    // request popularity signals so the fallback can rank mainstream/recent books up
+    const r = await fetch('https://openlibrary.org/search.json?q='+encodeURIComponent(q)+'&fields=key,title,author_name,cover_i,subject,first_publish_year,edition_count,readinglog_count,ratings_count&limit=30'+(offset?'&offset='+offset:''));
     const d = await r.json();
-    return (d.docs||[]).filter(x=>x.title).map(b=>({ key:b.key, title:b.title, author_name:b.author_name||[], cover_i:b.cover_i||null, cover_url:null, subject:b.subject||[] }));
+    return (d.docs||[]).filter(x=>x.title).map(b=>({ key:b.key, title:b.title, author_name:b.author_name||[], cover_i:b.cover_i||null, cover_url:null, subject:b.subject||[],
+      ratings:(b.readinglog_count||0)+(b.ratings_count||0)+(b.edition_count||0), year:b.first_publish_year||0 }));
   }
 
   async function run(){

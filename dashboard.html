@@ -273,8 +273,10 @@
   function coverUrl(cover_i){ return cover_i ? `https://covers.openlibrary.org/b/id/${cover_i}-L.jpg` : null; }
   const coverSrc=b=>b.cover_url||coverUrl(b.cover_i);
   // Google Books first, Open Library fallback — normalized {key,title,author,cover_url,cover_i}
+  const GB_KEY=(window.SMUTHUB_CONFIG||{}).GOOGLE_BOOKS_KEY||'';
   async function gBooks(q){
-    try{ const d=await (await fetch('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)+'&maxResults=12&printType=books&langRestrict=en&country=US&orderBy=relevance')).json();
+    if(!GB_KEY) return [];   // keyless Google quota is shared + exhausted (429) → use Open Library
+    try{ const d=await (await fetch('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)+'&maxResults=12&printType=books&langRestrict=en&country=US&orderBy=relevance&key='+GB_KEY)).json();
       return (d.items||[]).map(it=>{const v=it.volumeInfo||{},img=v.imageLinks&&(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail);return {key:'gb:'+it.id,title:v.title,author:(v.authors&&v.authors[0])||'Unknown',cover_url:img?img.replace(/^http:/,'https:'):null,cover_i:null};}).filter(b=>b.title);
     }catch(_){ return []; }
   }
