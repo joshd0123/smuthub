@@ -75,69 +75,60 @@
   .stage{position:relative;z-index:2;display:flex;justify-content:center;padding:20px 16px 130px}
 
   /* ── THE BOOKCASE (cabinet) ── */
-  .bookcase{position:relative;width:100%;max-width:560px;
-    padding:18px 16px 20px;border-radius:16px;
-    background:var(--wood-tex), linear-gradient(150deg,var(--wood-lt),var(--wood) 30%,var(--wood-dk));
-    background-blend-mode:soft-light,normal;
-    box-shadow:0 50px 90px -28px rgba(0,0,0,.9), 0 8px 0 -2px rgba(0,0,0,.5),
-               inset 0 2px 0 rgba(255,255,255,.14), inset 0 -3px 8px rgba(0,0,0,.5);}
-  /* carved top cornice + base */
-  .bookcase::before{content:"";position:absolute;left:-6px;right:-6px;top:-10px;height:16px;border-radius:8px 8px 4px 4px;
+  .bookcase{position:relative;width:100%;max-width:540px;padding:13px 13px 15px;border-radius:14px;
+    background:var(--wood-tex), linear-gradient(150deg,var(--wood-lt),var(--wood) 32%,var(--wood-dk));background-blend-mode:soft-light,normal;
+    box-shadow:0 38px 78px -30px rgba(0,0,0,.85), inset 0 2px 0 rgba(255,255,255,.12), inset 0 -3px 7px rgba(0,0,0,.4)}
+  .bookcase::before{content:"";position:absolute;left:-4px;right:-4px;top:-7px;height:11px;border-radius:7px 7px 3px 3px;
     background:var(--wood-tex), linear-gradient(var(--wood-lt),var(--wood-dk));background-blend-mode:soft-light,normal;
-    box-shadow:0 8px 14px -4px rgba(0,0,0,.7), inset 0 2px 0 rgba(255,255,255,.16)}
-  .bookcase::after{content:"";position:absolute;left:-6px;right:-6px;bottom:-10px;height:16px;border-radius:4px 4px 8px 8px;
+    box-shadow:0 6px 12px -5px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.16)}
+  .bookcase::after{content:"";position:absolute;left:-4px;right:-4px;bottom:-7px;height:11px;border-radius:3px 3px 7px 7px;
     background:var(--wood-tex), linear-gradient(var(--wood),var(--wood-dk));background-blend-mode:soft-light,normal;
-    box-shadow:0 14px 22px -6px rgba(0,0,0,.8)}
-  /* recessed interior holding the shelves */
-  .interior{position:relative;border-radius:8px;padding:6px 12px 12px;overflow:hidden;
-    background:var(--wood-tex), linear-gradient(160deg,var(--back),#070403);background-blend-mode:soft-light,normal;
-    box-shadow:inset 0 0 50px rgba(0,0,0,.9), inset 0 2px 14px rgba(0,0,0,.9)}
-  /* warm string-light glint along the top inside, for atmosphere */
-  .interior::before{content:"";position:absolute;left:0;right:0;top:0;height:60px;pointer-events:none;
-    background:radial-gradient(40% 80% at 18% 0%, var(--glow), transparent 70%),
-              radial-gradient(40% 80% at 82% 0%, var(--glow), transparent 70%)}
+    box-shadow:0 12px 18px -7px rgba(0,0,0,.7)}
+  /* recessed interior — reads as dark wood, not a black void */
+  .interior{position:relative;border-radius:7px;padding:6px 14px 12px;overflow:hidden;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.022) 0 1px, transparent 1px 72px),
+      var(--wood-tex),
+      linear-gradient(160deg, var(--wood-dk), #0c0805);
+    background-blend-mode:normal,soft-light,normal;
+    box-shadow:inset 0 0 55px rgba(0,0,0,.72), inset 0 2px 12px rgba(0,0,0,.82)}
+  .interior::before{content:"";position:absolute;left:0;right:0;top:0;height:54px;pointer-events:none;
+    background:radial-gradient(40% 80% at 20% 0%, var(--glow), transparent 70%), radial-gradient(40% 80% at 80% 0%, var(--glow), transparent 70%)}
 
-  .shelfrow{position:relative;padding-top:8px}
-  .plate{position:relative;z-index:3;display:inline-flex;align-items:center;gap:7px;margin:0 0 -4px 6px;
-    font-family:'Fraunces';font-weight:700;font-size:.82rem;letter-spacing:.01em;
-    color:var(--plate-tx);background:linear-gradient(#f0d79a,var(--plate) 55%,#9c7330);
-    padding:.18em .8em;border-radius:3px;border:1px solid rgba(80,50,10,.6);
-    text-shadow:0 1px 0 rgba(255,255,255,.5);box-shadow:0 2px 5px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.6)}
-  .plate::before,.plate::after{content:"";width:4px;height:4px;border-radius:50%;background:radial-gradient(#fff,#7a5512);box-shadow:inset 0 1px 1px rgba(0,0,0,.5)}
-  .plate .ct{font-family:'Hanken Grotesk';font-weight:800;font-size:.72rem;opacity:.7}
+  .shelfrow{position:relative;padding-top:6px}
+  /* elegant engraved gold label — no chunky plaque */
+  .plate{position:relative;z-index:3;display:inline-flex;align-items:baseline;gap:8px;margin:0 0 2px 4px;
+    font-family:'Fraunces';font-weight:600;font-size:.96rem;letter-spacing:.03em;color:var(--plate);
+    text-shadow:0 1px 3px rgba(0,0,0,.75)}
+  .plate .ct{font-family:'Hanken Grotesk';font-weight:800;font-size:.7rem;color:var(--accent);opacity:.85}
 
   .row{position:relative}
-  .row::before{content:"";position:absolute;left:0;right:0;top:-2px;height:34px;pointer-events:none;z-index:2;
-    background:linear-gradient(rgba(0,0,0,.55),transparent)}/* shadow cast by shelf above */
-  .books{position:relative;z-index:2;display:flex;gap:5px;align-items:flex-end;justify-content:flex-start;
-    overflow-x:auto;padding:14px 6px 0;min-height:158px;scrollbar-width:none}
+  .row::before{content:"";position:absolute;left:0;right:0;top:-2px;height:30px;pointer-events:none;z-index:2;
+    background:linear-gradient(rgba(0,0,0,.5),transparent)}
+  .books{position:relative;z-index:2;display:flex;gap:7px;align-items:flex-end;justify-content:flex-start;
+    overflow-x:auto;padding:12px 4px 0;min-height:148px;scrollbar-width:none}
   .books::-webkit-scrollbar{display:none}
-  .bookend{flex:0 0 auto;width:14px;align-self:stretch;margin-right:4px;border-radius:2px;
-    background:linear-gradient(var(--wood-lt),var(--wood-dk));box-shadow:2px 0 6px rgba(0,0,0,.5);
-    position:relative;top:8px}
-  .book{flex:0 0 auto;width:clamp(64px,17vw,84px);cursor:grab;transition:transform .18s ease;position:relative;
-    touch-action:manipulation;filter:drop-shadow(0 12px 9px rgba(0,0,0,.6))}
-  .book::after{content:"";position:absolute;left:6%;right:6%;bottom:-7px;height:11px;border-radius:50%;
-    background:radial-gradient(ellipse at center,rgba(0,0,0,.65),transparent 72%)}
-  .book:nth-child(odd){transform:rotate(-.6deg)}
-  .book:nth-child(3n){transform:rotate(.7deg)}
-  .book:hover{transform:translateY(-14px) rotate(0);z-index:4}
+  .book{flex:0 0 auto;width:clamp(72px,18vw,92px);cursor:grab;transition:transform .2s ease;position:relative;
+    touch-action:manipulation;filter:drop-shadow(0 9px 9px rgba(0,0,0,.5))}
+  .book::after{content:"";position:absolute;left:8%;right:8%;bottom:-5px;height:8px;border-radius:50%;
+    background:radial-gradient(ellipse at center,rgba(0,0,0,.5),transparent 72%)}
+  .book:hover{transform:translateY(-12px);z-index:4}
   .book.dragging{opacity:.4;cursor:grabbing}
-  .book.dnf{filter:grayscale(1) drop-shadow(0 12px 9px rgba(0,0,0,.6));opacity:.85}
-  .book .bcov{width:100%;border-radius:1px 4px 4px 1px;display:block;object-fit:cover;
-    border-left:3px solid rgba(0,0,0,.45);box-shadow:inset -7px 0 12px -6px rgba(0,0,0,.7), inset 7px 0 9px -7px rgba(255,255,255,.25)}
+  .book.dnf{filter:grayscale(1) drop-shadow(0 9px 9px rgba(0,0,0,.5));opacity:.85}
+  .book .bcov{width:100%;border-radius:1px 3px 3px 1px;display:block;object-fit:cover;
+    border-left:3px solid rgba(0,0,0,.5);border-right:2px solid rgba(244,232,210,.5);
+    box-shadow:inset -6px 0 12px -7px rgba(0,0,0,.6), inset 8px 0 10px -8px rgba(255,255,255,.28)}
   .book .ph{width:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;
-    font-family:'Fraunces';font-style:italic;font-size:.72rem;color:#fff;border-radius:1px 4px 4px 1px;
-    background:linear-gradient(160deg,#3a0d2a,#7a1238);border-left:3px solid rgba(0,0,0,.45)}
+    font-family:'Fraunces';font-style:italic;font-size:.72rem;color:#fff;border-radius:1px 3px 3px 1px;
+    background:linear-gradient(160deg,#3a0d2a,#7a1238);border-left:3px solid rgba(0,0,0,.5)}
   .book .sp{position:absolute;top:5px;right:5px;font-size:.58rem;background:rgba(8,4,5,.82);color:#fff;padding:.1em .35em;border-radius:4px;z-index:3}
   .book .grave{position:absolute;top:5px;left:5px;font-size:.7rem;z-index:3}
-  /* the shelf board */
-  .plank{height:18px;margin-top:-3px;border-radius:1px 1px 3px 3px;position:relative;z-index:1;
-    background:var(--wood-tex), linear-gradient(var(--wood-lt),var(--wood) 40%,var(--wood-dk));background-blend-mode:soft-light,normal;
-    box-shadow:0 12px 18px rgba(0,0,0,.6), inset 0 2px 0 rgba(255,255,255,.18), inset 0 -3px 6px rgba(0,0,0,.5)}
-  .plank::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:4px;background:rgba(0,0,0,.4);border-radius:0 0 3px 3px}
-  .ghost{flex:0 0 auto;width:clamp(64px,17vw,84px);height:126px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
-    border:2px dashed rgba(255,255,255,.18);border-radius:1px 5px 5px 1px;color:var(--accent);font-weight:700;font-size:.78rem;cursor:pointer;opacity:.8}
+  /* slim refined shelf ledge */
+  .plank{height:10px;margin-top:-2px;border-radius:2px;position:relative;z-index:1;
+    background:var(--wood-tex), linear-gradient(var(--wood-lt),var(--wood) 45%,var(--wood-dk));background-blend-mode:soft-light,normal;
+    box-shadow:0 9px 15px -5px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.22)}
+  .ghost{flex:0 0 auto;width:clamp(72px,18vw,92px);height:128px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    border:2px dashed rgba(255,255,255,.16);border-radius:1px 4px 4px 1px;color:var(--accent);font-weight:700;font-size:.78rem;cursor:pointer;opacity:.75}
   .ghost:hover{border-color:var(--accent);background:rgba(255,255,255,.04);opacity:1}
 
   /* DNF drawer below the cabinet */
@@ -270,12 +261,12 @@
 
   /* responsive: roomier on tablet/desktop */
   @media(min-width:760px){
-    .bookcase{max-width:600px;padding:22px 20px 24px}
-    .book,.ghost{width:clamp(78px,9vw,96px)}
-    .books{gap:6px;min-height:178px}
+    .bookcase{max-width:560px;padding:16px 16px 18px}
+    .book,.ghost{width:clamp(84px,9vw,100px)}
+    .books{gap:9px;min-height:168px}
     .stage{padding:30px 16px 140px}
   }
-  @media(min-width:1100px){ .bookcase{max-width:640px} }
+  @media(min-width:1100px){ .bookcase{max-width:580px} }
 </style>
 </head>
 <body class="theme-walnut">
@@ -442,7 +433,7 @@
       + '<div class="bookcase"><div class="interior">'
       + visible.map(([st,label])=>{
           const items=ordered.filter(b=>b.status===st);
-          const inner = items.length ? '<span class="bookend"></span>'+items.map(bookHTML).join('') : ghostHTML;
+          const inner = items.length ? items.map(bookHTML).join('') : ghostHTML;
           return '<div class="shelfrow"><div class="plate">'+label+' <span class="ct">'+items.length+'</span></div>'
             + '<div class="row"><div class="books" data-status="'+st+'">'+inner+'</div></div><div class="plank"></div></div>';
         }).join('')
@@ -456,7 +447,7 @@
     if(!items.length) return '';
     return '<div class="dnfwrap'+(dnfOpen?' open':'')+'">'
       + '<button class="dnfstrip" id="dnftoggle">🪦 DNF ('+items.length+') <span class="caret">▾</span></button>'
-      + (dnfOpen?'<div class="dnfbooks"><div class="row"><div class="books" data-status="dnf"><span class="bookend"></span>'+items.map(bookHTML).join('')+'</div></div><div class="plank"></div></div>':'')
+      + (dnfOpen?'<div class="dnfbooks"><div class="row"><div class="books" data-status="dnf">'+items.map(bookHTML).join('')+'</div></div><div class="plank"></div></div>':'')
       + '</div>';
   }
 
@@ -623,7 +614,7 @@
       + '<div class="sv-light light-'+(c.lighting_key||'none')+'"></div>'
       + '<div class="propbar" id="propbar"><button data-p="smaller">－</button><button data-p="bigger">＋</button><button data-p="remove">🗑️</button></div>'
       + '<div class="sv-top"><button class="sv-back" id="svback">←</button><div class="sv-label">'+label+'</div><div style="width:40px"></div></div>'
-      + '<div class="sv-shelf"><div class="books">'+(items.length?'<span class="bookend"></span>'+items.map(bookHTML).join(''):ghostHTML)+'</div><div class="plank"></div></div>'
+      + '<div class="sv-shelf"><div class="books">'+(items.length?items.map(bookHTML).join(''):ghostHTML)+'</div><div class="plank"></div></div>'
       + '<button class="sv-customize" id="svcustomize">🎨 Customize</button>'
       + '<div class="sv-dots">'+SHELVES.map((s,i)=>'<span class="'+(i===shelfIndex?'on':'')+'"></span>').join('')+'</div>'
       + '<div class="sv-drawer" id="svdrawer"></div>';
