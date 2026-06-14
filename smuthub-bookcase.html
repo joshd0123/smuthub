@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SmutHub — My Bookshelf</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,13 +17,15 @@
     --grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%);
     /* themed (set by .theme-* below) */
     --case:#1c130c;--wood:#7a4e2a;--wood-dk:#3d2614;--plate:#c9a063;--plate-tx:#2a1a0c;--accent:#ffab40;
+    --room:radial-gradient(120% 80% at 50% -10%, #241612, #0c0708 70%);
+    --ambient:radial-gradient(60% 40% at 50% 6%, rgba(255,171,64,.12), transparent 70%);
   }
-  /* ── BOOKCASE THEMES ── */
-  .theme-walnut {--case:#1c130c;--wood:#7a4e2a;--wood-dk:#3d2614;--plate:#c9a063;--plate-tx:#2a1a0c;--accent:#ffab40;}
-  .theme-noir   {--case:#0c0c0e;--wood:#34343c;--wood-dk:#16161a;--plate:#9a9aa4;--plate-tx:#0c0c0e;--accent:#ff3d76;}
-  .theme-faerie {--case:#0c1a14;--wood:#2f5a44;--wood-dk:#163026;--plate:#d8c06a;--plate-tx:#0c1a14;--accent:#4fd1a5;}
-  .theme-academia{--case:#170f0c;--wood:#6e3c2a;--wood-dk:#3a2018;--plate:#bd9152;--plate-tx:#170f0c;--accent:#d9a05b;}
-  .theme-boudoir{--case:#1a0c12;--wood:#6e2c46;--wood-dk:#3a1626;--plate:#e6b86a;--plate-tx:#1a0c12;--accent:#ff5a8c;}
+  /* ── BOOKCASE THEMES (free: walnut, noir · premium: others) ── */
+  .theme-walnut {--case:#1c130c;--wood:#7a4e2a;--wood-dk:#3d2614;--plate:#c9a063;--plate-tx:#2a1a0c;--accent:#ffab40;--room:radial-gradient(120% 80% at 50% -10%,#241612,#0c0708 70%);--ambient:radial-gradient(60% 40% at 50% 6%,rgba(255,171,64,.14),transparent 70%);}
+  .theme-noir   {--case:#0c0c0e;--wood:#34343c;--wood-dk:#16161a;--plate:#9a9aa4;--plate-tx:#0c0c0e;--accent:#ff3d76;--room:radial-gradient(120% 80% at 50% -10%,#1a1a20,#070708 70%);--ambient:radial-gradient(60% 40% at 50% 6%,rgba(255,61,118,.12),transparent 70%);}
+  .theme-faerie {--case:#0c1a14;--wood:#2f5a44;--wood-dk:#163026;--plate:#d8c06a;--plate-tx:#0c1a14;--accent:#4fd1a5;--room:radial-gradient(120% 80% at 50% -10%,#12281f,#06100b 70%);--ambient:radial-gradient(60% 40% at 50% 6%,rgba(79,209,165,.14),transparent 70%);}
+  .theme-academia{--case:#170f0c;--wood:#6e3c2a;--wood-dk:#3a2018;--plate:#bd9152;--plate-tx:#170f0c;--accent:#d9a05b;--room:radial-gradient(120% 80% at 50% -10%,#241813,#0d0a08 70%);--ambient:radial-gradient(60% 40% at 50% 6%,rgba(217,160,91,.14),transparent 70%);}
+  .theme-boudoir{--case:#1a0c12;--wood:#6e2c46;--wood-dk:#3a1626;--plate:#e6b86a;--plate-tx:#1a0c12;--accent:#ff5a8c;--room:radial-gradient(120% 80% at 50% -10%,#2a1019,#0c0708 70%);--ambient:radial-gradient(60% 40% at 50% 6%,rgba(255,90,140,.16),transparent 70%);}
 
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
@@ -44,45 +46,29 @@
   .setup{background:rgba(255,171,64,.1);border:1px solid rgba(255,171,64,.4);color:var(--amber);font-size:.85rem;text-align:center;padding:9px;display:none}
   .setup.show{display:block}
 
-  .head{padding:26px 0 6px;text-align:center}
-  h1{font-family:'Fraunces';font-weight:600;font-size:clamp(1.9rem,5vw,2.7rem)}
-  h1 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
-  .sub{color:var(--muted);margin-top:6px;font-size:.95rem}
+  /* ── THE ROOM (bookcase view) ── */
+  .roomwrap{min-height:calc(100vh - 73px);background:var(--room);position:relative;overflow:hidden;transition:background .4s}
+  .roomwrap::before{content:"";position:absolute;inset:0;background:var(--ambient);pointer-events:none}
+  .roomhead{text-align:center;padding:18px 16px 4px;position:relative;z-index:1}
+  .roomhead h1{font-family:'Fraunces';font-weight:600;font-size:clamp(1.5rem,5vw,2.2rem)}
+  .roomhead h1 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
+  .roomhead .sub{color:var(--muted);font-size:.9rem;margin-top:2px}
+  .room{max-width:760px;margin:0 auto;padding:10px 14px 120px;position:relative;z-index:1}
 
-  /* theme picker */
-  .themes{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0 6px}
-  .swatch{display:flex;align-items:center;gap:8px;background:var(--ink-2);border:1px solid var(--line);border-radius:99px;padding:6px 14px 6px 6px;cursor:pointer;font-weight:700;font-size:.83rem;transition:all .15s}
-  .swatch:hover{border-color:var(--rose)}
-  .swatch.on{border-color:var(--cream)}
-  .swatch .dot{width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.2)}
-  .swatch .gem{font-size:.72rem;opacity:.8}
-  .themenote{text-align:center;color:#6b4f4d;font-size:.8rem;margin-top:2px}
-
-  /* gate */
-  .gate{max-width:420px;margin:46px auto;background:var(--ink-2);border:1px solid var(--line);border-radius:18px;padding:30px;text-align:center}
-  .gate h2{font-family:'Fraunces';font-weight:600;font-size:1.4rem;margin-bottom:6px}
-  .gate p{color:var(--muted);font-size:.92rem;margin-bottom:16px}
-  .gate .row{display:flex;gap:8px}
-  .gate input{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--cream);font-family:inherit;border-radius:99px;padding:.65em 1em;outline:none}
-
-  /* ── THE BOOKCASE ── */
-  .case{margin:18px 0 60px;background:
-      linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.55)), var(--case);
-    border:16px solid var(--wood-dk);border-radius:12px;
-    box-shadow:inset 0 0 70px rgba(0,0,0,.7), 0 30px 60px -20px rgba(0,0,0,.8);
-    padding:8px 16px 18px}
-  .shelf{margin-top:14px}
-  .plate{display:inline-flex;align-items:center;gap:8px;background:var(--plate);color:var(--plate-tx);
-    font-family:'Fraunces';font-weight:600;font-size:.95rem;padding:.18em .8em;border-radius:4px;
-    box-shadow:0 2px 0 rgba(0,0,0,.3);margin:0 0 6px 4px}
-  .plate .ct{font-family:'Hanken Grotesk';font-weight:800;font-size:.78rem;opacity:.8}
+  .shelfrow{margin-top:10px}
+  .carve{display:inline-flex;align-items:center;gap:8px;font-family:'Fraunces';font-weight:700;font-size:.86rem;
+    color:rgba(0,0,0,.5);text-shadow:0 1px 0 rgba(255,255,255,.14);
+    background:linear-gradient(var(--wood),var(--wood-dk));padding:.28em 1em;border-radius:5px 5px 0 0;
+    border:1px solid rgba(0,0,0,.32);border-bottom:0;letter-spacing:.01em}
+  .carve .ct{font-family:'Hanken Grotesk';font-weight:800;font-size:.74rem;color:rgba(0,0,0,.42)}
   .row{position:relative}
-  .books{display:flex;gap:14px;align-items:flex-end;overflow-x:auto;padding:6px 6px 0;min-height:150px;scrollbar-width:thin}
+  .books{display:flex;gap:14px;align-items:flex-end;overflow-x:auto;padding:8px 8px 0;min-height:150px;scrollbar-width:thin}
   .books::-webkit-scrollbar{height:6px}.books::-webkit-scrollbar-thumb{background:var(--wood);border-radius:99px}
-  .book{flex:0 0 auto;width:92px;cursor:grab;transition:transform .18s ease;position:relative;
+  .book{flex:0 0 auto;width:84px;cursor:grab;transition:transform .18s ease;position:relative;touch-action:manipulation;
     filter:drop-shadow(0 10px 8px rgba(0,0,0,.55))}
   .book:hover{transform:translateY(-12px) rotate(-1deg)}
   .book.dragging{opacity:.35;cursor:grabbing}
+  .book.dnf{filter:grayscale(1) drop-shadow(0 10px 8px rgba(0,0,0,.55));opacity:.85}
   .books.dropok{outline:2px dashed var(--accent);outline-offset:6px;border-radius:6px}
   .book .bcov{width:100%;border-radius:2px 5px 5px 2px;display:block;object-fit:cover;
     border-left:3px solid rgba(0,0,0,.35);box-shadow:inset -6px 0 10px -6px rgba(0,0,0,.6)}
@@ -90,12 +76,54 @@
     font-family:'Fraunces';font-style:italic;font-size:.72rem;color:#fff;border-radius:2px 5px 5px 2px;
     background:linear-gradient(160deg,#3a0d2a,#7a1238);border-left:3px solid rgba(0,0,0,.35)}
   .book .sp{position:absolute;top:5px;right:5px;font-size:.6rem;background:rgba(8,4,5,.78);color:#fff;padding:.1em .35em;border-radius:4px}
-  .plank{height:18px;background:linear-gradient(var(--wood),var(--wood-dk));border-radius:3px;
-    box-shadow:0 10px 16px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.1);margin-top:-2px}
-  .empty-shelf{color:var(--muted);opacity:.7;font-style:italic;font-size:.85rem;padding:40px 0 46px;text-align:center;width:100%}
+  .book .grave{position:absolute;top:5px;left:5px;font-size:.7rem}
+  .plank{height:18px;background:linear-gradient(var(--wood),var(--wood-dk));border-radius:0 0 3px 3px;
+    box-shadow:0 10px 16px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.1);margin-top:-2px;cursor:zoom-in;touch-action:manipulation}
+  .ghost{flex:0 0 auto;width:84px;height:128px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+    border:2px dashed rgba(255,171,64,.45);border-radius:2px 6px 6px 2px;color:var(--amber);font-weight:700;font-size:.8rem;cursor:pointer}
+  .ghost:hover{border-color:var(--amber);background:rgba(255,171,64,.06)}
 
-  /* book detail sheet */
-  .sheetbg{position:fixed;inset:0;z-index:80;background:rgba(6,3,4,.75);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px}
+  /* DNF collapse */
+  .dnfwrap{margin-top:14px}
+  .dnfstrip{width:100%;text-align:left;background:linear-gradient(var(--wood-dk),#0c0708);color:var(--cream);
+    border:1px solid rgba(0,0,0,.4);border-radius:6px;font-family:inherit;font-weight:700;font-size:.85rem;
+    padding:.6em 1em;cursor:pointer;display:flex;align-items:center;gap:8px}
+  .dnfstrip .caret{margin-left:auto;transition:transform .2s}
+  .dnfwrap.open .dnfstrip .caret{transform:rotate(180deg)}
+
+  /* hint */
+  .hint{text-align:center;color:#6b4f4d;font-size:.78rem;margin-top:18px}
+
+  /* ── FLOATING THEME PILL + SHEET ── */
+  .themepill{position:fixed;right:16px;bottom:74px;z-index:60;background:#150e10;border:1px solid var(--line);color:var(--cream);
+    font-family:inherit;font-weight:700;font-size:.82rem;padding:.6em 1em;border-radius:99px;cursor:pointer;box-shadow:0 10px 24px rgba(0,0,0,.45);display:none}
+  .themepill.show{display:inline-flex;align-items:center;gap:6px}
+  .sheetbase{position:fixed;inset:0;z-index:114;background:rgba(6,3,4,.6);backdrop-filter:blur(3px);display:none;align-items:flex-end;justify-content:center}
+  .sheetbase.open{display:flex}
+  .bottomsheet{background:#150e10;border:1px solid var(--line);border-radius:20px 20px 0 0;width:100%;max-width:560px;padding:18px 18px 26px;max-height:80vh;overflow:auto}
+  .bottomsheet h3{font-family:'Fraunces';font-weight:600;font-size:1.2rem;margin-bottom:4px}
+  .bottomsheet .note{color:var(--muted);font-size:.84rem;margin-bottom:14px}
+  .themegrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .themecard{display:flex;align-items:center;gap:10px;background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer;position:relative;transition:border-color .15s}
+  .themecard:hover{border-color:var(--rose)}
+  .themecard.on{border-color:var(--cream)}
+  .themecard .dot{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,.2);flex:0 0 auto}
+  .themecard .tn{font-weight:700;font-size:.9rem}
+  .themecard .lock{font-size:.66rem;color:var(--amber);font-weight:800;letter-spacing:.04em}
+
+  /* ── UPSELL MODAL ── */
+  .modalbg{position:fixed;inset:0;z-index:120;background:rgba(6,3,4,.75);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px}
+  .modalbg.open{display:flex}
+  .modalcard{background:#150e10;border:1px solid var(--line);border-radius:20px;max-width:380px;width:100%;padding:26px;text-align:center}
+  .modalcard .em{font-size:2rem}
+  .modalcard h3{font-family:'Fraunces';font-weight:600;font-size:1.3rem;margin:6px 0 4px}
+  .modalcard p{color:var(--muted);font-size:.9rem;margin-bottom:18px}
+  .modalcard .row{display:flex;gap:8px}
+  .modalcard .row .btn{flex:1}
+  .ghostbtn{flex:1;background:none;border:1px solid var(--line);color:var(--muted);font-family:inherit;font-weight:700;border-radius:99px;padding:.6em;cursor:pointer}
+
+  /* ── BOOK INFO MODAL ── */
+  .sheetbg{position:fixed;inset:0;z-index:110;background:rgba(6,3,4,.75);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px}
   .sheetbg.open{display:flex}
   .sheet{background:var(--ink-2);border:1px solid var(--line);border-radius:20px;max-width:440px;width:100%;overflow:hidden}
   .sheet .top{display:flex;gap:16px;padding:20px}
@@ -109,11 +137,76 @@
   .sheet .acts{border-top:1px solid var(--line);padding:14px 20px;display:flex;gap:8px;flex-wrap:wrap}
   .pillbtn{font-family:inherit;font-weight:700;font-size:.82rem;border:1px solid var(--line);background:none;color:var(--cream);padding:.5em .9em;border-radius:99px;cursor:pointer}
   .pillbtn:hover{border-color:var(--rose)}
-  .pillbtn.on{background:var(--grad);color:#1a0c10;border-color:transparent}
   .pillbtn.rec{background:var(--grad);color:#1a0c10;border:0;margin-left:auto}
   .pillbtn.rm{color:#c99}
 
-  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink-2);border:1px solid var(--rose);color:var(--cream);padding:.7em 1.2em;border-radius:99px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:90}
+  /* ── LONG-PRESS MOVE MENU ── */
+  .mmbg{position:fixed;inset:0;z-index:112;background:rgba(6,3,4,.6);display:none;align-items:center;justify-content:center;padding:24px}
+  .mmbg.open{display:flex}
+  .mmcard{background:#150e10;border:1px solid var(--line);border-radius:16px;width:100%;max-width:300px;overflow:hidden}
+  .mm-title{padding:14px 16px;font-family:'Fraunces';font-weight:600;border-bottom:1px solid var(--line)}
+  .mm-item{display:block;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);color:var(--cream);font-family:inherit;font-weight:600;font-size:.9rem;padding:.8em 1em;cursor:pointer}
+  .mm-item:first-of-type{border-top:0}
+  .mm-item:hover{background:var(--ink-2)}
+  .mm-item.cancel{color:var(--muted)}
+
+  /* ── SHELF VIEW (zoomed) ── */
+  .shelfview{position:fixed;inset:0;z-index:100;display:none;overflow:hidden;background:#06080f}
+  .shelfview.open{display:block}
+  .sv-backdrop{position:absolute;inset:0;z-index:0}
+  .sv-props{position:absolute;inset:0;z-index:1}
+  .sv-light{position:absolute;inset:0;z-index:2;pointer-events:none}
+  .sv-top{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:14px 16px}
+  .sv-back,.sv-customize{background:rgba(12,7,8,.6);backdrop-filter:blur(8px);border:1px solid var(--line);color:var(--cream);font-family:inherit;font-weight:700;border-radius:99px;cursor:pointer}
+  .sv-back{width:38px;height:38px;font-size:1.1rem}
+  .sv-label{font-family:'Fraunces';font-weight:600;font-size:1.05rem;text-shadow:0 2px 10px rgba(0,0,0,.7)}
+  .sv-shelf{position:absolute;left:0;right:0;bottom:16%;z-index:3;padding:0 18px}
+  .sv-shelf .books{justify-content:center;min-height:140px}
+  .sv-shelf .plank{max-width:620px;margin:0 auto}
+  .sv-customize{position:absolute;right:16px;bottom:18px;z-index:6;padding:.7em 1.1em;font-size:.85rem}
+  .sv-dots{position:absolute;left:0;right:0;bottom:8px;z-index:6;display:flex;gap:7px;justify-content:center}
+  .sv-dots span{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3)}
+  .sv-dots span.on{background:var(--accent)}
+  /* backdrops (stubbed art) */
+  .bd-plain{background:linear-gradient(160deg,var(--case),#04050a)}
+  .bd-velvet{background:repeating-linear-gradient(60deg,#2a0c1c,#2a0c1c 10px,#360f24 10px,#360f24 20px)}
+  .bd-library{background:linear-gradient(#1a1410,#070605);box-shadow:inset 0 0 120px rgba(255,171,64,.12)}
+  .bd-vines{background:linear-gradient(160deg,#0c1a14,#04080a)}
+  .bd-window{background:radial-gradient(60% 50% at 50% 30%,rgba(120,160,255,.25),transparent 60%),#0a0b12}
+  .bd-night{background:radial-gradient(circle at 30% 18%,#1b2440,#05070d)}
+  /* lighting moods */
+  .light-none{background:none}
+  .light-candlelit{background:radial-gradient(55% 45% at 50% 82%,rgba(255,170,80,.4),transparent 72%)}
+  .light-moonlit{background:radial-gradient(60% 55% at 50% 8%,rgba(120,160,255,.3),transparent 72%)}
+  .light-golden{background:linear-gradient(0deg,rgba(255,180,90,.28),rgba(255,120,90,.10))}
+  .light-stormy{background:radial-gradient(85% 60% at 50% 0%,rgba(120,130,160,.34),transparent 70%)}
+  /* props */
+  .prop{position:absolute;transform:translate(-50%,-50%) scale(var(--s,1));font-size:2.4rem;cursor:grab;user-select:none;touch-action:none;filter:drop-shadow(0 6px 8px rgba(0,0,0,.5))}
+  .prop.sel{outline:2px dashed var(--accent);outline-offset:8px;border-radius:10px}
+  .propbar{position:absolute;top:64px;left:50%;transform:translateX(-50%);z-index:6;display:none;gap:6px;background:rgba(12,7,8,.7);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:99px;padding:5px}
+  .propbar.show{display:flex}
+  .propbar button{background:none;border:0;color:var(--cream);font-family:inherit;font-weight:800;font-size:.9rem;width:34px;height:30px;border-radius:99px;cursor:pointer}
+  .propbar button:hover{background:var(--ink-2)}
+
+  /* customize drawer */
+  .sv-drawer{position:absolute;left:0;right:0;bottom:0;z-index:7;background:#120c0e;border-top:1px solid var(--line);
+    border-radius:18px 18px 0 0;transform:translateY(100%);transition:transform .25s ease;max-height:62%;overflow:auto;padding:14px 16px 24px}
+  .sv-drawer.open{transform:translateY(0)}
+  .premnote{background:linear-gradient(100deg,rgba(255,61,118,.12),rgba(255,171,64,.12));border:1px solid rgba(255,171,64,.3);
+    color:var(--amber);font-size:.78rem;font-weight:700;text-align:center;padding:7px;border-radius:10px;margin-bottom:12px}
+  .tabs{display:flex;gap:6px;margin-bottom:12px}
+  .tabs button{flex:1;background:var(--ink-2);border:1px solid var(--line);color:var(--muted);font-family:inherit;font-weight:700;font-size:.82rem;padding:.55em;border-radius:10px;cursor:pointer}
+  .tabs button.on{background:var(--grad);color:#1a0c10;border-color:transparent}
+  .optgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .opt{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer;font-size:.78rem;font-weight:700;position:relative}
+  .opt:hover{border-color:var(--rose)}
+  .opt.on{border-color:var(--cream)}
+  .opt .sw{height:42px;border-radius:8px;margin-bottom:6px}
+  .opt .gly{font-size:1.6rem}
+  .opt .prem{position:absolute;top:4px;right:5px;font-size:.6rem;color:var(--amber)}
+  .closebar{display:flex;justify-content:center;margin-top:8px}
+
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink-2);border:1px solid var(--rose);color:var(--cream);padding:.7em 1.2em;border-radius:99px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:130}
   .toast.show{opacity:1}
 </style>
 </head>
@@ -133,104 +226,132 @@
   <div class="setup" id="setup">⚠️ Supabase isn’t configured — add your keys to config.js to switch on accounts.</div>
 </header>
 
-<div class="wrap head">
-  <h1>My <em>Bookshelf</em></h1>
-  <p class="sub" id="sub">Decorate your shelves. Show off your spice.</p>
-  <div class="themes" id="themes"></div>
-  <div class="themenote">🧪 Beta: all themes unlocked — pick one and it saves to your account</div>
+<div class="roomwrap" id="roomwrap">
+  <div class="roomhead">
+    <h1>My <em>Bookshelf</em></h1>
+    <p class="sub" id="sub">Decorate your shelves. Show off your spice.</p>
+  </div>
+  <div id="stage"></div>
 </div>
 
-<div class="wrap" id="body"></div>
+<button class="themepill" id="themepill">🎨 Theme</button>
+
+<!-- theme bottom sheet -->
+<div class="sheetbase" id="themesheetbg">
+  <div class="bottomsheet">
+    <h3>Choose your bookcase theme</h3>
+    <p class="note">Walnut &amp; Noir are free. The rest are part of the members-only library ✨</p>
+    <div class="themegrid" id="themegrid"></div>
+  </div>
+</div>
+
+<!-- upsell modal -->
+<div class="modalbg" id="upsell">
+  <div class="modalcard">
+    <div class="em">✨</div>
+    <h3 id="upsellTitle">Themes are part of the members-only library ✨</h3>
+    <p id="upsellBody">Unlock every theme, backdrop, prop and lighting mood when membership lands. For now, beta members get a free preview.</p>
+    <div class="row">
+      <button class="ghostbtn" onclick="closeUpsell()">Maybe later</button>
+      <button class="btn" id="upsellGo">Preview it ✨</button>
+    </div>
+  </div>
+</div>
+
+<!-- book info modal -->
 <div class="sheetbg" id="sheetbg" onclick="if(event.target===this)closeSheet()"></div>
+<!-- long-press move menu -->
+<div class="mmbg" id="movemenu" onclick="if(event.target===this)this.classList.remove('open')"></div>
+
+<!-- shelf view (zoomed) -->
+<div class="shelfview" id="shelfview"></div>
+
 <div class="toast" id="toast"></div>
 
 <script>
   // Shared auth via config.js + auth.js — this page just listens.
+  const SHELVES=[['reading','Currently Reading'],['want','Want to Read'],['read','Read'],['dnf','Did Not Finish']];
   const THEMES=[
-    {id:'walnut',  name:'Walnut',           color:'#7a4e2a'},
-    {id:'noir',    name:'Noir',             color:'#34343c'},
-    {id:'faerie',  name:'Faerie Court',     color:'#2f5a44'},
-    {id:'academia',name:'Dark Academia',    color:'#6e3c2a'},
-    {id:'boudoir', name:'Candlelit Boudoir',color:'#6e2c46'},
-  ]; // beta: all themes unlocked
-  const STATUSES=[['want','Want to Read'],['reading','Currently Reading'],['read','Read & Rated'],['dnf','Did Not Finish']];
-  let sb=null, user=null, shelf=[], spiceMap={}, theme='walnut';
+    {id:'walnut',  name:'Walnut',           color:'#7a4e2a', premium:false},
+    {id:'noir',    name:'Noir',             color:'#34343c', premium:false},
+    {id:'boudoir', name:'Candlelit Boudoir',color:'#6e2c46', premium:true},
+    {id:'faerie',  name:'Faerie Court',     color:'#2f5a44', premium:true},
+    {id:'academia',name:'Dark Academia',    color:'#6e3c2a', premium:true},
+  ];
+  const BACKDROPS=[
+    {key:'plain',  name:'Plain',   premium:false},
+    {key:'velvet', name:'Velvet',  premium:true},
+    {key:'library',name:'Library', premium:true},
+    {key:'vines',  name:'Vines',   premium:true},
+    {key:'window', name:'Window',  premium:true},
+    {key:'night',  name:'Night',   premium:true},
+  ];
+  const LIGHTS=[
+    {key:'none',     name:'None'},
+    {key:'candlelit',name:'Candlelit'},
+    {key:'moonlit',  name:'Moonlit'},
+    {key:'golden',   name:'Golden'},
+    {key:'stormy',   name:'Stormy'},
+  ];
+  const PROP_DEFS=[
+    {key:'candle',gly:'🕯️'},{key:'plant',gly:'🪴'},{key:'teacup',gly:'🍵'},
+    {key:'dragon',gly:'🐉'},{key:'crystal',gly:'🔮'},{key:'art',gly:'🖼️'},
+  ];
 
-  // theme picker
-  document.getElementById('themes').innerHTML = THEMES.map(t=>`
-    <div class="swatch ${t.id==='walnut'?'on':''}" data-t="${t.id}" onclick="setTheme('${t.id}')">
-      <span class="dot" style="background:${t.color}"></span>${t.name}
-    </div>`).join('');
+  let sb=null, user=null, shelf=[], spiceMap={}, theme='walnut', isPremium=false;
+  let custom={};                 // status -> {backdrop_key, lighting_key, props:[]}
+  let dnfOpen=false, shelfIndex=0, selectedProp=null, drawerTab='backdrop';
+
+  const $=id=>document.getElementById(id);
+  const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1700);}
+  const hash=s=>{let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;};
+  const labelOf=st=>(SHELVES.find(s=>s[0]===st)||[,st])[1];
+
+  // ── AUTH WIRING ──
   window.addEventListener('sh-auth', async (e)=>{
-    sb = window.SH.sb; user = e.detail.user;
-    if(window.SH && !window.SH.configured) document.getElementById('setup').classList.add('show');
-    if(!user){ renderGate(); return; }
+    sb = window.SH ? window.SH.sb : null; user = e.detail.user;
+    if(window.SH && !window.SH.configured) $('setup').classList.add('show');
+    if(!user){ renderGate(); $('themepill').classList.remove('show'); return; }
+    isPremium = !!(e.detail.profile && e.detail.profile.is_premium);
     if(e.detail.profile && e.detail.profile.theme) setTheme(e.detail.profile.theme, true);
-    try{ await loadShelf(); renderCase(); }
-    catch(err){
-      console.error('bookcase load failed:', err);
-      document.getElementById('body').innerHTML =
-        `<div class="gate"><h2>Hmm, the bookshelf hit a snag</h2><p style="color:#ff9aa8">${(err&&err.message)||err}</p><p>Screenshot this message — it tells us exactly what to fix.</p></div>`;
+    try{
+      await loadAll(); renderRoom(); buildThemeSheet(); $('themepill').classList.add('show');
+    }catch(err){
+      console.error('bookshelf load failed:', err);
+      $('stage').innerHTML = `<div class="room"><div style="background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:24px;text-align:center;max-width:440px;margin:30px auto"><h2 style="font-family:Fraunces">Hmm, the bookshelf hit a snag</h2><p style="color:#ff9aa8">${esc((err&&err.message)||err)}</p><p style="color:var(--muted)">Screenshot this — it tells us exactly what to fix.</p></div></div>`;
     }
   });
-
-  function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1700);}
-  const idOf=k=>'b_'+k.replace(/[^a-z0-9]/gi,'');
-  const hash=s=>{let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;};
 
   function setTheme(id, silent){
     theme=id;
     document.body.className='theme-'+id;
-    document.querySelectorAll('.swatch').forEach(s=>s.classList.toggle('on',s.dataset.t===id));
+    document.querySelectorAll('.themecard').forEach(s=>s.classList.toggle('on',s.dataset.t===id));
     if(!silent && window.SH && SH.user){ SH.saveTheme(id); toast("Theme saved to your account ✨"); }
   }
 
-  // ── AUTH ──
-  async function loadShelf(){
-    const [r1, r2]=await Promise.all([
+  async function loadAll(){
+    const [r1,r2,r3]=await Promise.all([
       sb.from('shelf').select('*'),
-      sb.from('book_tags').select('book_key,spice')
+      sb.from('book_tags').select('book_key,spice'),
+      sb.from('shelf_customization').select('*')
     ]);
     if(r1.error) throw r1.error;
-    if(r2.error) throw r2.error;
     shelf=(r1.data||[]).sort(shelfCmp); spiceMap={};
-    (r2.data||[]).forEach(t=>{ if(t.spice) spiceMap[t.book_key]=t.spice; });
+    if(!r2.error) (r2.data||[]).forEach(t=>{ if(t.spice) spiceMap[t.book_key]=t.spice; });
+    custom={};
+    if(!r3.error) (r3.data||[]).forEach(c=>{ custom[c.shelf_status]={backdrop_key:c.backdrop_key,lighting_key:c.lighting_key,props:Array.isArray(c.props)?c.props:[]}; });
   }
 
   function renderGate(){
-    document.getElementById('body').innerHTML=`<div class="gate">
-      <h2>Log in to open your bookshelf 📚</h2>
-      <p>Your shelves, ratings, and theme live here — just for you.</p>
-      <div class="row" style="justify-content:center"><button class="btn" style="padding:.8em 1.6em" onclick="SH.openAuth()">Log in / Sign up</button></div>
-    </div>`;
+    $('stage').innerHTML=`<div class="room"><div style="background:var(--ink-2);border:1px solid var(--line);border-radius:18px;padding:30px;text-align:center;max-width:420px;margin:40px auto">
+      <h2 style="font-family:Fraunces;font-weight:600;font-size:1.4rem">Log in to open your bookshelf 📚</h2>
+      <p style="color:var(--muted);margin:6px 0 16px">Your shelves, ratings, themes and decorations live here — just for you.</p>
+      <button class="btn" style="padding:.8em 1.6em" onclick="SH.openAuth()">Log in / Sign up</button>
+    </div></div>`;
   }
 
-  function renderCase(){
-    const total=shelf.length;
-    document.getElementById('sub').textContent = total ? `${total} book${total>1?'s':''} on your shelves — decorate them, show them off.` : "Empty shelves… for now. Go find some trouble.";
-    const ordered=[...shelf].sort(shelfCmp);
-    document.getElementById('body').innerHTML = `<div class="case">${STATUSES.map(([st,label])=>{
-      const items=ordered.filter(b=>b.status===st);
-      const books = items.length
-        ? items.map(b=>{
-            const sp=spiceMap[b.book_key]||0;
-            const cov = b.cover_i
-              ? `<img class="bcov" src="https://covers.openlibrary.org/b/id/${b.cover_i}-L.jpg" style="height:${120+hash(b.book_key)%26}px" alt="${(b.title||'').replace(/"/g,'')}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="ph" style="height:${120+hash(b.book_key)%26}px;display:none">${b.title||''}</div>`
-              : `<div class="ph" style="height:${120+hash(b.book_key)%26}px">${b.title||''}</div>`;
-            return `<div class="book" draggable="true" data-key="${b.book_key}" onclick="openBook('${b.book_key}')">${cov}${sp?`<span class="sp">${sp}🌶️</span>`:''}</div>`;
-          }).join('')
-        : `<div class="empty-shelf">This shelf is bare.</div>`;
-      return `<div class="shelf">
-        <div class="plate">${label} <span class="ct">${items.length}</span></div>
-        <div class="row"><div class="books" data-status="${st}">${books}</div><div class="plank"></div></div>
-      </div>`;
-    }).join('')}</div>
-    ${total?`<p class="themenote">✋ Drag books to reorder, or drop them on another shelf to move them. Whatever sits first shows on your dashboard.</p>`:''}`;
-    attachDnD();
-  }
-
-  // ── DRAG & DROP (reorder within a shelf, or move between shelves) ──
-  let draggedEl=null;
+  // ── shelf ordering (manual sort_order asc; new books float to top) ──
   function shelfCmp(a,b){
     const ao=a.sort_order, bo=b.sort_order;
     if(ao==null && bo==null) return (b.created_at||'').localeCompare(a.created_at||'');
@@ -238,18 +359,80 @@
     if(bo==null) return 1;
     return ao-bo;
   }
+
+  // ── BOOK RENDERING (shared by room + shelf view) ──
+  function bookHTML(b){
+    const sp=spiceMap[b.book_key]||0;
+    const h=120+hash(b.book_key)%26;
+    const cov=b.cover_i
+      ? '<img class="bcov" src="https://covers.openlibrary.org/b/id/'+b.cover_i+'-L.jpg" style="height:'+h+'px" alt="'+esc(b.title)+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="ph" style="height:'+h+'px;display:none">'+esc(b.title)+'</div>'
+      : '<div class="ph" style="height:'+h+'px">'+esc(b.title)+'</div>';
+    const dnf=b.status==='dnf';
+    return '<div class="book'+(dnf?' dnf':'')+'" draggable="true" data-key="'+esc(b.book_key)+'">'+cov+(dnf?'<span class="grave">🪦</span>':'')+(sp?'<span class="sp">'+sp+'🌶️</span>':'')+'</div>';
+  }
+  const ghostHTML='<a class="ghost" href="smuthub-app.html"><span style="font-size:1.4rem">＋</span>Add</a>';
+
+  // ── BOOKCASE VIEW ──
+  function renderRoom(){
+    const ordered=[...shelf].sort(shelfCmp);
+    const total=shelf.length;
+    $('sub').textContent = total ? (total+' book'+(total>1?'s':'')+' on your shelves — tap a book, double-tap a shelf to zoom') : "Empty shelves… for now. Go find some trouble.";
+    const visible=SHELVES.filter(([st])=>st!=='dnf');
+    const dnfItems=ordered.filter(b=>b.status==='dnf');
+    $('stage').innerHTML = '<div class="room">'
+      + visible.map(([st,label])=>{
+          const items=ordered.filter(b=>b.status===st);
+          const books = items.length ? items.map(bookHTML).join('') : ghostHTML;
+          return '<div class="shelfrow"><div class="carve">'+label+' <span class="ct">'+items.length+'</span></div>'
+            + '<div class="row"><div class="books" data-status="'+st+'">'+books+'</div><div class="plank" data-shelf="'+st+'"></div></div></div>';
+        }).join('')
+      + dnfStripHTML(dnfItems)
+      + (total?'<p class="hint">✋ Drag to reorder · single-tap a book for details · double-tap a shelf to decorate it</p>':'')
+      + '</div>';
+    attachRoom();
+  }
+  function dnfStripHTML(items){
+    if(!items.length) return '';
+    return '<div class="dnfwrap'+(dnfOpen?' open':'')+'">'
+      + '<button class="dnfstrip" id="dnftoggle">🪦 DNF ('+items.length+') <span class="caret">▾</span></button>'
+      + '<div class="row" '+(dnfOpen?'':'style="display:none"')+'><div class="books" data-status="dnf">'+items.map(bookHTML).join('')+'</div><div class="plank" data-shelf="dnf"></div></div>'
+      + '</div>';
+  }
+
+  function attachRoom(){
+    attachDnD();
+    const dt=$('dnftoggle'); if(dt) dt.onclick=()=>{ dnfOpen=!dnfOpen; renderRoom(); };
+    // book: single tap → info · long-press → move menu
+    document.querySelectorAll('#stage .book').forEach(el=>{
+      const key=el.dataset.key; let lp=null;
+      el.addEventListener('click', ()=>{ if(el._suppress){ el._suppress=false; return; } openBook(key); });
+      const start=()=>{ el._suppress=false; lp=setTimeout(()=>{ el._suppress=true; openMoveMenu(key); }, 500); };
+      const cancel=()=>{ if(lp){clearTimeout(lp);lp=null;} };
+      el.addEventListener('touchstart',start,{passive:true});
+      ['touchend','touchmove','mouseup','mouseleave','dragstart'].forEach(ev=>el.addEventListener(ev,cancel));
+      el.addEventListener('mousedown',start);
+    });
+    // plank: double-tap → shelf view
+    document.querySelectorAll('#stage .plank').forEach(pl=>{
+      let last=0;
+      pl.addEventListener('click', ()=>{ const now=Date.now(); if(now-last<300){ enterShelf(pl.dataset.shelf); last=0; } else last=now; });
+    });
+  }
+
+  // ── DRAG & DROP REORDER (desktop) ──
+  let draggedEl=null;
   function attachDnD(){
-    document.querySelectorAll('#body .book').forEach(el=>{
+    document.querySelectorAll('#stage .book').forEach(el=>{
       el.addEventListener('dragstart', ()=>{ draggedEl=el; setTimeout(()=>el.classList.add('dragging'),0); });
       el.addEventListener('dragend', onDragEnd);
     });
-    document.querySelectorAll('#body .books').forEach(c=>{
+    document.querySelectorAll('#stage .books').forEach(c=>{
       c.addEventListener('dragover', e=>{
         e.preventDefault();
         if(!draggedEl) return;
-        document.querySelectorAll('#body .books.dropok').forEach(x=>{ if(x!==c) x.classList.remove('dropok'); });
+        document.querySelectorAll('#stage .books.dropok').forEach(x=>{ if(x!==c) x.classList.remove('dropok'); });
         c.classList.add('dropok');
-        const empty=c.querySelector('.empty-shelf'); if(empty) empty.remove();
+        const empty=c.querySelector('.ghost'); if(empty) empty.remove();
         const after=dragAfterElement(c, e.clientX);
         if(after==null) c.appendChild(draggedEl); else c.insertBefore(draggedEl, after);
       });
@@ -263,15 +446,15 @@
   }
   async function onDragEnd(){
     if(draggedEl) draggedEl.classList.remove('dragging');
-    document.querySelectorAll('#body .books.dropok').forEach(x=>x.classList.remove('dropok'));
+    document.querySelectorAll('#stage .books.dropok').forEach(x=>x.classList.remove('dropok'));
     draggedEl=null;
     const changed=commitOrder();
-    renderCase();
+    renderRoom();
     if(changed.length) await persistOrder(changed);
   }
   function commitOrder(){
     let idx=0; const changed=[];
-    document.querySelectorAll('#body .books').forEach(c=>{
+    document.querySelectorAll('#stage .books').forEach(c=>{
       const status=c.dataset.status;
       c.querySelectorAll('.book').forEach(el=>{
         const row=shelf.find(b=>b.book_key===el.dataset.key);
@@ -289,41 +472,32 @@
     toast("Order saved ✨");
   }
 
-  // ── BOOK DETAIL SHEET ──
+  // ── BOOK INFO MODAL ──
   function openBook(key){
     const b=shelf.find(x=>x.book_key===key); if(!b) return;
     const sp=spiceMap[key]||0;
     const cov = b.cover_i
-      ? `<img src="https://covers.openlibrary.org/b/id/${b.cover_i}-L.jpg" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="ph" style="display:none">${b.title||''}</div>`
-      : `<div class="ph">${b.title||''}</div>`;
-    const chilis=[1,2,3,4,5].map(n=>`<span data-n="${n}" class="${sp>=n?'on':''}">🌶️</span>`).join('');
-    const moves=STATUSES.filter(([s])=>s!==b.status).map(([s,l])=>`<button class="pillbtn" onclick="setStatus('${key}','${s}')">→ ${l}</button>`).join('');
-    document.getElementById('sheetbg').innerHTML = `<div class="sheet">
-      <div class="top">
-        <div class="bigcov">${cov}</div>
-        <div>
-          <h3>${b.title||'Untitled'}</h3>
-          <div class="au">by ${b.author||'Unknown'}</div>
-          <div class="rate" id="srate" onclick="rate(event,'${key}')">${chilis}</div>
-        </div>
-      </div>
-      <div class="acts">
-        ${moves}
-        <button class="pillbtn rec" onclick="recommend('${key}')">↗ Recommend</button>
-        <button class="pillbtn rm" onclick="removeBook('${key}')">Remove</button>
-      </div></div>`;
-    document.getElementById('sheetbg').classList.add('open');
+      ? '<img src="https://covers.openlibrary.org/b/id/'+b.cover_i+'-L.jpg" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="ph" style="display:none">'+esc(b.title)+'</div>'
+      : '<div class="ph">'+esc(b.title)+'</div>';
+    const chilis=[1,2,3,4,5].map(n=>'<span data-n="'+n+'" class="'+(sp>=n?'on':'')+'">🌶️</span>').join('');
+    const moves=SHELVES.filter(([s])=>s!==b.status).map(([s,l])=>'<button class="pillbtn" onclick="setStatus(\''+esc(key)+'\',\''+s+'\')">→ '+l+'</button>').join('');
+    $('sheetbg').innerHTML = '<div class="sheet"><div class="top"><div class="bigcov">'+cov+'</div>'
+      + '<div><h3>'+esc(b.title||'Untitled')+'</h3><div class="au">by '+esc(b.author||'Unknown')+'</div>'
+      + '<div class="rate" id="srate" onclick="rate(event,\''+esc(key)+'\')">'+chilis+'</div></div></div>'
+      + '<div class="acts">'+moves+'<button class="pillbtn rec" onclick="recommend(\''+esc(key)+'\')">↗ Recommend</button>'
+      + '<button class="pillbtn rm" onclick="removeBook(\''+esc(key)+'\')">Remove</button></div></div>';
+    $('sheetbg').classList.add('open');
   }
-  function closeSheet(){ document.getElementById('sheetbg').classList.remove('open'); }
+  function closeSheet(){ $('sheetbg').classList.remove('open'); }
 
   async function setStatus(key,status){
     const row=shelf.find(b=>b.book_key===key); if(row) row.status=status;
-    closeSheet(); renderCase();
+    closeSheet(); refreshViews();
     await sb.from('shelf').update({status}).eq('book_key',key);
-    toast("Moved to "+STATUSES.find(s=>s[0]===status)[1]);
+    toast("Moved to "+labelOf(status));
   }
   async function removeBook(key){
-    shelf=shelf.filter(b=>b.book_key!==key); closeSheet(); renderCase();
+    shelf=shelf.filter(b=>b.book_key!==key); closeSheet(); refreshViews();
     await sb.from('shelf').delete().eq('book_key',key);
     toast("Removed from your bookshelf");
   }
@@ -336,8 +510,179 @@
   }
   function recommend(key){
     const b=shelf.find(x=>x.book_key===key);
-    toast(`Reccing "${b?.title||'this'}" — shareable rec cards coming soon ↗`);
+    toast('Reccing "'+((b&&b.title)||'this')+'" — shareable rec cards coming soon ↗');
   }
+  // re-render whichever view is showing
+  function refreshViews(){ renderRoom(); if($('shelfview').classList.contains('open')) renderShelfView(); }
+
+  // ── LONG-PRESS MOVE MENU ──
+  function openMoveMenu(key){
+    const b=shelf.find(x=>x.book_key===key); if(!b) return;
+    const opts=SHELVES.filter(([s])=>s!==b.status).map(([s,l])=>'<button class="mm-item" data-move="'+s+'">→ '+l+'</button>').join('');
+    const m=$('movemenu');
+    m.innerHTML='<div class="mmcard"><div class="mm-title">Move “'+esc(b.title||'book')+'”</div>'+opts+'<button class="mm-item cancel">Cancel</button></div>';
+    m.classList.add('open');
+    m.querySelectorAll('.mm-item').forEach(it=>it.onclick=()=>{ const mv=it.dataset.move; m.classList.remove('open'); if(mv) setStatus(key,mv); });
+  }
+
+  // ── THEME SHEET + GATING (visual-only locks: usable, with upsell) ──
+  function buildThemeSheet(){
+    $('themegrid').innerHTML = THEMES.map(t=>
+      '<div class="themecard '+(t.id===theme?'on':'')+'" data-t="'+t.id+'" data-prem="'+(t.premium?1:0)+'">'
+      + '<span class="dot" style="background:'+t.color+'"></span>'
+      + '<div><div class="tn">'+t.name+'</div>'+(t.premium?'<div class="lock">✨ PREMIUM</div>':'<div class="lock" style="color:var(--muted)">FREE</div>')+'</div></div>'
+    ).join('');
+    document.querySelectorAll('#themegrid .themecard').forEach(c=>c.onclick=()=>{
+      const id=c.dataset.t, prem=c.dataset.prem==='1';
+      if(prem && !isPremium){ showUpsell("Themes are part of the members-only library ✨", ()=>{ setTheme(id); closeThemeSheet(); }); return; }
+      setTheme(id); closeThemeSheet();
+    });
+  }
+  $('themepill').onclick=()=>{ buildThemeSheet(); $('themesheetbg').classList.add('open'); };
+  $('themesheetbg').onclick=(e)=>{ if(e.target===$('themesheetbg')) closeThemeSheet(); };
+  function closeThemeSheet(){ $('themesheetbg').classList.remove('open'); }
+
+  function showUpsell(title, onGo){
+    $('upsellTitle').textContent=title;
+    $('upsell').classList.add('open');
+    $('upsellGo').onclick=()=>{ closeUpsell(); if(onGo) onGo(); };
+  }
+  function closeUpsell(){ $('upsell').classList.remove('open'); }
+
+  // ── SHELF VIEW (zoomed, customization) ──
+  function enterShelf(status){
+    shelfIndex=Math.max(0, SHELVES.findIndex(([s])=>s===status));
+    selectedProp=null; renderShelfView();
+    $('shelfview').classList.add('open');
+  }
+  function exitShelf(){ $('shelfview').classList.remove('open'); }
+
+  function renderShelfView(){
+    const [status,label]=SHELVES[shelfIndex];
+    const c=custom[status]||{};
+    const items=[...shelf].sort(shelfCmp).filter(b=>b.status===status);
+    const props=(c.props||[]).map((p,i)=>propHTML(p,i)).join('');
+    $('shelfview').innerHTML =
+      '<div class="sv-backdrop bd-'+(c.backdrop_key||'plain')+'"></div>'
+      + '<div class="sv-props" id="svprops">'+props+'</div>'
+      + '<div class="sv-light light-'+(c.lighting_key||'none')+'"></div>'
+      + '<div class="propbar" id="propbar"><button data-p="smaller">－</button><button data-p="bigger">＋</button><button data-p="remove">🗑️</button></div>'
+      + '<div class="sv-top"><button class="sv-back" id="svback">←</button><div class="sv-label">'+label+'</div><div style="width:38px"></div></div>'
+      + '<div class="sv-shelf"><div class="books">'+(items.length?items.map(bookHTML).join(''):ghostHTML)+'</div><div class="plank"></div></div>'
+      + '<button class="sv-customize" id="svcustomize">🎨 Customize</button>'
+      + '<div class="sv-dots">'+SHELVES.map((s,i)=>'<span class="'+(i===shelfIndex?'on':'')+'"></span>').join('')+'</div>'
+      + '<div class="sv-drawer" id="svdrawer"></div>';
+    attachShelfView(status);
+  }
+  function propHTML(p,i){
+    const def=PROP_DEFS.find(x=>x.key===p.key);
+    return '<span class="prop'+(i===selectedProp?' sel':'')+'" data-i="'+i+'" style="left:'+((p.x==null?.5:p.x)*100)+'%;top:'+((p.y==null?.5:p.y)*100)+'%;--s:'+(p.scale||1)+'">'+(def?def.gly:'❔')+'</span>';
+  }
+
+  function attachShelfView(status){
+    $('svback').onclick=exitShelf;
+    $('svcustomize').onclick=()=>openDrawer(status);
+    // book tap → info
+    document.querySelectorAll('#shelfview .book').forEach(el=>{
+      el.addEventListener('click',()=>openBook(el.dataset.key));
+    });
+    // props: drag to move, tap to select
+    document.querySelectorAll('#svprops .prop').forEach(el=>attachProp(el, status));
+    // prop toolbar
+    const bar=$('propbar');
+    bar.querySelectorAll('button').forEach(btn=>btn.onclick=()=>propAction(btn.dataset.p, status));
+    if(selectedProp!=null) bar.classList.add('show'); else bar.classList.remove('show');
+  }
+
+  function attachProp(el, status){
+    const layer=$('svprops');
+    let moved=false, startX=0, startY=0;
+    el.addEventListener('pointerdown', (e)=>{
+      e.preventDefault(); moved=false; startX=e.clientX; startY=e.clientY;
+      el.setPointerCapture(e.pointerId);
+      const onMove=(ev)=>{
+        if(Math.abs(ev.clientX-startX)>4||Math.abs(ev.clientY-startY)>4) moved=true;
+        const r=layer.getBoundingClientRect();
+        const x=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width));
+        const y=Math.min(1,Math.max(0,(ev.clientY-r.top)/r.height));
+        el.style.left=(x*100)+'%'; el.style.top=(y*100)+'%';
+        el._x=x; el._y=y;
+      };
+      const onUp=()=>{
+        el.removeEventListener('pointermove',onMove); el.removeEventListener('pointerup',onUp);
+        const i=+el.dataset.i; const arr=(custom[status]||{}).props||[];
+        if(moved && arr[i]){ arr[i].x=el._x; arr[i].y=el._y; saveCustom(status); }
+        else { selectedProp = (selectedProp===i? null : i); renderShelfView(); }
+      };
+      el.addEventListener('pointermove',onMove); el.addEventListener('pointerup',onUp);
+    });
+  }
+  function propAction(act, status){
+    const arr=(custom[status]||{}).props||[]; if(selectedProp==null||!arr[selectedProp]) return;
+    if(act==='remove'){ arr.splice(selectedProp,1); selectedProp=null; }
+    else { const p=arr[selectedProp]; p.scale=Math.min(2.4,Math.max(.5,(p.scale||1)+(act==='bigger'?.2:-.2))); }
+    saveCustom(status); renderShelfView();
+  }
+
+  // ── CUSTOMIZE DRAWER ──
+  function openDrawer(status){ drawerTab='backdrop'; renderDrawer(status); $('svdrawer').classList.add('open'); }
+  function renderDrawer(status){
+    const c=custom[status]||{};
+    let body='';
+    if(drawerTab==='backdrop'){
+      body='<div class="optgrid">'+BACKDROPS.map(b=>
+        '<div class="opt '+((c.backdrop_key||'plain')===b.key?'on':'')+'" data-bd="'+b.key+'"><div class="sw bd-'+b.key+'"></div>'+b.name+(b.premium?'<span class="prem">✨</span>':'')+'</div>'
+      ).join('')+'</div>';
+    } else if(drawerTab==='lighting'){
+      body='<div class="optgrid">'+LIGHTS.map(l=>
+        '<div class="opt '+((c.lighting_key||'none')===l.key?'on':'')+'" data-light="'+l.key+'"><div class="sw light-'+l.key+'" style="background-color:#0c0708"></div>'+l.name+'</div>'
+      ).join('')+'</div>';
+    } else {
+      body='<div class="optgrid">'+PROP_DEFS.map(p=>
+        '<div class="opt" data-prop="'+p.key+'"><div class="gly">'+p.gly+'</div>'+p.key+'</div>'
+      ).join('')+'</div><p style="color:var(--muted);font-size:.78rem;margin-top:10px;text-align:center">Tap to add · drag on the shelf to place · tap a prop to resize/remove</p>';
+    }
+    $('svdrawer').innerHTML =
+      '<div class="premnote">✨ Premium decoration — free to preview during beta</div>'
+      + '<div class="tabs"><button data-tab="backdrop" class="'+(drawerTab==='backdrop'?'on':'')+'">Backdrop</button>'
+      + '<button data-tab="props" class="'+(drawerTab==='props'?'on':'')+'">Props</button>'
+      + '<button data-tab="lighting" class="'+(drawerTab==='lighting'?'on':'')+'">Lighting</button></div>'
+      + body
+      + '<div class="closebar"><button class="ghostbtn" id="drawerClose" style="max-width:160px">Done</button></div>';
+    // wire
+    $('svdrawer').querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{ drawerTab=b.dataset.tab; renderDrawer(status); });
+    $('drawerClose').onclick=()=>$('svdrawer').classList.remove('open');
+    $('svdrawer').querySelectorAll('[data-bd]').forEach(o=>o.onclick=()=>{ ensure(status).backdrop_key=o.dataset.bd; saveCustom(status); renderShelfView(); openDrawer(status); });
+    $('svdrawer').querySelectorAll('[data-light]').forEach(o=>o.onclick=()=>{ ensure(status).lighting_key=o.dataset.light; saveCustom(status); renderShelfView(); openDrawer(status); });
+    $('svdrawer').querySelectorAll('[data-prop]').forEach(o=>o.onclick=()=>{ ensure(status).props.push({key:o.dataset.prop,x:.5,y:.55,scale:1,rotation:0}); saveCustom(status); renderShelfView(); openDrawer(status); });
+  }
+  function ensure(status){ if(!custom[status]) custom[status]={backdrop_key:null,lighting_key:null,props:[]}; if(!custom[status].props) custom[status].props=[]; return custom[status]; }
+
+  async function saveCustom(status){
+    const c=custom[status]||{};
+    const { error } = await sb.from('shelf_customization').upsert(
+      { user_id:user.id, shelf_status:status, backdrop_key:c.backdrop_key||null, lighting_key:c.lighting_key||null, props:c.props||[], updated_at:new Date().toISOString() },
+      { onConflict:'user_id,shelf_status' }
+    );
+    if(error){ console.error('customization save', error); toast(/relation|exist|column|shelf_customization/i.test(error.message) ? "Run smuthub-bookshelf-schema.sql in Supabase to save decorations" : "Couldn't save: "+error.message); }
+  }
+
+  // swipe + keyboard nav for shelf view (bound once)
+  (function(){
+    const sv=$('shelfview'); let tsx=null, tsy=null;
+    sv.addEventListener('touchstart', e=>{ tsx=e.touches[0].clientX; tsy=e.touches[0].clientY; }, {passive:true});
+    sv.addEventListener('touchend', e=>{
+      if(tsx==null) return; const dx=e.changedTouches[0].clientX-tsx, dy=e.changedTouches[0].clientY-tsy; tsx=null;
+      if(Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)){ if(!$('svdrawer')||!$('svdrawer').classList.contains('open')) switchShelf(dx<0?1:-1); }
+    });
+    document.addEventListener('keydown', e=>{
+      if(!sv.classList.contains('open')) return;
+      if(e.key==='Escape') exitShelf();
+      else if(e.key==='ArrowRight') switchShelf(1);
+      else if(e.key==='ArrowLeft') switchShelf(-1);
+    });
+  })();
+  function switchShelf(dir){ shelfIndex=Math.min(SHELVES.length-1, Math.max(0, shelfIndex+dir)); selectedProp=null; renderShelfView(); }
 </script>
 </body>
 </html>
