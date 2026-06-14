@@ -32,6 +32,17 @@
   .theme-academia{--case:#170f0c;--wood:#7a4a32;--wood-dk:#3a2418;--wood-lt:#9c6442;--back:#160d08;--plate:#caa063;--plate-tx:#170f0c;--accent:#e0a85e;--room:radial-gradient(130% 90% at 50% -18%,#26180f,#0c0908 72%);--glow:rgba(224,168,94,.18);}
   .theme-boudoir{--case:#1a0c12;--wood:#7e3656;--wood-dk:#3e1a2c;--wood-lt:#a04e72;--back:#1a0a12;--plate:#eec078;--plate-tx:#1a0c12;--accent:#ff6ea0;--room:radial-gradient(130% 90% at 50% -18%,#2e1320,#0c0708 72%);--glow:rgba(255,110,160,.20);}
 
+  /* Optional per-theme background ART. These files don't exist yet; the site
+     stays on the CSS gradients above until you (a) drop an image at the path
+     and (b) set THEME_ART=true in the script. See /themes/README for prompts. */
+  .theme-walnut  {--room-img:url('themes/walnut/room.jpg')}
+  .theme-noir    {--room-img:url('themes/noir/room.jpg')}
+  .theme-faerie  {--room-img:url('themes/faerie/room.jpg')}
+  .theme-academia{--room-img:url('themes/academia/room.jpg')}
+  .theme-boudoir {--room-img:url('themes/boudoir/room.jpg')}
+  body.art-on .roomwrap{background:var(--room-img) center/cover no-repeat, var(--room)}
+  body.art-on .bd-plain{background:var(--room-img) center/cover no-repeat, var(--room)}
+
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
   .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
@@ -347,6 +358,9 @@
     {key:'candle',gly:'🕯️'},{key:'plant',gly:'🪴'},{key:'teacup',gly:'🍵'},
     {key:'dragon',gly:'🐉'},{key:'crystal',gly:'🔮'},{key:'art',gly:'🖼️'},
   ];
+  // Flip to true once you've added background images at /themes/<theme>/room.jpg.
+  // Until then the page uses the CSS gradients (no missing-image requests).
+  const THEME_ART=false;
 
   let sb=null, user=null, shelf=[], spiceMap={}, theme='walnut', isPremium=false;
   let custom={};
@@ -374,7 +388,7 @@
 
   function setTheme(id, silent){
     theme=id;
-    document.body.className='theme-'+id;
+    document.body.className='theme-'+id+(THEME_ART?' art-on':'');
     document.querySelectorAll('.themecard').forEach(s=>s.classList.toggle('on',s.dataset.t===id));
     if(!silent && window.SH && SH.user){ SH.saveTheme(id); toast("Theme saved to your account ✨"); }
   }
