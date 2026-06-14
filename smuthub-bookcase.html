@@ -106,7 +106,7 @@
   .row::before{content:"";position:absolute;left:0;right:0;top:-2px;height:30px;pointer-events:none;z-index:2;
     background:linear-gradient(rgba(0,0,0,.5),transparent)}
   .books{position:relative;z-index:2;display:flex;gap:7px;align-items:flex-end;justify-content:flex-start;
-    overflow-x:auto;padding:12px 4px 0;min-height:148px;scrollbar-width:none}
+    overflow-x:auto;padding:18px 4px 0;min-height:172px;scrollbar-width:none}
   .books::-webkit-scrollbar{display:none}
   .book{flex:0 0 auto;width:clamp(72px,18vw,92px);cursor:grab;transition:transform .2s ease;position:relative;
     touch-action:manipulation;filter:drop-shadow(0 9px 9px rgba(0,0,0,.5))}
@@ -414,7 +414,7 @@
 
   function bookHTML(b){
     const sp=spiceMap[b.book_key]||0;
-    const h=118+hash(b.book_key)%30;
+    const h=138;   // uniform height — a tidy shelf line, and never taller than the row
     const cov=b.cover_i
       ? '<img class="bcov" src="https://covers.openlibrary.org/b/id/'+b.cover_i+'-L.jpg" style="height:'+h+'px" alt="'+esc(b.title)+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="ph" style="height:'+h+'px;display:none">'+esc(b.title)+'</div>'
       : '<div class="ph" style="height:'+h+'px">'+esc(b.title)+'</div>';
