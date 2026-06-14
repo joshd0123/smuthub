@@ -127,11 +127,12 @@
     (shelf||[]).forEach(s=>{ shelfSet.add(s.book_key); shelfStatus[s.book_key]=s.status||'want'; });
   }
 
-  // ── SEARCH: fresh defaults each visit + relevance-sorted results ──
-  const DEFAULT_QUERIES = ['subject:"fantasy romance"','subject:"paranormal romance"','subject:romance subject:fantasy','subject:romance subject:dragons','subject:romance subject:fae'];
-  // Browse results must read as romantasy — not just any book the catalog returns.
+  // ── SEARCH: Google Books first, Open Library as fallback ──
+  const DEFAULT_QUERIES = ['romantasy','fantasy romance','paranormal romance','fae romance','dragon rider romance','enemies to lovers romance'];
   const ROMANCE_RX = /romance|romantasy|fantasy|fae|dragon|paranormal|vampire|werewolf/i;
-  function isRomantasy(b){ return Array.isArray(b.subject) && b.subject.some(s=>ROMANCE_RX.test(s)); }
+  // soft filter: if a result carries no category info, don't exclude it
+  function isRomantasy(b){ const s=[].concat(b.subject||[]); return s.length ? s.some(x=>ROMANCE_RX.test(x)) : true; }
+  const coverSrc=b=>b.cover_url||(b.cover_i?('https://covers.openlibrary.org/b/id/'+b.cover_i+'-L.jpg'):null);
 
   function scoreDoc(b, q){
     const t=(b.title||'').toLowerCase(), a=((b.author_name&&b.author_name[0])||'').toLowerCase();
@@ -141,8 +142,22 @@
     const words=q.split(/\s+/).filter(Boolean);
     sc += words.filter(w=>t.includes(w)).length*6;
     sc += words.filter(w=>a.includes(w)).length*4;
-    if(b.cover_i) sc+=18;            // prefer books with real covers
+    if(coverSrc(b)) sc+=18;          // prefer books with real covers
     return sc;
+  }
+
+  async function googleBooks(q){
+    const r = await fetch('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)+'&maxResults=24&printType=books');
+    const d = await r.json();
+    return (d.items||[]).map(it=>{
+      const v=it.volumeInfo||{}, img=v.imageLinks&&(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail);
+      return { key:'gb:'+it.id, title:v.title, author_name:v.authors||[], cover_url:img?img.replace(/^http:/,'https:'):null, cover_i:null, subject:v.categories||[] };
+    }).filter(b=>b.title);
+  }
+  async function openLib(q, offset){
+    const r = await fetch('https://openlibrary.org/search.json?q='+encodeURIComponent(q)+'&fields=key,title,author_name,cover_i,subject&limit=30'+(offset?'&offset='+offset:''));
+    const d = await r.json();
+    return (d.docs||[]).filter(x=>x.title).map(b=>({ key:b.key, title:b.title, author_name:b.author_name||[], cover_i:b.cover_i||null, cover_url:null, subject:b.subject||[] }));
   }
 
   async function run(){
@@ -150,22 +165,17 @@
     const st=document.getElementById('status');
     st.textContent="Pulling real books…";
     try{
-      let url;
-      if(typed){
-        url = `https://openlibrary.org/search.json?q=${encodeURIComponent(typed)}&fields=key,title,author_name,cover_i,subject&limit=30`;
-      } else {
-        const q = DEFAULT_QUERIES[Math.floor(Math.random()*DEFAULT_QUERIES.length)];
-        const offset = [0,20,40][Math.floor(Math.random()*3)];
-        url = `https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&fields=key,title,author_name,cover_i,subject&limit=40&offset=${offset}`;
-      }
-      const r=await fetch(url); const d=await r.json();
-      let docs=(d.docs||[]).filter(x=>x.title);
+      const browseQ = DEFAULT_QUERIES[Math.floor(Math.random()*DEFAULT_QUERIES.length)];
+      let docs=[];
+      try{ docs = await googleBooks(typed || browseQ); }catch(e){ docs=[]; }
+      if(!docs.length){ docs = await openLib(typed || browseQ, typed?0:[0,20,40][Math.floor(Math.random()*3)]); }
       if(typed){
         const q=typed.toLowerCase();
         docs = docs.map(b=>[scoreDoc(b,q),b]).sort((x,y)=>y[0]-x[0]).map(x=>x[1]);
       } else {
-        // Browsing: romantasy only, and only books that actually have a cover.
-        docs = docs.filter(b=>b.cover_i && isRomantasy(b));
+        const covered = docs.filter(coverSrc);
+        const onTheme = covered.filter(isRomantasy);
+        docs = onTheme.length ? onTheme : covered;
       }
       lastDocs = docs.slice(0,16);
       st.innerHTML = lastDocs.length ? `Showing <b style="color:var(--cream)">${lastDocs.length}</b> real books` : "No books found — try a title or author.";
@@ -174,8 +184,9 @@
   }
 
   function coverHTML(b){
-    return b.cover_i
-      ? `<img src="https://covers.openlibrary.org/b/id/${b.cover_i}-L.jpg" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="ph" style="display:none">${b.title}</div>`
+    const s=coverSrc(b);
+    return s
+      ? `<img src="${s}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="ph" style="display:none">${b.title}</div>`
       : `<div class="ph">${b.title}</div>`;
   }
   const idOf=k=>'b_'+k.replace(/[^a-z0-9]/gi,'');
@@ -254,8 +265,9 @@
 
   async function shelveBook(key, status, book){
     const payload = { book_key:key, status };
-    if(book){ payload.title=book.title||null; payload.author=(book.author_name&&book.author_name[0])||null; payload.cover_i=book.cover_i||null; }
-    const { error } = await sb.from('shelf').upsert(payload,{onConflict:'user_id,book_key'});
+    if(book){ payload.title=book.title||null; payload.author=(book.author_name&&book.author_name[0])||null; payload.cover_i=book.cover_i||null; payload.cover_url=book.cover_url||null; }
+    let { error } = await sb.from('shelf').upsert(payload,{onConflict:'user_id,book_key'});
+    if(error && /cover_url/i.test(error.message)){ delete payload.cover_url; ({ error } = await sb.from('shelf').upsert(payload,{onConflict:'user_id,book_key'})); }
     if(error){ toast("Save failed: "+error.message); console.error('shelf save', error); return; }
     shelfSet.add(key); shelfStatus[key]=status; render();
     toast("Shelved as "+(STATUS_LABEL[status]||status)+" 📚");

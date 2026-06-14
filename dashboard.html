@@ -271,6 +271,18 @@
   function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1700); }
   function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   function coverUrl(cover_i){ return cover_i ? `https://covers.openlibrary.org/b/id/${cover_i}-L.jpg` : null; }
+  const coverSrc=b=>b.cover_url||coverUrl(b.cover_i);
+  // Google Books first, Open Library fallback — normalized {key,title,author,cover_url,cover_i}
+  async function gBooks(q){
+    try{ const d=await (await fetch('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)+'&maxResults=12&printType=books')).json();
+      return (d.items||[]).map(it=>{const v=it.volumeInfo||{},img=v.imageLinks&&(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail);return {key:'gb:'+it.id,title:v.title,author:(v.authors&&v.authors[0])||'Unknown',cover_url:img?img.replace(/^http:/,'https:'):null,cover_i:null};}).filter(b=>b.title);
+    }catch(_){ return []; }
+  }
+  async function oLib(q){
+    try{ const d=await (await fetch('https://openlibrary.org/search.json?q='+encodeURIComponent(q)+'&fields=key,title,author_name,cover_i&limit=12')).json();
+      return (d.docs||[]).filter(b=>b.title).map(b=>({key:b.key,title:b.title,author:(b.author_name&&b.author_name[0])||'Unknown',cover_i:b.cover_i||null,cover_url:null}));
+    }catch(_){ return []; }
+  }
   // Shelf order: manual sort_order ascending; un-ordered (new) books float to the
   // top by recency until the next reorder on the bookshelf.
   function shelfCmp(a,b){
@@ -352,7 +364,7 @@
   function readingTileHTML(b){
     const status = b.status || 'want';
     const spice = mySpice[b.key] || mySpice[b.book_key] || b.spice;
-    const cov = coverUrl(b.cover_i);
+    const cov = coverSrc(b);
     const img = cov ? `<img src="${cov}" alt="" onerror="this.style.display='none'">` : '';
     return `<div class="tile ${status==='dnf'?'dnf':''}" onclick="openBook('${esc(b.key||b.book_key)}')">
       ${img}
@@ -381,16 +393,17 @@
   // ── trending ──────────────────────────────────────────
   // Covers are resolved live from Open Library by title+author (cached per session),
   // so trending.json only needs title/author/badge — no brittle, wrong cover IDs.
+  // returns a cover image URL (Google Books first, Open Library fallback), cached per session
   async function resolveCover(title, author){
     const ck = 'sh_cov_' + title + '|' + (author||'');
-    try{ const c = sessionStorage.getItem(ck); if(c!==null) return c==='0' ? null : +c; }catch(_){}
+    try{ const c = sessionStorage.getItem(ck); if(c!==null) return c||null; }catch(_){}
+    let url=null;
     try{
-      const u = `https://openlibrary.org/search.json?title=${encodeURIComponent(title)}${author?`&author=${encodeURIComponent(author)}`:''}&fields=cover_i&limit=1`;
-      const d = await (await fetch(u)).json();
-      const ci = (d.docs && d.docs[0] && d.docs[0].cover_i) || null;
-      try{ sessionStorage.setItem(ck, ci?String(ci):'0'); }catch(_){}
-      return ci;
-    }catch(_){ return null; }
+      const g = await gBooks(title+(author?' '+author:'')); const gh=g.find(x=>x.cover_url); if(gh) url=gh.cover_url;
+      if(!url){ const o = await oLib('title:'+title+(author?' author:'+author:'')); const oh=o.find(x=>x.cover_i); if(oh) url=coverUrl(oh.cover_i); }
+    }catch(_){}
+    try{ sessionStorage.setItem(ck, url||''); }catch(_){}
+    return url;
   }
   async function loadTrending(){
     if (!trendingFetched){
@@ -414,7 +427,7 @@
   function renderTrending(books){
     const withCovers = books.filter(b=>b._cover);   // only show books that have a real cover
     $('trending').innerHTML = (withCovers.length?withCovers:books).slice(0,6).map(b=>{
-      const cov = coverUrl(b._cover);
+      const cov = b._cover;
       const badgeText = b.badge==='hot' ? `#${b.rank} HOT` : b.badge==='new' ? 'NEW' : `↑ #${b.rank}`;
       const badgeClass = b.badge==='hot' || b.badge==='new' ? 'hot' : '';
       return `<div class="tile" onclick="openTrending('${esc(b.title)}')">
@@ -454,7 +467,7 @@
     if (onShelf.length){
       html += `<div class="rgroup"><h4>📚 On your shelf</h4>` +
         onShelf.map(b=>{
-          const cov = coverUrl(b.cover_i);
+          const cov = coverSrc(b);
           const st = b.status||'want';
           return `<div class="rrow" onclick="openBook('${esc(b.book_key||b.key)}')">
             <div class="rcov">${cov?`<img src="${cov}" alt="" onerror="this.style.display='none'">`:esc(b.title)}</div>
@@ -470,20 +483,19 @@
     $('results').classList.add('show');
 
     try{
-      const r = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&fields=key,title,author_name,cover_i&limit=12`);
-      const d = await r.json();
+      let docs = await gBooks(q);
+      if(!docs.length) docs = await oLib(q);
       const shelfKeys = new Set(myShelf.map(b=>b.book_key||b.key));
-      const docs = (d.docs||[]).filter(b=>b.title && !shelfKeys.has(b.key)).slice(0,5);
+      docs = docs.filter(b=>!shelfKeys.has(b.key)).slice(0,5);
       if (!docs.length){
         $('olres').innerHTML = `<div style="color:var(--muted);font-size:.85rem;padding:8px 4px">No new results — looks like you've covered it.</div>`;
         return;
       }
       $('olres').outerHTML = docs.map(b=>{
-        const cov = coverUrl(b.cover_i);
-        const author = (b.author_name && b.author_name[0]) || 'Unknown';
-        return `<div class="rrow" onclick="addFromSearch('${esc(b.key)}','${esc(b.title)}','${esc(author)}',${b.cover_i||'null'})">
+        const cov = coverSrc(b);
+        return `<div class="rrow" onclick="addFromSearch('${esc(b.title)}')">
           <div class="rcov">${cov?`<img src="${cov}" alt="" onerror="this.style.display='none'">`:esc(b.title)}</div>
-          <div class="rinfo"><div class="t">${esc(b.title)}</div><div class="a">by ${esc(author)}</div></div>
+          <div class="rinfo"><div class="t">${esc(b.title)}</div><div class="a">by ${esc(b.author||'Unknown')}</div></div>
           <span class="rstat none">+ add</span>
         </div>`;
       }).join('');
@@ -491,7 +503,7 @@
       $('olres').innerHTML = `<div style="color:var(--muted);font-size:.85rem;padding:8px 4px">Catalog unreachable — try again in a moment.</div>`;
     }
   }
-  function addFromSearch(key,title,author,cover_i){
+  function addFromSearch(title){
     if (!user){ if (window.SH) SH.openAuth(); return; }
     location.href = 'smuthub-app.html?q=' + encodeURIComponent(title);
   }

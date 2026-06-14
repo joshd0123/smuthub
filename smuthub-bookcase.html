@@ -108,8 +108,10 @@
   .books{position:relative;z-index:2;display:flex;gap:7px;align-items:flex-end;justify-content:flex-start;
     overflow-x:auto;padding:18px 4px 0;min-height:172px;scrollbar-width:none}
   .books::-webkit-scrollbar{display:none}
-  .book{flex:0 0 auto;width:clamp(72px,18vw,92px);cursor:grab;transition:transform .2s ease;position:relative;
+  .book{flex:0 0 auto;cursor:grab;transition:transform .2s ease;position:relative;
     touch-action:manipulation;filter:drop-shadow(0 9px 9px rgba(0,0,0,.5))}
+  .book.face{width:clamp(72px,18vw,92px)}
+  .book.spine{width:clamp(32px,7.5vw,42px)}
   .book::after{content:"";position:absolute;left:8%;right:8%;bottom:-5px;height:8px;border-radius:50%;
     background:radial-gradient(ellipse at center,rgba(0,0,0,.5),transparent 72%)}
   .book:hover{transform:translateY(-12px);z-index:4}
@@ -123,6 +125,17 @@
     background:linear-gradient(160deg,#3a0d2a,#7a1238);border-left:3px solid rgba(0,0,0,.5)}
   .book .sp{position:absolute;top:5px;right:5px;font-size:.58rem;background:rgba(8,4,5,.82);color:#fff;padding:.1em .35em;border-radius:4px;z-index:3}
   .book .grave{position:absolute;top:5px;left:5px;font-size:.7rem;z-index:3}
+  /* generated spine (no spine art exists in the book APIs) */
+  .book.spine .spineinner{width:100%;height:138px;border-radius:2px 3px 3px 2px;position:relative;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;padding:10px 2px;
+    background:linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,0) 22%,rgba(0,0,0,0) 78%,rgba(0,0,0,.32)),var(--wood-tex),var(--spine,#4a1d30);
+    background-blend-mode:normal,soft-light,normal;border-left:2px solid rgba(0,0,0,.55);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+  .book.spine .spineinner::before,.book.spine .spineinner::after{content:"";position:absolute;left:4px;right:4px;height:4px;background:var(--accent);opacity:.4;border-radius:1px}
+  .book.spine .spineinner::before{top:11px}.book.spine .spineinner::after{bottom:11px}
+  .book.spine .stitle{writing-mode:vertical-rl;font-family:'Fraunces';font-weight:600;font-size:.64rem;letter-spacing:.02em;
+    color:rgba(244,232,210,.92);white-space:nowrap;overflow:hidden;max-height:104px;text-shadow:0 1px 2px rgba(0,0,0,.7)}
+  .book.spine .sp{top:3px;right:3px;font-size:.5rem;padding:.04em .2em}
+  .book.spine .grave{top:3px;left:3px;font-size:.62rem}
   /* slim refined shelf ledge */
   .plank{height:10px;margin-top:-2px;border-radius:2px;position:relative;z-index:1;
     background:var(--wood-tex), linear-gradient(var(--wood-lt),var(--wood) 45%,var(--wood-dk));background-blend-mode:soft-light,normal;
@@ -262,8 +275,9 @@
   /* responsive: roomier on tablet/desktop */
   @media(min-width:760px){
     .bookcase{max-width:560px;padding:16px 16px 18px}
-    .book,.ghost{width:clamp(84px,9vw,100px)}
-    .books{gap:9px;min-height:168px}
+    .book.face,.ghost{width:clamp(84px,9vw,100px)}
+    .book.spine{width:clamp(36px,4.5vw,48px)}
+    .books{gap:9px;min-height:172px}
     .stage{padding:30px 16px 140px}
   }
   @media(min-width:1100px){ .bookcase{max-width:580px} }
@@ -412,14 +426,27 @@
     return ao-bo;
   }
 
-  function bookHTML(b){
-    const sp=spiceMap[b.book_key]||0;
-    const h=138;   // uniform height — a tidy shelf line, and never taller than the row
-    const cov=b.cover_i
-      ? '<img class="bcov" src="https://covers.openlibrary.org/b/id/'+b.cover_i+'-L.jpg" style="height:'+h+'px" alt="'+esc(b.title)+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="ph" style="height:'+h+'px;display:none">'+esc(b.title)+'</div>'
-      : '<div class="ph" style="height:'+h+'px">'+esc(b.title)+'</div>';
-    const dnf=b.status==='dnf';
-    return '<div class="book'+(dnf?' dnf':'')+'" draggable="true" data-key="'+esc(b.book_key)+'">'+cov+(dnf?'<span class="grave">🪦</span>':'')+(sp?'<span class="sp">'+sp+'🌶️</span>':'')+'</div>';
+  // cover source: Google Books URL (cover_url) or Open Library id (cover_i)
+  const coverSrc=b=>b.cover_url||(b.cover_i?('https://covers.openlibrary.org/b/id/'+b.cover_i+'-L.jpg'):null);
+  // curated spine colours (deep, romantasy-leaning) keyed by book
+  const SPINES=['#5a1730','#3a1a4e','#143a2e','#1c2c52','#5a2410','#6e2c46','#27304a','#3e2317'];
+  const H=138; // uniform book height
+
+  // face=true → cover turned out; otherwise a generated spine
+  function bookHTML(b, face){
+    const sp=spiceMap[b.book_key]||0, dnf=b.status==='dnf';
+    const badges=(dnf?'<span class="grave">🪦</span>':'')+(sp?'<span class="sp">'+sp+'🌶️</span>':'');
+    if(face){
+      const src=coverSrc(b);
+      const cov=src
+        ? '<img class="bcov" src="'+src+'" style="height:'+H+'px" alt="'+esc(b.title)+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="ph" style="height:'+H+'px;display:none">'+esc(b.title)+'</div>'
+        : '<div class="ph" style="height:'+H+'px">'+esc(b.title)+'</div>';
+      return '<div class="book face'+(dnf?' dnf':'')+'" draggable="true" data-key="'+esc(b.book_key)+'">'+cov+badges+'</div>';
+    }
+    const color=SPINES[hash(b.book_key)%SPINES.length];
+    return '<div class="book spine'+(dnf?' dnf':'')+'" draggable="true" data-key="'+esc(b.book_key)+'">'
+      + '<div class="spineinner" style="--spine:'+color+'"><span class="stitle">'+esc(b.title||'Untitled')+'</span></div>'
+      + badges + '</div>';
   }
   const ghostHTML='<a class="ghost" href="smuthub-app.html"><span style="font-size:1.4rem">＋</span>Add</a>';
 
@@ -433,7 +460,7 @@
       + '<div class="bookcase"><div class="interior">'
       + visible.map(([st,label])=>{
           const items=ordered.filter(b=>b.status===st);
-          const inner = items.length ? items.map(bookHTML).join('') : ghostHTML;
+          const inner = items.length ? items.map((b,i)=>bookHTML(b,i===0)).join('') : ghostHTML;
           return '<div class="shelfrow"><div class="plate">'+label+' <span class="ct">'+items.length+'</span></div>'
             + '<div class="row"><div class="books" data-status="'+st+'">'+inner+'</div></div><div class="plank"></div></div>';
         }).join('')
@@ -447,7 +474,7 @@
     if(!items.length) return '';
     return '<div class="dnfwrap'+(dnfOpen?' open':'')+'">'
       + '<button class="dnfstrip" id="dnftoggle">🪦 DNF ('+items.length+') <span class="caret">▾</span></button>'
-      + (dnfOpen?'<div class="dnfbooks"><div class="row"><div class="books" data-status="dnf">'+items.map(bookHTML).join('')+'</div></div><div class="plank"></div></div>':'')
+      + (dnfOpen?'<div class="dnfbooks"><div class="row"><div class="books" data-status="dnf">'+items.map((b,i)=>bookHTML(b,i===0)).join('')+'</div></div><div class="plank"></div></div>':'')
       + '</div>';
   }
 
@@ -523,8 +550,9 @@
   function openBook(key){
     const b=shelf.find(x=>x.book_key===key); if(!b) return;
     const sp=spiceMap[key]||0;
-    const cov = b.cover_i
-      ? '<img src="https://covers.openlibrary.org/b/id/'+b.cover_i+'-L.jpg" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="ph" style="display:none">'+esc(b.title)+'</div>'
+    const _src = coverSrc(b);
+    const cov = _src
+      ? '<img src="'+_src+'" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="ph" style="display:none">'+esc(b.title)+'</div>'
       : '<div class="ph">'+esc(b.title)+'</div>';
     const chilis=[1,2,3,4,5].map(n=>'<span data-n="'+n+'" class="'+(sp>=n?'on':'')+'">🌶️</span>').join('');
     const moves=SHELVES.filter(([s])=>s!==b.status).map(([s,l])=>'<button class="pillbtn" onclick="setStatus(\''+esc(key)+'\',\''+s+'\')">→ '+l+'</button>').join('');
@@ -614,7 +642,7 @@
       + '<div class="sv-light light-'+(c.lighting_key||'none')+'"></div>'
       + '<div class="propbar" id="propbar"><button data-p="smaller">－</button><button data-p="bigger">＋</button><button data-p="remove">🗑️</button></div>'
       + '<div class="sv-top"><button class="sv-back" id="svback">←</button><div class="sv-label">'+label+'</div><div style="width:40px"></div></div>'
-      + '<div class="sv-shelf"><div class="books">'+(items.length?items.map(bookHTML).join(''):ghostHTML)+'</div><div class="plank"></div></div>'
+      + '<div class="sv-shelf"><div class="books">'+(items.length?items.map((b,i)=>bookHTML(b,i===0)).join(''):ghostHTML)+'</div><div class="plank"></div></div>'
       + '<button class="sv-customize" id="svcustomize">🎨 Customize</button>'
       + '<div class="sv-dots">'+SHELVES.map((s,i)=>'<span class="'+(i===shelfIndex?'on':'')+'"></span>').join('')+'</div>'
       + '<div class="sv-drawer" id="svdrawer"></div>';
