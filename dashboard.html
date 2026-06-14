@@ -274,7 +274,7 @@
   const coverSrc=b=>b.cover_url||coverUrl(b.cover_i);
   // Google Books first, Open Library fallback — normalized {key,title,author,cover_url,cover_i}
   async function gBooks(q){
-    try{ const d=await (await fetch('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)+'&maxResults=12&printType=books')).json();
+    try{ const d=await (await fetch('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)+'&maxResults=12&printType=books&langRestrict=en&country=US&orderBy=relevance')).json();
       return (d.items||[]).map(it=>{const v=it.volumeInfo||{},img=v.imageLinks&&(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail);return {key:'gb:'+it.id,title:v.title,author:(v.authors&&v.authors[0])||'Unknown',cover_url:img?img.replace(/^http:/,'https:'):null,cover_i:null};}).filter(b=>b.title);
     }catch(_){ return []; }
   }
