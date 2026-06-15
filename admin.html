@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmutHub — Catalog Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script defer src="auth.js"></script>
+<style>
+  :root{--ink:#0c0708;--ink-2:#150e10;--panel:#1c1316;--line:#2a1d22;--cream:#f4e8e3;--muted:#b69089;--rose:#ff3d76;--amber:#ffab40;--grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:900px;margin:0 auto;padding:0 24px}
+  a{color:inherit;text-decoration:none}
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap}
+  .navlinks{display:flex;gap:18px}.navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;transition:color .2s}.navlinks a.on,.navlinks a:hover{color:var(--cream)}
+  @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
+  .authbox{display:flex;align-items:center;gap:8px}
+  .btn{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:.6em 1.2em;border-radius:99px;cursor:pointer;font-size:.9rem}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .ghostbtn{background:none;border:1px solid var(--line);color:var(--cream);font-family:inherit;font-weight:700;padding:.55em 1em;border-radius:99px;cursor:pointer}
+  h1{font-family:'Fraunces';font-weight:600;font-size:2rem;margin:24px 0 6px}
+  h1 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
+  p.sub{color:var(--muted);margin-bottom:18px}
+  .card{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:16px}
+  .card h2{font-family:'Fraunces';font-weight:600;font-size:1.15rem;margin-bottom:8px}
+  .card p{color:var(--muted);font-size:.9rem;margin-bottom:10px}
+  textarea{width:100%;min-height:160px;background:var(--panel);border:1px solid var(--line);color:var(--cream);font-family:ui-monospace,Menlo,monospace;font-size:.82rem;border-radius:12px;padding:12px;outline:none;resize:vertical}
+  input[type=file]{color:var(--muted);font-size:.85rem;margin-bottom:10px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+  code{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:.1em .4em;font-size:.82rem}
+  .muted{color:var(--muted);font-size:.85rem}
+  table{width:100%;border-collapse:collapse;margin-top:12px;font-size:.82rem}
+  th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--amber);font-weight:700}
+  .pillset{display:flex;flex-wrap:wrap;gap:4px}
+  .pill{background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:.1em .6em;font-size:.72rem}
+  .gate{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:30px;text-align:center;margin:40px auto;max-width:460px}
+  .ok{color:#7adc96}.bad{color:#ff9aa8}
+  .note{color:#6b4f4d;font-size:.82rem;margin-top:8px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav wrap">
+    <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
+    <nav class="navlinks">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="smuthub-app.html">Search</a>
+      <a href="smuthub-bookcase.html">My Bookshelf</a>
+      <a href="stores.html">Find a Store</a>
+    </nav>
+    <div class="authbox" id="authbox"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="gate" class="gate">Checking access…</div>
+
+  <div id="tool" style="display:none">
+    <h1>Catalog <em>bulk import</em></h1>
+    <p class="sub">Paste a CSV (or choose a file) exported from your spreadsheet. Rows upsert into the catalog by <code>title</code> + <code>author</code>, so re-importing updates existing books instead of duplicating.</p>
+
+    <div class="card">
+      <h2>1 · Get the template</h2>
+      <p>Download <a href="catalog-template.csv" download style="color:var(--amber);text-decoration:underline">catalog-template.csv</a>, open it in Google Sheets / Excel, fill rows, then export as CSV.</p>
+      <p class="muted">Multi-value fields (tropes, mood, content warnings, archetypes, setting, comp titles, representation, themes, vibes, kink tags) take several values separated by a <b>semicolon</b>, e.g. <code>enemies-to-lovers; fae; slow-burn</code>. Booleans accept <code>true/false</code>. Leave a cell blank to skip it.</p>
+    </div>
+
+    <div class="card">
+      <h2>2 · Paste or choose your CSV</h2>
+      <input type="file" id="file" accept=".csv,text/csv">
+      <textarea id="csv" placeholder="title,author,spice,tropes,mood,ending&#10;Fourth Wing,Rebecca Yarros,4,enemies-to-lovers; dragon-rider,angsty; swoony,HFN"></textarea>
+      <div class="row">
+        <button class="ghostbtn" id="parseBtn">Parse &amp; preview</button>
+        <span class="muted" id="parseMsg"></span>
+      </div>
+      <div id="preview"></div>
+    </div>
+
+    <div class="card" id="importCard" style="display:none">
+      <h2>3 · Import</h2>
+      <p>Review the preview above, then import. Existing books (same title + author) are updated.</p>
+      <div class="row">
+        <button class="btn" id="importBtn">Import books</button>
+        <span class="muted" id="importMsg"></span>
+      </div>
+      <div id="result"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Which catalog columns are arrays / booleans / numbers (everything else = text)
+  const ARRAY_FIELDS=new Set(['tropes','themes','mood','vibes','content_warnings','representation','kink_tags','mc_archetype','li_archetype','setting','comp_titles']);
+  const BOOL_FIELDS =new Set(['standalone','audiobook','open_door','cliffhanger','love_triangle','featured']);
+  const NUM_FIELDS  =new Set(['spice','year','page_count','series_number','rating_avg','popularity']);
+  // Columns the app/table knows about — anything else in the CSV is ignored with a warning
+  const KNOWN=new Set(['title','author','cover_url','year','series','series_number','isbn','page_count','publisher','language','subgenre','standalone','audiobook','age_category','spice','spice_notes','open_door','steam_frequency','kink_tags','tropes','themes','mood','vibes','content_warnings','triggers_detail','representation','energy','pacing','length_feel','pov','tense','mc_archetype','li_archetype','mc_gender','li_gender','relationship_type','who_falls_first','love_triangle','ending','cliffhanger','setting','time_period','world_type','comp_titles','rating_avg','popularity','featured','status','blurb']);
+
+  let parsed=[];
+
+  // RFC4180-ish CSV parser (handles quoted fields, commas, newlines, "" escapes)
+  function parseCSV(text){
+    const rows=[]; let row=[], field='', i=0, inQ=false;
+    text=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+    while(i<text.length){
+      const c=text[i];
+      if(inQ){
+        if(c==='"'){ if(text[i+1]==='"'){ field+='"'; i+=2; continue; } inQ=false; i++; continue; }
+        field+=c; i++; continue;
+      }
+      if(c==='"'){ inQ=true; i++; continue; }
+      if(c===','){ row.push(field); field=''; i++; continue; }
+      if(c==='\n'){ row.push(field); rows.push(row); row=[]; field=''; i++; continue; }
+      field+=c; i++;
+    }
+    if(field.length||row.length){ row.push(field); rows.push(row); }
+    return rows.filter(r=>r.some(x=>(x||'').trim()!==''));
+  }
+
+  function toRows(text){
+    const m=parseCSV(text);
+    if(m.length<2) return { rows:[], unknown:[], headers:[] };
+    const headers=m[0].map(h=>h.trim().toLowerCase());
+    const unknown=headers.filter(h=>h && !KNOWN.has(h));
+    const rows=[];
+    for(let r=1;r<m.length;r++){
+      const o={};
+      headers.forEach((h,idx)=>{
+        if(!KNOWN.has(h)) return;
+        let v=(m[r][idx]||'').trim();
+        if(v==='') return;
+        if(ARRAY_FIELDS.has(h)) o[h]=v.split(/[;|]/).map(s=>s.trim()).filter(Boolean);
+        else if(BOOL_FIELDS.has(h)) o[h]=/^(true|yes|y|1)$/i.test(v);
+        else if(NUM_FIELDS.has(h)){ const n=Number(v); if(!isNaN(n)) o[h]=n; }
+        else o[h]=v;
+      });
+      if(o.title) rows.push(o);
+    }
+    return { rows, unknown, headers };
+  }
+
+  function preview(){
+    const text=document.getElementById('csv').value;
+    const { rows, unknown }=toRows(text);
+    parsed=rows;
+    const pm=document.getElementById('parseMsg');
+    if(!rows.length){ pm.innerHTML='<span class="bad">No valid rows found (need a header row + at least one row with a title).</span>'; document.getElementById('importCard').style.display='none'; document.getElementById('preview').innerHTML=''; return; }
+    pm.innerHTML='<span class="ok">'+rows.length+' book'+(rows.length>1?'s':'')+' parsed.</span>'+(unknown.length?' <span class="bad">Ignoring unknown columns: '+unknown.join(', ')+'</span>':'');
+    const cols=['title','author','spice','tropes','mood','ending'];
+    const head='<tr>'+cols.map(c=>'<th>'+c+'</th>').join('')+'</tr>';
+    const body=rows.slice(0,8).map(r=>'<tr>'+cols.map(c=>{
+      const v=r[c]; if(Array.isArray(v)) return '<td><div class="pillset">'+v.map(x=>'<span class="pill">'+esc(x)+'</span>').join('')+'</div></td>';
+      return '<td>'+(v==null?'<span class="muted">—</span>':esc(String(v)))+'</td>';
+    }).join('')+'</tr>').join('');
+    document.getElementById('preview').innerHTML='<table>'+head+body+'</table>'+(rows.length>8?'<p class="note">…and '+(rows.length-8)+' more</p>':'');
+    document.getElementById('importCard').style.display='block';
+    document.getElementById('importBtn').textContent='Import '+rows.length+' book'+(rows.length>1?'s':'');
+  }
+  function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  async function doImport(){
+    if(!parsed.length) return;
+    const sb=window.SH&&window.SH.sb; if(!sb){ document.getElementById('importMsg').innerHTML='<span class="bad">Not signed in.</span>'; return; }
+    const btn=document.getElementById('importBtn'); btn.disabled=true;
+    let added=0, failed=0; const errors=[];
+    for(let i=0;i<parsed.length;i+=50){
+      const chunk=parsed.slice(i,i+50);
+      document.getElementById('importMsg').textContent='Importing '+Math.min(i+chunk.length,parsed.length)+'/'+parsed.length+'…';
+      const { error }=await sb.from('catalog').upsert(chunk,{onConflict:'title,author'});
+      if(error){ failed+=chunk.length; errors.push(error.message); }
+      else added+=chunk.length;
+    }
+    btn.disabled=false;
+    document.getElementById('importMsg').textContent='';
+    document.getElementById('result').innerHTML =
+      '<p class="ok" style="margin-top:10px">✓ Imported '+added+' book'+(added===1?'':'s')+'.</p>'
+      + (failed?'<p class="bad">'+failed+' failed. '+esc(errors[0]||'')+(/policy|denied|row-level/i.test(errors[0]||'')?' — make sure your profile has is_admin = true.':'')+'</p>':'')
+      + '<p class="note">Covers still need filling for new books — use “🔧 Fill missing catalog covers” on Search, or paste Storage URLs.</p>';
+  }
+
+  // ── access gate ──
+  window.addEventListener('sh-auth', (e)=>{
+    const admin = !!(e.detail.profile && e.detail.profile.is_admin);
+    const gate=document.getElementById('gate'), tool=document.getElementById('tool');
+    if(admin){ gate.style.display='none'; tool.style.display='block'; }
+    else if(e.detail.user){ gate.innerHTML='<h2 style="font-family:Fraunces">Admins only</h2><p class="muted" style="margin-top:8px">Your account isn’t an admin yet. In Supabase, set <code>is_admin = true</code> on your profile row, then reload.</p>'; tool.style.display='none'; }
+    else { gate.innerHTML='<h2 style="font-family:Fraunces">Admins only</h2><p class="muted" style="margin-top:8px">Please <button class="ghostbtn" onclick="SH.openAuth()">log in</button> with your admin account.</p>'; tool.style.display='none'; }
+  });
+
+  document.getElementById('file').addEventListener('change', (e)=>{
+    const f=e.target.files[0]; if(!f) return;
+    const rd=new FileReader(); rd.onload=()=>{ document.getElementById('csv').value=rd.result; preview(); }; rd.readAsText(f);
+  });
+  document.getElementById('parseBtn').onclick=preview;
+  document.getElementById('importBtn').onclick=doImport;
+</script>
+</body>
+</html>
