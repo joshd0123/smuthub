@@ -99,6 +99,9 @@
 </div>
 
 <div class="wrap">
+  <div id="adminbar" style="display:none;text-align:center;margin:0 0 12px">
+    <button id="adminFill" class="catbtn" style="max-width:280px;margin:0 auto">🔧 Fill missing catalog covers</button>
+  </div>
   <div class="status" id="status"></div>
   <div class="grid" id="grid"></div>
   <p class="note">Log in once with a password and you stay logged in on this device. Your data is private to your account.</p>
@@ -113,6 +116,7 @@
   window.addEventListener('sh-auth', async (e)=>{
     sb = window.SH.sb; user = e.detail.user;
     isAdmin = !!(e.detail.profile && e.detail.profile.is_admin);
+    const ab=document.getElementById('adminbar'); if(ab){ ab.style.display=isAdmin?'block':'none'; const fb=document.getElementById('adminFill'); if(fb) fb.onclick=fillCatalogCovers; }
     if(window.SH && !window.SH.configured) document.getElementById('setup').classList.add('show');
     if(user){ await loadMine(); } else { Object.keys(spiceMap).forEach(k=>delete spiceMap[k]); shelfSet.clear(); Object.keys(shelfStatus).forEach(k=>delete shelfStatus[k]); }
     render();
@@ -214,6 +218,24 @@
     if(!POPULAR){ try{ POPULAR=((await (await fetch('popular.json',{cache:'no-cache'})).json()).books)||[]; }catch(_){ POPULAR=[]; } }
     const pick=[...POPULAR].sort(()=>Math.random()-0.5).slice(0,12);   // randomized each visit
     return (await Promise.all(pick.map(b=>resolveOne(b.title,b.author)))).filter(Boolean);
+  }
+
+  // admin: walk the catalog and fill any missing covers from Google (real covers only)
+  async function fillCatalogCovers(){
+    if(!isAdmin || !sb){ toast("Admins only"); return; }
+    const btn=document.getElementById('adminFill');
+    const { data, error } = await sb.from('catalog').select('id,title,author').is('cover_url',null).limit(40);
+    if(error){ toast("Catalog read failed: "+error.message); return; }
+    if(!data || !data.length){ toast("Every catalog book already has a cover ✓"); return; }
+    btn.disabled=true; let filled=0, i=0;
+    for(const row of data){
+      btn.textContent='🔧 Filling… '+(++i)+'/'+data.length;
+      const b=await resolveOne(row.title, row.author);
+      if(b && b.cover_url){ const { error:e2 } = await sb.from('catalog').update({ cover_url:b.cover_url }).eq('id', row.id); if(!e2) filled++; }
+      await new Promise(r=>setTimeout(r,150));   // gentle on the Google quota
+    }
+    btn.disabled=false; btn.textContent='🔧 Fill missing catalog covers';
+    toast('Filled '+filled+' cover'+(filled===1?'':'s')+' ★ — reload browse to see them');
   }
 
   async function run(){
