@@ -196,6 +196,11 @@
 
   // ── curated "popular" browse (shown when the search box is empty) ──
   let POPULAR=null;
+  // Keep a visitor's browse picks stable for a session (GA4-style: 30-min inactivity
+  // window). A tab switch / quick return reuses the same set; 30 min+ away re-rolls.
+  const BROWSE_TTL=30*60*1000;
+  function loadBrowseCache(){ try{ const c=JSON.parse(localStorage.getItem('sh_browse')||'null'); if(c && Array.isArray(c.books) && c.books.length && Date.now()-c.ts<BROWSE_TTL) return c.books; }catch(_){} return null; }
+  function saveBrowseCache(books){ try{ localStorage.setItem('sh_browse', JSON.stringify({ts:Date.now(), books})); }catch(_){} }
   async function resolveOne(title, author){
     const ck='sh_one_'+title+'|'+(author||'');
     try{ const c=sessionStorage.getItem(ck); if(c!==null) return c==='null'?null:JSON.parse(c); }catch(_){}
@@ -253,29 +258,37 @@
         const withC=docs.filter(coverSrc), without=docs.filter(b=>!coverSrc(b));
         docs = withC.concat(without.slice(0,2));   // covers first; a couple stragglers ok
       } else {
-        // 1. YOUR catalog (covers you control) — reliable, no Google dependency
-        try{
-          const _sb = window.SH && window.SH.sb;
-          if(_sb){
-            const { data } = await _sb.from('catalog').select('id,title,author,cover_url,spice,year').not('cover_url','is',null);
-            if(data && data.length){
-              docs = data.sort(()=>Math.random()-0.5).slice(0,12)
-                .map(b=>({ key:'cat:'+b.id, title:b.title, author_name:b.author?[b.author]:[], cover_url:b.cover_url, cover_i:null, year:b.year||0, ratings:0 }));
+        // Stable per-session picks: reuse the same shuffle for ~30 min so a tab
+        // switch / quick return doesn't reshuffle; a fresh visit (30 min+ away) re-rolls.
+        const sbReady = !!(window.SH && window.SH.sb);
+        const cached = sbReady ? loadBrowseCache() : null;
+        if(cached){ docs = cached; saveBrowseCache(cached); }
+        else {
+          // 1. YOUR catalog (covers you control) — reliable, no Google dependency
+          try{
+            const _sb = window.SH && window.SH.sb;
+            if(_sb){
+              const { data } = await _sb.from('catalog').select('id,title,author,cover_url,spice,year').not('cover_url','is',null);
+              if(data && data.length){
+                docs = data.sort(()=>Math.random()-0.5).slice(0,12)
+                  .map(b=>({ key:'cat:'+b.id, title:b.title, author_name:b.author?[b.author]:[], cover_url:b.cover_url, cover_i:null, year:b.year||0, ratings:0 }));
+              }
             }
+          }catch(_){}
+          // 2. top up to ~12 with the curated popular.json list (Google-resolved covers)
+          if(docs.length < 12){
+            const have = new Set(docs.map(b=>(b.title||'').toLowerCase()));
+            const more = (await browsePopular()).filter(b=>!have.has((b.title||'').toLowerCase()));
+            docs = docs.concat(more).slice(0,12);
           }
-        }catch(_){}
-        // 2. top up to ~12 with the curated popular.json list (Google-resolved covers)
-        if(docs.length < 12){
-          const have = new Set(docs.map(b=>(b.title||'').toLowerCase()));
-          const more = (await browsePopular()).filter(b=>!have.has((b.title||'').toLowerCase()));
-          docs = docs.concat(more).slice(0,12);
-        }
-        // 3. last-resort keyword fallback (no key / nothing resolved yet)
-        if(!docs.length){
-          const browseQ = DEFAULT_QUERIES[Math.floor(Math.random()*DEFAULT_QUERIES.length)];
-          try{ docs = await googleBooks(browseQ+' subject:fiction'); }catch(e){ docs=[]; }
-          if(!docs.length){ docs = await openLib(browseQ, [0,20,40][Math.floor(Math.random()*3)]); }
-          docs = dedupe(docs).filter(b=>coverSrc(b)&&isNovel(b)).map(b=>[quality(b),b]).sort((x,y)=>y[0]-x[0]).map(x=>x[1]);
+          // 3. last-resort keyword fallback (no key / nothing resolved yet)
+          if(!docs.length){
+            const browseQ = DEFAULT_QUERIES[Math.floor(Math.random()*DEFAULT_QUERIES.length)];
+            try{ docs = await googleBooks(browseQ+' subject:fiction'); }catch(e){ docs=[]; }
+            if(!docs.length){ docs = await openLib(browseQ, [0,20,40][Math.floor(Math.random()*3)]); }
+            docs = dedupe(docs).filter(b=>coverSrc(b)&&isNovel(b)).map(b=>[quality(b),b]).sort((x,y)=>y[0]-x[0]).map(x=>x[1]);
+          }
+          if(sbReady) saveBrowseCache(docs.slice(0,16));
         }
       }
       lastDocs = docs.slice(0,16);
