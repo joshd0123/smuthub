@@ -65,6 +65,8 @@
   .addrow{margin-top:10px;display:flex;gap:6px}
   .addrow .shelfbtn{margin-top:0;flex:0 0 auto}
   .statussel{flex:1;min-width:0;background:var(--ink-2);border:1px solid var(--line);color:var(--cream);font-family:inherit;font-weight:700;font-size:.78rem;padding:.5em;border-radius:10px;cursor:pointer}
+  .catbtn{margin-top:8px;width:100%;background:none;border:1px dashed rgba(255,171,64,.5);color:var(--amber);font-family:inherit;font-weight:700;font-size:.76rem;padding:.45em;border-radius:10px;cursor:pointer}
+  .catbtn:hover{background:rgba(255,171,64,.08)}
 
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink-2);border:1px solid var(--rose);color:var(--cream);padding:.7em 1.2em;border-radius:99px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:90}
   .toast.show{opacity:1}
@@ -105,11 +107,12 @@
 
 <script>
   // Shared auth (config.js + auth.js). This page just listens.
-  let sb=null, user=null, lastDocs=[];
+  let sb=null, user=null, lastDocs=[], isAdmin=false;
   const spiceMap={}, shelfSet=new Set(), shelfStatus={};
   const STATUS_LABEL={want:'Want',reading:'Reading',read:'Read',dnf:'DNF'};
   window.addEventListener('sh-auth', async (e)=>{
     sb = window.SH.sb; user = e.detail.user;
+    isAdmin = !!(e.detail.profile && e.detail.profile.is_admin);
     if(window.SH && !window.SH.configured) document.getElementById('setup').classList.add('show');
     if(user){ await loadMine(); } else { Object.keys(spiceMap).forEach(k=>delete spiceMap[k]); shelfSet.clear(); Object.keys(shelfStatus).forEach(k=>delete shelfStatus[k]); }
     render();
@@ -298,6 +301,7 @@
           <div class="author">by ${author}</div>
           <div class="spice" id="sp_${id}">${chilis}</div>
           ${addControlHTML(b.key, id, on)}
+          ${isAdmin ? `<button class="catbtn" data-act="catalog">★ Add to catalog</button>` : ''}
         </div></article>`;
     }).join('');
   }
@@ -309,6 +313,18 @@
     const key = decodeURIComponent(card.dataset.key);
     const book = lastDocs.find(x=>x.key===key) || {};
     const id = idOf(key);
+
+    // admin: file this book into the catalog (so it can feature in browse)
+    if(e.target.closest('.catbtn')){
+      const author=(book.author_name&&book.author_name[0])||null;
+      const { error } = await sb.from('catalog').upsert(
+        { title:book.title||null, author, cover_url:book.cover_url||null, year:book.year||null },
+        { onConflict:'title,author' }
+      );
+      if(error){ toast(/relation|exist|catalog|policy|denied/i.test(error.message) ? "Run smuthub-catalog.sql and set your profile is_admin=true" : "Catalog: "+error.message); console.error('catalog add', error); return; }
+      toast("Added to your catalog ★");
+      return;
+    }
 
     // chili tap
     const chip = e.target.closest('span[data-n]');
