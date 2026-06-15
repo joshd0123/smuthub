@@ -67,6 +67,11 @@
   .statussel{flex:1;min-width:0;background:var(--ink-2);border:1px solid var(--line);color:var(--cream);font-family:inherit;font-weight:700;font-size:.78rem;padding:.5em;border-radius:10px;cursor:pointer}
   .catbtn{margin-top:8px;width:100%;background:none;border:1px dashed rgba(255,171,64,.5);color:var(--amber);font-family:inherit;font-weight:700;font-size:.76rem;padding:.45em;border-radius:10px;cursor:pointer}
   .catbtn:hover{background:rgba(255,171,64,.08)}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:640px;margin:14px auto 0}
+  .filters select{background:var(--ink-2);border:1px solid var(--line);color:var(--cream);font-family:inherit;font-weight:600;font-size:.8rem;padding:.5em .8em;border-radius:99px;cursor:pointer}
+  .filters select:focus{outline:none;border-color:var(--rose)}
+  .fclear{background:none;border:1px solid var(--line);color:var(--muted);font-family:inherit;font-weight:700;font-size:.8rem;padding:.5em .9em;border-radius:99px;cursor:pointer}
+  .fclear:hover{border-color:var(--rose);color:var(--cream)}
 
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink-2);border:1px solid var(--rose);color:var(--cream);padding:.7em 1.2em;border-radius:99px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:90}
   .toast.show{opacity:1}
@@ -95,6 +100,21 @@
   <div class="search">
     <input id="q" type="text" placeholder="Search title, author, or trope…">
     <button onclick="run()">Search</button>
+  </div>
+  <div class="filters" id="filters">
+    <select id="fSpice" aria-label="Spice">
+      <option value="">🌶️ Any spice</option><option value="1">1+ 🌶️</option><option value="2">2+ 🌶️</option><option value="3">3+ 🌶️</option><option value="4">4+ 🌶️</option><option value="5">5 🌶️</option>
+    </select>
+    <select id="fTrope" aria-label="Trope">
+      <option value="">Any trope</option><option>enemies-to-lovers</option><option>fated-mates</option><option>slow-burn</option><option>forced-proximity</option><option>only-one-bed</option><option>fake-dating</option><option>grumpy-sunshine</option><option>morally-grey-mc</option><option>found-family</option><option>second-chance</option><option>forbidden-love</option><option>age-gap</option><option>reverse-harem</option><option>touch-her-and-die</option><option>academy</option><option>dragon-rider</option>
+    </select>
+    <select id="fMood" aria-label="Mood">
+      <option value="">Any mood</option><option>dark</option><option>cozy</option><option>angsty</option><option>emotional</option><option>funny</option><option>swoony</option><option>steamy</option><option>atmospheric</option>
+    </select>
+    <select id="fEnding" aria-label="Ending">
+      <option value="">Any ending</option><option value="HEA">HEA</option><option value="HFN">HFN</option><option value="cliffhanger">Cliffhanger</option>
+    </select>
+    <button id="fClear" class="fclear" style="display:none">✕ Clear</button>
   </div>
 </div>
 
@@ -243,12 +263,38 @@
     toast('Filled '+filled+' cover'+(filled===1?'':'s')+' ★ — reload browse to see them');
   }
 
+  // ── filters: explore your catalog by metadata (spice / trope / mood / ending) ──
+  const F={spice:'',trope:'',mood:'',ending:''};
+  function anyFilter(){ return !!(F.spice||F.trope||F.mood||F.ending); }
+  async function filteredBrowse(){
+    const _sb = window.SH && window.SH.sb; if(!_sb) return [];
+    let q=_sb.from('catalog').select('id,title,author,cover_url,year,spice');
+    if(F.spice)  q=q.gte('spice', +F.spice);
+    if(F.trope)  q=q.contains('tropes',[F.trope]);
+    if(F.mood)   q=q.contains('mood',[F.mood]);
+    if(F.ending) q=q.eq('ending', F.ending);
+    const typed=document.getElementById('q').value.trim();
+    if(typed) q=q.or('title.ilike.%'+typed+'%,author.ilike.%'+typed+'%');
+    const { data, error } = await q.limit(48);
+    if(error){ console.warn('filter query', error); return []; }
+    return (data||[]).map(b=>({ key:'cat:'+b.id, title:b.title, author_name:b.author?[b.author]:[], cover_url:b.cover_url, cover_i:null, year:b.year||0 }));
+  }
+
   async function run(){
     const typed = document.getElementById('q').value.trim();
     const st=document.getElementById('status');
     st.textContent="Pulling real books…";
     try{
       let docs=[];
+      // filters active → explore the curated catalog by metadata
+      if(anyFilter()){
+        docs = await filteredBrowse();
+        lastDocs = docs.slice(0,24);
+        st.innerHTML = lastDocs.length
+          ? `Showing <b style="color:var(--cream)">${lastDocs.length}</b> from your catalog matching filters`
+          : "No catalog books match those filters yet — try fewer, or tag more books.";
+        render(); return;
+      }
       if(typed){
         try{ docs = await googleBooks(typed); }catch(e){ docs=[]; }
         if(!docs.length){ docs = await openLib(typed, 0); }
@@ -410,6 +456,20 @@
   }
 
   document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')run();});
+
+  // filter controls
+  const FMAP={fSpice:'spice',fTrope:'trope',fMood:'mood',fEnding:'ending'};
+  Object.keys(FMAP).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.addEventListener('change', e=>{ F[FMAP[id]]=e.target.value; document.getElementById('fClear').style.display=anyFilter()?'':'none'; run(); });
+  });
+  const fClearBtn=document.getElementById('fClear');
+  if(fClearBtn) fClearBtn.onclick=()=>{
+    F.spice=F.trope=F.mood=F.ending='';
+    Object.keys(FMAP).forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+    fClearBtn.style.display='none'; run();
+  };
+
   // Pre-fill the search from ?q= (deep links from the dashboard land here).
   const qParam = new URLSearchParams(location.search).get('q');
   if(qParam) document.getElementById('q').value = qParam;
