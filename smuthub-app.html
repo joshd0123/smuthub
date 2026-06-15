@@ -113,6 +113,8 @@
     if(window.SH && !window.SH.configured) document.getElementById('setup').classList.add('show');
     if(user){ await loadMine(); } else { Object.keys(spiceMap).forEach(k=>delete spiceMap[k]); shelfSet.clear(); Object.keys(shelfStatus).forEach(k=>delete shelfStatus[k]); }
     render();
+    // once the Supabase client is ready, refresh an empty-box browse so the catalog loads
+    if(!document.getElementById('q').value.trim()) run();
   });
 
   function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
@@ -193,11 +195,13 @@
     if(!GB_KEY) return null;
     let book=null;
     try{
-      const url='https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent('intitle:'+title+(author?' inauthor:'+author:''))+'&maxResults=1&printType=books&langRestrict=en&country=US&key='+GB_KEY;
-      const it=(((await (await fetch(url)).json()).items)||[])[0];
+      const url='https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent('intitle:'+title+(author?' inauthor:'+author:''))+'&maxResults=6&printType=books&langRestrict=en&country=US&key='+GB_KEY;
+      const items=(((await (await fetch(url)).json()).items)||[]);
+      // real cover scans carry "edge=curl"; Google's "image not available" placeholder does not
+      const it=items.find(x=>{const il=(x.volumeInfo||{}).imageLinks; return il&&il.thumbnail&&/edge=curl/.test(il.thumbnail);});
       if(it){
-        const v=it.volumeInfo||{}, cover=gImg(v.imageLinks&&(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail));
-        if(cover) book={ key:'gb:'+it.id, title:v.title||title, author_name:v.authors||(author?[author]:[]), cover_url:cover, cover_i:null, subject:v.categories||[], ratings:v.ratingsCount||0, year:parseInt((v.publishedDate||'').slice(0,4))||0 };
+        const v=it.volumeInfo||{};
+        book={ key:'gb:'+it.id, title:v.title||title, author_name:v.authors||(author?[author]:[]), cover_url:gImg(v.imageLinks.thumbnail), cover_i:null, subject:v.categories||[], ratings:v.ratingsCount||0, year:parseInt((v.publishedDate||'').slice(0,4))||0 };
       }
     }catch(_){}
     try{ sessionStorage.setItem(ck, book?JSON.stringify(book):'null'); }catch(_){}
@@ -224,9 +228,25 @@
         const withC=docs.filter(coverSrc), without=docs.filter(b=>!coverSrc(b));
         docs = withC.concat(without.slice(0,2));   // covers first; a couple stragglers ok
       } else {
-        // empty box → curated popular titles with reliable covers, shuffled
-        docs = await browsePopular();
-        if(!docs.length){ // no key / popular.json missing → keyword fallback
+        // 1. YOUR catalog (covers you control) — reliable, no Google dependency
+        try{
+          const _sb = window.SH && window.SH.sb;
+          if(_sb){
+            const { data } = await _sb.from('catalog').select('id,title,author,cover_url,spice,year').not('cover_url','is',null);
+            if(data && data.length){
+              docs = data.sort(()=>Math.random()-0.5).slice(0,12)
+                .map(b=>({ key:'cat:'+b.id, title:b.title, author_name:b.author?[b.author]:[], cover_url:b.cover_url, cover_i:null, year:b.year||0, ratings:0 }));
+            }
+          }
+        }catch(_){}
+        // 2. top up to ~12 with the curated popular.json list (Google-resolved covers)
+        if(docs.length < 12){
+          const have = new Set(docs.map(b=>(b.title||'').toLowerCase()));
+          const more = (await browsePopular()).filter(b=>!have.has((b.title||'').toLowerCase()));
+          docs = docs.concat(more).slice(0,12);
+        }
+        // 3. last-resort keyword fallback (no key / nothing resolved yet)
+        if(!docs.length){
           const browseQ = DEFAULT_QUERIES[Math.floor(Math.random()*DEFAULT_QUERIES.length)];
           try{ docs = await googleBooks(browseQ+' subject:fiction'); }catch(e){ docs=[]; }
           if(!docs.length){ docs = await openLib(browseQ, [0,20,40][Math.floor(Math.random()*3)]); }
