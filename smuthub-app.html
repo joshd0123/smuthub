@@ -326,16 +326,35 @@
         render(); return;
       }
       if(typed){
+        // 1. catalog matches FIRST — YOUR books with YOUR controlled covers.
+        //    Prepending them means the dedupe step (which prefers the version
+        //    with a cover) keeps the catalog entry when Google/OL also returns
+        //    the same title+author. Fixes "Powerless cover swaps between sessions"
+        //    when Google ranks a different edition's cover today vs yesterday.
+        let cat=[];
+        const _sb = window.SH && window.SH.sb;
+        if(_sb){
+          try{
+            const like='%'+typed.replace(/[%,]/g,' ')+'%';
+            const { data } = await _sb.from('books')
+              .select('slug,title,author,cover_url,year,spice_level')
+              .eq('status','live').not('cover_url','is',null)
+              .or('title.ilike.'+like+',author.ilike.'+like)
+              .limit(24);
+            cat = (data||[]).map(b=>({ _curated:true, key:b.slug, title:b.title, author_name:b.author?[b.author]:[], cover_url:b.cover_url, cover_i:null, subject:[], ratings:9999, year:b.year||0 }));
+          }catch(_){}
+        }
+        // 2. external sources
         try{ docs = await googleBooks(typed); }catch(e){ docs=[]; }
         if(!docs.length){ docs = await openLib(typed, 0); }
-        docs = dedupe(docs);
-        // strict quality gate: every word of the query must appear, it must look
-        // like a novel (not a magazine / coloring book / Holy Bible / nursing
-        // textbook), and it must have a real cover. Without these, broad indices
-        // (esp. Open Library) leak public-domain garbage into the results.
-        docs = docs.filter(b => matchesQuery(b, typed) && isNovel(b) && coverSrc(b));
+        // 3. merge: catalog first so dedupe locks it in, then external candidates
+        docs = dedupe(cat.concat(docs));
+        // strict quality gate for external results only — curated catalog books
+        // always pass. Filter kills Open Library's "Macmillan's Magazine" /
+        // "Holy Bible" matches that leak through on broad queries.
+        docs = docs.filter(b => b._curated || (matchesQuery(b, typed) && isNovel(b) && coverSrc(b)));
         const q=typed.toLowerCase();
-        docs = docs.map(b=>[scoreDoc(b,q),b]).sort((x,y)=>y[0]-x[0]).map(x=>x[1]);
+        docs = docs.map(b=>[scoreDoc(b,q) + (b._curated?500:0), b]).sort((x,y)=>y[0]-x[0]).map(x=>x[1]);
       } else {
         // Stable per-session picks: reuse the same shuffle for ~30 min so a tab
         // switch / quick return doesn't reshuffle; a fresh visit (30 min+ away) re-rolls.
