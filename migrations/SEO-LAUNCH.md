@@ -5,7 +5,7 @@
 Every page (except admin) has:
 - Unique `<title>` (page-first format: `Search — SmutHub`)
 - `<meta name="description">` — one per page
-- `<link rel="canonical">` → `https://smuthub.com/...`
+- `<link rel="canonical">` → `https://smuthub.ca/...`
 - `<meta name="theme-color">` (mobile address-bar color)
 - `<link rel="icon" type="image/svg+xml" href="/favicon.svg">`
 - `<link rel="apple-touch-icon" href="/apple-touch-icon.png">`
@@ -33,9 +33,9 @@ Plus, fixed for accessibility / Lighthouse:
 
 ## What YOU need to do manually before launch
 
-1. **Register the domain.** I wired `https://smuthub.com` as the canonical
+1. **Register the domain.** I wired `https://smuthub.ca` as the canonical
    everywhere. If you go with `.ca` (or anything else), do a project-wide
-   find-replace from `smuthub.com` → `smuthub.ca` — touches every HTML
+   find-replace from `smuthub.ca` → `smuthub.ca` — touches every HTML
    file + `robots.txt` + `sitemap.xml`. One commit.
 
 2. **Point the domain at Cloudflare Workers.** In Cloudflare dashboard →

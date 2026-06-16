@@ -11,32 +11,32 @@
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://smuthub.com/</loc>
+    <loc>https://smuthub.ca/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://smuthub.com/smuthub-app.html</loc>
+    <loc>https://smuthub.ca/smuthub-app.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://smuthub.com/dashboard.html</loc>
+    <loc>https://smuthub.ca/dashboard.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://smuthub.com/smuthub-bookcase.html</loc>
+    <loc>https://smuthub.ca/smuthub-bookcase.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://smuthub.com/stores.html</loc>
+    <loc>https://smuthub.ca/stores.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://smuthub.com/sitemap.html</loc>
+    <loc>https://smuthub.ca/sitemap.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>

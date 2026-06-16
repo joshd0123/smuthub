@@ -6,4 +6,4 @@ Disallow: /admin.html
 Disallow: /catalog-admin.html
 
 # Sitemap (canonical XML index Google + Bing want)
-Sitemap: https://smuthub.com/sitemap.xml
+Sitemap: https://smuthub.ca/sitemap.xml
