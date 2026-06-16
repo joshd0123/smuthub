@@ -33,14 +33,35 @@ Plus, fixed for accessibility / Lighthouse:
 
 ## What YOU need to do manually before launch
 
-1. **Register the domain.** I wired `https://smuthub.ca` as the canonical
-   everywhere. If you go with `.ca` (or anything else), do a project-wide
-   find-replace from `smuthub.ca` → `smuthub.ca` — touches every HTML
-   file + `robots.txt` + `sitemap.xml`. One commit.
+1. **Register `smuthub.ca`** (~$15 CAD/year). `.com` was confirmed taken by
+   a squatter at $5k CAD — out. The `.ca` is the locked-in canonical and
+   every page, OG tag, sitemap entry, and JSON-LD URL already points to
+   `https://smuthub.ca/`.
+   - **Where to register:** I'd go with **Cloudflare Registrar** — at-cost
+     pricing (no registrar markup), and since the site already lives on
+     Cloudflare Workers, the DNS + custom-domain setup becomes one click.
+     Alternative registrars: Hover (good support, fair pricing), Namecheap,
+     Porkbun. **Avoid GoDaddy** — known for renewal price hikes.
+   - **Why `.ca` is actually a quiet win, not a fallback:**
+     - **Squatting protection.** CIRA requires Canadian presence to
+       register a `.ca`, so the situation you just hit on `.com` can't
+       happen again on this name.
+     - **Google.ca SEO bonus.** For ambiguous Canadian queries, `.ca` ranks
+       higher than `.com` by default.
+     - **Predictable pricing.** No "premium domain" surprise hikes the way
+       some `.com` renewals carry.
 
-2. **Point the domain at Cloudflare Workers.** In Cloudflare dashboard →
-   Workers → smuthub → Settings → Triggers → Custom Domains → add your
-   domain. Cloudflare handles SSL automatically.
+2. **Point `smuthub.ca` at Cloudflare Workers.** In Cloudflare dashboard →
+   Workers & Pages → smuthub → Settings → Triggers → Custom Domains → Add
+   Custom Domain → `smuthub.ca`. Cloudflare handles SSL automatically.
+   If you registered through Cloudflare Registrar, the DNS records get
+   added for you; if you registered elsewhere, point the domain's
+   nameservers at the ones Cloudflare gives you (or add a CNAME/A record
+   per Cloudflare's setup screen).
+   Also add `www.smuthub.ca` as a second custom domain and set up a 301
+   redirect (`www` → root, or vice versa — pick one canonical, but most
+   modern brands go root-only). Worker rules can handle that, or do it
+   in the Cloudflare Rules tab.
 
 3. **Generate `og-image.png` from `og-image.svg`** (1200×630). The SVG
    already exists in the repo with the brand styling. To convert: drop
@@ -58,9 +79,13 @@ Plus, fixed for accessibility / Lighthouse:
    which works but looks slightly less crisp on home-screen saves.
 
 5. **Submit to search engines** (post-launch, once the domain resolves):
-   - Google Search Console → Add property → submit `sitemap.xml`
+   - Google Search Console → Add property → submit `https://smuthub.ca/sitemap.xml`
    - Bing Webmaster Tools → same
-   Both are free; coverage reports show up within ~48h.
+   - In Google Search Console → Settings → International Targeting →
+     **leave geographic target unset** (or set to "no target"). `.ca` is
+     auto-targeted to Canada otherwise, which would hurt rankings for
+     US/UK readers. You want global visibility, not Canadian-only.
+   Both submissions are free; coverage reports show up within ~48h.
 
 6. **Verify previews** before announcing the launch:
    - https://www.opengraph.xyz/ — pastes a URL, shows you exactly what
