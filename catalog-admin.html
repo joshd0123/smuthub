@@ -67,7 +67,6 @@
   .tagcat h4{font-size:.82rem;color:var(--amber);font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
   .chips{display:flex;flex-wrap:wrap;gap:6px}
   .chip{display:inline-flex;align-items:center;gap:5px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:.25em .7em;font-size:.8rem;cursor:pointer;user-select:none}
-  .chip input{display:none}
   .chip.on{background:var(--grad);color:#1a0c10;border-color:transparent;font-weight:700}
   .addtag{display:flex;gap:6px;margin-top:8px}
   .addtag input{flex:1;font-size:.82rem;padding:.4em .6em}
@@ -322,7 +321,10 @@
       (checked[cat]||new Set()).forEach(s=>{ if(!known.has(s)){ have.push({slug:s,label:s}); known.add(s); } });
       const chips = have.sort((a,b)=>a.label.localeCompare(b.label)).map(t=>{
         const on=(checked[cat]||new Set()).has(t.slug);
-        return `<label class="chip ${on?'on':''}" data-cat="${cat}" data-slug="${esc(t.slug)}"><input type="checkbox" ${on?'checked':''}>${esc(t.label)}</label>`;
+        // <span>, NOT <label> — labels with an inner checkbox double-toggle on
+        // click (browser also fires a synthetic click on the input that bubbles
+        // back into our delegated handler), netting out to zero state change.
+        return `<span class="chip ${on?'on':''}" data-cat="${cat}" data-slug="${esc(t.slug)}" role="checkbox" aria-checked="${on}" tabindex="0">${esc(t.label)}</span>`;
       }).join('');
       return `<div class="tagcat" data-cat="${cat}">
         <h4>${CAT_LABEL[cat]}</h4>
@@ -335,11 +337,19 @@
   // toggle chips + add-new-tag (event delegation)
   $('tagGroups').addEventListener('click',e=>{
     const chip=e.target.closest('.chip');
-    if(chip){ const on=chip.classList.toggle('on'); chip.querySelector('input').checked=on; return; }
+    if(chip){ const on=chip.classList.toggle('on'); chip.setAttribute('aria-checked', on); return; }
     const addbtn=e.target.closest('[data-addbtn]');
     if(addbtn){ addTagToGroup(addbtn.getAttribute('data-addbtn')); }
   });
   $('tagGroups').addEventListener('keydown',e=>{
+    // chip toggle via keyboard for accessibility (Space / Enter on a focused chip)
+    if(e.target.matches('.chip') && (e.key===' '||e.key==='Enter')){
+      e.preventDefault();
+      const chip=e.target;
+      const on=chip.classList.toggle('on');
+      chip.setAttribute('aria-checked', on);
+      return;
+    }
     if(e.key==='Enter' && e.target.matches('[data-add]')){ e.preventDefault(); addTagToGroup(e.target.getAttribute('data-add')); }
   });
   function addTagToGroup(cat){
@@ -349,10 +359,12 @@
     let chip=group.querySelector(`.chip[data-slug="${CSS.escape(slug)}"]`);
     if(!chip){
       if(group.querySelector('.muted')) group.innerHTML='';
-      chip=document.createElement('label'); chip.className='chip on'; chip.dataset.cat=cat; chip.dataset.slug=slug;
-      chip.innerHTML=`<input type="checkbox" checked>${esc(raw.trim())}`;
+      chip=document.createElement('span');
+      chip.className='chip on'; chip.dataset.cat=cat; chip.dataset.slug=slug;
+      chip.setAttribute('role','checkbox'); chip.setAttribute('aria-checked','true'); chip.setAttribute('tabindex','0');
+      chip.textContent=raw.trim();
       group.appendChild(chip);
-    } else { chip.classList.add('on'); chip.querySelector('input').checked=true; }
+    } else { chip.classList.add('on'); chip.setAttribute('aria-checked','true'); }
     inp.value='';
   }
 
