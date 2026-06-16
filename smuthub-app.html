@@ -43,9 +43,14 @@
   h1 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
   .sub{color:var(--muted);margin-top:10px;font-size:.95rem}
   .search{display:flex;max-width:600px;margin:20px auto 0;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:8px 8px 8px 22px;box-shadow:var(--shadow)}
-  .search input{flex:1;background:none;border:0;color:var(--cream);font-family:inherit;font-size:1rem;outline:none}
+  .search input{flex:1;min-width:0;background:none;border:0;color:var(--cream);font-family:inherit;font-size:1rem;outline:none}
   .search input::placeholder{color:#7d5d5b}
-  .search button{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:0 24px;border-radius:99px;cursor:pointer}
+  .search button{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:0 24px;border-radius:99px;cursor:pointer;flex:0 0 auto}
+  @media(max-width:600px){
+    .search{padding:6px 6px 6px 16px;margin-top:14px}
+    .search input{font-size:.92rem}
+    .search button{padding:0 18px;font-size:.9rem}
+  }
   .status{text-align:center;color:var(--muted);margin:18px 0 4px;min-height:1.1em;font-size:.92rem}
 
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;padding:10px 0 60px;align-items:start}
@@ -204,7 +209,11 @@
     const d = await (await fetch(url)).json();
     return (d.items||[]).map(it=>{
       const v=it.volumeInfo||{}, img=v.imageLinks&&(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail);
-      return { key:'gb:'+it.id, title:v.title, author_name:v.authors||[], cover_url:gImg(img), cover_i:null,
+      // Google serves a generic "image not available" placeholder for cover-less
+      // books; real cover scans carry edge=curl. Drop placeholders so the card
+      // falls back to the styled title tile instead of the ugly grey image.
+      const real = img && /edge=curl/.test(img);
+      return { key:'gb:'+it.id, title:v.title, author_name:v.authors||[], cover_url: real?gImg(img):null, cover_i:null,
                subject:v.categories||[], ratings:v.ratingsCount||0, year:parseInt((v.publishedDate||'').slice(0,4))||0 };
     }).filter(b=>b.title);
   }

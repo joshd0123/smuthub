@@ -64,12 +64,13 @@
     const box = document.getElementById('authbox');
     if(!box) return;
     if (SH.user) {
+      const name = displayName();
+      const initial = ((name||'?').trim().charAt(0) || '?').toUpperCase();
       box.innerHTML = `
         <div style="position:relative">
-          <button id="shUserBtn" style="display:flex;align-items:center;gap:7px;background:none;border:1px solid var(--line,#2a1d22);color:var(--cream,#f4e8e3);font-family:inherit;font-weight:700;font-size:.85rem;padding:.5em 1em;border-radius:99px;cursor:pointer">
-            <span style="color:var(--amber,#ffab40)">${esc(displayName())}</span> ▾
-          </button>
-          <div id="shMenu" style="display:none;position:absolute;right:0;top:110%;z-index:95;background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:14px;min-width:190px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.5)">
+          <button id="shUserBtn" class="sh-avatar" title="${esc(name)}" aria-label="Account menu">${esc(initial)}</button>
+          <div id="shMenu" style="display:none;position:absolute;right:0;top:125%;z-index:95;background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:14px;min-width:200px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.5)">
+            <div style="padding:.7em 1.1em;border-bottom:1px solid var(--line,#2a1d22);color:#b69089;font-size:.78rem">Signed in as<br><b style="color:var(--amber,#ffab40);font-size:.92rem">${esc(name)}</b></div>
             <button class="shMenuItem" data-act="username">✏️ Set username</button>
             <button class="shMenuItem" data-act="logout">👋 Log out</button>
           </div>
@@ -212,7 +213,9 @@
     if(pendingFeedback && e.detail && e.detail.user){ pendingFeedback=false; setTimeout(openFeedback, 200); }
   });
 
-  // Floating "Feedback" button on every page.
+  // Floating "Feedback" button — DISABLED for now. Members give feedback from the
+  // dashboard, and this bubble duplicated that (and overlapped content on mobile).
+  // openFeedback() is still exported, so any in-page button can re-trigger it.
   function mountFeedbackButton(){
     if(document.getElementById('shFeedbackBtn')) return;
     const b=document.createElement('button');
@@ -224,6 +227,46 @@
     b.onclick=openFeedback;
     document.body.appendChild(b);
   }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', mountFeedbackButton);
-  else mountFeedbackButton();
+
+  // ── shared mobile header: compact avatar + hamburger nav (every page) ──
+  function injectHeaderCSS(){
+    if(document.getElementById('sh-ui-css')) return;
+    const st=document.createElement('style'); st.id='sh-ui-css';
+    st.textContent=`
+      .sh-avatar{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;
+        background:var(--grad,linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40));color:#1a0c10;font-weight:800;font-size:1rem;
+        border:0;cursor:pointer;font-family:inherit;flex:0 0 auto}
+      .sh-hamburger{display:none;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;
+        background:none;border:1px solid var(--line,#2a1d22);color:var(--cream,#f4e8e3);font-size:1.3rem;line-height:1;cursor:pointer;flex:0 0 auto}
+      @media(max-width:680px){
+        header .nav{flex-wrap:nowrap;height:auto;min-height:60px;gap:10px;
+          padding-top:calc(12px + env(safe-area-inset-top,0px));padding-bottom:10px}
+        header .logo{font-size:1.85rem;margin-right:auto}
+        header .sh-hamburger{display:inline-flex}
+        header #authbox button:not(.sh-avatar){font-size:.8rem;padding:.5em .9em}
+        header .navlinks{position:absolute;top:calc(100% - 1px);right:10px;left:10px;flex-direction:column;gap:2px;
+          background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:16px;padding:8px;
+          display:none;box-shadow:0 22px 50px rgba(0,0,0,.55)}
+        header .navlinks.sh-open{display:flex}
+        header .navlinks a{padding:.85em 1em;border-radius:10px;font-size:1.05rem}
+        header .navlinks a.on,header .navlinks a:hover{background:rgba(255,171,64,.12);color:var(--cream,#f4e8e3)}
+      }`;
+    document.head.appendChild(st);
+  }
+  function enhanceHeader(){
+    const nav=document.querySelector('header .nav'); if(!nav) return;
+    const links=nav.querySelector('.navlinks'); if(!links || nav.querySelector('.sh-hamburger')) return;
+    const burger=document.createElement('button');
+    burger.className='sh-hamburger'; burger.type='button';
+    burger.setAttribute('aria-label','Menu'); burger.setAttribute('aria-expanded','false');
+    burger.textContent='☰';
+    const setOpen=(open)=>{ links.classList.toggle('sh-open',open); burger.textContent=open?'✕':'☰'; burger.setAttribute('aria-expanded',open?'true':'false'); };
+    burger.addEventListener('click',(e)=>{ e.stopPropagation(); setOpen(!links.classList.contains('sh-open')); });
+    document.addEventListener('click',(e)=>{ if(links.classList.contains('sh-open') && !nav.contains(e.target)) setOpen(false); });
+    links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setOpen(false)));
+    nav.appendChild(burger);   // far right
+  }
+  function initShUI(){ injectHeaderCSS(); enhanceHeader(); /* mountFeedbackButton(); ← disabled */ }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', initShUI);
+  else initShUI();
 })();

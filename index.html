@@ -62,10 +62,15 @@
   h1 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
   .sub{max-width:46ch;margin:26px auto 0;color:var(--muted);font-size:1.12rem}
   .search{margin:38px auto 0;max-width:560px;display:flex;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:7px 7px 7px 22px;box-shadow:var(--shadow)}
-  .search input{flex:1;background:none;border:0;color:var(--cream);font-family:inherit;font-size:1rem;outline:none}
+  .search input{flex:1;min-width:0;background:none;border:0;color:var(--cream);font-family:inherit;font-size:1rem;outline:none;text-overflow:ellipsis}
   .search input::placeholder{color:#7d5d5b}
-  .search button{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:0 26px;border-radius:99px;cursor:pointer;font-size:.95rem;transition:transform .15s}
+  .search button{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:0 26px;border-radius:99px;cursor:pointer;font-size:.95rem;transition:transform .15s;flex:0 0 auto;white-space:nowrap}
   .search button:hover{transform:scale(1.04)}
+  @media(max-width:600px){
+    .search{margin-top:26px;padding:6px 6px 6px 16px}
+    .search input{font-size:.92rem}
+    .search button{padding:0 18px;font-size:.9rem}
+  }
   .hero-tags{margin-top:18px;color:#7d5d5b;font-size:.85rem}
   .hero-tags span{color:var(--muted)}
 
