@@ -53,17 +53,22 @@
   }
   .status{text-align:center;color:var(--muted);margin:18px 0 4px;min-height:1.1em;font-size:.92rem}
 
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;padding:10px 0 60px;align-items:start}
+  /* — uniform tiles ("book cards"): identical height on every screen size.
+     Grid stretches each card, .meta uses a deterministic vertical layout where
+     every slot has a fixed min-height so cards never differ regardless of title
+     length, author length, login state, or admin status. */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;padding:10px 0 60px}
   @media(max-width:600px){.grid{grid-template-columns:repeat(2,1fr);gap:12px}}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
-  .cover{aspect-ratio:3/4;position:relative;background:var(--ink-2);overflow:hidden}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;height:100%}
+  .cover{aspect-ratio:3/4;position:relative;background:var(--ink-2);overflow:hidden;flex:0 0 auto}
   .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
   .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;font-family:'Fraunces';font-style:italic;color:#fff;background:linear-gradient(160deg,#3a0d2a,#7a1238)}
-  .meta{padding:14px 16px 16px;display:flex;flex-direction:column;gap:2px;flex:1}
-  .title{font-family:'Fraunces';font-weight:500;font-size:1.08rem;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .author{color:var(--muted);font-size:.82rem}
-  .spice{margin-top:8px;font-size:1rem;letter-spacing:.06em;cursor:pointer;user-select:none}
-  .spice span{filter:grayscale(1);opacity:.3}
+  .meta{padding:14px 16px 16px;display:flex;flex-direction:column;flex:1}
+  .title{font-family:'Fraunces';font-weight:500;font-size:1.08rem;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:calc(1.2em * 2)}
+  .author{color:var(--muted);font-size:.82rem;line-height:1.3;min-height:1.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .actions{margin-top:auto;display:flex;flex-direction:column}
+  .spice{margin-top:8px;font-size:1rem;letter-spacing:.06em;cursor:pointer;user-select:none;white-space:nowrap;display:flex;align-items:center}
+  .spice span{flex:0 0 auto;filter:grayscale(1);opacity:.3}
   .spice span.on{filter:none;opacity:1}
   .shelfbtn{margin-top:10px;background:none;border:1px solid var(--line);color:var(--muted);font-family:inherit;font-weight:700;font-size:.82rem;padding:.5em;border-radius:10px;cursor:pointer}
   .shelfbtn.on{background:var(--grad);color:#1a0c10;border-color:transparent}
@@ -103,7 +108,7 @@
   <h1>Your <em>shelf</em>, saved for real.</h1>
   <p class="sub" id="sub">Log in, then your 🌶️ ratings and 📚 shelf stick — across devices, forever.</p>
   <div class="search">
-    <input id="q" type="text" placeholder="Search title, author, or trope…">
+    <input id="q" type="text" placeholder="Title, author, or trope…">
     <button onclick="run()">Search</button>
   </div>
   <div class="filters" id="filters">
@@ -165,8 +170,18 @@
   // ── SEARCH: Google Books first, Open Library as fallback ──
   const DEFAULT_QUERIES = ['romantasy','fae romance','dragon rider romance','fated mates romance','enemies to lovers fantasy','vampire romance'];
   // exclude books *about* romance (writing guides, academic, collectibles) — we want novels
-  const NONFIC_RX = /language arts|literary criticism|education|reference|study aids|biography|history|technology|science|antiques|collectibl|business|self-help|cooking|travel|religion|crafts|music|games/i;
-  function isNovel(b){ const s=[].concat(b.subject||[]); return !s.some(x=>NONFIC_RX.test(x)); }
+  const NONFIC_RX = /language arts|literary criticism|education|reference|study aids|biography|history|technology|science|antiques|collectibl|business|self-help|cooking|travel|religion|crafts|music|games|bible|christian|theology|sermons|medical|nursing|law|engineering|economics|sociology|philosophy|magazine|journal|periodical|gazette|annual report|proceedings|congress|senate|labor|commerce|government|public welfare|coloring/i;
+  function isNovel(b){ const s=[].concat(b.subject||[]); return !s.some(x=>NONFIC_RX.test(x)) && !NONFIC_RX.test(b.title||''); }
+  // require at least ONE meaningful query word in title or author — kills the
+  // "Macmillan's Magazine" / "Holy Bible" matches Open Library returns on broad
+  // queries, while still allowing legit results that share part of the query.
+  function matchesQuery(b, q){
+    if(!q) return true;
+    const t=(b.title||'').toLowerCase(), a=((b.author_name||[])[0]||'').toLowerCase();
+    const words=q.toLowerCase().split(/\s+/).filter(w=>w.length>=3);
+    if(!words.length) return t.includes(q.toLowerCase()) || a.includes(q.toLowerCase());
+    return words.some(w => t.includes(w) || a.includes(w));
+  }
   const coverSrc=b=>b.cover_url||(b.cover_i?('https://covers.openlibrary.org/b/id/'+b.cover_i+'-L.jpg'):null);
   // Google thumbnails default to a tiny zoom=1; request a larger, clean image
   function gImg(u){ return u ? u.replace(/^http:/,'https:').replace('&edge=curl','').replace(/zoom=\d/,'zoom=2') : null; }
@@ -314,10 +329,13 @@
         try{ docs = await googleBooks(typed); }catch(e){ docs=[]; }
         if(!docs.length){ docs = await openLib(typed, 0); }
         docs = dedupe(docs);
+        // strict quality gate: every word of the query must appear, it must look
+        // like a novel (not a magazine / coloring book / Holy Bible / nursing
+        // textbook), and it must have a real cover. Without these, broad indices
+        // (esp. Open Library) leak public-domain garbage into the results.
+        docs = docs.filter(b => matchesQuery(b, typed) && isNovel(b) && coverSrc(b));
         const q=typed.toLowerCase();
         docs = docs.map(b=>[scoreDoc(b,q),b]).sort((x,y)=>y[0]-x[0]).map(x=>x[1]);
-        const withC=docs.filter(coverSrc), without=docs.filter(b=>!coverSrc(b));
-        docs = withC.concat(without.slice(0,2));   // covers first; a couple stragglers ok
       } else {
         // Stable per-session picks: reuse the same shuffle for ~30 min so a tab
         // switch / quick return doesn't reshuffle; a fresh visit (30 min+ away) re-rolls.
@@ -396,9 +414,11 @@
         <div class="meta">
           <div class="title">${b.title}</div>
           <div class="author">by ${author}</div>
-          <div class="spice" id="sp_${id}">${chilis}</div>
-          ${addControlHTML(b.key, id, on)}
-          ${isAdmin ? `<button class="catbtn" data-act="catalog">★ Add to catalog</button>` : ''}
+          <div class="actions">
+            <div class="spice" id="sp_${id}">${chilis}</div>
+            ${addControlHTML(b.key, id, on)}
+            ${isAdmin ? `<button class="catbtn" data-act="catalog">★ Add to catalog</button>` : ''}
+          </div>
         </div></article>`;
     }).join('');
   }

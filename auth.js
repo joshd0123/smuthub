@@ -79,9 +79,13 @@
       btn.onclick = (e)=>{
         e.stopPropagation();
         const opening = menu.style.display==='none';
+        // close any other open header menu first (e.g. the mobile nav drawer)
+        if(opening) window.dispatchEvent(new CustomEvent('sh-menu-open',{detail:{id:'shMenu'}}));
         menu.style.display = opening ? 'block' : 'none';
         if(opening) document.addEventListener('click', ()=>{ menu.style.display='none'; }, { once:true });
       };
+      // listen for another menu opening → close this one
+      window.addEventListener('sh-menu-open', (ev)=>{ if(ev.detail && ev.detail.id!=='shMenu') menu.style.display='none'; });
       menu.querySelectorAll('.shMenuItem').forEach(mi=>{
         mi.style.cssText = 'display:block;width:100%;text-align:left;background:none;border:0;color:#f4e8e3;font-family:inherit;font-size:.88rem;font-weight:600;padding:.75em 1.1em;cursor:pointer';
         mi.onmouseenter = ()=> mi.style.background='#1c1316';
@@ -261,9 +265,16 @@
     burger.setAttribute('aria-label','Menu'); burger.setAttribute('aria-expanded','false');
     burger.textContent='☰';
     const setOpen=(open)=>{ links.classList.toggle('sh-open',open); burger.textContent=open?'✕':'☰'; burger.setAttribute('aria-expanded',open?'true':'false'); };
-    burger.addEventListener('click',(e)=>{ e.stopPropagation(); setOpen(!links.classList.contains('sh-open')); });
+    burger.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      const opening = !links.classList.contains('sh-open');
+      if(opening) window.dispatchEvent(new CustomEvent('sh-menu-open',{detail:{id:'shNav'}}));
+      setOpen(opening);
+    });
     document.addEventListener('click',(e)=>{ if(links.classList.contains('sh-open') && !nav.contains(e.target)) setOpen(false); });
     links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setOpen(false)));
+    // close the nav drawer if another header menu opens (e.g. the avatar dropdown)
+    window.addEventListener('sh-menu-open',(ev)=>{ if(ev.detail && ev.detail.id!=='shNav') setOpen(false); });
     nav.appendChild(burger);   // far right
   }
   function initShUI(){ injectHeaderCSS(); enhanceHeader(); /* mountFeedbackButton(); ← disabled */ }

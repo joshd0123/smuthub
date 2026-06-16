@@ -108,7 +108,7 @@
   .badge.rank{top:5px;left:5px;color:#fff;background:rgba(8,4,5,.78)}
   .badge.rank.hot{background:var(--grad);color:#1a0c10}
   .badge.rank.new{background:var(--grad);color:#1a0c10}
-  .spice{position:absolute;bottom:5px;right:5px;font-size:.6rem;letter-spacing:.04em;z-index:3}
+  .spice{position:absolute;bottom:5px;right:5px;font-size:.6rem;letter-spacing:.04em;z-index:3;white-space:nowrap}
 
   /* ── PLACEHOLDER ROOMS ── */
   .rooms{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
@@ -168,7 +168,7 @@
   <div class="searchwrap">
     <div class="sbar">
       <span class="ic">🔍</span>
-      <input id="q" type="text" placeholder="Have you read this? Search any title or author…" autocomplete="off">
+      <input id="q" type="text" placeholder="Read this? Search title or author…" autocomplete="off">
       <button onclick="runSearch()">Search</button>
     </div>
     <div class="shelfhint">Searches your shelf <em>first</em>, then everything else.</div>

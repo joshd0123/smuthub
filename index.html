@@ -109,7 +109,7 @@
   .cover h3{font-family:'Fraunces';font-style:italic;font-weight:500;font-size:1.5rem;line-height:1.05;text-shadow:0 2px 14px rgba(0,0,0,.5)}
   .card .meta{padding:14px 16px 18px}
   .card .author{color:var(--muted);font-size:.85rem}
-  .spice{margin-top:8px;font-size:.95rem;letter-spacing:.08em}
+  .spice{margin-top:8px;font-size:.95rem;letter-spacing:.08em;white-space:nowrap}
   .spice .off{filter:grayscale(1);opacity:.28}
   .card .tag{display:inline-block;margin-top:10px;font-size:.72rem;color:var(--amber);border:1px solid var(--line);padding:.25em .6em;border-radius:99px}
 
@@ -174,7 +174,7 @@
     <h1 class="fu d2">The hub for <em>spicy</em> fantasy reads you can't put down.</h1>
     <p class="sub fu d3">Browse by trope, sort by heat, and find your next fictional situationship. Dragons optional. Pining mandatory.</p>
     <div class="search fu d4">
-      <input type="text" placeholder="Search by trope, vibe, or fae man who would never…">
+      <input type="text" id="heroSearch" placeholder="Search by trope, vibe, or title…">
       <button type="button" onclick="document.getElementById('shelf').scrollIntoView({behavior:'smooth'})">Find heat</button>
     </div>
     <p class="hero-tags fu d5">🚧 <span>We're still stocking the shelves —</span> drop your email below to get first access. 💌</p>
