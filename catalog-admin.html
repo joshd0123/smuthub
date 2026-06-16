@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmutHub — Manage Catalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script defer src="auth.js"></script>
+<style>
+  :root{--ink:#0c0708;--ink-2:#150e10;--panel:#1c1316;--line:#2a1d22;--cream:#f4e8e3;--muted:#b69089;--rose:#ff3d76;--amber:#ffab40;--grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  a{color:inherit;text-decoration:none}
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;color:var(--cream)}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em}
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap}
+  .navlinks{display:flex;gap:18px}.navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;transition:color .2s}.navlinks a.on,.navlinks a:hover{color:var(--cream)}
+  @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
+  .authbox{display:flex;align-items:center;gap:8px}
+  .btn{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:.6em 1.2em;border-radius:99px;cursor:pointer;font-size:.9rem}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .ghostbtn{background:none;border:1px solid var(--line);color:var(--cream);font-family:inherit;font-weight:700;padding:.55em 1em;border-radius:99px;cursor:pointer;font-size:.88rem}
+  .ghostbtn:hover{border-color:var(--rose)}
+  .danger{border-color:#ff6a8a;color:#ff9aa8}
+  h1{font-family:'Fraunces';font-weight:600;font-size:2rem;margin:24px 0 4px}
+  h1 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
+  p.sub{color:var(--muted);margin-bottom:18px}
+  .gate{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:30px;text-align:center;margin:40px auto;max-width:460px}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0}
+  input,select,textarea{background:var(--panel);border:1px solid var(--line);color:var(--cream);font-family:inherit;font-size:.9rem;border-radius:10px;padding:.55em .7em;outline:none}
+  input:focus,select:focus,textarea:focus{border-color:var(--rose)}
+  .toolbar input[type=search]{flex:1;min-width:180px}
+  textarea{width:100%;min-height:80px;resize:vertical;line-height:1.45}
+  /* list */
+  .list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;padding-bottom:60px}
+  .item{display:flex;gap:12px;background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:10px;cursor:pointer;transition:border-color .15s}
+  .item:hover{border-color:var(--rose)}
+  .item .cv{width:54px;height:72px;flex:0 0 auto;border-radius:6px;background:var(--panel) center/cover no-repeat;display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:#5b4040}
+  .item .info{min-width:0;flex:1}
+  .item .t{font-family:'Fraunces';font-weight:600;font-size:1rem;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .item .a{color:var(--muted);font-size:.8rem;margin-top:2px}
+  .badge{display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:.12em .55em;border-radius:99px;margin-top:6px}
+  .b-draft{background:rgba(255,171,64,.16);color:var(--amber)}
+  .b-live{background:rgba(122,220,150,.16);color:#7adc96}
+  .b-archived{background:rgba(182,144,137,.16);color:var(--muted)}
+  /* editor */
+  fieldset{border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+  legend{font-family:'Fraunces';font-weight:600;font-size:1.05rem;padding:0 8px;color:var(--cream)}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+  .field{display:flex;flex-direction:column;gap:4px}
+  .field label{font-size:.78rem;color:var(--muted);font-weight:700;letter-spacing:.02em}
+  .field.cb{flex-direction:row;align-items:center;gap:8px}
+  .chilis{font-size:1.5rem;letter-spacing:.1em;cursor:pointer;user-select:none}
+  .chilis span{filter:grayscale(1);opacity:.3;cursor:pointer}.chilis span.on{filter:none;opacity:1}
+  .coverprev{width:90px;height:120px;border-radius:8px;background:var(--panel) center/cover no-repeat;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:#5b4040;font-size:1.5rem}
+  .tagcat{margin-bottom:14px}
+  .tagcat h4{font-size:.82rem;color:var(--amber);font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{display:inline-flex;align-items:center;gap:5px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:.25em .7em;font-size:.8rem;cursor:pointer;user-select:none}
+  .chip input{display:none}
+  .chip.on{background:var(--grad);color:#1a0c10;border-color:transparent;font-weight:700}
+  .addtag{display:flex;gap:6px;margin-top:8px}
+  .addtag input{flex:1;font-size:.82rem;padding:.4em .6em}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;position:sticky;bottom:0;background:linear-gradient(0deg,var(--ink) 70%,transparent);padding:14px 0 24px;margin-top:6px}
+  .ok{color:#7adc96}.bad{color:#ff9aa8}.muted{color:var(--muted);font-size:.85rem}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink-2);border:1px solid var(--rose);color:var(--cream);padding:.7em 1.2em;border-radius:99px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:90}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav wrap">
+    <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
+    <nav class="navlinks">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="smuthub-app.html">Search</a>
+      <a href="smuthub-bookcase.html">My Bookshelf</a>
+      <a href="admin.html">Bulk import</a>
+      <a href="catalog-admin.html" class="on">Manage</a>
+    </nav>
+    <div class="authbox" id="authbox"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="gate" class="gate">Checking access…</div>
+
+  <div id="tool" style="display:none">
+    <!-- ── LIST VIEW ── -->
+    <div id="listView">
+      <h1>Manage <em>catalog</em></h1>
+      <p class="sub">Your books — drafts and live. Click one to edit its facts, spice and tags, or add a new one.</p>
+      <div class="toolbar">
+        <button class="btn" id="newBtn">＋ New book</button>
+        <input type="search" id="listSearch" placeholder="Filter by title or author…">
+        <select id="listStatus">
+          <option value="">All statuses</option>
+          <option value="draft">Draft</option>
+          <option value="live">Live</option>
+          <option value="archived">Archived</option>
+        </select>
+        <span class="muted" id="listCount"></span>
+      </div>
+      <div class="list" id="bookList"></div>
+    </div>
+
+    <!-- ── EDIT VIEW ── -->
+    <div id="editView" style="display:none">
+      <div class="toolbar">
+        <button class="ghostbtn" id="backBtn">← Back to list</button>
+        <span class="muted" id="editingSlug"></span>
+      </div>
+      <h1 id="editTitle"><em>Edit</em> book</h1>
+
+      <fieldset>
+        <legend>Identity</legend>
+        <div class="grid2">
+          <div class="field"><label for="f_title">Title *</label><input id="f_title"></div>
+          <div class="field"><label for="f_author">Author</label><input id="f_author"></div>
+          <div class="field"><label for="f_year">Year</label><input id="f_year" type="number"></div>
+          <div class="field"><label for="f_series">Series</label><input id="f_series"></div>
+          <div class="field"><label for="f_series_number">Series #</label><input id="f_series_number" type="number" step="0.5"></div>
+          <div class="field"><label for="f_isbn">ISBN</label><input id="f_isbn"></div>
+          <div class="field"><label for="f_publisher">Publisher</label><input id="f_publisher"></div>
+          <div class="field"><label for="f_page_count">Pages</label><input id="f_page_count" type="number"></div>
+          <div class="field"><label for="f_language">Language</label><input id="f_language" placeholder="en"></div>
+          <div class="field"><label for="f_subgenre">Subgenre</label>
+            <select id="f_subgenre"><option value=""></option><option>romantasy</option><option>fantasy-romance</option><option>paranormal-romance</option><option>sci-fi-romance</option><option>dark-romance</option><option>contemporary-romance</option><option>historical-romance</option></select>
+          </div>
+          <div class="field"><label for="f_age_category">Age category</label>
+            <select id="f_age_category"><option value=""></option><option>YA</option><option>NA</option><option>Adult</option></select>
+          </div>
+          <div class="field cb"><input type="checkbox" id="f_standalone"><label for="f_standalone">Standalone</label></div>
+          <div class="field cb"><input type="checkbox" id="f_audiobook"><label for="f_audiobook">Audiobook exists</label></div>
+        </div>
+        <div class="grid2" style="margin-top:12px;align-items:end">
+          <div class="field" style="grid-column:1/-1"><label for="f_cover_url">Cover URL (Supabase Storage or any host)</label><input id="f_cover_url"></div>
+        </div>
+        <div class="toolbar">
+          <div class="coverprev" id="coverPrev">▭</div>
+          <button class="ghostbtn" id="fetchBtn" type="button">⤓ Fetch facts from Google Books</button>
+          <span class="muted" id="fetchMsg"></span>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Spice</legend>
+        <div class="grid2">
+          <div class="field"><label>Spice level (0–5)</label><div class="chilis" id="f_spice_level"></div></div>
+          <div class="field"><label for="f_door">Door</label>
+            <select id="f_door"><option value=""></option><option value="open">open (on-page)</option><option value="fade">fade-to-black</option><option value="closed">closed</option></select>
+          </div>
+          <div class="field"><label for="f_spice_frequency">Frequency</label>
+            <select id="f_spice_frequency"><option value=""></option><option>none</option><option>rare</option><option>occasional</option><option>frequent</option><option>constant</option></select>
+          </div>
+          <div class="field"><label for="f_heat_type">Heat type (semicolon-sep)</label><input id="f_heat_type" placeholder="praise; dom-sub"></div>
+        </div>
+        <div class="field" style="margin-top:12px"><label for="f_spice_notes">Spice notes</label><textarea id="f_spice_notes"></textarea></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Reading experience &amp; structure</legend>
+        <div class="grid2">
+          <div class="field"><label for="f_energy">Energy</label><select id="f_energy"><option value=""></option><option>light</option><option>medium</option><option>heavy</option></select></div>
+          <div class="field"><label for="f_pacing">Pacing</label><select id="f_pacing"><option value=""></option><option>slow-burn</option><option>steady</option><option>fast</option></select></div>
+          <div class="field"><label for="f_length_feel">Length feel</label><select id="f_length_feel"><option value=""></option><option>quick</option><option>standard</option><option>chonky</option></select></div>
+          <div class="field"><label for="f_pov">POV</label><select id="f_pov"><option value=""></option><option>1st single</option><option>1st dual</option><option>3rd single</option><option>3rd dual</option><option>multi</option></select></div>
+          <div class="field"><label for="f_tense">Tense</label><select id="f_tense"><option value=""></option><option>past</option><option>present</option></select></div>
+          <div class="field"><label for="f_relationship_type">Relationship</label><select id="f_relationship_type"><option value=""></option><option>MF</option><option>MM</option><option>FF</option><option>poly</option><option>why-choose</option></select></div>
+          <div class="field"><label for="f_who_falls_first">Who falls first</label><select id="f_who_falls_first"><option value=""></option><option>MC</option><option>LI</option><option>both</option><option>simultaneous</option></select></div>
+          <div class="field"><label for="f_mc_gender">MC gender</label><input id="f_mc_gender"></div>
+          <div class="field"><label for="f_li_gender">LI gender</label><input id="f_li_gender"></div>
+          <div class="field"><label for="f_ending">Ending</label><select id="f_ending"><option value=""></option><option>HEA</option><option>HFN</option><option>cliffhanger</option><option>tragic</option><option>ambiguous</option></select></div>
+          <div class="field cb"><input type="checkbox" id="f_love_triangle"><label for="f_love_triangle">Love triangle</label></div>
+          <div class="field cb"><input type="checkbox" id="f_cliffhanger"><label for="f_cliffhanger">Cliffhanger</label></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>World</legend>
+        <div class="grid2">
+          <div class="field"><label for="f_time_period">Time period</label><select id="f_time_period"><option value=""></option><option>medieval</option><option>regency</option><option>victorian</option><option>contemporary</option><option>futuristic</option></select></div>
+          <div class="field"><label for="f_world_type">World type</label><select id="f_world_type"><option value=""></option><option>high-fantasy</option><option>urban-fantasy</option><option>portal</option><option>contemporary</option><option>sci-fi</option><option>historical</option><option>paranormal</option></select></div>
+          <div class="field" style="grid-column:1/-1"><label for="f_comp_titles">Comp titles — "for fans of…" (semicolon-sep)</label><input id="f_comp_titles" placeholder="Fourth Wing; From Blood and Ash"></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Tags</legend>
+        <p class="muted" style="margin-bottom:12px">Tick all that apply. Type a new one into a category to coin it — it's added to the shared vocabulary on save.</p>
+        <div id="tagGroups"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Discovery &amp; status</legend>
+        <div class="grid2">
+          <div class="field"><label for="f_rating_avg">Rating avg (0–5)</label><input id="f_rating_avg" type="number" step="0.1"></div>
+          <div class="field"><label for="f_popularity">Popularity (sort weight)</label><input id="f_popularity" type="number"></div>
+          <div class="field cb"><input type="checkbox" id="f_featured"><label for="f_featured">Featured</label></div>
+          <div class="field"><label for="f_status">Status</label>
+            <select id="f_status"><option value="draft">draft (hidden)</option><option value="live">live (public)</option><option value="archived">archived</option></select>
+          </div>
+        </div>
+        <div class="field" style="margin-top:12px"><label for="f_blurb">Blurb</label><textarea id="f_blurb"></textarea></div>
+        <div class="field" style="margin-top:12px"><label for="f_triggers_detail">Trigger detail / notes</label><textarea id="f_triggers_detail"></textarea></div>
+      </fieldset>
+
+      <div class="actions">
+        <button class="btn" id="saveBtn">Save book</button>
+        <button class="ghostbtn danger" id="deleteBtn">Delete</button>
+        <span class="muted" id="editMsg"></span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  let sb=null, isAdmin=false, allBooks=[], tagsByCat={}, current=null;
+
+  const TAG_CATS = ['trope','mood','vibe','theme','warning','representation','setting','kink','mc-archetype','li-archetype'];
+  const CAT_LABEL = {trope:'Tropes',mood:'Moods',vibe:'Vibes',theme:'Themes',warning:'Content warnings',representation:'Representation',setting:'Settings',kink:'Kinks','mc-archetype':'MC archetypes','li-archetype':'LI archetypes'};
+  // category → the payload key upsert_book expects
+  const CAT_TO_KEY = {trope:'tropes',mood:'mood',vibe:'vibes',theme:'themes',warning:'content_warnings',representation:'representation',setting:'setting',kink:'kink_tags','mc-archetype':'mc_archetype','li-archetype':'li_archetype'};
+
+  // scalar field definitions for the form ↔ payload mapping
+  const TEXT_F = ['title','author','cover_url','series','isbn','publisher','language','subgenre','age_category','door','spice_frequency','energy','pacing','length_feel','pov','tense','mc_gender','li_gender','relationship_type','who_falls_first','ending','time_period','world_type','spice_notes','blurb','triggers_detail','status'];
+  const NUM_F  = ['year','series_number','page_count','spice_level','rating_avg','popularity'];
+  const BOOL_F = ['standalone','audiobook','love_triangle','cliffhanger','featured'];
+
+  const toast=(m)=>{const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);};
+  const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const $=id=>document.getElementById(id);
+  const slugifyTag=s=>String(s||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+  const arrFromInput=s=>String(s||'').split(/[;|]/).map(x=>x.trim()).filter(Boolean);
+
+  // ── access gate ──
+  window.addEventListener('sh-auth', async (e)=>{
+    sb = window.SH && window.SH.sb;
+    isAdmin = !!(e.detail.profile && e.detail.profile.is_admin);
+    const gate=$('gate'), tool=$('tool');
+    if(isAdmin){ gate.style.display='none'; tool.style.display='block'; await loadTags(); await loadList(); }
+    else if(e.detail.user){ gate.innerHTML='<h2 style="font-family:Fraunces">Admins only</h2><p class="muted" style="margin-top:8px">Set <code>is_admin = true</code> on your profile in Supabase, then reload.</p>'; }
+    else { gate.innerHTML='<h2 style="font-family:Fraunces">Admins only</h2><p class="muted" style="margin-top:8px">Please <button class="ghostbtn" onclick="SH.openAuth()">log in</button> with your admin account.</p>'; }
+  });
+
+  // ── data ──
+  async function loadTags(){
+    tagsByCat={}; TAG_CATS.forEach(c=>tagsByCat[c]=[]);
+    const { data, error } = await sb.from('tags').select('category,slug,label').order('label');
+    if(error){ console.warn('tags load', error); return; }
+    (data||[]).forEach(t=>{ if(!tagsByCat[t.category]) tagsByCat[t.category]=[]; tagsByCat[t.category].push({slug:t.slug,label:t.label||t.slug}); });
+  }
+  async function loadList(){
+    const { data, error } = await sb.from('books').select('slug,title,author,cover_url,year,spice_level,status').order('updated_at',{ascending:false});
+    if(error){ $('bookList').innerHTML='<p class="bad">'+esc(error.message)+(/exist|schema/i.test(error.message)?' — run migrations/2026-06-16-catalog-normalized.sql first.':'')+'</p>'; return; }
+    allBooks=data||[]; renderList();
+  }
+  function renderList(){
+    const term=$('listSearch').value.trim().toLowerCase(), st=$('listStatus').value;
+    const rows=allBooks.filter(b=>(!st||b.status===st) && (!term || (b.title||'').toLowerCase().includes(term) || (b.author||'').toLowerCase().includes(term)));
+    $('listCount').textContent=rows.length+' of '+allBooks.length;
+    $('bookList').innerHTML = rows.map(b=>`
+      <div class="item" data-slug="${esc(b.slug)}">
+        <div class="cv" ${b.cover_url?`style="background-image:url('${esc(b.cover_url)}')"`:''}>${b.cover_url?'':'📖'}</div>
+        <div class="info">
+          <div class="t">${esc(b.title||'(untitled)')}</div>
+          <div class="a">${esc(b.author||'Unknown')}${b.year?' · '+b.year:''}${b.spice_level!=null?' · '+'🌶️'.repeat(b.spice_level):''}</div>
+          <span class="badge b-${esc(b.status||'draft')}">${esc(b.status||'draft')}</span>
+        </div>
+      </div>`).join('') || '<p class="muted">No books match. Add one with “＋ New book”.</p>';
+  }
+
+  // ── spice chili widget ──
+  let spiceLevel=null;
+  function renderChilis(){
+    $('f_spice_level').innerHTML=[0,1,2,3,4,5].map(n=>n===0
+      ? `<span data-n="0" title="none" style="font-size:.8rem;${spiceLevel===0?'opacity:1;filter:none':''}">🚫</span>`
+      : `<span data-n="${n}" class="${spiceLevel!=null&&spiceLevel>=n?'on':''}">🌶️</span>`).join('');
+  }
+  $('f_spice_level').addEventListener('click',e=>{ const s=e.target.closest('span[data-n]'); if(!s)return; spiceLevel=+s.dataset.n; renderChilis(); });
+
+  // ── open editor ──
+  function openEditor(book){
+    current = book || { slug:null };
+    $('editTitle').innerHTML = book ? '<em>Edit</em> book' : '<em>New</em> book';
+    $('editingSlug').textContent = book ? book.slug : 'new — slug auto-built from title + author + year';
+    $('deleteBtn').style.display = book ? '' : 'none';
+    // scalars
+    TEXT_F.forEach(f=>{ const el=$('f_'+f); if(el) el.value = (book && book[f]!=null) ? book[f] : (f==='status'?'draft':(f==='language'?'':'')); });
+    if(!book){ $('f_status').value='draft'; }
+    NUM_F.forEach(f=>{ if(f==='spice_level') return; const el=$('f_'+f); if(el) el.value = (book && book[f]!=null) ? book[f] : ''; });
+    BOOL_F.forEach(f=>{ const el=$('f_'+f); if(el) el.checked = !!(book && book[f]); });
+    spiceLevel = (book && book.spice_level!=null) ? book.spice_level : null; renderChilis();
+    $('f_heat_type').value = (book && Array.isArray(book.heat_type)) ? book.heat_type.join('; ') : '';
+    $('f_comp_titles').value = (book && Array.isArray(book.comp_titles)) ? book.comp_titles.join('; ') : '';
+    updateCoverPrev();
+    // tags: derive checked slugs per category from tag_ids ("cat:slug")
+    const checked={}; TAG_CATS.forEach(c=>checked[c]=new Set());
+    ((book&&book.tag_ids)||[]).forEach(ts=>{ const i=ts.indexOf(':'); if(i>0){ const c=ts.slice(0,i), s=ts.slice(i+1); if(checked[c]) checked[c].add(s); } });
+    renderTagGroups(checked);
+    $('editMsg').textContent='';
+    $('listView').style.display='none'; $('editView').style.display='block'; window.scrollTo(0,0);
+  }
+
+  function renderTagGroups(checked){
+    $('tagGroups').innerHTML = TAG_CATS.map(cat=>{
+      const have = tagsByCat[cat]||[];
+      // include any checked slug not in the vocabulary (shouldn't happen, but safe)
+      const known = new Set(have.map(t=>t.slug));
+      (checked[cat]||new Set()).forEach(s=>{ if(!known.has(s)){ have.push({slug:s,label:s}); known.add(s); } });
+      const chips = have.sort((a,b)=>a.label.localeCompare(b.label)).map(t=>{
+        const on=(checked[cat]||new Set()).has(t.slug);
+        return `<label class="chip ${on?'on':''}" data-cat="${cat}" data-slug="${esc(t.slug)}"><input type="checkbox" ${on?'checked':''}>${esc(t.label)}</label>`;
+      }).join('');
+      return `<div class="tagcat" data-cat="${cat}">
+        <h4>${CAT_LABEL[cat]}</h4>
+        <div class="chips">${chips||'<span class="muted">none yet</span>'}</div>
+        <div class="addtag"><input placeholder="add a ${cat}…" data-add="${cat}"><button class="ghostbtn" type="button" data-addbtn="${cat}">Add</button></div>
+      </div>`;
+    }).join('');
+  }
+
+  // toggle chips + add-new-tag (event delegation)
+  $('tagGroups').addEventListener('click',e=>{
+    const chip=e.target.closest('.chip');
+    if(chip){ const on=chip.classList.toggle('on'); chip.querySelector('input').checked=on; return; }
+    const addbtn=e.target.closest('[data-addbtn]');
+    if(addbtn){ addTagToGroup(addbtn.getAttribute('data-addbtn')); }
+  });
+  $('tagGroups').addEventListener('keydown',e=>{
+    if(e.key==='Enter' && e.target.matches('[data-add]')){ e.preventDefault(); addTagToGroup(e.target.getAttribute('data-add')); }
+  });
+  function addTagToGroup(cat){
+    const inp=$('tagGroups').querySelector(`[data-add="${cat}"]`);
+    const raw=inp.value, slug=slugifyTag(raw); if(!slug) return;
+    const group=$('tagGroups').querySelector(`.tagcat[data-cat="${cat}"] .chips`);
+    let chip=group.querySelector(`.chip[data-slug="${CSS.escape(slug)}"]`);
+    if(!chip){
+      if(group.querySelector('.muted')) group.innerHTML='';
+      chip=document.createElement('label'); chip.className='chip on'; chip.dataset.cat=cat; chip.dataset.slug=slug;
+      chip.innerHTML=`<input type="checkbox" checked>${esc(raw.trim())}`;
+      group.appendChild(chip);
+    } else { chip.classList.add('on'); chip.querySelector('input').checked=true; }
+    inp.value='';
+  }
+
+  function gatherChecked(cat){
+    return [...$('tagGroups').querySelectorAll(`.tagcat[data-cat="${cat}"] .chip.on`)].map(c=>c.dataset.slug);
+  }
+
+  // ── cover preview ──
+  function updateCoverPrev(){ const u=$('f_cover_url').value.trim(); const p=$('coverPrev'); if(u){ p.style.backgroundImage="url('"+u.replace(/'/g,"%27")+"')"; p.textContent=''; } else { p.style.backgroundImage=''; p.textContent='▭'; } }
+  $('f_cover_url').addEventListener('input',updateCoverPrev);
+
+  // ── build payload (every field present → full overwrite; '' → null) ──
+  function buildPayload(){
+    const p={};
+    if(current && current.slug) p.slug=current.slug;
+    TEXT_F.forEach(f=>{ const el=$('f_'+f); if(el){ const v=el.value.trim(); p[f]= v===''?null:v; } });
+    NUM_F.forEach(f=>{ if(f==='spice_level'){ p.spice_level = spiceLevel; return; } const el=$('f_'+f); if(el){ const v=el.value.trim(); p[f]= v===''?null:Number(v); } });
+    BOOL_F.forEach(f=>{ const el=$('f_'+f); if(el) p[f]=el.checked; });
+    p.heat_type = arrFromInput($('f_heat_type').value);
+    p.comp_titles = arrFromInput($('f_comp_titles').value);
+    TAG_CATS.forEach(cat=>{ p[CAT_TO_KEY[cat]] = gatherChecked(cat); });
+    return p;
+  }
+
+  // ── save / delete ──
+  async function save(){
+    if(!$('f_title').value.trim()){ $('editMsg').innerHTML='<span class="bad">Title is required.</span>'; return; }
+    const btn=$('saveBtn'); btn.disabled=true; $('editMsg').textContent='Saving…';
+    const { data, error } = await sb.rpc('upsert_book',{ p: buildPayload() });
+    btn.disabled=false;
+    if(error){ $('editMsg').innerHTML='<span class="bad">'+esc(error.message)+(/authorized|admin/i.test(error.message)?' — set is_admin=true.':'')+'</span>'; console.error(error); return; }
+    toast('Saved ★'); await loadTags(); await loadList();
+    // reopen the saved book so further edits keep working on the right slug
+    const saved=allBooks.find(b=>b.slug===data);
+    if(saved){ const { data:full }=await sb.from('books').select('*').eq('slug',data).single(); openEditor(full||saved); }
+    else backToList();
+  }
+  async function del(){
+    if(!current || !current.slug) return;
+    if(!confirm('Delete "'+(current.title||current.slug)+'"? This removes the book and its tag assignments (your shelves are not affected).')) return;
+    const { error } = await sb.from('books').delete().eq('slug', current.slug);
+    if(error){ toast('Delete failed: '+error.message); return; }
+    toast('Deleted'); await loadList(); backToList();
+  }
+  function backToList(){ $('editView').style.display='none'; $('listView').style.display='block'; }
+
+  // ── Google Books fact fetch (fills EMPTY fields only; never clobbers your edits) ──
+  const GB_KEY=(window.SMUTHUB_CONFIG||{}).GOOGLE_BOOKS_KEY||'';
+  function gImg(u){ return u ? u.replace(/^http:/,'https:').replace('&edge=curl','').replace(/zoom=\d/,'zoom=2') : null; }
+  async function fetchFacts(){
+    const isbn=$('f_isbn').value.trim(), title=$('f_title').value.trim(), author=$('f_author').value.trim();
+    if(!isbn && !title){ $('fetchMsg').innerHTML='<span class="bad">Enter an ISBN or title first.</span>'; return; }
+    if(!GB_KEY){ $('fetchMsg').innerHTML='<span class="bad">No Google Books key in config.js.</span>'; return; }
+    $('fetchMsg').textContent='Fetching…';
+    try{
+      const q = isbn ? ('isbn:'+isbn) : ('intitle:'+title+(author?' inauthor:'+author:''));
+      const url='https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)+'&maxResults=5&printType=books&langRestrict=en&country=US&key='+GB_KEY;
+      const items=(((await (await fetch(url)).json()).items)||[]);
+      const it = items.find(x=>{const il=(x.volumeInfo||{}).imageLinks; return il&&il.thumbnail;}) || items[0];
+      if(!it){ $('fetchMsg').innerHTML='<span class="bad">No match found.</span>'; return; }
+      const v=it.volumeInfo||{};
+      const setIfEmpty=(id,val)=>{ const el=$(id); if(el && !el.value.trim() && val!=null && val!=='') el.value=val; };
+      setIfEmpty('f_title', v.title);
+      setIfEmpty('f_author', (v.authors||[])[0]);
+      setIfEmpty('f_year', (v.publishedDate||'').slice(0,4));
+      setIfEmpty('f_publisher', v.publisher);
+      setIfEmpty('f_page_count', v.pageCount);
+      setIfEmpty('f_blurb', v.description);
+      if(!isbn){ const ind=(v.industryIdentifiers||[]).find(x=>/ISBN_13|ISBN_10/.test(x.type)); if(ind) setIfEmpty('f_isbn', ind.identifier); }
+      const img=v.imageLinks&&(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail);
+      if(img && !$('f_cover_url').value.trim()){ $('f_cover_url').value=gImg(img); updateCoverPrev(); }
+      $('fetchMsg').innerHTML='<span class="ok">Filled empty fields from Google ✓ — review, then Save.</span>';
+    }catch(err){ $('fetchMsg').innerHTML='<span class="bad">Fetch failed.</span>'; console.error(err); }
+  }
+
+  // ── wire up ──
+  $('newBtn').onclick=()=>openEditor(null);
+  $('backBtn').onclick=backToList;
+  $('saveBtn').onclick=save;
+  $('deleteBtn').onclick=del;
+  $('fetchBtn').onclick=fetchFacts;
+  $('listSearch').addEventListener('input',renderList);
+  $('listStatus').addEventListener('change',renderList);
+  $('bookList').addEventListener('click', async (e)=>{
+    const item=e.target.closest('.item'); if(!item) return;
+    const { data, error } = await sb.from('books').select('*').eq('slug',item.dataset.slug).single();
+    if(error){ toast('Load failed: '+error.message); return; }
+    openEditor(data);
+  });
+</script>
+</body>
+</html>

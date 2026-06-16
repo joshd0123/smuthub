@@ -2,21 +2,25 @@
 
 Static site (plain HTML/JS) deployed to Cloudflare Workers static assets at
 `smuthub.joshd0123.workers.dev`, backed by Supabase (auth + `shelf`,
-`book_tags`, `profiles` tables).
+`book_tags`, `profiles`, and the normalized catalog `books` / `tags` /
+`book_tag_assignments` tables).
 
 ## Files
 
 | File | Purpose |
 |---|---|
 | `index.html` | Landing page + email waitlist |
-| `smuthub-app.html` | Search (Open Library) + spice ratings + add-to-shelf |
+| `smuthub-app.html` | Search + spice ratings + add-to-shelf; catalog browse & filters (live books) |
 | `smuthub-bookcase.html` | The bookcase: shelves, themes, book detail sheet |
+| `admin.html` | Admin-only bulk CSV import into the catalog (via `upsert_book`) |
+| `catalog-admin.html` | Admin-only catalog manager: books list + per-book edit form (facts, spice, tags, status) |
 | `stores.html` | Store finder (Leaflet/OpenStreetMap demo) |
 | `sitemap.html` | Sitemap |
-| `config.js` | `window.SMUTHUB_CONFIG` — Supabase URL/publishable key + Web3Forms key |
+| `config.js` | `window.SMUTHUB_CONFIG` — Supabase URL/publishable key + Web3Forms + Google Books keys |
 | `auth.js` | Shared auth layer: login modal, header widget into `#authbox`, fires `sh-auth` |
 | `_headers` | `Cache-Control: no-cache` for everything (no stale deploys) |
 | `smuthub-profiles.sql` | One-time Supabase setup for the `profiles` table (not deployed) |
+| `migrations/` | Catalog schema migration + tag seed + design notes — see `migrations/README.md` |
 
 Every page uses the same header (`.nav` > logo / `.navlinks` / `#authbox`) and
 loads, in order: Supabase CDN → `config.js` → `auth.js` (defer). Page scripts

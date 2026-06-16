@@ -67,18 +67,18 @@
 
   <div id="tool" style="display:none">
     <h1>Catalog <em>bulk import</em></h1>
-    <p class="sub">Paste a CSV (or choose a file) exported from your spreadsheet. Rows upsert into the catalog by <code>title</code> + <code>author</code>, so re-importing updates existing books instead of duplicating.</p>
+    <p class="sub">Paste a CSV (or choose a file) exported from your spreadsheet. Each row upserts a book by its <code>slug</code> (auto-built from title + author + year), so re-importing updates existing books — including their tags — instead of duplicating. New rows import as <b>drafts</b> unless the CSV sets <code>status</code>.</p>
 
     <div class="card">
       <h2>1 · Get the template</h2>
       <p>Download <a href="catalog-template.csv" download style="color:var(--amber);text-decoration:underline">catalog-template.csv</a>, open it in Google Sheets / Excel, fill rows, then export as CSV.</p>
-      <p class="muted">Multi-value fields (tropes, mood, content warnings, archetypes, setting, comp titles, representation, themes, vibes, kink tags) take several values separated by a <b>semicolon</b>, e.g. <code>enemies-to-lovers; fae; slow-burn</code>. Booleans accept <code>true/false</code>. Leave a cell blank to skip it.</p>
+      <p class="muted">Multi-value fields (tropes, mood, vibes, themes, content_warnings, representation, setting, kink_tags, mc_archetype, li_archetype, comp_titles, heat_type) take several values separated by a <b>semicolon</b>, e.g. <code>enemies-to-lovers; fae; slow-burn</code> — these become catalog tags. Spice: <code>spice_level</code> 0–5, <code>door</code> = open/fade/closed, <code>spice_frequency</code> = none/rare/occasional/frequent/constant. Booleans accept <code>true/false</code>. Leave a cell blank to skip it.</p>
     </div>
 
     <div class="card">
       <h2>2 · Paste or choose your CSV</h2>
       <input type="file" id="file" accept=".csv,text/csv">
-      <textarea id="csv" placeholder="title,author,spice,tropes,mood,ending&#10;Fourth Wing,Rebecca Yarros,4,enemies-to-lovers; dragon-rider,angsty; swoony,HFN"></textarea>
+      <textarea id="csv" placeholder="title,author,year,spice_level,tropes,mood,ending&#10;Fourth Wing,Rebecca Yarros,2023,4,enemies-to-lovers; dragon-rider,angsty; swoony,HFN"></textarea>
       <div class="row">
         <button class="ghostbtn" id="parseBtn">Parse &amp; preview</button>
         <span class="muted" id="parseMsg"></span>
@@ -100,11 +100,12 @@
 
 <script>
   // Which catalog columns are arrays / booleans / numbers (everything else = text)
-  const ARRAY_FIELDS=new Set(['tropes','themes','mood','vibes','content_warnings','representation','kink_tags','mc_archetype','li_archetype','setting','comp_titles']);
+  const ARRAY_FIELDS=new Set(['tropes','themes','mood','vibes','content_warnings','representation','kink_tags','mc_archetype','li_archetype','setting','comp_titles','heat_type']);
   const BOOL_FIELDS =new Set(['standalone','audiobook','open_door','cliffhanger','love_triangle','featured']);
-  const NUM_FIELDS  =new Set(['spice','year','page_count','series_number','rating_avg','popularity']);
-  // Columns the app/table knows about — anything else in the CSV is ignored with a warning
-  const KNOWN=new Set(['title','author','cover_url','year','series','series_number','isbn','page_count','publisher','language','subgenre','standalone','audiobook','age_category','spice','spice_notes','open_door','steam_frequency','kink_tags','tropes','themes','mood','vibes','content_warnings','triggers_detail','representation','energy','pacing','length_feel','pov','tense','mc_archetype','li_archetype','mc_gender','li_gender','relationship_type','who_falls_first','love_triangle','ending','cliffhanger','setting','time_period','world_type','comp_titles','rating_avg','popularity','featured','status','blurb']);
+  const NUM_FIELDS  =new Set(['spice','spice_level','year','page_count','series_number','rating_avg','popularity']);
+  // Columns upsert_book understands — anything else in the CSV is ignored with a warning.
+  // Legacy names (spice, open_door, steam_frequency) still work; the RPC maps them.
+  const KNOWN=new Set(['slug','title','author','cover_url','year','series','series_number','isbn','page_count','publisher','language','subgenre','standalone','audiobook','age_category','spice','spice_level','spice_notes','open_door','door','steam_frequency','spice_frequency','heat_type','kink_tags','tropes','themes','mood','vibes','content_warnings','triggers_detail','representation','energy','pacing','length_feel','pov','tense','mc_archetype','li_archetype','mc_gender','li_gender','relationship_type','who_falls_first','love_triangle','ending','cliffhanger','setting','time_period','world_type','comp_titles','rating_avg','popularity','featured','status','blurb']);
 
   let parsed=[];
 
@@ -173,19 +174,24 @@
     const sb=window.SH&&window.SH.sb; if(!sb){ document.getElementById('importMsg').innerHTML='<span class="bad">Not signed in.</span>'; return; }
     const btn=document.getElementById('importBtn'); btn.disabled=true;
     let added=0, failed=0; const errors=[];
-    for(let i=0;i<parsed.length;i+=50){
-      const chunk=parsed.slice(i,i+50);
-      document.getElementById('importMsg').textContent='Importing '+Math.min(i+chunk.length,parsed.length)+'/'+parsed.length+'…';
-      const { error }=await sb.from('catalog').upsert(chunk,{onConflict:'title,author'});
-      if(error){ failed+=chunk.length; errors.push(error.message); }
-      else added+=chunk.length;
+    // One RPC per row: upsert_book writes the book AND explodes tropes/mood/etc.
+    // into tags + assignments + the synced tag_ids[], all in a single transaction.
+    for(let i=0;i<parsed.length;i++){
+      document.getElementById('importMsg').textContent='Importing '+(i+1)+'/'+parsed.length+'…';
+      const { error }=await sb.rpc('upsert_book',{ p: parsed[i] });
+      if(error){ failed++; errors.push(error.message); }
+      else added++;
     }
     btn.disabled=false;
     document.getElementById('importMsg').textContent='';
+    const firstErr=errors[0]||'';
     document.getElementById('result').innerHTML =
       '<p class="ok" style="margin-top:10px">✓ Imported '+added+' book'+(added===1?'':'s')+'.</p>'
-      + (failed?'<p class="bad">'+failed+' failed. '+esc(errors[0]||'')+(/policy|denied|row-level/i.test(errors[0]||'')?' — make sure your profile has is_admin = true.':'')+'</p>':'')
-      + '<p class="note">Covers still need filling for new books — use “🔧 Fill missing catalog covers” on Search, or paste Storage URLs.</p>';
+      + (failed?'<p class="bad">'+failed+' failed. '+esc(firstErr)
+          + (/authorized|admin|policy|denied|row-level/i.test(firstErr)?' — make sure your profile has is_admin = true.':'')
+          + (/function|schema cache|does not exist/i.test(firstErr)?' — run migrations/2026-06-16-catalog-normalized.sql first.':'')
+          + '</p>':'')
+      + '<p class="note">Rows without a <code>status</code> column import as <b>drafts</b>. Review, tag and publish them in <a href="catalog-admin.html" style="color:var(--amber)">Manage catalog</a>; fill covers there or via “🔧 Fill missing covers” on Search.</p>';
   }
 
   // ── access gate ──

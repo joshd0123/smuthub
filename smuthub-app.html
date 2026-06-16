@@ -106,7 +106,7 @@
       <option value="">🌶️ Any spice</option><option value="1">1+ 🌶️</option><option value="2">2+ 🌶️</option><option value="3">3+ 🌶️</option><option value="4">4+ 🌶️</option><option value="5">5 🌶️</option>
     </select>
     <select id="fTrope" aria-label="Trope">
-      <option value="">Any trope</option><option>enemies-to-lovers</option><option>fated-mates</option><option>slow-burn</option><option>forced-proximity</option><option>only-one-bed</option><option>fake-dating</option><option>grumpy-sunshine</option><option>morally-grey-mc</option><option>found-family</option><option>second-chance</option><option>forbidden-love</option><option>age-gap</option><option>reverse-harem</option><option>touch-her-and-die</option><option>academy</option><option>dragon-rider</option>
+      <option value="">Any trope</option><option>enemies-to-lovers</option><option>fated-mates</option><option>slow-burn</option><option>forced-proximity</option><option>only-one-bed</option><option>fake-dating</option><option>grumpy-sunshine</option><option>morally-grey</option><option>found-family</option><option>second-chance</option><option>forbidden-love</option><option>age-gap</option><option>reverse-harem</option><option>touch-her-and-die</option><option>academy</option><option>dragon-rider</option>
     </select>
     <select id="fMood" aria-label="Mood">
       <option value="">Any mood</option><option>dark</option><option>cozy</option><option>angsty</option><option>emotional</option><option>funny</option><option>swoony</option><option>steamy</option><option>atmospheric</option>
@@ -120,8 +120,9 @@
 
 <div class="wrap">
   <div id="adminbar" style="display:none;text-align:center;margin:0 0 12px">
-    <button id="adminFill" class="catbtn" style="max-width:280px;margin:0 6px 6px 0;display:inline-block;width:auto">🔧 Fill missing catalog covers</button>
-    <a href="admin.html" class="catbtn" style="max-width:200px;margin:0 0 6px;display:inline-block;width:auto;text-align:center">📥 Bulk import</a>
+    <a href="catalog-admin.html" class="catbtn" style="max-width:220px;margin:0 6px 6px 0;display:inline-block;width:auto;text-align:center">✎ Manage catalog</a>
+    <button id="adminFill" class="catbtn" style="max-width:240px;margin:0 6px 6px 0;display:inline-block;width:auto">🔧 Fill missing covers</button>
+    <a href="admin.html" class="catbtn" style="max-width:160px;margin:0 0 6px;display:inline-block;width:auto;text-align:center">📥 Bulk import</a>
   </div>
   <div class="status" id="status"></div>
   <div class="grid" id="grid"></div>
@@ -250,17 +251,17 @@
   async function fillCatalogCovers(){
     if(!isAdmin || !sb){ toast("Admins only"); return; }
     const btn=document.getElementById('adminFill');
-    const { data, error } = await sb.from('catalog').select('id,title,author').is('cover_url',null).limit(40);
+    const { data, error } = await sb.from('books').select('slug,title,author').is('cover_url',null).limit(40);
     if(error){ toast("Catalog read failed: "+error.message); return; }
     if(!data || !data.length){ toast("Every catalog book already has a cover ✓"); return; }
     btn.disabled=true; let filled=0, i=0;
     for(const row of data){
       btn.textContent='🔧 Filling… '+(++i)+'/'+data.length;
       const b=await resolveOne(row.title, row.author);
-      if(b && b.cover_url){ const { error:e2 } = await sb.from('catalog').update({ cover_url:b.cover_url }).eq('id', row.id); if(!e2) filled++; }
+      if(b && b.cover_url){ const { error:e2 } = await sb.from('books').update({ cover_url:b.cover_url }).eq('slug', row.slug); if(!e2) filled++; }
       await new Promise(r=>setTimeout(r,150));   // gentle on the Google quota
     }
-    btn.disabled=false; btn.textContent='🔧 Fill missing catalog covers';
+    btn.disabled=false; btn.textContent='🔧 Fill missing covers';
     toast('Filled '+filled+' cover'+(filled===1?'':'s')+' ★ — reload browse to see them');
   }
 
@@ -269,16 +270,20 @@
   function anyFilter(){ return !!(F.spice||F.trope||F.mood||F.ending); }
   async function filteredBrowse(){
     const _sb = window.SH && window.SH.sb; if(!_sb) return [];
-    let q=_sb.from('catalog').select('id,title,author,cover_url,year,spice');
-    if(F.spice)  q=q.gte('spice', +F.spice);
-    if(F.trope)  q=q.contains('tropes',[F.trope]);
-    if(F.mood)   q=q.contains('mood',[F.mood]);
+    // Filter the normalized catalog: spice + ending are columns; trope + mood are
+    // tags, matched against the synced tag_ids[] cache ("category:slug") so this
+    // stays a single fast .contains() query. RLS already hides non-live books;
+    // .eq('status','live') keeps an admin's public browse to live too.
+    let q=_sb.from('books').select('slug,title,author,cover_url,year,spice_level').eq('status','live');
+    if(F.spice)  q=q.gte('spice_level', +F.spice);
+    if(F.trope)  q=q.contains('tag_ids',['trope:'+F.trope]);
+    if(F.mood)   q=q.contains('tag_ids',['mood:'+F.mood]);
     if(F.ending) q=q.eq('ending', F.ending);
     const typed=document.getElementById('q').value.trim();
     if(typed) q=q.or('title.ilike.%'+typed+'%,author.ilike.%'+typed+'%');
     const { data, error } = await q.limit(48);
     if(error){ console.warn('filter query', error); return []; }
-    return (data||[]).map(b=>({ key:'cat:'+b.id, title:b.title, author_name:b.author?[b.author]:[], cover_url:b.cover_url, cover_i:null, year:b.year||0 }));
+    return (data||[]).map(b=>({ key:b.slug, title:b.title, author_name:b.author?[b.author]:[], cover_url:b.cover_url, cover_i:null, year:b.year||0 }));
   }
 
   async function run(){
@@ -311,14 +316,15 @@
         const cached = sbReady ? loadBrowseCache() : null;
         if(cached){ docs = cached; saveBrowseCache(cached); }
         else {
-          // 1. YOUR catalog (covers you control) — reliable, no Google dependency
+          // 1. YOUR catalog (covers you control) — reliable, no Google dependency.
+          //    Only live books with a cover; RLS keeps drafts out of public browse.
           try{
             const _sb = window.SH && window.SH.sb;
             if(_sb){
-              const { data } = await _sb.from('catalog').select('id,title,author,cover_url,spice,year').not('cover_url','is',null);
+              const { data } = await _sb.from('books').select('slug,title,author,cover_url,spice_level,year').eq('status','live').not('cover_url','is',null);
               if(data && data.length){
                 docs = data.sort(()=>Math.random()-0.5).slice(0,12)
-                  .map(b=>({ key:'cat:'+b.id, title:b.title, author_name:b.author?[b.author]:[], cover_url:b.cover_url, cover_i:null, year:b.year||0, ratings:0 }));
+                  .map(b=>({ key:b.slug, title:b.title, author_name:b.author?[b.author]:[], cover_url:b.cover_url, cover_i:null, year:b.year||0, ratings:0 }));
               }
             }
           }catch(_){}
@@ -396,15 +402,18 @@
     const book = lastDocs.find(x=>x.key===key) || {};
     const id = idOf(key);
 
-    // admin: file this book into the catalog (so it can feature in browse)
+    // admin: file this book into the catalog as a DRAFT (review + publish in Manage catalog)
     if(e.target.closest('.catbtn')){
       const author=(book.author_name&&book.author_name[0])||null;
-      const { error } = await sb.from('catalog').upsert(
-        { title:book.title||null, author, cover_url:book.cover_url||null, year:book.year||null },
-        { onConflict:'title,author' }
-      );
-      if(error){ toast(/relation|exist|catalog|policy|denied/i.test(error.message) ? "Run smuthub-catalog.sql and set your profile is_admin=true" : "Catalog: "+error.message); console.error('catalog add', error); return; }
-      toast("Added to your catalog ★");
+      const { error } = await sb.rpc('upsert_book', { p:{ title:book.title||null, author, cover_url:book.cover_url||null, year:book.year||null } });
+      if(error){
+        const m=error.message||'';
+        toast(/function|schema cache|does not exist/i.test(m) ? "Run migrations/2026-06-16-catalog-normalized.sql first"
+            : /authorized|admin/i.test(m) ? "Admins only — set your profile is_admin=true"
+            : "Catalog: "+m);
+        console.error('catalog add', error); return;
+      }
+      toast("Added as draft ★ — publish it in Manage catalog");
       return;
     }
 
