@@ -237,6 +237,13 @@
     if(document.getElementById('sh-ui-css')) return;
     const st=document.createElement('style'); st.id='sh-ui-css';
     st.textContent=`
+      /* iOS Safari auto-zooms into any input with font-size < 16px when it's
+         focused, then leaves the user stranded in a zoomed state with the page
+         scrolled sideways. The ONLY reliable fix is to make text inputs and
+         textareas ≥ 16px at touch sizes. Desktop layout is unaffected. */
+      @media (max-width: 768px){
+        input, textarea { font-size: 16px !important; }
+      }
       .sh-avatar{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;
         background:var(--grad,linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40));color:#1a0c10;font-weight:800;font-size:1rem;
         border:0;cursor:pointer;font-family:inherit;flex:0 0 auto}
