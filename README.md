@@ -36,3 +36,4 @@ live site (`config.js` IS deployed — pages need it).
 
 If a deploy ever looks stale: `_headers` forces edge + browser revalidation
 (`no-cache`), so a normal reload after a successful deploy is enough.
+^above not needed as we push through github now.

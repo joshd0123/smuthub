@@ -4,4 +4,5 @@
 .assetsignore
 wrangler.jsonc
 README.md
-smuthub-profiles.sql
+GIT-CHEATSHEET.md
+*.sql

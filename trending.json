@@ -1,0 +1,12 @@
+{
+  "_comment": "Dashboard 'Trending This Week'. Edit freely, commit & push — Cloudflare auto-deploys. Covers are looked up automatically from title + author via Open Library, so you do NOT need cover IDs. 'badge' is one of: 'hot' | 'rising' | 'new'.",
+  "updated": "2026-06-13",
+  "books": [
+    { "rank": 1, "title": "Powerless",                          "author": "Lauren Roberts",     "badge": "hot",    "tease": "She's the prophecy. He's the problem." },
+    { "rank": 2, "title": "Quicksilver",                        "author": "Callie Hart",        "badge": "rising", "tease": "Fae prince energy. Zero impulse control." },
+    { "rank": 3, "title": "Wind and Truth",                     "author": "Brandon Sanderson",  "badge": "rising", "tease": "An epic with a body count and a heart." },
+    { "rank": 4, "title": "The Serpent and the Wings of Night", "author": "Carissa Broadbent",  "badge": "rising", "tease": "Touch her and the realm burns." },
+    { "rank": 5, "title": "Iron Flame",                         "author": "Rebecca Yarros",     "badge": "new",    "tease": "Year two. The bedroom door is open." },
+    { "rank": 6, "title": "House of Earth and Blood",           "author": "Sarah J. Maas",      "badge": "rising", "tease": "Half-fae, all attitude." }
+  ]
+}

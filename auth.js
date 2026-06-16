@@ -7,7 +7,7 @@
 (function(){
   const cfg = window.SMUTHUB_CONFIG || {};
   const configured = (cfg.SUPABASE_URL||"").startsWith("http") && (cfg.SUPABASE_KEY||"").length > 20;
-  const SH = window.SH = { sb:null, user:null, profile:null, configured, openAuth, saveTheme, logout };
+  const SH = window.SH = { sb:null, user:null, profile:null, configured, openAuth, saveTheme, logout, openFeedback };
 
   if (configured && window.supabase) {
     // Storage probe: privacy modes/extensions can block localStorage. Without it,
@@ -169,4 +169,61 @@
   }
 
   function esc(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  // ── feedback (members-only) ──────────────────────────────
+  // Shown on every page via a floating button. Logged-out users are sent to
+  // sign up first; once logged in we auto-open the feedback box (login + feedback
+  // in close to one step). Submissions go to the Supabase `feedback` table.
+  let pendingFeedback = false;
+
+  function openFeedback(){
+    if(!configured){ alert("Feedback needs the site's Supabase config."); return; }
+    if(!SH.user){ pendingFeedback = true; openAuth(); return; }
+    if(document.getElementById('fbModal')) return;
+    const d=document.createElement('div');
+    d.id='fbModal';
+    d.style.cssText='position:fixed;inset:0;z-index:130;background:rgba(6,3,4,.75);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;font-family:inherit';
+    d.innerHTML=`<div style="background:#150e10;border:1px solid #2a1d22;border-radius:20px;max-width:420px;width:100%;padding:24px;color:#f4e8e3">
+      <h3 style="font-family:Fraunces,serif;font-weight:600;font-size:1.3rem;margin:0">Tell us everything 💌</h3>
+      <p style="color:#b69089;font-size:.86rem;margin:4px 0 14px">Bugs, hot takes, missing tropes — members only, and we read every note.</p>
+      <textarea id="fbText" rows="5" placeholder="What's on your mind?" style="width:100%;box-sizing:border-box;background:#1c1316;border:1px solid #2a1d22;color:#f4e8e3;font-family:inherit;border-radius:12px;padding:.7em 1em;outline:none;resize:vertical"></textarea>
+      <div id="fbMsg" style="min-height:1.2em;font-size:.85rem;margin-top:8px;color:#ffab40"></div>
+      <button id="fbSend" style="width:100%;margin-top:6px;padding:.8em;background:linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40);color:#1a0c10;border:0;font-family:inherit;font-weight:800;border-radius:99px;cursor:pointer">Send feedback</button>
+      <button id="fbCancel" style="width:100%;margin-top:8px;padding:.6em;background:none;border:0;color:#b69089;font-family:inherit;font-weight:700;cursor:pointer">Cancel</button>
+    </div>`;
+    d.addEventListener('click',e=>{ if(e.target===d) d.remove(); });
+    document.body.appendChild(d);
+    document.getElementById('fbCancel').onclick=()=>d.remove();
+    document.getElementById('fbSend').onclick=async ()=>{
+      const fbMsg=document.getElementById('fbMsg');
+      const message=document.getElementById('fbText').value.trim();
+      if(message.length<3){ fbMsg.style.color='#ff9aa8'; fbMsg.textContent="A few more words?"; return; }
+      document.getElementById('fbSend').textContent="Sending…";
+      const { error } = await SH.sb.from('feedback').insert({ user_id: SH.user.id, page: location.pathname, message });
+      if(error){ fbMsg.style.color='#ff9aa8'; fbMsg.textContent="Couldn't send: "+error.message; document.getElementById('fbSend').textContent="Send feedback"; return; }
+      d.querySelector('div').innerHTML='<h3 style="font-family:Fraunces,serif;font-weight:600;font-size:1.3rem;margin:0">Got it 💌</h3><p style="color:#b69089;font-size:.9rem;margin:8px 0 0">Thank you — that genuinely helps. You can close this.</p><button id="fbDone" style="width:100%;margin-top:16px;padding:.7em;background:none;border:1px solid #2a1d22;color:#f4e8e3;font-family:inherit;font-weight:700;border-radius:99px;cursor:pointer">Close</button>';
+      document.getElementById('fbDone').onclick=()=>d.remove();
+    };
+    document.getElementById('fbText').focus();
+  }
+
+  // After login, fulfil a feedback request that was started while logged out.
+  window.addEventListener('sh-auth', (e)=>{
+    if(pendingFeedback && e.detail && e.detail.user){ pendingFeedback=false; setTimeout(openFeedback, 200); }
+  });
+
+  // Floating "Feedback" button on every page.
+  function mountFeedbackButton(){
+    if(document.getElementById('shFeedbackBtn')) return;
+    const b=document.createElement('button');
+    b.id='shFeedbackBtn';
+    b.type='button';
+    b.textContent='💬 Feedback';
+    b.title='Feedback (members only)';
+    b.style.cssText='position:fixed;right:16px;bottom:16px;z-index:70;background:#150e10;border:1px solid #2a1d22;color:#f4e8e3;font-family:inherit;font-weight:700;font-size:.82rem;padding:.6em 1em;border-radius:99px;cursor:pointer;box-shadow:0 10px 24px rgba(0,0,0,.45)'
+    b.onclick=openFeedback;
+    document.body.appendChild(b);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', mountFeedbackButton);
+  else mountFeedbackButton();
 })();
