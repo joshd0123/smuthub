@@ -3,6 +3,6 @@
 .gitignore
 .assetsignore
 wrangler.jsonc
-README.md
-GIT-CHEATSHEET.md
+*.md
 *.sql
+migrations

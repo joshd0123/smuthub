@@ -1,0 +1,9 @@
+# smutHub — public crawler rules
+# Allow all bots into the public surface; keep admin tooling out of the index.
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /catalog-admin.html
+
+# Sitemap (canonical XML index Google + Bing want)
+Sitemap: https://smuthub.com/sitemap.xml
