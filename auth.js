@@ -10,15 +10,10 @@
   const SH = window.SH = { sb:null, user:null, profile:null, configured, openAuth, saveTheme, logout, openFeedback, track };
 
   // ── Umami analytics (self-hosted, cookieless) ────────────────────────────
-  // IMPORTANT: `src` must be a PUBLIC https URL. The LAN address
-  // http://192.168.229.174:3003 only works inside your network and is blocked
-  // as mixed content on the live https site, so tracking is OFF until you point
-  // this at a publicly-reachable HTTPS host — e.g. expose your self-hosted Umami
-  // via a Cloudflare Tunnel to https://analytics.smuthub.ca and set:
-  //   src: 'https://analytics.smuthub.ca/script.js'
-  // The website id is public (like a GA measurement id) — safe to commit.
+  // Served over a public Cloudflare Tunnel (cloudflared on the Umami box →
+  // https://analytics.smuthub.ca). The website id is public (like a GA id).
   const UMAMI = {
-    src: '',  // ← set to your public https Umami script URL to switch tracking on
+    src: 'https://analytics.smuthub.ca/script.js',
     websiteId: '571d3bb1-66a8-484a-9db0-1918903a2425',
   };
   // Fire a custom event. Safe no-op until the Umami script is loaded, so pages
