@@ -268,12 +268,38 @@
     "we promise the slow burn is worth it. Probably."
   ];
   const STATUS_LABELS = { reading:'📖 reading', want:'📌 want', read:'✓ read', dnf:'🪦 DNF' };
-  const DEMO_READING = [
-    { key:'demo-fw',     title:'Fourth Wing',  author:'Rebecca Yarros',  status:'reading', spice:4, cover_i:13986891 },
-    { key:'demo-acotar', title:'ACOTAR',       author:'Sarah J. Maas',   status:'want',    spice:0, cover_i:10470548 },
-    { key:'demo-onyx',   title:'Onyx Storm',   author:'Rebecca Yarros',  status:'read',    spice:5, cover_i:14627025 },
-    { key:'demo-dnf',    title:'That Other One', author:'Various',       status:'dnf',     spice:2, cover_i:null      }
+  // Logged-out demo "Your reading". Real covers come from the live catalog (see
+  // loadDemoReading); this fallback renders only if the catalog query is empty
+  // or unreachable — no cover_i, so tiles show clean branded gradient cards with
+  // the title instead of the wrong Open Library images we used to hardcode.
+  const DEMO_FALLBACK = [
+    { key:'demo-fw',     title:'Fourth Wing',                 status:'reading', spice:4 },
+    { key:'demo-acotar', title:'A Court of Thorns and Roses', status:'want',    spice:3 },
+    { key:'demo-iron',   title:'Iron Flame',                  status:'read',    spice:4 },
+    { key:'demo-dnf',    title:'Powerless',                   status:'dnf',     spice:2 }
   ];
+
+  // Build the logged-out demo shelf from real live catalog books (correct covers,
+  // and self-hosted automatically once covers move to R2). Falls back to the
+  // gradient placeholders above if nothing is available.
+  async function loadDemoReading(){
+    let demo = [];
+    if (sb){
+      try{
+        const { data } = await sb.from('books')
+          .select('slug,title,author,cover_url,spice_level')
+          .eq('status','live').not('cover_url','is',null).limit(4);
+        if (data && data.length){
+          const statuses = ['reading','want','read','dnf'];
+          demo = data.map((b,i)=>({ key:'demo-'+b.slug, title:b.title, author:b.author,
+            cover_url:b.cover_url, status:statuses[i%statuses.length], spice:b.spice_level||0 }));
+        }
+      }catch(_){}
+    }
+    if (!demo.length) demo = DEMO_FALLBACK;
+    myShelf = demo;
+    mySpice = Object.fromEntries(demo.filter(b=>b.spice).map(b=>[b.key,b.spice]));
+  }
 
   // ── state ─────────────────────────────────────────────
   let sb=null, user=null;
@@ -346,8 +372,7 @@
 
     if (!user){
       $('demobar').classList.add('show');
-      myShelf = DEMO_READING;
-      mySpice = Object.fromEntries(DEMO_READING.filter(b=>b.spice).map(b=>[b.key,b.spice]));
+      await loadDemoReading();
     } else if (sb){
       try{
         const [{data:s},{data:t}] = await Promise.all([
@@ -365,7 +390,7 @@
   });
 
   // safety net for un-configured local opens
-  setTimeout(()=>{ if(!myShelf.length && !user){ $('demobar').classList.add('show'); myShelf = DEMO_READING; mySpice = Object.fromEntries(DEMO_READING.filter(b=>b.spice).map(b=>[b.key,b.spice])); renderPills(); renderReading(); loadTrending(); } }, 2800);
+  setTimeout(async ()=>{ if(!myShelf.length && !user){ $('demobar').classList.add('show'); await loadDemoReading(); renderPills(); renderReading(); loadTrending(); } }, 2800);
 
   // ── pills ─────────────────────────────────────────────
   function renderPills(){
