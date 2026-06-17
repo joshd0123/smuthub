@@ -124,7 +124,7 @@
   <p class="sub" id="sub">Log in, then your 🌶️ ratings and 📚 shelf stick — across devices, forever.</p>
   <div class="search">
     <input id="q" type="text" placeholder="Title, author, or trope…">
-    <button onclick="run()">Search</button>
+    <button onclick="searchNow()">Search</button>
   </div>
   <div class="filters" id="filters">
     <select id="fSpice" aria-label="Spice">
@@ -487,6 +487,7 @@
         console.error('catalog add', error); return;
       }
       bustBrowseCache();   // a future publish will surface this book in public browse
+      if(window.SH) SH.track('add-to-catalog');
       toast("Added as draft ★ — publish it in Manage catalog");
       return;
     }
@@ -500,6 +501,7 @@
       if(error){ toast("Save failed: "+error.message); console.error('spice save', error); return; }
       spiceMap[key]=n;
       document.querySelectorAll('#sp_'+id+' span').forEach(s=>s.classList.toggle('on',+s.dataset.n<=n));
+      if(window.SH) SH.track('spice-rate',{ n });
       toast("Saved "+"🌶️".repeat(n));
       return;
     }
@@ -530,6 +532,7 @@
     if(error && /cover_url/i.test(error.message)){ delete payload.cover_url; ({ error } = await sb.from('shelf').upsert(payload,{onConflict:'user_id,book_key'})); }
     if(error){ toast("Save failed: "+error.message); console.error('shelf save', error); return; }
     shelfSet.add(key); shelfStatus[key]=status; render();
+    if(window.SH) SH.track('shelve',{ status });
     toast("Shelved as "+(STATUS_LABEL[status]||status)+" 📚");
   }
   async function removeFromShelf(key){
@@ -539,13 +542,19 @@
     toast("Removed from shelf");
   }
 
-  document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')run();});
+  // user-initiated search → analytics event (separate from browse/filter runs)
+  function searchNow(){
+    const q=document.getElementById('q').value.trim();
+    if(q && window.SH) SH.track('search',{ q:q.slice(0,80) });
+    run();
+  }
+  document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')searchNow();});
 
   // filter controls
   const FMAP={fSpice:'spice',fTrope:'trope',fMood:'mood',fEnding:'ending'};
   Object.keys(FMAP).forEach(id=>{
     const el=document.getElementById(id);
-    if(el) el.addEventListener('change', e=>{ F[FMAP[id]]=e.target.value; document.getElementById('fClear').style.display=anyFilter()?'':'none'; run(); });
+    if(el) el.addEventListener('change', e=>{ F[FMAP[id]]=e.target.value; if(e.target.value && window.SH) SH.track('filter',{ type:FMAP[id], value:e.target.value }); document.getElementById('fClear').style.display=anyFilter()?'':'none'; run(); });
   });
   const fClearBtn=document.getElementById('fClear');
   if(fClearBtn) fClearBtn.onclick=()=>{

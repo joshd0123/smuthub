@@ -184,7 +184,7 @@
     <div class="sbar">
       <span class="ic">🔍</span>
       <input id="q" type="text" placeholder="Read this? Search title or author…" autocomplete="off">
-      <button onclick="runSearch()">Search</button>
+      <button onclick="trackAndSearch()">Search</button>
     </div>
     <div class="shelfhint">Searches your shelf <em>first</em>, then everything else.</div>
     <div class="results" id="results"></div>
@@ -493,7 +493,10 @@
     if (!q){ $('results').classList.remove('show'); return; }
     searchTimer = setTimeout(()=>runSearch(), 220);
   });
-  $('q').addEventListener('keydown', e=>{ if(e.key==='Enter') runSearch(); });
+  $('q').addEventListener('keydown', e=>{ if(e.key==='Enter') trackAndSearch(); });
+  // deliberate search (button/Enter) → analytics; the debounced-typing path
+  // stays on runSearch() so we don't fire an event on every keystroke.
+  function trackAndSearch(){ const q=$('q').value.trim(); if(q && window.SH) SH.track('search',{ q:q.slice(0,80) }); runSearch(); }
 
   async function runSearch(){
     const q = $('q').value.trim();

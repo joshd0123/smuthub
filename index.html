@@ -317,6 +317,7 @@
       msg.textContent = "You're on the list 💌 Welcome to the Hub.";
       input.value = "";
       document.getElementById('joinBtn').textContent = "You're in ✓";
+      if(window.SH) SH.track('waitlist-signup');   // top pre-launch conversion metric
     }catch(e){
       msg.style.color = '#ff7a8f';
       msg.textContent = "Something glitched — try again in a sec.";

@@ -7,7 +7,33 @@
 (function(){
   const cfg = window.SMUTHUB_CONFIG || {};
   const configured = (cfg.SUPABASE_URL||"").startsWith("http") && (cfg.SUPABASE_KEY||"").length > 20;
-  const SH = window.SH = { sb:null, user:null, profile:null, configured, openAuth, saveTheme, logout, openFeedback };
+  const SH = window.SH = { sb:null, user:null, profile:null, configured, openAuth, saveTheme, logout, openFeedback, track };
+
+  // ── Umami analytics (self-hosted, cookieless) ────────────────────────────
+  // IMPORTANT: `src` must be a PUBLIC https URL. The LAN address
+  // http://192.168.229.174:3003 only works inside your network and is blocked
+  // as mixed content on the live https site, so tracking is OFF until you point
+  // this at a publicly-reachable HTTPS host — e.g. expose your self-hosted Umami
+  // via a Cloudflare Tunnel to https://analytics.smuthub.ca and set:
+  //   src: 'https://analytics.smuthub.ca/script.js'
+  // The website id is public (like a GA measurement id) — safe to commit.
+  const UMAMI = {
+    src: '',  // ← set to your public https Umami script URL to switch tracking on
+    websiteId: '571d3bb1-66a8-484a-9db0-1918903a2425',
+  };
+  // Fire a custom event. Safe no-op until the Umami script is loaded, so pages
+  // can call SH.track(...) unconditionally.
+  function track(name, data){
+    try { if (window.umami && typeof window.umami.track === 'function') { data ? window.umami.track(name, data) : window.umami.track(name); } } catch(_) {}
+  }
+  function mountUmami(){
+    if (!/^https:\/\//.test(UMAMI.src)) return;                 // dormant until a public https URL is set
+    if (/(^|\/)(admin|catalog-admin)\.html$/.test(location.pathname)) return; // keep admin usage out of the stats
+    if (document.querySelector('script[data-website-id]')) return;
+    const s = document.createElement('script');
+    s.defer = true; s.src = UMAMI.src; s.setAttribute('data-website-id', UMAMI.websiteId);
+    document.head.appendChild(s);
+  }
 
   if (configured && window.supabase) {
     // Storage probe: privacy modes/extensions can block localStorage. Without it,
@@ -284,7 +310,7 @@
     window.addEventListener('sh-menu-open',(ev)=>{ if(ev.detail && ev.detail.id!=='shNav') setOpen(false); });
     nav.appendChild(burger);   // far right
   }
-  function initShUI(){ injectHeaderCSS(); enhanceHeader(); /* mountFeedbackButton(); ← disabled */ }
+  function initShUI(){ injectHeaderCSS(); enhanceHeader(); mountUmami(); /* mountFeedbackButton(); ← disabled */ }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', initShUI);
   else initShUI();
 })();
