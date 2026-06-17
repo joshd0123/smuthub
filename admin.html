@@ -188,6 +188,7 @@
     }
     btn.disabled=false;
     document.getElementById('importMsg').textContent='';
+    if(added>0){ try{ localStorage.removeItem('sh_browse'); }catch(_){} }   // invalidate Search browse cache
     const firstErr=errors[0]||'';
     document.getElementById('result').innerHTML =
       '<p class="ok" style="margin-top:10px">✓ Imported '+added+' book'+(added===1?'':'s')+'.</p>'

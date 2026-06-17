@@ -259,9 +259,11 @@
   let POPULAR=null;
   // Keep a visitor's browse picks stable for a session (GA4-style: 30-min inactivity
   // window). A tab switch / quick return reuses the same set; 30 min+ away re-rolls.
+  // Admins ALWAYS bypass the cache so catalog edits are visible immediately.
   const BROWSE_TTL=30*60*1000;
   function loadBrowseCache(){ try{ const c=JSON.parse(localStorage.getItem('sh_browse')||'null'); if(c && Array.isArray(c.books) && c.books.length && Date.now()-c.ts<BROWSE_TTL) return c.books; }catch(_){} return null; }
   function saveBrowseCache(books){ try{ localStorage.setItem('sh_browse', JSON.stringify({ts:Date.now(), books})); }catch(_){} }
+  function bustBrowseCache(){ try{ localStorage.removeItem('sh_browse'); }catch(_){} }
   async function resolveOne(title, author){
     const ck='sh_one_'+title+'|'+(author||'');
     try{ const c=sessionStorage.getItem(ck); if(c!==null) return c==='null'?null:JSON.parse(c); }catch(_){}
@@ -301,6 +303,7 @@
       await new Promise(r=>setTimeout(r,150));   // gentle on the Google quota
     }
     btn.disabled=false; btn.textContent='🔧 Fill missing covers';
+    if(filled>0) bustBrowseCache();   // public browse now has new covers
     toast('Filled '+filled+' cover'+(filled===1?'':'s')+' ★ — reload browse to see them');
   }
 
@@ -373,10 +376,13 @@
       } else {
         // Stable per-session picks: reuse the same shuffle for ~30 min so a tab
         // switch / quick return doesn't reshuffle; a fresh visit (30 min+ away) re-rolls.
+        // Admins always bypass — they expect catalog edits to be visible instantly.
         const sbReady = !!(window.SH && window.SH.sb);
-        const cached = sbReady ? loadBrowseCache() : null;
-        if(cached){ docs = cached; saveBrowseCache(cached); }
-        else {
+        const cached = (sbReady && !isAdmin) ? loadBrowseCache() : null;
+        if(cached){ docs = cached; /* do NOT refresh the timestamp on hit — that
+            would make the cache effectively immortal for any user who visits
+            inside the TTL, locking in stale popular-fallback content forever */
+        } else {
           // 1. YOUR catalog (covers you control) — reliable, no Google dependency.
           //    Only live books with a cover; RLS keeps drafts out of public browse.
           try{
@@ -402,7 +408,11 @@
             if(!docs.length){ docs = await openLib(browseQ, [0,20,40][Math.floor(Math.random()*3)]); }
             docs = dedupe(docs).filter(b=>coverSrc(b)&&isNovel(b)).map(b=>[quality(b),b]).sort((x,y)=>y[0]-x[0]).map(x=>x[1]);
           }
-          if(sbReady) saveBrowseCache(docs.slice(0,16));
+          // Save the cache for anonymous + non-admin visitors only. Admins
+          // bypass on read (above) so it's pointless to populate it for them
+          // — and skipping the write avoids ever locking THEIR session into a
+          // partial mid-edit catalog snapshot.
+          if(sbReady && !isAdmin) saveBrowseCache(docs.slice(0,16));
         }
       }
       lastDocs = docs.slice(0,16);
@@ -476,6 +486,7 @@
             : "Catalog: "+m);
         console.error('catalog add', error); return;
       }
+      bustBrowseCache();   // a future publish will surface this book in public browse
       toast("Added as draft ★ — publish it in Manage catalog");
       return;
     }

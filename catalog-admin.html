@@ -396,6 +396,9 @@
     const { data, error } = await sb.rpc('upsert_book',{ p: buildPayload() });
     btn.disabled=false;
     if(error){ $('editMsg').innerHTML='<span class="bad">'+esc(error.message)+(/authorized|admin/i.test(error.message)?' — set is_admin=true.':'')+'</span>'; console.error(error); return; }
+    // Invalidate the public Search page's browse cache so non-admin visitors
+    // see this edit on their next page load instead of stale popular fallback.
+    try{ localStorage.removeItem('sh_browse'); }catch(_){}
     toast('Saved ★'); await loadTags(); await loadList();
     // reopen the saved book so further edits keep working on the right slug
     const saved=allBooks.find(b=>b.slug===data);
@@ -407,6 +410,7 @@
     if(!confirm('Delete "'+(current.title||current.slug)+'"? This removes the book and its tag assignments (your shelves are not affected).')) return;
     const { error } = await sb.from('books').delete().eq('slug', current.slug);
     if(error){ toast('Delete failed: '+error.message); return; }
+    try{ localStorage.removeItem('sh_browse'); }catch(_){}
     toast('Deleted'); await loadList(); backToList();
   }
   function backToList(){ $('editView').style.display='none'; $('listView').style.display='block'; }
