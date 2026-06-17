@@ -21,6 +21,8 @@ Static site (plain HTML/JS) deployed to Cloudflare Workers static assets at
 | `_headers` | `Cache-Control: no-cache` for everything (no stale deploys) |
 | `smuthub-profiles.sql` | One-time Supabase setup for the `profiles` table (not deployed) |
 | `migrations/` | Catalog schema migration + tag seed + design notes — see `migrations/README.md` |
+| `supabase/functions/rehost-cover/` | Edge Function that rehosts book covers to Cloudflare R2 (`covers.smuthub.ca`) — see `migrations/R2-COVERS.md` |
+| `scripts/migrate-covers.mjs` | One-time runner that migrates all existing covers to R2 (run manually) |
 
 Every page uses the same header (`.nav` > logo / `.navlinks` / `#authbox`) and
 loads, in order: Supabase CDN → `config.js` → `auth.js` (defer). Page scripts

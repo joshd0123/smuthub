@@ -6,3 +6,5 @@ wrangler.jsonc
 *.md
 *.sql
 migrations
+supabase
+scripts
