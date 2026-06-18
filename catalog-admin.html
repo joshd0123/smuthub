@@ -390,12 +390,45 @@
   }
 
   // ── save / delete ──
+  // Server-side rehost: takes whatever cover_url was just saved (Google Books,
+  // Goodreads/Amazon, anywhere) and copies it to R2 so the public cover_url is
+  // always served from covers.smuthub.ca. Idempotent — the function no-ops if
+  // the URL is already on R2 — but we skip the call in that case to avoid the
+  // round-trip. Non-fatal: if the rehost fails (dead source, weird image), the
+  // book still saved with the original URL and you can fix it later.
+  async function rehostIfNeeded(slug, coverUrl){
+    if(!coverUrl) return { ok:true, skipped:'no cover' };
+    if(coverUrl.startsWith('https://covers.smuthub.ca/')) return { ok:true, skipped:'already on R2' };
+    const cfg = window.SMUTHUB_CONFIG||{};
+    if(!cfg.SUPABASE_URL) return { ok:false, reason:'no supabase URL configured' };
+    let token;
+    try{ const { data:{ session } } = await sb.auth.getSession(); token = session && session.access_token; }catch(_){}
+    if(!token) return { ok:false, reason:'no admin session token' };
+    try{
+      const res = await fetch(cfg.SUPABASE_URL.replace(/\/+$/,'') + '/functions/v1/rehost-cover', {
+        method:'POST',
+        headers:{ 'Authorization':'Bearer '+token, 'Content-Type':'application/json' },
+        body: JSON.stringify({ slug }),
+      });
+      const body = await res.json().catch(()=>({}));
+      if(!res.ok) return { ok:false, reason: body.error || body.reason || ('rehost http '+res.status) };
+      return body;
+    }catch(e){ return { ok:false, reason: 'rehost network: '+(e&&e.message||e) }; }
+  }
+
   async function save(){
     if(!$('f_title').value.trim()){ $('editMsg').innerHTML='<span class="bad">Title is required.</span>'; return; }
     const btn=$('saveBtn'); btn.disabled=true; $('editMsg').textContent='Saving…';
     const { data, error } = await sb.rpc('upsert_book',{ p: buildPayload() });
+    if(error){ btn.disabled=false; $('editMsg').innerHTML='<span class="bad">'+esc(error.message)+(/authorized|admin/i.test(error.message)?' — set is_admin=true.':'')+'</span>'; console.error(error); return; }
+    // auto-rehost the cover to R2 before refreshing the view (best-effort)
+    const sourceUrl = $('f_cover_url').value.trim();
+    if(sourceUrl && !sourceUrl.startsWith('https://covers.smuthub.ca/')){
+      $('editMsg').innerHTML='<span class="muted">Saved ★ — rehosting cover to R2…</span>';
+      const r = await rehostIfNeeded(data, sourceUrl);
+      if(!r.ok) toast('Cover rehost failed: '+(r.reason||'unknown')+' — book saved with the source URL.');
+    }
     btn.disabled=false;
-    if(error){ $('editMsg').innerHTML='<span class="bad">'+esc(error.message)+(/authorized|admin/i.test(error.message)?' — set is_admin=true.':'')+'</span>'; console.error(error); return; }
     // Invalidate the public Search page's browse cache so non-admin visitors
     // see this edit on their next page load instead of stale popular fallback.
     try{ localStorage.removeItem('sh_browse'); }catch(_){}
