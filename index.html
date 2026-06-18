@@ -204,59 +204,22 @@
   <section id="tropes" class="wrap">
     <div class="sec-head">
       <h2>Browse by trope</h2>
-      <a href="#">All 240 tropes →</a>
+      <a href="smuthub-app.html">Browse all →</a>
     </div>
-    <div class="tropes">
-      <a class="trope" href="#"><span class="emoji">⚔️</span><div><div class="name">Enemies to Lovers</div><div class="count">3,420 reads</div></div></a>
-      <a class="trope" href="#"><span class="emoji">🐉</span><div><div class="name">Fae &amp; Dragon Princes</div><div class="count">2,981 reads</div></div></a>
-      <a class="trope" href="#"><span class="emoji">🛏️</span><div><div class="name">Only One Bed</div><div class="count">2,114 reads</div></div></a>
-      <a class="trope" href="#"><span class="emoji">🌙</span><div><div class="name">Fated Mates</div><div class="count">1,877 reads</div></div></a>
-      <a class="trope" href="#"><span class="emoji">🗡️</span><div><div class="name">Touch Her &amp; You Die</div><div class="count">1,650 reads</div></div></a>
-      <a class="trope" href="#"><span class="emoji">👑</span><div><div class="name">Marriage of Convenience</div><div class="count">1,402 reads</div></div></a>
-      <a class="trope" href="#"><span class="emoji">🩸</span><div><div class="name">Morally Grey Villain</div><div class="count">1,290 reads</div></div></a>
-      <a class="trope" href="#"><span class="emoji">🔒</span><div><div class="name">Slow Burn</div><div class="count">1,108 reads</div></div></a>
-    </div>
+    <!-- Curated 8 flagship tropes; counts + links resolve from the live catalog
+         at the bottom of this page. Markup is filled by JS — empty placeholder
+         here so this section never shows fake data. -->
+    <div class="tropes" id="tropesGrid"></div>
   </section>
 
-  <section id="trending" class="wrap">
+  <!-- Hidden by default; the script reveals it only if there are live featured
+       books in the catalog, so the landing never shows an empty grid or fakes. -->
+  <section id="trending" class="wrap" style="display:none">
     <div class="sec-head">
-      <h2>🔥 <span class="hot">Trending</span> this week</h2>
-      <a href="#">See the charts →</a>
+      <h2>🔥 <span class="hot">Featured</span> reads</h2>
+      <a href="smuthub-app.html">Browse all →</a>
     </div>
-    <div class="grid">
-      <article class="card">
-        <div class="cover c1"><span class="ribbon">#1 Hot</span><h3>A Court of Bad Decisions</h3></div>
-        <div class="meta">
-          <div class="author">by E. V. Thornwood</div>
-          <div class="spice">🌶️🌶️🌶️🌶️<span class="off">🌶️</span></div>
-          <span class="tag">enemies-to-lovers</span>
-        </div>
-      </article>
-      <article class="card">
-        <div class="cover c2"><span class="ribbon">↑ Rising</span><h3>The Pining Hours</h3></div>
-        <div class="meta">
-          <div class="author">by Marin Vale</div>
-          <div class="spice">🌶️🌶️🌶️<span class="off">🌶️🌶️</span></div>
-          <span class="tag">slow burn</span>
-        </div>
-      </article>
-      <article class="card">
-        <div class="cover c3"><span class="ribbon">🔥 5-chili</span><h3>Touch Her &amp; You Die</h3></div>
-        <div class="meta">
-          <div class="author">by R. Ashgrove</div>
-          <div class="spice">🌶️🌶️🌶️🌶️🌶️</div>
-          <span class="tag">morally grey</span>
-        </div>
-      </article>
-      <article class="card">
-        <div class="cover c4"><span class="ribbon">New</span><h3>Only One Tent</h3></div>
-        <div class="meta">
-          <div class="author">by Sage Lockheart</div>
-          <div class="spice">🌶️🌶️🌶️🌶️<span class="off">🌶️</span></div>
-          <span class="tag">forced proximity</span>
-        </div>
-      </article>
-    </div>
+    <div class="grid" id="trendingGrid"></div>
   </section>
 
   <section id="meter" class="wrap">
@@ -325,6 +288,87 @@
     }
   }
   document.getElementById('emailInput').addEventListener('keydown', e=>{ if(e.key==='Enter') joinHub(); });
+
+  // ── Dynamic homepage content from the live catalog ───────────────────────
+  // Curated 8 trope cards (consistent over time regardless of which books are
+  // live this week) + featured-books grid (status=live AND featured=true).
+  // Both sections render from the books table; no hardcoded covers or counts.
+  const FLAGSHIP_TROPES = [
+    { slug:'enemies-to-lovers', emoji:'⚔️',  label:'Enemies to Lovers' },
+    { slug:'fated-mates',       emoji:'🌙', label:'Fated Mates' },
+    { slug:'dragon-rider',      emoji:'🐉', label:'Dragon Rider' },
+    { slug:'fae',               emoji:'🧚', label:'Fae' },
+    { slug:'morally-grey',      emoji:'🩶', label:'Morally Grey' },
+    { slug:'forced-proximity',  emoji:'🛏️', label:'Forced Proximity' },
+    { slug:'slow-burn',         emoji:'🔥', label:'Slow Burn' },
+    { slug:'dark-romance',      emoji:'🖤', label:'Dark Romance' },
+  ];
+  const escH = s => String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  // Render the trope cards immediately with no counts so the grid never looks
+  // blank; counts fill in once the parallel head queries resolve.
+  function paintTropes(counts){
+    const grid = document.getElementById('tropesGrid'); if(!grid) return;
+    grid.innerHTML = FLAGSHIP_TROPES.map(t=>{
+      const n = counts && counts[t.slug];
+      const sub = (n!=null && n>0) ? (n+' book'+(n===1?'':'s')) : 'Explore';
+      return `<a class="trope" href="smuthub-app.html?trope=${escH(t.slug)}">
+        <span class="emoji">${t.emoji}</span>
+        <div><div class="name">${escH(t.label)}</div><div class="count">${escH(sub)}</div></div>
+      </a>`;
+    }).join('');
+  }
+  paintTropes(null);
+
+  function trendingCardHTML(b){
+    const spice = Math.max(0, Math.min(5, Number(b.spice_level)||0));
+    const chilis = '🌶️'.repeat(spice) + '<span class="off">' + '🌶️'.repeat(5-spice) + '</span>';
+    const cover = b.cover_url
+      ? `<img src="${escH(b.cover_url)}" alt="${escH(b.title)} book cover" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`
+      : '';
+    return `<a class="card" href="smuthub-app.html?q=${encodeURIComponent(b.title||'')}" style="text-decoration:none;color:inherit;display:block">
+      <div class="cover c1" style="position:relative;overflow:hidden">
+        ${cover}
+        <h3 style="position:relative;z-index:1">${escH(b.title)}</h3>
+      </div>
+      <div class="meta">
+        <div class="author">by ${escH(b.author||'Unknown')}</div>
+        ${spice>0 ? `<div class="spice">${chilis}</div>` : ''}
+      </div>
+    </a>`;
+  }
+
+  async function loadHomepageCatalog(){
+    const sb = window.SH && window.SH.sb; if(!sb) return;
+    // Trope counts in parallel (head requests, ~1 KB each)
+    const tropeCounts = {};
+    await Promise.all(FLAGSHIP_TROPES.map(async t=>{
+      try{
+        const { count } = await sb.from('books').select('slug', { count:'exact', head:true })
+          .eq('status','live').contains('tag_ids', ['trope:'+t.slug]);
+        tropeCounts[t.slug] = count || 0;
+      }catch(_){ tropeCounts[t.slug] = 0; }
+    }));
+    paintTropes(tropeCounts);
+
+    // Featured books — admin-curated. If 0, the section stays hidden so the
+    // landing never shows an empty grid.
+    try{
+      const { data } = await sb.from('books')
+        .select('slug,title,author,cover_url,spice_level').eq('status','live').eq('featured',true).limit(8);
+      if(data && data.length){
+        document.getElementById('trendingGrid').innerHTML = data.map(trendingCardHTML).join('');
+        document.getElementById('trending').style.display = '';
+      }
+    }catch(_){}
+  }
+
+  // sh-auth fires once the supabase client is ready (logged-in or anon).
+  // Use it instead of DOMContentLoaded so we never query before sb exists.
+  window.addEventListener('sh-auth', loadHomepageCatalog, { once:true });
+  // Safety net: if sh-auth never fires (Supabase down / blocked), keep the
+  // trope cards visible with their "Explore" labels — no broken layout.
+  setTimeout(()=>{ if(!Object.keys({}).length){ /* paintTropes already called */ } }, 2500);
 </script>
 
 <footer class="wrap">

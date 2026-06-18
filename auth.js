@@ -265,6 +265,12 @@
       @media (max-width: 768px){
         input, textarea { font-size: 16px !important; }
       }
+      .sh-totop{position:fixed;right:16px;bottom:16px;z-index:60;width:46px;height:46px;border-radius:50%;
+        background:var(--grad,linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40));color:#1a0c10;border:0;cursor:pointer;
+        font-size:1.25rem;font-weight:800;line-height:1;font-family:inherit;
+        opacity:0;transform:translateY(10px);transition:opacity .18s,transform .18s;pointer-events:none;
+        box-shadow:0 10px 24px rgba(0,0,0,.45)}
+      .sh-totop.show{opacity:1;transform:none;pointer-events:auto}
       .sh-avatar{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;
         background:var(--grad,linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40));color:#1a0c10;font-weight:800;font-size:1rem;
         border:0;cursor:pointer;font-family:inherit;flex:0 0 auto}
@@ -305,7 +311,21 @@
     window.addEventListener('sh-menu-open',(ev)=>{ if(ev.detail && ev.detail.id!=='shNav') setOpen(false); });
     nav.appendChild(burger);   // far right
   }
-  function initShUI(){ injectHeaderCSS(); enhanceHeader(); mountUmami(); /* mountFeedbackButton(); ← disabled */ }
+  // Floating "↑ back to top" button (every page). Appears after the user scrolls
+  // ~800px down, smooth-scrolls to top on click. Visible / aria-hidden when not.
+  function mountBackToTop(){
+    if(document.getElementById('shToTop')) return;
+    const b=document.createElement('button');
+    b.id='shToTop'; b.className='sh-totop'; b.type='button';
+    b.setAttribute('aria-label','Back to top');
+    b.textContent='↑';
+    b.onclick=()=> window.scrollTo({top:0, behavior:'smooth'});
+    document.body.appendChild(b);
+    const onScroll=()=>{ b.classList.toggle('show', window.scrollY > 800); };
+    window.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+  }
+  function initShUI(){ injectHeaderCSS(); enhanceHeader(); mountUmami(); mountBackToTop(); /* mountFeedbackButton(); ← disabled */ }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', initShUI);
   else initShUI();
 })();

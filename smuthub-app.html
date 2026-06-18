@@ -563,9 +563,22 @@
     fClearBtn.style.display='none'; run();
   };
 
-  // Pre-fill the search from ?q= (deep links from the dashboard land here).
-  const qParam = new URLSearchParams(location.search).get('q');
-  if(qParam) document.getElementById('q').value = qParam;
+  // Pre-fill the search from URL params: ?q= prefills the search input (dashboard
+  // deep links), ?trope=/?mood=/?spice=/?ending= apply filters (landing-page
+  // "Browse by trope" cards and future per-trope landing pages link here).
+  (function initFromURL(){
+    const p = new URLSearchParams(location.search);
+    const q = p.get('q'); if(q) document.getElementById('q').value = q;
+    const PRESETS = { trope:'fTrope', mood:'fMood', spice:'fSpice', ending:'fEnding' };
+    let touched = false;
+    for(const [param, selectId] of Object.entries(PRESETS)){
+      const v = p.get(param); if(!v) continue;
+      F[param] = v;
+      const sel = document.getElementById(selectId); if(sel) sel.value = v;
+      touched = true;
+    }
+    if(touched){ const cl=document.getElementById('fClear'); if(cl) cl.style.display=''; }
+  })();
   run();
 </script>
 </body>
