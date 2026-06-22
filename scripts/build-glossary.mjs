@@ -48,6 +48,19 @@ const tagsURL = `${SUPABASE_URL.replace(/\/+$/,'')}/rest/v1/tags?select=*&descri
 const tags = await pgGet(tagsURL);
 console.log(`◇ Building ${tags.length} glossary entries`);
 
+// ── Editorial tag relations (optional; falls back to sibling tags if empty) ──
+const tagById = Object.fromEntries(tags.map(t => [t.id, t]));
+let relations = [];
+try {
+  relations = await pgGet(`${SUPABASE_URL.replace(/\/+$/,'')}/rest/v1/tag_relations?select=tag_id,related_tag_id,relation_type,strength`);
+} catch (e) {
+  // tag_relations table not created yet — that's fine, related-terms falls back
+  console.log('  (no tag_relations table yet — using sibling-category fallback for related terms)');
+}
+const relByTag = {};
+for (const r of relations) { (relByTag[r.tag_id] = relByTag[r.tag_id] || []).push(r); }
+const REL_LABEL = { 'similar':'Similar', 'often-paired':'Often with', 'parent':'Broader', 'child':'Narrower', 'opposite':'Opposite' };
+
 // ── Category display config (label + URL slug + emoji for badges) ─────────
 const CATS = {
   'trope':           { label:'Tropes',          emoji:'⚔️', order:1 },
@@ -81,12 +94,21 @@ const ensureDir = p => fs.mkdir(p, { recursive: true });
 // PostgREST won't give us in one call — leaving that for a v2 enhancement
 // via a DB function. Sibling-category fallback is plenty for launch.)
 function relatedFor(tag){
+  // 1. Editorial relations from tag_relations (best) — only those that have a
+  //    glossary page (are in the fetched set), strongest first.
+  const edits = (relByTag[tag.id] || [])
+    .map(r => ({ t: tagById[r.related_tag_id], rel: r.relation_type, strength: r.strength || 5 }))
+    .filter(x => x.t)
+    .sort((a,b) => b.strength - a.strength)
+    .slice(0,8)
+    .map(x => ({ ...x.t, _rel: x.rel }));
+  if (edits.length) return edits;
+  // 2. Manual related_tag_ids[] override (legacy/simple path)
   if (tag.related_tag_ids && tag.related_tag_ids.length){
-    return tag.related_tag_ids.map(id => tags.find(t => t.id === id)).filter(Boolean).slice(0,6);
+    return tag.related_tag_ids.map(id => tagById[id]).filter(Boolean).slice(0,6);
   }
-  return tags
-    .filter(t => t.category === tag.category && t.id !== tag.id)
-    .slice(0,6);
+  // 3. Fallback: other tags in the same category
+  return tags.filter(t => t.category === tag.category && t.id !== tag.id).slice(0,6);
 }
 
 // ── Shared shell (header / CSS / footer) ──────────────────────────────────
@@ -270,7 +292,7 @@ ${SHARED_HEADER.replace('class="on"','')
   ${related.length ? `<section class="detail">
     <h2>Related terms</h2>
     <div class="relgrid">
-      ${related.map(r => `<a class="reltag" href="${escAttr(termPath(r))}"><span class="c">${esc(CATS[catKey(r.category)].label.replace(/s$/,''))}</span>${esc(r.label)}</a>`).join('')}
+      ${related.map(r => `<a class="reltag" href="${escAttr(termPath(r))}"><span class="c">${esc(r._rel ? (REL_LABEL[r._rel] || r._rel) : CATS[catKey(r.category)].label.replace(/s$/,''))}</span>${esc(r.label)}</a>`).join('')}
     </div>
   </section>` : ''}
 </div>
