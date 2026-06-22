@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reader Culture — Romantasy Glossary | smutHub</title>
+<meta name="description" content="Every reader culture term in romantasy, decoded — with the books that feature them.">
+<link rel="canonical" href="https://smuthub.ca/glossary/culture/">
+<meta name="theme-color" content="#0c0708">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="smutHub">
+<meta property="og:title" content="Reader Culture — Romantasy Glossary | smutHub">
+<meta property="og:description" content="Every reader culture term in romantasy, decoded — with the books that feature them.">
+<meta property="og:url" content="https://smuthub.ca/glossary/culture/">
+<meta property="og:image" content="https://smuthub.ca/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Reader Culture — Romantasy Glossary | smutHub">
+<meta name="twitter:description" content="Every reader culture term in romantasy, decoded — with the books that feature them.">
+<meta name="twitter:image" content="https://smuthub.ca/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<script defer src="/auth.js"></script>
+<style>
+  :root{--ink:#0c0708;--ink-2:#150e10;--panel:#1c1316;--line:#2a1d22;--cream:#f4e8e3;--muted:#b69089;--rose:#ff3d76;--amber:#ffab40;--grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(800px 500px at 10% -5%,rgba(255,61,118,.12),transparent 60%)}
+  a{color:inherit}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+  /* shared header */
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap}
+  .navlinks{display:flex;gap:18px}
+  .navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none;transition:color .2s}
+  .navlinks a.on,.navlinks a:hover{color:var(--cream)}
+  @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
+  .authbox{display:flex;align-items:center;gap:8px}
+  /* footer (slim) */
+  footer{border-top:1px solid var(--line);margin-top:48px;padding:32px 0 40px}
+  footer .ft{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:.86rem}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--cream)}
+</style>
+<style>
+      .head{padding:30px 0 12px}
+      h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2rem,4.5vw,3rem)}
+      h1 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
+      .sub{color:var(--muted);margin-top:10px}
+      .crumb{padding:18px 0 0;color:var(--muted);font-size:.86rem}
+      .crumb a{color:var(--muted);text-decoration:none}.crumb a:hover{color:var(--cream)}
+      .terms{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;padding:18px 0 40px}
+      .term{display:block;background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;text-decoration:none;color:inherit;transition:border-color .12s,transform .12s}
+      .term:hover{border-color:var(--rose);transform:translateY(-1px)}
+      .term .n{font-family:'Fraunces',serif;font-weight:500;font-size:1.1rem}
+      .term .d{color:var(--muted);font-size:.86rem;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    </style>
+</head><body>
+<header>
+  <div class="nav wrap">
+    <a href="/" class="logo">smut<span class="box">Hub</span></a>
+    <nav class="navlinks">
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/smuthub-app.html">Search</a>
+      <a href="/smuthub-bookcase.html">My Bookshelf</a>
+      <a href="/glossary/" class="on">Glossary</a>
+    </nav>
+    <div class="authbox" id="authbox"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="crumb"><a href="/glossary/">Glossary</a> / <span>Reader Culture</span></nav>
+  <div class="head">
+    <h1>💬 <em>Reader Culture</em></h1>
+    <p class="sub">30 terms in this category.</p>
+  </div>
+  <div class="terms">
+    <a class="term" href="/glossary/culture/arc/">
+      <div class="n">ARC</div>
+      <div class="d">Advance Reader Copy — a free pre-publication copy given to reviewers, BookTokers, and bookstagrammers in exchange for an honest review.</div>
+    </a><a class="term" href="/glossary/culture/book-boyfriend/">
+      <div class="n">Book Boyfriend</div>
+      <div class="d">A fictional hero you&#39;re emotionally attached to.</div>
+    </a><a class="term" href="/glossary/culture/book-hangover/">
+      <div class="n">Book Hangover</div>
+      <div class="d">The inability to start a new book because you&#39;re still emotionally compromised by the last one.</div>
+    </a><a class="term" href="/glossary/culture/booktok/">
+      <div class="n">BookTok</div>
+      <div class="d">The romance and romantasy corner of TikTok — primary recommendation engine and discovery surface for the genre since ~2020.</div>
+    </a><a class="term" href="/glossary/culture/dnf/">
+      <div class="n">DNF</div>
+      <div class="d">Did Not Finish — a book you stopped reading. No judgment; not every book is for every reader.</div>
+    </a><a class="term" href="/glossary/culture/ff/">
+      <div class="n">FF</div>
+      <div class="d">A female / female pairing.</div>
+    </a><a class="term" href="/glossary/culture/fmc/">
+      <div class="n">FMC</div>
+      <div class="d">Female Main Character — the heroine.</div>
+    </a><a class="term" href="/glossary/culture/good-girl/">
+      <div class="n">Good Girl</div>
+      <div class="d">Praise used in intimate contexts. The two-word phrase doing the most heavy lifting in modern romance.</div>
+    </a><a class="term" href="/glossary/culture/grey-sweatpants/">
+      <div class="n">Grey Sweatpants</div>
+      <div class="d">A piece of clothing with disproportionate cultural significance in romance reader spaces.</div>
+    </a><a class="term" href="/glossary/culture/hea/">
+      <div class="n">HEA</div>
+      <div class="d">Happily Ever After — the couple ends up together and committed. The genre&#39;s baseline promise.</div>
+    </a><a class="term" href="/glossary/culture/hfn/">
+      <div class="n">HFN</div>
+      <div class="d">Happily For Now — the couple is together and happy, but the future isn&#39;t fully defined. Still a positive ending.</div>
+    </a><a class="term" href="/glossary/culture/indie-author/">
+      <div class="n">Indie Author</div>
+      <div class="d">Self-published authors — increasingly the engine of romance&#39;s output and innovation, especially in romantasy and dark romance.</div>
+    </a><a class="term" href="/glossary/culture/kindle-unlimited/">
+      <div class="n">Kindle Unlimited (KU)</div>
+      <div class="d">Amazon&#39;s ebook subscription service. Many indie romance authors are KU-exclusive, which is why a lot of the genre lives there.</div>
+    </a><a class="term" href="/glossary/culture/li/">
+      <div class="n">LI</div>
+      <div class="d">Love Interest — the romantic counterpart to the main character.</div>
+    </a><a class="term" href="/glossary/culture/mce/">
+      <div class="n">Main Character Energy</div>
+      <div class="d">When a character commands their own story — presence, agency, the protagonism reader-immersion runs on.</div>
+    </a><a class="term" href="/glossary/culture/mf/">
+      <div class="n">MF</div>
+      <div class="d">A male / female pairing.</div>
+    </a><a class="term" href="/glossary/culture/mfm/">
+      <div class="n">MFM</div>
+      <div class="d">A pairing of two men and one woman where the men are involved with the woman but NOT each other.</div>
+    </a><a class="term" href="/glossary/culture/mm/">
+      <div class="n">MM</div>
+      <div class="d">A male / male pairing.</div>
+    </a><a class="term" href="/glossary/culture/mmc/">
+      <div class="n">MMC</div>
+      <div class="d">Male Main Character — the hero, often the love interest in MF romance.</div>
+    </a><a class="term" href="/glossary/culture/mmf/">
+      <div class="n">MMF</div>
+      <div class="d">A pairing of two men and one woman that INCLUDES male/male contact between the men.</div>
+    </a><a class="term" href="/glossary/culture/ofy/">
+      <div class="n">OFY</div>
+      <div class="d">Obsessed For You — extreme devotion from a love interest. Distinct from creepy by being mutual and (mostly) wanted.</div>
+    </a><a class="term" href="/glossary/culture/otp/">
+      <div class="n">OTP</div>
+      <div class="d">One True Pairing — the couple you&#39;re ride-or-die for in a book, series, or fandom.</div>
+    </a><a class="term" href="/glossary/culture/ott/">
+      <div class="n">OTT</div>
+      <div class="d">Over the Top — used affectionately for heroes who are theatrical in their devotion: grand gestures, possessiveness, obsession (consensual).</div>
+    </a><a class="term" href="/glossary/culture/red-flag-parade/">
+      <div class="n">Red Flag Parade</div>
+      <div class="d">A character who is nothing but red flags. Often said affectionately.</div>
+    </a><a class="term" href="/glossary/culture/snort-laugh/">
+      <div class="n">Snort-Laugh</div>
+      <div class="d">The unflattering laugh a book surprises out of you. Sign of high quality. Frequently happens in public.</div>
+    </a><a class="term" href="/glossary/culture/tbr/">
+      <div class="n">TBR</div>
+      <div class="d">To Be Read — your reading list. Never shrinks. Only grows.</div>
+    </a><a class="term" href="/glossary/culture/trope/">
+      <div class="n">Trope</div>
+      <div class="d">A recurring story element or device. NOT a cliché — tropes are the whole reason we&#39;re here.</div>
+    </a><a class="term" href="/glossary/culture/wc/">
+      <div class="n">Why Choose</div>
+      <div class="d">A polyamorous trope where the protagonist doesn&#39;t pick — they get all the love interests.</div>
+    </a><a class="term" href="/glossary/culture/wip/">
+      <div class="n">WIP</div>
+      <div class="d">Work in Progress — a book the author is currently writing.</div>
+    </a><a class="term" href="/glossary/culture/yearning/">
+      <div class="n">Yearning</div>
+      <div class="d">The painful longing between characters who haven&#39;t come together (or have, and now can&#39;t).</div>
+    </a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap ft">
+    <span>© 2026 smutHub · Romantasy, decoded.</span>
+    <span><a href="/glossary/">Glossary</a> · <a href="/smuthub-app.html">Search</a> · <a href="/sitemap.html">Sitemap</a></span>
+  </div>
+</footer>
+</body></html>

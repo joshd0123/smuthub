@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tropes — Romantasy Glossary | smutHub</title>
+<meta name="description" content="Every tropes term in romantasy, decoded — with the books that feature them.">
+<link rel="canonical" href="https://smuthub.ca/glossary/trope/">
+<meta name="theme-color" content="#0c0708">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="smutHub">
+<meta property="og:title" content="Tropes — Romantasy Glossary | smutHub">
+<meta property="og:description" content="Every tropes term in romantasy, decoded — with the books that feature them.">
+<meta property="og:url" content="https://smuthub.ca/glossary/trope/">
+<meta property="og:image" content="https://smuthub.ca/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tropes — Romantasy Glossary | smutHub">
+<meta name="twitter:description" content="Every tropes term in romantasy, decoded — with the books that feature them.">
+<meta name="twitter:image" content="https://smuthub.ca/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<script defer src="/auth.js"></script>
+<style>
+  :root{--ink:#0c0708;--ink-2:#150e10;--panel:#1c1316;--line:#2a1d22;--cream:#f4e8e3;--muted:#b69089;--rose:#ff3d76;--amber:#ffab40;--grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(800px 500px at 10% -5%,rgba(255,61,118,.12),transparent 60%)}
+  a{color:inherit}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+  /* shared header */
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap}
+  .navlinks{display:flex;gap:18px}
+  .navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none;transition:color .2s}
+  .navlinks a.on,.navlinks a:hover{color:var(--cream)}
+  @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
+  .authbox{display:flex;align-items:center;gap:8px}
+  /* footer (slim) */
+  footer{border-top:1px solid var(--line);margin-top:48px;padding:32px 0 40px}
+  footer .ft{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:.86rem}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--cream)}
+</style>
+<style>
+      .head{padding:30px 0 12px}
+      h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2rem,4.5vw,3rem)}
+      h1 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
+      .sub{color:var(--muted);margin-top:10px}
+      .crumb{padding:18px 0 0;color:var(--muted);font-size:.86rem}
+      .crumb a{color:var(--muted);text-decoration:none}.crumb a:hover{color:var(--cream)}
+      .terms{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;padding:18px 0 40px}
+      .term{display:block;background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;text-decoration:none;color:inherit;transition:border-color .12s,transform .12s}
+      .term:hover{border-color:var(--rose);transform:translateY(-1px)}
+      .term .n{font-family:'Fraunces',serif;font-weight:500;font-size:1.1rem}
+      .term .d{color:var(--muted);font-size:.86rem;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    </style>
+</head><body>
+<header>
+  <div class="nav wrap">
+    <a href="/" class="logo">smut<span class="box">Hub</span></a>
+    <nav class="navlinks">
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/smuthub-app.html">Search</a>
+      <a href="/smuthub-bookcase.html">My Bookshelf</a>
+      <a href="/glossary/" class="on">Glossary</a>
+    </nav>
+    <div class="authbox" id="authbox"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="crumb"><a href="/glossary/">Glossary</a> / <span>Tropes</span></nav>
+  <div class="head">
+    <h1>⚔️ <em>Tropes</em></h1>
+    <p class="sub">21 terms in this category.</p>
+  </div>
+  <div class="terms">
+    <a class="term" href="/glossary/trope/dark-romance/">
+      <div class="n">Dark Romance</div>
+      <div class="d">A subgenre and trope where the romance involves morally compromised characters, dubious-consent dynamics, violence, captor relationships, or other content most romance shies away from.</div>
+    </a><a class="term" href="/glossary/trope/dragon-rider/">
+      <div class="n">Dragon Rider</div>
+      <div class="d">A trope where the male love interest is a dragon rider — usually in an academy or military setting, with a soul-bonded dragon and a high-stakes magical war as the backdrop.</div>
+    </a><a class="term" href="/glossary/trope/enemies-to-lovers/">
+      <div class="n">Enemies to Lovers</div>
+      <div class="d">A romance in which the love interests start as antagonists — rivals, opposing sides, mutual loathing — and gradually convert that animosity into desire.</div>
+    </a><a class="term" href="/glossary/trope/fae/">
+      <div class="n">Fae</div>
+      <div class="d">Magical beings associated with fairy lore — tall, often pointed-eared, otherworldly in beauty, frequently organized into magical courts with their own powers and politics.</div>
+    </a><a class="term" href="/glossary/trope/fake-dating/">
+      <div class="n">Fake Dating</div>
+      <div class="d">Characters pretend to be a couple — for a wedding, a contract, family pressure — and discover the pretense is concealing real feelings.</div>
+    </a><a class="term" href="/glossary/trope/fated-mates/">
+      <div class="n">Fated Mates</div>
+      <div class="d">A trope where two characters are magically, spiritually, or cosmically destined to be together — often with consequences for rejecting the bond.</div>
+    </a><a class="term" href="/glossary/trope/forced-proximity/">
+      <div class="n">Forced Proximity</div>
+      <div class="d">A trope where characters who would otherwise stay apart are required by circumstance to be together — sharing a cabin, road trip, safehouse, or single room.</div>
+    </a><a class="term" href="/glossary/trope/friends-to-lovers/">
+      <div class="n">Friends to Lovers</div>
+      <div class="d">A romance that starts in established friendship and transitions into something more.</div>
+    </a><a class="term" href="/glossary/trope/he-falls-first/">
+      <div class="n">He Falls First</div>
+      <div class="d">A pacing trope where the male love interest realizes his feelings well before the heroine does.</div>
+    </a><a class="term" href="/glossary/trope/morally-grey/">
+      <div class="n">Morally Grey</div>
+      <div class="d">A character whose ethics are flexible — capable of cruelty, manipulation, or violence, usually with a justification that makes the reader complicit.</div>
+    </a><a class="term" href="/glossary/trope/mutual-pining/">
+      <div class="n">Mutual Pining</div>
+      <div class="d">Both characters are in love with each other but neither has said it — sometimes neither has admitted it to themselves.</div>
+    </a><a class="term" href="/glossary/trope/only-one-bed/">
+      <div class="n">Only One Bed</div>
+      <div class="d">A setup where the characters must share a single sleeping space — by reservation error, snowstorm, hideout, or contrived circumstance.</div>
+    </a><a class="term" href="/glossary/trope/shadow-daddy/">
+      <div class="n">Shadow Daddy</div>
+      <div class="d">A hero archetype: intimidating, dark, often morally grey, with shadow- or void-based magical abilities; possessive and devoted to his love interest.</div>
+    </a><a class="term" href="/glossary/trope/she-fell-harder/">
+      <div class="n">She Fell Harder</div>
+      <div class="d">A companion pacing trope: when &quot;he fell first&quot; lands, her eventual feelings arrive with more force.</div>
+    </a><a class="term" href="/glossary/trope/shifter/">
+      <div class="n">Shifter</div>
+      <div class="d">Romance featuring characters who shift between human and animal forms — wolves and dragons most common, but anything from big cats to bears. Often includes pack dynamics and mate bonds.</div>
+    </a><a class="term" href="/glossary/trope/slow-burn/">
+      <div class="n">Slow Burn</div>
+      <div class="d">A romance where attraction builds over a long stretch of the book — sometimes the whole book — with delayed physical resolution.</div>
+    </a><a class="term" href="/glossary/trope/soul-bond/">
+      <div class="n">Soul Bond</div>
+      <div class="d">A character who is biologically or magically destined to be the partner of another — without the lifelong commitment implication of &quot;mate.&quot;</div>
+    </a><a class="term" href="/glossary/trope/soulmates/">
+      <div class="n">Soulmates</div>
+      <div class="d">Two characters magically or spiritually bonded — sometimes telepathically, sometimes through ritual, sometimes by birth.</div>
+    </a><a class="term" href="/glossary/trope/touch-her-and-die/">
+      <div class="n">Touch Her and Die</div>
+      <div class="d">A possessive hero archetype where the love interest&#39;s extreme protectiveness becomes a threat to anyone who looks sideways at the heroine.</div>
+    </a><a class="term" href="/glossary/trope/true-mate/">
+      <div class="n">True Mate</div>
+      <div class="d">A shifter/paranormal variation of fated mates — the destined partner, often recognized by scent or the shifter&#39;s animal side, sometimes distinguished from a &quot;chosen mate&quot; picked by logic rather than fate.</div>
+    </a><a class="term" href="/glossary/trope/virgin-hero/">
+      <div class="n">Virgin Hero</div>
+      <div class="d">A male love interest who hasn&#39;t had sex before the events of the book.</div>
+    </a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap ft">
+    <span>© 2026 smutHub · Romantasy, decoded.</span>
+    <span><a href="/glossary/">Glossary</a> · <a href="/smuthub-app.html">Search</a> · <a href="/sitemap.html">Sitemap</a></span>
+  </div>
+</footer>
+</body></html>

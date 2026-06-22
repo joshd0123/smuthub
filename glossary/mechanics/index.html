@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spice &amp; Door — Romantasy Glossary | smutHub</title>
+<meta name="description" content="Every spice &amp; door term in romantasy, decoded — with the books that feature them.">
+<link rel="canonical" href="https://smuthub.ca/glossary/mechanics/">
+<meta name="theme-color" content="#0c0708">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="smutHub">
+<meta property="og:title" content="Spice &amp; Door — Romantasy Glossary | smutHub">
+<meta property="og:description" content="Every spice &amp; door term in romantasy, decoded — with the books that feature them.">
+<meta property="og:url" content="https://smuthub.ca/glossary/mechanics/">
+<meta property="og:image" content="https://smuthub.ca/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Spice &amp; Door — Romantasy Glossary | smutHub">
+<meta name="twitter:description" content="Every spice &amp; door term in romantasy, decoded — with the books that feature them.">
+<meta name="twitter:image" content="https://smuthub.ca/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<script defer src="/auth.js"></script>
+<style>
+  :root{--ink:#0c0708;--ink-2:#150e10;--panel:#1c1316;--line:#2a1d22;--cream:#f4e8e3;--muted:#b69089;--rose:#ff3d76;--amber:#ffab40;--grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(800px 500px at 10% -5%,rgba(255,61,118,.12),transparent 60%)}
+  a{color:inherit}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+  /* shared header */
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap}
+  .navlinks{display:flex;gap:18px}
+  .navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none;transition:color .2s}
+  .navlinks a.on,.navlinks a:hover{color:var(--cream)}
+  @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
+  .authbox{display:flex;align-items:center;gap:8px}
+  /* footer (slim) */
+  footer{border-top:1px solid var(--line);margin-top:48px;padding:32px 0 40px}
+  footer .ft{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:.86rem}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--cream)}
+</style>
+<style>
+      .head{padding:30px 0 12px}
+      h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2rem,4.5vw,3rem)}
+      h1 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
+      .sub{color:var(--muted);margin-top:10px}
+      .crumb{padding:18px 0 0;color:var(--muted);font-size:.86rem}
+      .crumb a{color:var(--muted);text-decoration:none}.crumb a:hover{color:var(--cream)}
+      .terms{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;padding:18px 0 40px}
+      .term{display:block;background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;text-decoration:none;color:inherit;transition:border-color .12s,transform .12s}
+      .term:hover{border-color:var(--rose);transform:translateY(-1px)}
+      .term .n{font-family:'Fraunces',serif;font-weight:500;font-size:1.1rem}
+      .term .d{color:var(--muted);font-size:.86rem;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    </style>
+</head><body>
+<header>
+  <div class="nav wrap">
+    <a href="/" class="logo">smut<span class="box">Hub</span></a>
+    <nav class="navlinks">
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/smuthub-app.html">Search</a>
+      <a href="/smuthub-bookcase.html">My Bookshelf</a>
+      <a href="/glossary/" class="on">Glossary</a>
+    </nav>
+    <div class="authbox" id="authbox"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="crumb"><a href="/glossary/">Glossary</a> / <span>Spice &amp; Door</span></nav>
+  <div class="head">
+    <h1>🌶️ <em>Spice &amp; Door</em></h1>
+    <p class="sub">9 terms in this category.</p>
+  </div>
+  <div class="terms">
+    <a class="term" href="/glossary/mechanics/burn/">
+      <div class="n">Burn</div>
+      <div class="d">A descriptor for how fast a romance develops sexually — distinct from &quot;slow-burn&quot; the trope. A book can be &quot;fast-burn&quot; (immediate heat) or &quot;slow-burn&quot; (delayed).</div>
+    </a><a class="term" href="/glossary/mechanics/closed-door/">
+      <div class="n">Closed Door</div>
+      <div class="d">Romance where sex happens but isn&#39;t shown — fade-to-black, morning-after framing, imagination filling the gap.</div>
+    </a><a class="term" href="/glossary/mechanics/d-s/">
+      <div class="n">D/s (Dominance / Submission)</div>
+      <div class="d">A power-exchange dynamic — bedroom or 24/7 — where one partner takes control and one yields. Consensual is the only kind that counts.</div>
+    </a><a class="term" href="/glossary/mechanics/fade-to-black/">
+      <div class="n">Fade to Black</div>
+      <div class="d">A scene that cuts away just before or during a sexual encounter — the close-door convention in action.</div>
+    </a><a class="term" href="/glossary/mechanics/high-spice/">
+      <div class="n">High Spice</div>
+      <div class="d">Romance with very explicit sexual content — typically 4–5 chilis on smutHub&#39;s scale.</div>
+    </a><a class="term" href="/glossary/mechanics/open-door/">
+      <div class="n">Open Door</div>
+      <div class="d">Romance where sex scenes are shown explicitly on the page.</div>
+    </a><a class="term" href="/glossary/mechanics/safe-word/">
+      <div class="n">Safe Word</div>
+      <div class="d">An agreed-upon word that immediately stops a scene in kink contexts. Non-negotiable infrastructure for consent.</div>
+    </a><a class="term" href="/glossary/mechanics/smut/">
+      <div class="n">Smut</div>
+      <div class="d">Affectionate shorthand for explicit sexual content in romance.</div>
+    </a><a class="term" href="/glossary/mechanics/spice/">
+      <div class="n">Spice (Heat Level)</div>
+      <div class="d">A reader-shorthand rating for how explicit a book&#39;s sexual content is, usually on a 0–5 chili-pepper scale.</div>
+    </a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap ft">
+    <span>© 2026 smutHub · Romantasy, decoded.</span>
+    <span><a href="/glossary/">Glossary</a> · <a href="/smuthub-app.html">Search</a> · <a href="/sitemap.html">Sitemap</a></span>
+  </div>
+</footer>
+</body></html>
