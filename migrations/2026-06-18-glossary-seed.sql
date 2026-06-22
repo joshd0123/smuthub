@@ -106,8 +106,7 @@ values
  'A hero archetype: intimidating, dark, often morally grey, with shadow- or void-based magical abilities; possessive and devoted to his love interest.',
  'Tall. Brooding. Made of literal darkness. Will commit crimes for her.',
  'It''s morally grey with paranormal aesthetics. The shadows are doing emotional work — they''re a visual shorthand for everything dangerous and protective the reader wants in one character.',
- '{"shadow daddy"}',
- 'The term exploded on BookTok around the rise of fae romantasy — Rhysand, Azriel, Xaden — and now applies to any romantasy LI whose magic involves shadow, void, or darkness.'),
+ '{"shadow daddy"}'),
 
 ('trope','virgin-hero','Virgin Hero',
  'A male love interest who hasn''t had sex before the events of the book.',
@@ -120,6 +119,12 @@ on conflict (category, slug) do update set
   why_it_works   = coalesce(tags.why_it_works,   excluded.why_it_works),
   also_known_as  = case when array_length(tags.also_known_as,1) is null then excluded.also_known_as else tags.also_known_as end,
   origin_note    = coalesce(tags.origin_note,    excluded.origin_note);
+
+-- shadow-daddy gets an origin note (the only trope row with one in v1).
+-- Kept as a separate UPDATE so the trope INSERT stays a clean 7-column block.
+update tags set origin_note = coalesce(origin_note,
+  'The term exploded on BookTok around the rise of fae romantasy — Rhysand, Azriel, Xaden — and now applies to any romantasy LI whose magic involves shadow, void, or darkness.')
+where category='trope' and slug='shadow-daddy';
 
 -- ── 2. SUBGENRES (new category; some filterable some not) ─────────────────
 insert into tags (category, slug, label, description, voice_tagline, why_it_works, is_filterable)
