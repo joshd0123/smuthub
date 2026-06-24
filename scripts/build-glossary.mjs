@@ -71,14 +71,15 @@ const CATS = {
   'worldbuilding':   { label:'Worldbuilding',   emoji:'🗺️', order:6 },
   'setting':         { label:'Settings',        emoji:'🏰', order:7 },
   'mechanics':       { label:'Spice & Door',    emoji:'🌶️', order:8 },
-  'format':          { label:'Format & POV',    emoji:'📖', order:9 },
-  'culture':         { label:'Reader Culture',  emoji:'💬', order:10 },
-  'omegaverse':      { label:'Omegaverse',      emoji:'🐺', order:11 },
-  'kink':            { label:'Kinks',           emoji:'🔥', order:12 },
-  'mc-archetype':    { label:'MC Archetypes',   emoji:'👤', order:13 },
-  'li-archetype':    { label:'LI Archetypes',   emoji:'👁️', order:14 },
-  'representation':  { label:'Representation',  emoji:'🌈', order:15 },
-  'warning':         { label:'Content Warnings', emoji:'⚠️', order:16 },
+  'format':          { label:'Format',          emoji:'📖', order:9 },
+  'pov':             { label:'POV',             emoji:'👁️', order:10 },
+  'culture':         { label:'Reader Culture',  emoji:'💬', order:11 },
+  'omegaverse':      { label:'Omegaverse',      emoji:'🐺', order:12 },
+  'kink':            { label:'Kinks',           emoji:'🔥', order:13 },
+  'mc-archetype':    { label:'MC Archetypes',   emoji:'👤', order:14 },
+  'li-archetype':    { label:'LI Archetypes',   emoji:'💖', order:15 },
+  'representation':  { label:'Representation',  emoji:'🌈', order:16 },
+  'warning':         { label:'Content Warnings', emoji:'⚠️', order:17 },
 };
 const catKey = c => (CATS[c] ? c : 'culture');
 
@@ -163,6 +164,26 @@ ${page.jsonld ? `<script type="application/ld+json">${JSON.stringify(page.jsonld
   footer .ft{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:.86rem}
   footer a{color:var(--muted);text-decoration:none}
   footer a:hover{color:var(--cream)}
+  /* left rail — sticky category nav for inner glossary pages.
+     Hidden on mobile (hamburger handles nav); shown ≥900px. Hover/focus opens
+     the panel; on touch ≥900px a tap on the strip toggles it via the click
+     handler at the bottom of this file. */
+  .sh-rail{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:45;display:none}
+  @media(min-width:900px){.sh-rail{display:flex;align-items:center}}
+  .sh-rail-strip{display:flex;flex-direction:column;gap:6px;padding:14px 9px;background:rgba(28,19,22,.92);border:1px solid var(--line);border-left:0;border-radius:0 12px 12px 0;backdrop-filter:blur(8px);cursor:pointer;transition:background .15s}
+  .sh-rail:hover .sh-rail-strip,.sh-rail.open .sh-rail-strip{background:rgba(40,28,32,.96)}
+  .sh-rail-strip i{display:block;width:22px;height:2px;background:var(--muted);border-radius:1px;transition:background .15s,width .15s}
+  .sh-rail:hover .sh-rail-strip i,.sh-rail.open .sh-rail-strip i{background:var(--amber)}
+  .sh-rail-strip i:nth-child(odd){width:16px}
+  .sh-rail-panel{position:absolute;left:100%;top:50%;transform:translate(-12px,-50%);background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:260px;max-height:80vh;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;box-shadow:0 22px 50px rgba(0,0,0,.55);margin-left:6px}
+  .sh-rail:hover .sh-rail-panel,.sh-rail.open .sh-rail-panel,.sh-rail:focus-within .sh-rail-panel{opacity:1;pointer-events:auto;transform:translate(0,-50%)}
+  .sh-rail-panel h3{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding:0 8px}
+  .sh-rail-panel a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;border-radius:9px;color:var(--cream);text-decoration:none;font-size:.93rem;line-height:1.2}
+  .sh-rail-panel a:hover{background:var(--panel)}
+  .sh-rail-panel a.active{background:var(--panel);color:var(--amber)}
+  .sh-rail-panel a .lbl{display:flex;align-items:center;gap:8px}
+  .sh-rail-panel a .ct{color:var(--muted);font-size:.78rem;font-variant-numeric:tabular-nums}
+  .sh-rail-panel hr{border:0;border-top:1px solid var(--line);margin:8px 0}
 </style>
 ${page.extraCSS || ''}
 </head>`;
@@ -181,6 +202,47 @@ const SHARED_HEADER = `
   </div>
 </header>
 `;
+
+// Group tags by category once — drives the rail panel + category index ordering.
+const byCatAll = {};
+for (const t of tags){ const k = catKey(t.category); (byCatAll[k] = byCatAll[k] || []).push(t); }
+
+// Left rail: sticky category-navigator on the left edge of glossary pages.
+// `activeCat` highlights the row for the page you're on.
+function renderRail(activeCat){
+  const ordered = Object.entries(CATS)
+    .filter(([k]) => (byCatAll[k] || []).length > 0)
+    .sort((a,b) => a[1].order - b[1].order);
+  const items = ordered.map(([key, cfg]) => {
+    const n = (byCatAll[key] || []).length;
+    const cls = key === activeCat ? ' class="active"' : '';
+    return `<a href="/glossary/${key}/"${cls}><span class="lbl">${cfg.emoji} ${esc(cfg.label)}</span><span class="ct">${n}</span></a>`;
+  }).join('');
+  return `<aside class="sh-rail" id="shRail" tabindex="0" aria-label="Glossary categories">
+    <div class="sh-rail-strip" role="button" aria-expanded="false" aria-controls="shRailPanel" aria-label="Open glossary categories">
+      <i></i><i></i><i></i><i></i><i></i>
+    </div>
+    <div class="sh-rail-panel" id="shRailPanel">
+      <h3>Browse glossary</h3>
+      <a href="/glossary/"${!activeCat ? ' class="active"' : ''}><span class="lbl">📖 All terms</span><span class="ct">${tags.length}</span></a>
+      <hr>
+      ${items}
+    </div>
+  </aside>`;
+}
+
+// One small inline script wires hover-equivalent click toggling for the rail
+// (mostly relevant if the user clicks the strip on a touch-enabled big screen).
+const RAIL_SCRIPT = `<script>(function(){
+  var rail = document.getElementById('shRail'); if(!rail) return;
+  var strip = rail.querySelector('.sh-rail-strip');
+  strip.addEventListener('click', function(e){
+    e.stopPropagation();
+    var open = rail.classList.toggle('open');
+    strip.setAttribute('aria-expanded', open);
+  });
+  document.addEventListener('click', function(e){ if(!rail.contains(e.target)) { rail.classList.remove('open'); strip.setAttribute('aria-expanded','false'); } });
+})();</script>`;
 
 const SHARED_FOOTER = `
 <footer>
@@ -257,6 +319,7 @@ function renderTermPage(tag){
   const body = `<body>
 ${SHARED_HEADER.replace('class="on"','')
               .replace('href="/glossary/"','href="/glossary/" class="on"')}
+${renderRail(catKey(tag.category))}
 
 <div class="wrap">
   <nav class="crumb"><a href="/glossary/">Glossary</a> / <a href="/glossary/${tag.category}/">${esc(cat.label)}</a> / <span>${esc(tag.label)}</span></nav>
@@ -332,6 +395,7 @@ ${SHARED_HEADER.replace('class="on"','')
   })();
 </script>
 
+${RAIL_SCRIPT}
 ${SHARED_FOOTER}`;
 
   return head + body;
@@ -408,6 +472,7 @@ function renderIndexPage(){
 
   const body = `<body>
 ${SHARED_HEADER}
+${renderRail(null)}
 
 <div class="wrap head">
   <h1>The romantasy <em>encyclopedia</em>.</h1>
@@ -456,6 +521,7 @@ ${SHARED_HEADER}
   })();
 </script>
 
+${RAIL_SCRIPT}
 ${SHARED_FOOTER}`;
 
   return head + body;
@@ -485,6 +551,7 @@ function renderCategoryPage(catSlug, items){
     </style>`
   });
   const body = `<body>${SHARED_HEADER}
+${renderRail(catSlug)}
 <div class="wrap">
   <nav class="crumb"><a href="/glossary/">Glossary</a> / <span>${esc(cfg.label)}</span></nav>
   <div class="head">
@@ -498,6 +565,7 @@ function renderCategoryPage(catSlug, items){
     </a>`).join('')}
   </div>
 </div>
+${RAIL_SCRIPT}
 ${SHARED_FOOTER}`;
   return head + body;
 }
