@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Warnings — Romantasy Glossary | smutHub</title>
+<meta name="description" content="Every content warnings term in romantasy, decoded — with the books that feature them.">
+<link rel="canonical" href="https://smuthub.ca/glossary/warning/">
+<meta name="theme-color" content="#0c0708">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="smutHub">
+<meta property="og:title" content="Content Warnings — Romantasy Glossary | smutHub">
+<meta property="og:description" content="Every content warnings term in romantasy, decoded — with the books that feature them.">
+<meta property="og:url" content="https://smuthub.ca/glossary/warning/">
+<meta property="og:image" content="https://smuthub.ca/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Content Warnings — Romantasy Glossary | smutHub">
+<meta name="twitter:description" content="Every content warnings term in romantasy, decoded — with the books that feature them.">
+<meta name="twitter:image" content="https://smuthub.ca/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<script defer src="/auth.js"></script>
+<style>
+  :root{--ink:#0c0708;--ink-2:#150e10;--panel:#1c1316;--line:#2a1d22;--cream:#f4e8e3;--muted:#b69089;--rose:#ff3d76;--amber:#ffab40;--grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(800px 500px at 10% -5%,rgba(255,61,118,.12),transparent 60%)}
+  a{color:inherit}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+  /* shared header */
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap}
+  .navlinks{display:flex;gap:18px}
+  .navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none;transition:color .2s}
+  .navlinks a.on,.navlinks a:hover{color:var(--cream)}
+  @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
+  .authbox{display:flex;align-items:center;gap:8px}
+  /* footer (slim) */
+  footer{border-top:1px solid var(--line);margin-top:48px;padding:32px 0 40px}
+  footer .ft{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:.86rem}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--cream)}
+  /* left rail — sticky category nav for inner glossary pages.
+     Hidden on mobile (hamburger handles nav); shown ≥900px. Hover/focus opens
+     the panel; on touch ≥900px a tap on the strip toggles it via the click
+     handler at the bottom of this file. */
+  .sh-rail{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:45;display:none}
+  @media(min-width:900px){.sh-rail{display:flex;align-items:center}}
+  .sh-rail-strip{display:flex;flex-direction:column;gap:6px;padding:14px 9px;background:rgba(28,19,22,.92);border:1px solid var(--line);border-left:0;border-radius:0 12px 12px 0;backdrop-filter:blur(8px);cursor:pointer;transition:background .15s}
+  .sh-rail:hover .sh-rail-strip,.sh-rail.open .sh-rail-strip{background:rgba(40,28,32,.96)}
+  .sh-rail-strip i{display:block;width:22px;height:2px;background:var(--muted);border-radius:1px;transition:background .15s,width .15s}
+  .sh-rail:hover .sh-rail-strip i,.sh-rail.open .sh-rail-strip i{background:var(--amber)}
+  .sh-rail-strip i:nth-child(odd){width:16px}
+  .sh-rail-panel{position:absolute;left:100%;top:50%;transform:translate(-12px,-50%);background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:260px;max-height:80vh;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;box-shadow:0 22px 50px rgba(0,0,0,.55);margin-left:6px}
+  .sh-rail:hover .sh-rail-panel,.sh-rail.open .sh-rail-panel,.sh-rail:focus-within .sh-rail-panel{opacity:1;pointer-events:auto;transform:translate(0,-50%)}
+  .sh-rail-panel h3{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding:0 8px}
+  .sh-rail-panel a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;border-radius:9px;color:var(--cream);text-decoration:none;font-size:.93rem;line-height:1.2}
+  .sh-rail-panel a:hover{background:var(--panel)}
+  .sh-rail-panel a.active{background:var(--panel);color:var(--amber)}
+  .sh-rail-panel a .lbl{display:flex;align-items:center;gap:8px}
+  .sh-rail-panel a .ct{color:var(--muted);font-size:.78rem;font-variant-numeric:tabular-nums}
+  .sh-rail-panel hr{border:0;border-top:1px solid var(--line);margin:8px 0}
+</style>
+<style>
+      .head{padding:30px 0 12px}
+      h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2rem,4.5vw,3rem)}
+      h1 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
+      .sub{color:var(--muted);margin-top:10px}
+      .crumb{padding:18px 0 0;color:var(--muted);font-size:.86rem}
+      .crumb a{color:var(--muted);text-decoration:none}.crumb a:hover{color:var(--cream)}
+      .terms{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;padding:18px 0 40px}
+      .term{display:block;background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;text-decoration:none;color:inherit;transition:border-color .12s,transform .12s}
+      .term:hover{border-color:var(--rose);transform:translateY(-1px)}
+      .term .n{font-family:'Fraunces',serif;font-weight:500;font-size:1.1rem}
+      .term .d{color:var(--muted);font-size:.86rem;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+      .tier3{margin-top:8px;padding:16px 18px;background:var(--ink-2);border:1px dashed var(--line);border-radius:12px}
+      .tier3 h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.1rem;margin-bottom:6px}
+      .tier3 .sub2{color:var(--muted);font-size:.84rem;margin-bottom:10px}
+      .tier3 p{color:var(--cream);font-size:.9rem;line-height:1.7}
+    </style>
+</head><body>
+<header>
+  <div class="nav wrap">
+    <a href="/" class="logo">smut<span class="box">Hub</span></a>
+    <nav class="navlinks">
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/smuthub-app.html">Search</a>
+      <a href="/smuthub-bookcase.html">My Bookshelf</a>
+      <a href="/glossary/" class="on">Glossary</a>
+    </nav>
+    <div class="authbox" id="authbox"></div>
+  </div>
+</header>
+
+<aside class="sh-rail" id="shRail" tabindex="0" aria-label="Glossary categories">
+    <div class="sh-rail-strip" role="button" aria-expanded="false" aria-controls="shRailPanel" aria-label="Open glossary categories">
+      <i></i><i></i><i></i><i></i><i></i>
+    </div>
+    <div class="sh-rail-panel" id="shRailPanel">
+      <h3>Browse glossary</h3>
+      <a href="/glossary/"><span class="lbl">📖 All terms</span><span class="ct">358</span></a>
+      <hr>
+      <a href="/glossary/trope/"><span class="lbl">⚔️ Tropes</span><span class="ct">161</span></a><a href="/glossary/mood/"><span class="lbl">🌗 Moods</span><span class="ct">83</span></a><a href="/glossary/vibe/"><span class="lbl">✨ Vibes</span><span class="ct">15</span></a><a href="/glossary/theme/"><span class="lbl">🔭 Themes</span><span class="ct">18</span></a><a href="/glossary/subgenre/"><span class="lbl">📚 Subgenres</span><span class="ct">19</span></a><a href="/glossary/worldbuilding/"><span class="lbl">🗺️ Worldbuilding</span><span class="ct">23</span></a><a href="/glossary/setting/"><span class="lbl">🏰 Settings</span><span class="ct">37</span></a><a href="/glossary/mechanics/"><span class="lbl">🌶️ Spice &amp; Door</span><span class="ct">13</span></a><a href="/glossary/format/"><span class="lbl">📖 Format</span><span class="ct">13</span></a><a href="/glossary/pov/"><span class="lbl">👁️ POV</span><span class="ct">5</span></a><a href="/glossary/culture/"><span class="lbl">💬 Reader Culture</span><span class="ct">52</span></a><a href="/glossary/omegaverse/"><span class="lbl">🐺 Omegaverse</span><span class="ct">9</span></a><a href="/glossary/kink/"><span class="lbl">🔥 Kinks</span><span class="ct">43</span></a><a href="/glossary/mc-archetype/"><span class="lbl">👤 MC Archetypes</span><span class="ct">62</span></a><a href="/glossary/li-archetype/"><span class="lbl">💖 LI Archetypes</span><span class="ct">66</span></a><a href="/glossary/representation/"><span class="lbl">🌈 Representation</span><span class="ct">46</span></a><a href="/glossary/warning/" class="active"><span class="lbl">⚠️ Content Warnings</span><span class="ct">74</span></a>
+    </div>
+  </aside>
+<div class="wrap">
+  <nav class="crumb"><a href="/glossary/">Glossary</a> / <span>Content Warnings</span></nav>
+  <div class="head">
+    <h1>⚠️ <em>Content Warnings</em></h1>
+    <p class="sub">74 terms in this category · 47 with detailed pages + 27 filterable tags.</p>
+  </div>
+  <div class="terms">
+    <a class="term" href="/glossary/warning/ableism/">
+      <div class="n">Ableism</div>
+      <div class="d">Depictions of discrimination, prejudice, or harmful attitudes toward disabled individuals.</div>
+    </a><a class="term" href="/glossary/warning/abuse/">
+      <div class="n">Abuse</div>
+      <div class="d">Physical, emotional, psychological, verbal, or sexual abuse depicted within the story.</div>
+    </a><a class="term" href="/glossary/warning/abuse-between-mcs/">
+      <div class="n">Abuse Between Mcs</div>
+      <div class="d">Abuse occurs between the main romantic characters. A serious flag many readers want to know about going in.</div>
+    </a><a class="term" href="/glossary/warning/alcoholism/">
+      <div class="n">Alcoholism</div>
+      <div class="d">Alcohol dependency or addiction is depicted.</div>
+    </a><a class="term" href="/glossary/warning/animal-abuse/">
+      <div class="n">Animal Abuse</div>
+      <div class="d">Animals are intentionally harmed, neglected, or mistreated on-page.</div>
+    </a><a class="term" href="/glossary/warning/animal-death/">
+      <div class="n">Animal Death</div>
+      <div class="d">The death of an animal is depicted or discussed.</div>
+    </a><a class="term" href="/glossary/warning/birth-control-non-consent/">
+      <div class="n">Birth Control Non-Consent</div>
+      <div class="d">One character interferes with, removes, or deceives another regarding birth control.</div>
+    </a><a class="term" href="/glossary/warning/body-betrayal/">
+      <div class="n">Body Betrayal</div>
+      <div class="d">A character experiences unwanted physical attraction toward someone they dislike or distrust.</div>
+    </a><a class="term" href="/glossary/warning/child-death/">
+      <div class="n">Child Death</div>
+      <div class="d">The death of a child is depicted or discussed.</div>
+    </a><a class="term" href="/glossary/warning/death-grief/">
+      <div class="n">Death Grief</div>
+      <div class="d">Significant death, mourning, or bereavement is central to the story.</div>
+    </a><a class="term" href="/glossary/warning/drug-abuse/">
+      <div class="n">Drug Abuse</div>
+      <div class="d">Misuse or addiction involving drugs is depicted.</div>
+    </a><a class="term" href="/glossary/warning/dubious-consent/">
+      <div class="n">Dubious Consent</div>
+      <div class="d">Sexual situations where consent is unclear, impaired, pressured, or ethically questionable.</div>
+    </a><a class="term" href="/glossary/warning/eating-disorders/">
+      <div class="n">Eating Disorders</div>
+      <div class="d">Depictions of disordered eating behaviors or eating disorder recovery.</div>
+    </a><a class="term" href="/glossary/warning/fatphobia/">
+      <div class="n">Fatphobia</div>
+      <div class="d">Depictions of anti-fat bias, discrimination, or body shaming.</div>
+    </a><a class="term" href="/glossary/warning/forced-pregnancy/">
+      <div class="n">Forced Pregnancy</div>
+      <div class="d">Pregnancy occurs through coercion, manipulation, magical compulsion, or lack of consent.</div>
+    </a><a class="term" href="/glossary/warning/gambling/">
+      <div class="n">Gambling</div>
+      <div class="d">Problematic or significant gambling behavior is present.</div>
+    </a><a class="term" href="/glossary/warning/graphic-violence/">
+      <div class="n">Graphic Violence</div>
+      <div class="d">Violence depicted in explicit detail — gore, torture, brutal combat.</div>
+    </a><a class="term" href="/glossary/warning/human-trafficking/">
+      <div class="n">Human Trafficking</div>
+      <div class="d">Characters experience or are involved in forced exploitation or trafficking.</div>
+    </a><a class="term" href="/glossary/warning/incest/">
+      <div class="n">Incest</div>
+      <div class="d">Sexual or romantic relationships between close family members.</div>
+    </a><a class="term" href="/glossary/warning/infertility/">
+      <div class="n">Infertility</div>
+      <div class="d">Difficulty conceiving or carrying a pregnancy plays a role in the story.</div>
+    </a><a class="term" href="/glossary/warning/mental-illness/">
+      <div class="n">Mental Illness</div>
+      <div class="d">Characters experience diagnosed or implied mental health conditions — depression, anxiety, psychosis, etc.</div>
+    </a><a class="term" href="/glossary/warning/mental-trauma/">
+      <div class="n">Mental Trauma</div>
+      <div class="d">Characters experience significant psychological trauma — flashbacks, PTSD, dissociation.</div>
+    </a><a class="term" href="/glossary/warning/miscarriage/">
+      <div class="n">Miscarriage</div>
+      <div class="d">Pregnancy loss is depicted or discussed.</div>
+    </a><a class="term" href="/glossary/warning/misogyny/">
+      <div class="n">Misogyny</div>
+      <div class="d">Sexism, discrimination, or prejudice against women appears in the story.</div>
+    </a><a class="term" href="/glossary/warning/no-hea/">
+      <div class="n">No Hea</div>
+      <div class="d">The story does not conclude with a Happily Ever After. Important to flag — many romance readers consider HEA a genre requirement.</div>
+    </a><a class="term" href="/glossary/warning/non-consent-between-mcs/">
+      <div class="n">Non-Consent Between MCs</div>
+      <div class="d">Sexual activity occurs between main characters without consent.</div>
+    </a><a class="term" href="/glossary/warning/non-traditional-hea/">
+      <div class="n">Non-Traditional HEA</div>
+      <div class="d">The story ends positively but the ending differs from a conventional romantic resolution.</div>
+    </a><a class="term" href="/glossary/warning/past-abuse/">
+      <div class="n">Past Abuse</div>
+      <div class="d">A character has a history of abuse predating the events of the story.</div>
+    </a><a class="term" href="/glossary/warning/past-child-abuse/">
+      <div class="n">Past Child Abuse</div>
+      <div class="d">References to abuse experienced during childhood — character backstory.</div>
+    </a><a class="term" href="/glossary/warning/past-child-neglect/">
+      <div class="n">Past Child Neglect</div>
+      <div class="d">References to neglect experienced during childhood — backstory or memory.</div>
+    </a><a class="term" href="/glossary/warning/past-sexual-abuse/">
+      <div class="n">Past Sexual Abuse</div>
+      <div class="d">A character has a history of sexual abuse before the story begins.</div>
+    </a><a class="term" href="/glossary/warning/queerphobia/">
+      <div class="n">Queerphobia</div>
+      <div class="d">Homophobia, transphobia, or discrimination against LGBTQ+ individuals appears in the story.</div>
+    </a><a class="term" href="/glossary/warning/racism/">
+      <div class="n">Racism</div>
+      <div class="d">Racial prejudice, discrimination, or racial violence appears in the story.</div>
+    </a><a class="term" href="/glossary/warning/rape/">
+      <div class="n">Rape</div>
+      <div class="d">Sexual assault or rape is depicted or discussed. Always flag — readers deserve advance notice.</div>
+    </a><a class="term" href="/glossary/warning/religious-trauma/">
+      <div class="n">Religious Trauma</div>
+      <div class="d">Psychological harm resulting from religious beliefs, institutions, or experiences.</div>
+    </a><a class="term" href="/glossary/warning/self-harm/">
+      <div class="n">Self-Harm</div>
+      <div class="d">Intentional self-injury is depicted or discussed.</div>
+    </a><a class="term" href="/glossary/warning/slavery/">
+      <div class="n">Slavery</div>
+      <div class="d">Slavery exists or plays a major role in the story.</div>
+    </a><a class="term" href="/glossary/warning/slut-shaming/">
+      <div class="n">Slut Shaming</div>
+      <div class="d">Characters are criticized, judged, or humiliated for sexual behavior.</div>
+    </a><a class="term" href="/glossary/warning/stalking/">
+      <div class="n">Stalking</div>
+      <div class="d">Persistent unwanted surveillance, following, or monitoring of a character.</div>
+    </a><a class="term" href="/glossary/warning/substance-abuse/">
+      <div class="n">Substance Abuse</div>
+      <div class="d">Problematic use of drugs, alcohol, or other substances.</div>
+    </a><a class="term" href="/glossary/warning/suicide/">
+      <div class="n">Suicide</div>
+      <div class="d">Suicide attempts, suicide, or suicidal ideation are depicted or discussed.</div>
+    </a><a class="term" href="/glossary/warning/terminal-illness/">
+      <div class="n">Terminal Illness</div>
+      <div class="d">A character suffers from a life-limiting or incurable illness.</div>
+    </a><a class="term" href="/glossary/warning/third-party-abuse/">
+      <div class="n">Third Party Abuse</div>
+      <div class="d">Abuse committed by a character outside the primary romantic relationship.</div>
+    </a><a class="term" href="/glossary/warning/third-party-sexual-abuse/">
+      <div class="n">Third-Party Sexual Abuse</div>
+      <div class="d">Sexual assault committed by someone outside the primary relationship.</div>
+    </a><a class="term" href="/glossary/warning/torture-of-mcs/">
+      <div class="n">Torture Of Mcs</div>
+      <div class="d">A main character experiences torture.</div>
+    </a><a class="term" href="/glossary/warning/torture-of-side-characters/">
+      <div class="n">Torture Of Side Characters</div>
+      <div class="d">A secondary character experiences torture.</div>
+    </a><a class="term" href="/glossary/warning/victim-blaming/">
+      <div class="n">Victim Blaming</div>
+      <div class="d">Responsibility for abuse, assault, or harm is placed on the victim rather than the perpetrator.</div>
+    </a>
+  </div>
+  <div class="tier3">
+    <h2>Also filterable in this category</h2>
+    <p class="sub2">These exist as book-filter tags but don't have their own glossary page. Useful for catalog filtering.</p>
+    <p>Addiction · Age Gap · Animal Harm · Blood · Cheating · Child Harm · Death · Death of a Loved One · Domestic Violence · Eating Disorder · Gaslighting · Gore · Graphic Violencel Death · Grief · Ideation · Kidnapping · Mental Trama · Mental Violence · Misogny · Non-Consent · On-Page Spice · Pregnancy Loss · Sexual Assault · Suicidal Ideation · Torture · Violence · War</p>
+  </div>
+</div>
+<script>(function(){
+  var rail = document.getElementById('shRail'); if(!rail) return;
+  var strip = rail.querySelector('.sh-rail-strip');
+  strip.addEventListener('click', function(e){
+    e.stopPropagation();
+    var open = rail.classList.toggle('open');
+    strip.setAttribute('aria-expanded', open);
+  });
+  document.addEventListener('click', function(e){ if(!rail.contains(e.target)) { rail.classList.remove('open'); strip.setAttribute('aria-expanded','false'); } });
+})();</script>
+
+<footer>
+  <div class="wrap ft">
+    <span>© 2026 smutHub · Romantasy, decoded.</span>
+    <span><a href="/glossary/">Glossary</a> · <a href="/smuthub-app.html">Search</a> · <a href="/sitemap.html">Sitemap</a></span>
+  </div>
+</footer>
+</body></html>
