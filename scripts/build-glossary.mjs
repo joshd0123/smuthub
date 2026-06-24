@@ -44,9 +44,16 @@ async function pgGet(url){
   if(!r.ok) throw new Error(`PostgREST ${r.status}: ${await r.text()}`);
   return r.json();
 }
-const tagsURL = `${SUPABASE_URL.replace(/\/+$/,'')}/rest/v1/tags?select=*&description=not.is.null&glossary_visible=eq.true&order=category,label`;
-const tags = await pgGet(tagsURL);
-console.log(`◇ Building ${tags.length} glossary entries`);
+// Fetch ALL glossary-visible tags (with OR without description). Tags without a
+// description or with has_page=false are Tier 3 — they're listed on category
+// pages as flat text but DON'T get their own /glossary/<cat>/<slug>/ URL.
+const tagsURL = `${SUPABASE_URL.replace(/\/+$/,'')}/rest/v1/tags?select=*&glossary_visible=eq.true&order=category,label`;
+const allTags = await pgGet(tagsURL);
+// `tags` (the page-eligible set) is the canonical name used everywhere — keep
+// the build logic intact by filtering to has_page=true (default) + has description.
+const tags = allTags.filter(t => (t.has_page !== false) && t.description);
+const tier3Tags = allTags.filter(t => !((t.has_page !== false) && t.description));
+console.log(`◇ Building ${tags.length} term pages + ${tier3Tags.length} tier-3 filter-only tags listed inline`);
 
 // ── Editorial tag relations (optional; falls back to sibling tags if empty) ──
 const tagById = Object.fromEntries(tags.map(t => [t.id, t]));
@@ -204,8 +211,12 @@ const SHARED_HEADER = `
 `;
 
 // Group tags by category once — drives the rail panel + category index ordering.
+// Rail nav counts ALL visible tags (page + tier-3) so the user sees coverage.
 const byCatAll = {};
-for (const t of tags){ const k = catKey(t.category); (byCatAll[k] = byCatAll[k] || []).push(t); }
+for (const t of allTags){ const k = catKey(t.category); (byCatAll[k] = byCatAll[k] || []).push(t); }
+// Tier-3 (no page) tags, grouped by category for inline rendering on landings.
+const tier3ByCat = {};
+for (const t of tier3Tags){ const k = catKey(t.category); (tier3ByCat[k] = tier3ByCat[k] || []).push(t); }
 
 // Left rail: sticky category-navigator on the left edge of glossary pages.
 // `activeCat` highlights the row for the page you're on.
@@ -444,6 +455,9 @@ function renderIndexPage(){
       .term .n{font-family:'Fraunces',serif;font-weight:500;font-size:1.05rem;line-height:1.2}
       .term .d{color:var(--muted);font-size:.84rem;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
       .empty{color:var(--muted);font-style:italic;padding:8px 0}
+      .tier3{margin-top:14px;padding:14px 16px;background:var(--ink-2);border:1px dashed var(--line);border-radius:10px}
+      .tier3 h5{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:700}
+      .tier3 p{color:var(--cream);font-size:.86rem;line-height:1.6}
     </style>`
   });
 
@@ -456,15 +470,22 @@ function renderIndexPage(){
 
   const catSections = ordered.map(([key, cfg]) => {
     const items = (byCat[key] || []);
-    if(!items.length) return '';
+    const tier3 = (tier3ByCat[key] || []);
+    if(!items.length && !tier3.length) return '';
+    const total = items.length + tier3.length;
+    const tier3Html = tier3.length ? `<div class="tier3" data-label="${escAttr(tier3.map(t=>t.label.toLowerCase()).join(' '))}">
+      <h5>Also filterable</h5>
+      <p>${tier3.map(t => esc(t.label)).join(' · ')}</p>
+    </div>` : '';
     return `<div class="catblock" data-cat="${esc(key)}">
-      <h2><span class="ce">${cfg.emoji}</span>${esc(cfg.label)}<span class="count">${items.length}</span></h2>
+      <h2><span class="ce">${cfg.emoji}</span>${esc(cfg.label)}<span class="count">${total}</span></h2>
       <div class="terms">
         ${items.map(t => `<a class="term" href="${escAttr(termPath(t))}" data-label="${escAttr((t.label+' '+(t.also_known_as||[]).join(' ')).toLowerCase())}">
           <div class="n">${esc(t.label)}</div>
           <div class="d">${esc(t.description||'')}</div>
         </a>`).join('')}
       </div>
+      ${tier3Html}
     </div>`;
   }).join('');
 
@@ -548,15 +569,21 @@ function renderCategoryPage(catSlug, items){
       .term:hover{border-color:var(--rose);transform:translateY(-1px)}
       .term .n{font-family:'Fraunces',serif;font-weight:500;font-size:1.1rem}
       .term .d{color:var(--muted);font-size:.86rem;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+      .tier3{margin-top:8px;padding:16px 18px;background:var(--ink-2);border:1px dashed var(--line);border-radius:12px}
+      .tier3 h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.1rem;margin-bottom:6px}
+      .tier3 .sub2{color:var(--muted);font-size:.84rem;margin-bottom:10px}
+      .tier3 p{color:var(--cream);font-size:.9rem;line-height:1.7}
     </style>`
   });
+  const tier3 = (tier3ByCat[catKey(catSlug)] || []);
+  const total = items.length + tier3.length;
   const body = `<body>${SHARED_HEADER}
 ${renderRail(catSlug)}
 <div class="wrap">
   <nav class="crumb"><a href="/glossary/">Glossary</a> / <span>${esc(cfg.label)}</span></nav>
   <div class="head">
     <h1>${cfg.emoji} <em>${esc(cfg.label)}</em></h1>
-    <p class="sub">${items.length} term${items.length===1?'':'s'} in this category.</p>
+    <p class="sub">${total} term${total===1?'':'s'} in this category${tier3.length ? ` · ${items.length} with detailed pages + ${tier3.length} filterable tags` : ''}.</p>
   </div>
   <div class="terms">
     ${items.map(t => `<a class="term" href="${escAttr(termPath(t))}">
@@ -564,6 +591,11 @@ ${renderRail(catSlug)}
       <div class="d">${esc(t.description||'')}</div>
     </a>`).join('')}
   </div>
+  ${tier3.length ? `<div class="tier3">
+    <h2>Also filterable in this category</h2>
+    <p class="sub2">These exist as book-filter tags but don't have their own glossary page. Useful for catalog filtering.</p>
+    <p>${tier3.map(t => esc(t.label)).join(' · ')}</p>
+  </div>` : ''}
 </div>
 ${RAIL_SCRIPT}
 ${SHARED_FOOTER}`;
@@ -586,8 +618,12 @@ for (const t of tags){
   await fs.writeFile(path.join(dir, 'index.html'), renderTermPage(t));
   wrote++;
 }
-// Category landing pages
-for (const [cat, items] of Object.entries(byCat)){
+// Category landing pages — render every category that has ANY tags (page-eligible
+// OR tier-3 only). renderCategoryPage handles the tier-3 inline block from the
+// global tier3ByCat lookup, so a category with only filter-only tags still gets a page.
+const allCategoriesWithTags = new Set([...Object.keys(byCat), ...Object.keys(tier3ByCat)]);
+for (const cat of allCategoriesWithTags){
+  const items = byCat[cat] || [];
   const dir = path.join(GLOSSARY_DIR, cat);
   await ensureDir(dir);
   await fs.writeFile(path.join(dir, 'index.html'), renderCategoryPage(cat, items));
@@ -603,7 +639,7 @@ const end = '<!-- GLOSSARY-AUTO-END -->';
 const today = new Date().toISOString().slice(0, 10);
 const glossaryUrls =
   `  <url><loc>${SITE}/glossary/</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>\n` +
-  Object.keys(byCat).map(c =>
+  [...allCategoriesWithTags].map(c =>
     `  <url><loc>${SITE}/glossary/${c}/</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>`
   ).join('\n') + '\n' +
   tags.map(t =>
@@ -622,6 +658,6 @@ if (si >= 0 && ei >= 0 && ei > si) {
 }
 await fs.writeFile(sitemapPath, sitemap);
 
-console.log(`✓ Wrote ${wrote} term pages + ${Object.keys(byCat).length} category pages + index`);
-console.log(`✓ Updated sitemap.xml with ${tags.length + Object.keys(byCat).length + 1} URLs`);
+console.log(`✓ Wrote ${wrote} term pages + ${allCategoriesWithTags.size} category pages + index (+ ${tier3Tags.length} tier-3 tags listed inline, no own pages)`);
+console.log(`✓ Updated sitemap.xml with ${tags.length + allCategoriesWithTags.size + 1} URLs`);
 console.log(`\nNext: git add glossary/ sitemap.xml && git commit && git push`);
