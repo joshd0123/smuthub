@@ -3,21 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Format &amp; POV — Romantasy Glossary | smutHub</title>
-<meta name="description" content="Every format &amp; pov term in romantasy, decoded — with the books that feature them.">
+<title>Format — Romantasy Glossary | smutHub</title>
+<meta name="description" content="Every format term in romantasy, decoded — with the books that feature them.">
 <link rel="canonical" href="https://smuthub.ca/glossary/format/">
 <meta name="theme-color" content="#0c0708">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="smutHub">
-<meta property="og:title" content="Format &amp; POV — Romantasy Glossary | smutHub">
-<meta property="og:description" content="Every format &amp; pov term in romantasy, decoded — with the books that feature them.">
+<meta property="og:title" content="Format — Romantasy Glossary | smutHub">
+<meta property="og:description" content="Every format term in romantasy, decoded — with the books that feature them.">
 <meta property="og:url" content="https://smuthub.ca/glossary/format/">
 <meta property="og:image" content="https://smuthub.ca/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Format &amp; POV — Romantasy Glossary | smutHub">
-<meta name="twitter:description" content="Every format &amp; pov term in romantasy, decoded — with the books that feature them.">
+<meta name="twitter:title" content="Format — Romantasy Glossary | smutHub">
+<meta name="twitter:description" content="Every format term in romantasy, decoded — with the books that feature them.">
 <meta name="twitter:image" content="https://smuthub.ca/og-image.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,6 +48,26 @@
   footer .ft{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:.86rem}
   footer a{color:var(--muted);text-decoration:none}
   footer a:hover{color:var(--cream)}
+  /* left rail — sticky category nav for inner glossary pages.
+     Hidden on mobile (hamburger handles nav); shown ≥900px. Hover/focus opens
+     the panel; on touch ≥900px a tap on the strip toggles it via the click
+     handler at the bottom of this file. */
+  .sh-rail{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:45;display:none}
+  @media(min-width:900px){.sh-rail{display:flex;align-items:center}}
+  .sh-rail-strip{display:flex;flex-direction:column;gap:6px;padding:14px 9px;background:rgba(28,19,22,.92);border:1px solid var(--line);border-left:0;border-radius:0 12px 12px 0;backdrop-filter:blur(8px);cursor:pointer;transition:background .15s}
+  .sh-rail:hover .sh-rail-strip,.sh-rail.open .sh-rail-strip{background:rgba(40,28,32,.96)}
+  .sh-rail-strip i{display:block;width:22px;height:2px;background:var(--muted);border-radius:1px;transition:background .15s,width .15s}
+  .sh-rail:hover .sh-rail-strip i,.sh-rail.open .sh-rail-strip i{background:var(--amber)}
+  .sh-rail-strip i:nth-child(odd){width:16px}
+  .sh-rail-panel{position:absolute;left:100%;top:50%;transform:translate(-12px,-50%);background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:260px;max-height:80vh;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;box-shadow:0 22px 50px rgba(0,0,0,.55);margin-left:6px}
+  .sh-rail:hover .sh-rail-panel,.sh-rail.open .sh-rail-panel,.sh-rail:focus-within .sh-rail-panel{opacity:1;pointer-events:auto;transform:translate(0,-50%)}
+  .sh-rail-panel h3{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding:0 8px}
+  .sh-rail-panel a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;border-radius:9px;color:var(--cream);text-decoration:none;font-size:.93rem;line-height:1.2}
+  .sh-rail-panel a:hover{background:var(--panel)}
+  .sh-rail-panel a.active{background:var(--panel);color:var(--amber)}
+  .sh-rail-panel a .lbl{display:flex;align-items:center;gap:8px}
+  .sh-rail-panel a .ct{color:var(--muted);font-size:.78rem;font-variant-numeric:tabular-nums}
+  .sh-rail-panel hr{border:0;border-top:1px solid var(--line);margin:8px 0}
 </style>
 <style>
       .head{padding:30px 0 12px}
@@ -76,49 +96,55 @@
   </div>
 </header>
 
+<aside class="sh-rail" id="shRail" tabindex="0" aria-label="Glossary categories">
+    <div class="sh-rail-strip" role="button" aria-expanded="false" aria-controls="shRailPanel" aria-label="Open glossary categories">
+      <i></i><i></i><i></i><i></i><i></i>
+    </div>
+    <div class="sh-rail-panel" id="shRailPanel">
+      <h3>Browse glossary</h3>
+      <a href="/glossary/"><span class="lbl">📖 All terms</span><span class="ct">134</span></a>
+      <hr>
+      <a href="/glossary/trope/"><span class="lbl">⚔️ Tropes</span><span class="ct">44</span></a><a href="/glossary/mood/"><span class="lbl">🌗 Moods</span><span class="ct">2</span></a><a href="/glossary/vibe/"><span class="lbl">✨ Vibes</span><span class="ct">1</span></a><a href="/glossary/subgenre/"><span class="lbl">📚 Subgenres</span><span class="ct">6</span></a><a href="/glossary/worldbuilding/"><span class="lbl">🗺️ Worldbuilding</span><span class="ct">8</span></a><a href="/glossary/setting/"><span class="lbl">🏰 Settings</span><span class="ct">2</span></a><a href="/glossary/mechanics/"><span class="lbl">🌶️ Spice &amp; Door</span><span class="ct">9</span></a><a href="/glossary/format/" class="active"><span class="lbl">📖 Format</span><span class="ct">6</span></a><a href="/glossary/pov/"><span class="lbl">👁️ POV</span><span class="ct">5</span></a><a href="/glossary/culture/"><span class="lbl">💬 Reader Culture</span><span class="ct">30</span></a><a href="/glossary/omegaverse/"><span class="lbl">🐺 Omegaverse</span><span class="ct">9</span></a><a href="/glossary/kink/"><span class="lbl">🔥 Kinks</span><span class="ct">1</span></a><a href="/glossary/mc-archetype/"><span class="lbl">👤 MC Archetypes</span><span class="ct">4</span></a><a href="/glossary/li-archetype/"><span class="lbl">💖 LI Archetypes</span><span class="ct">7</span></a>
+    </div>
+  </aside>
 <div class="wrap">
-  <nav class="crumb"><a href="/glossary/">Glossary</a> / <span>Format &amp; POV</span></nav>
+  <nav class="crumb"><a href="/glossary/">Glossary</a> / <span>Format</span></nav>
   <div class="head">
-    <h1>📖 <em>Format &amp; POV</em></h1>
-    <p class="sub">11 terms in this category.</p>
+    <h1>📖 <em>Format</em></h1>
+    <p class="sub">6 terms in this category.</p>
   </div>
   <div class="terms">
-    <a class="term" href="/glossary/format/dual-pov/">
-      <div class="n">Dual POV</div>
-      <div class="d">A story alternates between two characters&#39; perspectives — usually the main love interests.</div>
-    </a><a class="term" href="/glossary/format/duet/">
+    <a class="term" href="/glossary/format/duet/">
       <div class="n">Duet</div>
       <div class="d">A story told across two books, often one POV each, or one continuous arc split in two.</div>
-    </a><a class="term" href="/glossary/format/first-person-pov/">
-      <div class="n">First-Person POV</div>
-      <div class="d">Narrated as &quot;I felt,&quot; &quot;I knew&quot; — placing the reader fully inside one character.</div>
     </a><a class="term" href="/glossary/format/interconnected-series/">
       <div class="n">Interconnected Series</div>
       <div class="d">Standalones that share a world or supporting cast but can be read independently. Previous protagonists often cameo.</div>
     </a><a class="term" href="/glossary/format/no-cliffhanger/">
       <div class="n">No Cliffhanger</div>
       <div class="d">A book that resolves its central arc rather than leaving readers waiting for the next installment.</div>
-    </a><a class="term" href="/glossary/format/pov/">
-      <div class="n">POV (Point of View)</div>
-      <div class="d">The character whose perspective the reader experiences. Romantasy is largely written in 1st-person POV; multi-POV is common in epic romantasy.</div>
     </a><a class="term" href="/glossary/format/series/">
       <div class="n">Series</div>
       <div class="d">Multiple connected books, either one continuous story or interconnected characters in a shared world.</div>
-    </a><a class="term" href="/glossary/format/single-pov/">
-      <div class="n">Single POV</div>
-      <div class="d">The story is told from one character&#39;s perspective — usually the protagonist.</div>
     </a><a class="term" href="/glossary/format/standalone/">
       <div class="n">Standalone</div>
       <div class="d">A complete story in a single book — no cliffhanger, no required reading after it.</div>
-    </a><a class="term" href="/glossary/format/third-person-pov/">
-      <div class="n">Third-Person POV</div>
-      <div class="d">Narrated as &quot;she did,&quot; &quot;he knew&quot; — a step outside the character with more flexibility to show multiple perspectives.</div>
     </a><a class="term" href="/glossary/format/trilogy/">
       <div class="n">Trilogy</div>
       <div class="d">A three-book story arc.</div>
     </a>
   </div>
 </div>
+<script>(function(){
+  var rail = document.getElementById('shRail'); if(!rail) return;
+  var strip = rail.querySelector('.sh-rail-strip');
+  strip.addEventListener('click', function(e){
+    e.stopPropagation();
+    var open = rail.classList.toggle('open');
+    strip.setAttribute('aria-expanded', open);
+  });
+  document.addEventListener('click', function(e){ if(!rail.contains(e.target)) { rail.classList.remove('open'); strip.setAttribute('aria-expanded','false'); } });
+})();</script>
 
 <footer>
   <div class="wrap ft">
