@@ -210,22 +210,27 @@ const SHARED_HEADER = `
 </header>
 `;
 
-// Group tags by category once — drives the rail panel + category index ordering.
-// Rail nav counts ALL visible tags (page + tier-3) so the user sees coverage.
+// Group tags by category once — drives the rail panel + index ordering.
+// Page-eligible (Tier 1+2 only — what appears on the main /glossary/ index).
+const byCatPage = {};
+for (const t of tags){ const k = catKey(t.category); (byCatPage[k] = byCatPage[k] || []).push(t); }
+// All visible (page + tier-3) — used only for category-page totals + which categories
+// to render category landings for.
 const byCatAll = {};
 for (const t of allTags){ const k = catKey(t.category); (byCatAll[k] = byCatAll[k] || []).push(t); }
-// Tier-3 (no page) tags, grouped by category for inline rendering on landings.
+// Tier-3 (no page) tags, grouped by category for inline rendering on category landings.
 const tier3ByCat = {};
 for (const t of tier3Tags){ const k = catKey(t.category); (tier3ByCat[k] = tier3ByCat[k] || []).push(t); }
 
 // Left rail: sticky category-navigator on the left edge of glossary pages.
-// `activeCat` highlights the row for the page you're on.
+// `activeCat` highlights the row for the page you're on. Counts only page-eligible
+// tags (Tier 1+2) — matches what's clickable from the index.
 function renderRail(activeCat){
   const ordered = Object.entries(CATS)
-    .filter(([k]) => (byCatAll[k] || []).length > 0)
+    .filter(([k]) => (byCatPage[k] || []).length > 0)
     .sort((a,b) => a[1].order - b[1].order);
   const items = ordered.map(([key, cfg]) => {
-    const n = (byCatAll[key] || []).length;
+    const n = (byCatPage[key] || []).length;
     const cls = key === activeCat ? ' class="active"' : '';
     return `<a href="/glossary/${key}/"${cls}><span class="lbl">${cfg.emoji} ${esc(cfg.label)}</span><span class="ct">${n}</span></a>`;
   }).join('');
@@ -455,9 +460,9 @@ function renderIndexPage(){
       .term .n{font-family:'Fraunces',serif;font-weight:500;font-size:1.05rem;line-height:1.2}
       .term .d{color:var(--muted);font-size:.84rem;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
       .empty{color:var(--muted);font-style:italic;padding:8px 0}
-      .tier3{margin-top:14px;padding:14px 16px;background:var(--ink-2);border:1px dashed var(--line);border-radius:10px}
-      .tier3 h5{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:700}
-      .tier3 p{color:var(--cream);font-size:.86rem;line-height:1.6}
+      .see-more{margin-top:14px;padding:0 6px}
+      .see-more a{color:var(--muted);font-size:.84rem;text-decoration:none;font-style:italic}
+      .see-more a:hover{color:var(--amber)}
     </style>`
   });
 
@@ -468,24 +473,21 @@ function renderIndexPage(){
     (byCat[c] = byCat[c] || []).push(t);
   }
 
+  // Index page shows page-eligible (Tier 1+2) terms only — no inline tier-3 lists.
+  // Tier-3 filter-only tags live on their category landing page instead.
   const catSections = ordered.map(([key, cfg]) => {
     const items = (byCat[key] || []);
-    const tier3 = (tier3ByCat[key] || []);
-    if(!items.length && !tier3.length) return '';
-    const total = items.length + tier3.length;
-    const tier3Html = tier3.length ? `<div class="tier3" data-label="${escAttr(tier3.map(t=>t.label.toLowerCase()).join(' '))}">
-      <h5>Also filterable</h5>
-      <p>${tier3.map(t => esc(t.label)).join(' · ')}</p>
-    </div>` : '';
+    if(!items.length) return '';
+    const tier3Count = (tier3ByCat[key] || []).length;
     return `<div class="catblock" data-cat="${esc(key)}">
-      <h2><span class="ce">${cfg.emoji}</span>${esc(cfg.label)}<span class="count">${total}</span></h2>
+      <h2><span class="ce">${cfg.emoji}</span>${esc(cfg.label)}<span class="count">${items.length}</span></h2>
       <div class="terms">
         ${items.map(t => `<a class="term" href="${escAttr(termPath(t))}" data-label="${escAttr((t.label+' '+(t.also_known_as||[]).join(' ')).toLowerCase())}">
           <div class="n">${esc(t.label)}</div>
           <div class="d">${esc(t.description||'')}</div>
         </a>`).join('')}
       </div>
-      ${tier3Html}
+      ${tier3Count ? `<p class="see-more"><a href="/glossary/${esc(key)}/">+ ${tier3Count} more filterable in ${esc(cfg.label.toLowerCase())} →</a></p>` : ''}
     </div>`;
   }).join('');
 
