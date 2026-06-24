@@ -81,10 +81,9 @@
       .term:hover{border-color:var(--rose);transform:translateY(-1px)}
       .term .n{font-family:'Fraunces',serif;font-weight:500;font-size:1.1rem}
       .term .d{color:var(--muted);font-size:.86rem;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-      .tier3{margin-top:8px;padding:16px 18px;background:var(--ink-2);border:1px dashed var(--line);border-radius:12px}
-      .tier3 h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.1rem;margin-bottom:6px}
-      .tier3 .sub2{color:var(--muted);font-size:.84rem;margin-bottom:10px}
-      .tier3 p{color:var(--cream);font-size:.9rem;line-height:1.7}
+      /* Tier-3 cards: visually identical to .term but non-interactive (no URL). */
+      div.term{cursor:default}
+      div.term:hover{border-color:var(--line);transform:none}
     </style>
 </head><body>
 <header>
@@ -106,27 +105,64 @@
     </div>
     <div class="sh-rail-panel" id="shRailPanel">
       <h3>Browse glossary</h3>
-      <a href="/glossary/"><span class="lbl">📖 All terms</span><span class="ct">358</span></a>
+      <a href="/glossary/"><span class="lbl">📖 All terms</span><span class="ct">359</span></a>
       <hr>
-      <a href="/glossary/trope/"><span class="lbl">⚔️ Tropes</span><span class="ct">75</span></a><a href="/glossary/mood/"><span class="lbl">🌗 Moods</span><span class="ct">2</span></a><a href="/glossary/vibe/" class="active"><span class="lbl">✨ Vibes</span><span class="ct">1</span></a><a href="/glossary/subgenre/"><span class="lbl">📚 Subgenres</span><span class="ct">19</span></a><a href="/glossary/worldbuilding/"><span class="lbl">🗺️ Worldbuilding</span><span class="ct">23</span></a><a href="/glossary/setting/"><span class="lbl">🏰 Settings</span><span class="ct">12</span></a><a href="/glossary/mechanics/"><span class="lbl">🌶️ Spice &amp; Door</span><span class="ct">13</span></a><a href="/glossary/format/"><span class="lbl">📖 Format</span><span class="ct">6</span></a><a href="/glossary/pov/"><span class="lbl">👁️ POV</span><span class="ct">5</span></a><a href="/glossary/culture/"><span class="lbl">💬 Reader Culture</span><span class="ct">52</span></a><a href="/glossary/omegaverse/"><span class="lbl">🐺 Omegaverse</span><span class="ct">9</span></a><a href="/glossary/kink/"><span class="lbl">🔥 Kinks</span><span class="ct">14</span></a><a href="/glossary/mc-archetype/"><span class="lbl">👤 MC Archetypes</span><span class="ct">24</span></a><a href="/glossary/li-archetype/"><span class="lbl">💖 LI Archetypes</span><span class="ct">32</span></a><a href="/glossary/representation/"><span class="lbl">🌈 Representation</span><span class="ct">24</span></a><a href="/glossary/warning/"><span class="lbl">⚠️ Content Warnings</span><span class="ct">47</span></a>
+      <a href="/glossary/trope/"><span class="lbl">⚔️ Tropes</span><span class="ct">76</span></a><a href="/glossary/mood/"><span class="lbl">🌗 Moods</span><span class="ct">2</span></a><a href="/glossary/vibe/" class="active"><span class="lbl">✨ Vibes</span><span class="ct">1</span></a><a href="/glossary/subgenre/"><span class="lbl">📚 Subgenres</span><span class="ct">19</span></a><a href="/glossary/worldbuilding/"><span class="lbl">🗺️ Worldbuilding</span><span class="ct">23</span></a><a href="/glossary/setting/"><span class="lbl">🏰 Settings</span><span class="ct">12</span></a><a href="/glossary/mechanics/"><span class="lbl">🌶️ Spice &amp; Door</span><span class="ct">13</span></a><a href="/glossary/format/"><span class="lbl">📖 Format</span><span class="ct">6</span></a><a href="/glossary/pov/"><span class="lbl">👁️ POV</span><span class="ct">5</span></a><a href="/glossary/culture/"><span class="lbl">💬 Reader Culture</span><span class="ct">52</span></a><a href="/glossary/omegaverse/"><span class="lbl">🐺 Omegaverse</span><span class="ct">9</span></a><a href="/glossary/kink/"><span class="lbl">🔥 Kinks</span><span class="ct">14</span></a><a href="/glossary/mc-archetype/"><span class="lbl">👤 MC Archetypes</span><span class="ct">24</span></a><a href="/glossary/li-archetype/"><span class="lbl">💖 LI Archetypes</span><span class="ct">32</span></a><a href="/glossary/representation/"><span class="lbl">🌈 Representation</span><span class="ct">24</span></a><a href="/glossary/warning/"><span class="lbl">⚠️ Content Warnings</span><span class="ct">47</span></a>
     </div>
   </aside>
 <div class="wrap">
   <nav class="crumb"><a href="/glossary/">Glossary</a> / <span>Vibes</span></nav>
   <div class="head">
     <h1>✨ <em>Vibes</em></h1>
-    <p class="sub">15 terms in this category · 1 with detailed pages + 14 filterable tags.</p>
+    <p class="sub">15 terms in this category.</p>
   </div>
   <div class="terms">
-    <a class="term" href="/glossary/vibe/gothic/">
-      <div class="n">Gothic</div>
-      <div class="d">Morally complex characters, darker themes, and sharp, unsettling conflict.</div>
-    </a>
-  </div>
-  <div class="tier3">
-    <h2>Also filterable in this category</h2>
-    <p class="sub2">These exist as book-filter tags but don't have their own glossary page. Useful for catalog filtering.</p>
-    <p>Cinematic · Cold &amp; Brutal · Comfort Read · Epic · Escapist · Fairytale · Fast &amp; Filthy · Feral · Intimate · Lush · Slow &amp; Tender · Soft · Unhinged · Yearning</p>
+    <div class="term">
+          <div class="n">Cinematic</div>
+          <div class="d"></div>
+        </div><div class="term">
+          <div class="n">Cold &amp; Brutal</div>
+          <div class="d"></div>
+        </div><div class="term">
+          <div class="n">Comfort Read</div>
+          <div class="d"></div>
+        </div><div class="term">
+          <div class="n">Epic</div>
+          <div class="d"></div>
+        </div><div class="term">
+          <div class="n">Escapist</div>
+          <div class="d"></div>
+        </div><div class="term">
+          <div class="n">Fairytale</div>
+          <div class="d"></div>
+        </div><div class="term">
+          <div class="n">Fast &amp; Filthy</div>
+          <div class="d"></div>
+        </div><div class="term">
+          <div class="n">Feral</div>
+          <div class="d"></div>
+        </div><a class="term" href="/glossary/vibe/gothic/">
+          <div class="n">Gothic</div>
+          <div class="d">Morally complex characters, darker themes, and sharp, unsettling conflict.</div>
+        </a><div class="term">
+          <div class="n">Intimate</div>
+          <div class="d"></div>
+        </div><div class="term">
+          <div class="n">Lush</div>
+          <div class="d"></div>
+        </div><div class="term">
+          <div class="n">Slow &amp; Tender</div>
+          <div class="d"></div>
+        </div><div class="term">
+          <div class="n">Soft</div>
+          <div class="d"></div>
+        </div><div class="term">
+          <div class="n">Unhinged</div>
+          <div class="d"></div>
+        </div><div class="term">
+          <div class="n">Yearning</div>
+          <div class="d"></div>
+        </div>
   </div>
 </div>
 <script>(function(){
