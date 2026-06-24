@@ -215,6 +215,7 @@
   .pillbtn:hover{border-color:var(--rose)}
   .pillbtn.rec{background:var(--grad);color:#1a0c10;border:0;margin-left:auto}
   .pillbtn.rm{color:#c99}
+  a.pillbtn.view{text-decoration:none;display:inline-flex;align-items:center;color:var(--amber);border-color:rgba(255,171,64,.5)}
 
   /* ── MOVE MENU ── */
   .mmbg{position:fixed;inset:0;z-index:112;background:rgba(6,3,4,.6);display:none;align-items:center;justify-content:center;padding:24px}
@@ -572,10 +573,14 @@
       : '<div class="ph">'+esc(b.title)+'</div>';
     const chilis=[1,2,3,4,5].map(n=>'<span data-n="'+n+'" class="'+(sp>=n?'on':'')+'">🌶️</span>').join('');
     const moves=SHELVES.filter(([s])=>s!==b.status).map(([s,l])=>'<button class="pillbtn" onclick="setStatus(\''+esc(key)+'\',\''+s+'\')">→ '+l+'</button>').join('');
+    // Catalog books (book_key === slug; not a Google "gb:"/OpenLibrary "/works/"/demo key)
+    // get a link to their plot page. External shelf entries don't have one.
+    const slug=(key && key.indexOf('gb:')!==0 && key.indexOf('/')<0 && key.indexOf('demo-')!==0) ? key : null;
+    const viewBtn = slug ? '<a class="pillbtn view" href="/book/'+encodeURIComponent(slug)+'/">📖 View book page</a>' : '';
     $('sheetbg').innerHTML = '<div class="sheet"><div class="top"><div class="bigcov">'+cov+'</div>'
       + '<div><h3>'+esc(b.title||'Untitled')+'</h3><div class="au">by '+esc(b.author||'Unknown')+'</div>'
       + '<div class="rate" id="srate" onclick="rate(event,\''+esc(key)+'\')">'+chilis+'</div></div></div>'
-      + '<div class="acts">'+moves+'<button class="pillbtn rec" onclick="recommend(\''+esc(key)+'\')">↗ Recommend</button>'
+      + '<div class="acts">'+viewBtn+moves+'<button class="pillbtn rec" onclick="recommend(\''+esc(key)+'\')">↗ Recommend</button>'
       + '<button class="pillbtn rm" onclick="removeBook(\''+esc(key)+'\')">Remove</button></div></div>';
     $('sheetbg').classList.add('open');
   }

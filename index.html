@@ -327,7 +327,7 @@
     const cover = b.cover_url
       ? `<img src="${escH(b.cover_url)}" alt="${escH(b.title)} book cover" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`
       : '';
-    return `<a class="card" href="smuthub-app.html?q=${encodeURIComponent(b.title||'')}" style="text-decoration:none;color:inherit;display:block">
+    return `<a class="card" href="/book/${escH(b.slug)}/" style="text-decoration:none;color:inherit;display:block">
       <div class="cover c1" style="position:relative;overflow:hidden">
         ${cover}
         <h3 style="position:relative;z-index:1">${escH(b.title)}</h3>

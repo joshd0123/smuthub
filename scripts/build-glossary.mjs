@@ -402,7 +402,7 @@ ${renderRail(catKey(tag.category))}
       if(!data || !data.length){ grid.innerHTML = '<p class="empty">No books shelved here yet — check back as the catalog grows.</p>'; return; }
       grid.innerHTML = data.map(function(b){
         const cov = b.cover_url ? '<img src="'+escH(b.cover_url)+'" alt="'+escH(b.title)+' book cover" loading="lazy">' : '';
-        return '<a class="card" href="/smuthub-app.html?q='+encodeURIComponent(b.title||'')+'">'
+        return '<a class="card" href="/book/'+encodeURIComponent(b.slug)+'/">'
           +    '<div class="cover">'+cov+'</div>'
           +    '<div class="meta"><div class="t">'+escH(b.title)+'</div><div class="a">'+escH(b.author||'')+'</div></div>'
           +    '</a>';
