@@ -44,16 +44,16 @@ async function pgGet(url){
   if(!r.ok) throw new Error(`PostgREST ${r.status}: ${await r.text()}`);
   return r.json();
 }
-// Fetch ALL glossary-visible tags (with OR without description). Tags without a
-// description or with has_page=false are Tier 3 — they're listed on category
-// pages as flat text but DON'T get their own /glossary/<cat>/<slug>/ URL.
+// Fetch ALL glossary-visible tags (with OR without description).
+//   Tier 1+2: has_page=true AND description → gets a /glossary/<cat>/<slug>/ page
+//             AND appears as a card on both the index AND the category landing
+//   Tier 3:   has_page=false (often with a brief description) → NO glossary URL,
+//             but appears as a card on the category landing (no link)
 const tagsURL = `${SUPABASE_URL.replace(/\/+$/,'')}/rest/v1/tags?select=*&glossary_visible=eq.true&order=category,label`;
 const allTags = await pgGet(tagsURL);
-// `tags` (the page-eligible set) is the canonical name used everywhere — keep
-// the build logic intact by filtering to has_page=true (default) + has description.
 const tags = allTags.filter(t => (t.has_page !== false) && t.description);
 const tier3Tags = allTags.filter(t => !((t.has_page !== false) && t.description));
-console.log(`◇ Building ${tags.length} term pages + ${tier3Tags.length} tier-3 filter-only tags listed inline`);
+console.log(`◇ Building ${tags.length} term pages + ${tier3Tags.length} tier-3 cards (no own URL)`);
 
 // ── Editorial tag relations (optional; falls back to sibling tags if empty) ──
 const tagById = Object.fromEntries(tags.map(t => [t.id, t]));
@@ -571,33 +571,39 @@ function renderCategoryPage(catSlug, items){
       .term:hover{border-color:var(--rose);transform:translateY(-1px)}
       .term .n{font-family:'Fraunces',serif;font-weight:500;font-size:1.1rem}
       .term .d{color:var(--muted);font-size:.86rem;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-      .tier3{margin-top:8px;padding:16px 18px;background:var(--ink-2);border:1px dashed var(--line);border-radius:12px}
-      .tier3 h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.1rem;margin-bottom:6px}
-      .tier3 .sub2{color:var(--muted);font-size:.84rem;margin-bottom:10px}
-      .tier3 p{color:var(--cream);font-size:.9rem;line-height:1.7}
+      /* Tier-3 cards: visually identical to .term but non-interactive (no URL). */
+      div.term{cursor:default}
+      div.term:hover{border-color:var(--line);transform:none}
     </style>`
   });
   const tier3 = (tier3ByCat[catKey(catSlug)] || []);
-  const total = items.length + tier3.length;
+  // Merge page-eligible + tier-3 into one alphabetized card list.
+  // <a> for page-eligible (links to /glossary/<cat>/<slug>/), <div> for tier-3 (no URL).
+  const merged = [
+    ...items.map(t => ({...t, _href: termPath(t)})),
+    ...tier3.map(t => ({...t, _href: null})),
+  ].sort((a,b) => (a.label||'').localeCompare(b.label||''));
+  const total = merged.length;
   const body = `<body>${SHARED_HEADER}
 ${renderRail(catSlug)}
 <div class="wrap">
   <nav class="crumb"><a href="/glossary/">Glossary</a> / <span>${esc(cfg.label)}</span></nav>
   <div class="head">
     <h1>${cfg.emoji} <em>${esc(cfg.label)}</em></h1>
-    <p class="sub">${total} term${total===1?'':'s'} in this category${tier3.length ? ` · ${items.length} with detailed pages + ${tier3.length} filterable tags` : ''}.</p>
+    <p class="sub">${total} term${total===1?'':'s'} in this category.</p>
   </div>
   <div class="terms">
-    ${items.map(t => `<a class="term" href="${escAttr(termPath(t))}">
-      <div class="n">${esc(t.label)}</div>
-      <div class="d">${esc(t.description||'')}</div>
-    </a>`).join('')}
+    ${merged.map(t => t._href
+      ? `<a class="term" href="${escAttr(t._href)}">
+          <div class="n">${esc(t.label)}</div>
+          <div class="d">${esc(t.description||'')}</div>
+        </a>`
+      : `<div class="term">
+          <div class="n">${esc(t.label)}</div>
+          <div class="d">${esc(t.description||'')}</div>
+        </div>`
+    ).join('')}
   </div>
-  ${tier3.length ? `<div class="tier3">
-    <h2>Also filterable in this category</h2>
-    <p class="sub2">These exist as book-filter tags but don't have their own glossary page. Useful for catalog filtering.</p>
-    <p>${tier3.map(t => esc(t.label)).join(' · ')}</p>
-  </div>` : ''}
 </div>
 ${RAIL_SCRIPT}
 ${SHARED_FOOTER}`;
