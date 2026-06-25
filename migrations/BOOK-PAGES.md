@@ -49,6 +49,53 @@ button, no empty panels.
 ### What's deferred to v2
 User reviews/ratings and affiliate buy links (intentionally out of v1).
 
+## Blurb formatting (what to type in the `blurb` column)
+
+The blurb is a single text column, but the page renders it as structured
+paragraphs — `What it's about` gets a small muted publisher intro, a larger
+lead hook, body paragraphs, and an italic rose-amber "pitch" callout. Long
+blurbs collapse to the first 3 paragraphs with a *Read more / Show less*
+toggle. You control the structure with four conventions inside the blurb:
+
+| You type | You get |
+|---|---|
+| blank line between paragraphs | paragraph break |
+| `> ` at the start of a paragraph | small muted publisher intro |
+| `***text***` wrapping a whole paragraph | italic pitch callout with the gradient left border |
+| `**word**` inline | bold key term (`.term` span — no link; chips below handle navigation) |
+
+The first non-intro, non-pitch paragraph is automatically promoted to the
+**lead** style (larger, slightly brighter) — you don't need a marker for it.
+
+In addition, any tag label that's on this book (`Enemies to Lovers`,
+`Romantasy`, `Morally Grey`, etc.) is **auto-bolded** wherever it appears in
+the blurb, whole-word and case-insensitive. So a book tagged
+`subgenre:romantasy` will see every mention of "romantasy" bolded without
+any markup. You only need the manual `**word**` markers for book-specific
+worldbuilding terms ("Fae", "Reapers", a made-up empire name) that aren't
+catalog tags.
+
+Example:
+
+```
+> Highly anticipated first in the spin-off to the Zodiac Academy phenomenon.
+
+The dragons are lost. The elements are at war.
+
+I'm a wielder of hearts and summoner of corruption. But I'm one of only two
+**Fae** in this divided land who might be starting to see through the lies.
+
+The **Reapers** are merciless. The **Royals** are lying. The **Werewolves**
+run rampant.
+
+***An enemies to lovers romantasy set in the same world as Zodiac Academy —
+but a dark and villainous tale of its own.***
+```
+
+Renders as: muted intro, dramatic lead, two body paragraphs with bolded
+worldbuilding terms, italic pitch callout with "enemies to lovers" and
+"romantasy" auto-bolded (they're tags).
+
 ## Chips → glossary linking
 
 A book's `tag_ids` are `"category:slug"` strings. A chip links to
