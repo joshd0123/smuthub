@@ -77,9 +77,12 @@
   .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;height:100%}
   .cover{aspect-ratio:3/4;position:relative;background:var(--ink-2);overflow:hidden;flex:0 0 auto}
   .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .cover-link{position:absolute;inset:0;z-index:2}
   .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;font-family:'Fraunces';font-style:italic;color:#fff;background:linear-gradient(160deg,#3a0d2a,#7a1238)}
   .meta{padding:14px 16px 16px;display:flex;flex-direction:column;flex:1}
   .title{font-family:'Fraunces';font-weight:500;font-size:1.08rem;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:calc(1.2em * 2)}
+  a.title{text-decoration:none;color:inherit;cursor:pointer;transition:color .15s}
+  a.title:hover{color:var(--rose)}
   .author{color:var(--muted);font-size:.82rem;line-height:1.3;min-height:1.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .actions{margin-top:auto;display:flex;flex-direction:column}
   .spice{margin-top:8px;font-size:1rem;letter-spacing:.06em;cursor:pointer;user-select:none;white-space:nowrap;display:flex;align-items:center}
@@ -454,10 +457,14 @@
       const id=idOf(b.key), sp=spiceMap[b.key]||0, on=shelfSet.has(b.key);
       const author=(b.author_name&&b.author_name[0])||"Unknown";
       const chilis=[1,2,3,4,5].map(n=>`<span data-n="${n}" class="${sp>=n?'on':''}">🌶️</span>`).join('');
+      // Catalog books (key === slug; not a Google "gb:" or OpenLibrary "/works/" id)
+      // link to their plot page. External search results stay un-linked.
+      const slug=(b.key && b.key.indexOf('gb:')!==0 && b.key.indexOf('/')<0) ? b.key : null;
+      const href=slug ? '/book/'+encodeURIComponent(slug)+'/' : null;
       return `<article class="card" data-key="${encodeURIComponent(b.key)}">
-        <div class="cover">${coverHTML(b)}</div>
+        <div class="cover">${coverHTML(b)}${href?`<a class="cover-link" href="${href}" aria-label="${(b.title||'').replace(/"/g,'&quot;')} — details"></a>`:''}</div>
         <div class="meta">
-          <div class="title">${b.title}</div>
+          ${href?`<a class="title" href="${href}">${b.title}</a>`:`<div class="title">${b.title}</div>`}
           <div class="author">by ${author}</div>
           <div class="actions">
             <div class="spice" id="sp_${id}">${chilis}</div>
