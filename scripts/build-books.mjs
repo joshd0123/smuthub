@@ -204,10 +204,23 @@ const BOOK_CSS = `<style>
   .crumb{padding:18px 0 0;color:var(--muted);font-size:.85rem}
   .crumb a{color:var(--muted);text-decoration:none}.crumb a:hover{color:var(--cream)}
   /* hero */
-  .bookhero{display:grid;grid-template-columns:260px 1fr;gap:34px;padding:26px 0 30px;border-bottom:1px solid var(--line);align-items:start}
-  @media(max-width:720px){.bookhero{grid-template-columns:1fr;gap:22px;max-width:460px}}
-  .cover-col{position:sticky;top:90px}
-  @media(max-width:720px){.cover-col{position:static;justify-self:center;width:200px}}
+  /* Desktop: a single 2-col grid that runs from the hero all the way down through
+     the plot + details. Cover stays sticky on the left while the right column
+     scrolls. The related-books grids ("More in series / like this / by author")
+     sit OUTSIDE this layout as full-width sections, since they need the room.
+     Mobile (≤720px): single column, everything stacks linearly. */
+  .book-layout{display:grid;grid-template-columns:260px 1fr;gap:34px;padding:24px 0 8px;align-items:start}
+  @media(max-width:720px){.book-layout{grid-template-columns:1fr;gap:22px;max-width:460px;margin:0 auto}}
+  .book-layout > .cover-col{position:sticky;top:90px}
+  @media(max-width:720px){.book-layout > .cover-col{position:static;justify-self:center;width:200px}}
+  .book-layout > .info-col{min-width:0}
+  /* Header inside info-col — was the right half of .bookhero before. */
+  .book-header{padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:6px}
+  .info-col > .book-header:only-child{border-bottom:0;padding-bottom:0;margin-bottom:0}
+  /* Inside the layout, .blk sections don't need their own top padding; the grid handles spacing. */
+  .info-col section.blk{padding:22px 0}
+  /* Related-books stack lives below the grid — first item draws a top divider. */
+  .related-stack section.blk:first-child{border-top:1px solid var(--line)}
   .cover{aspect-ratio:2/3;border-radius:14px;overflow:hidden;background:linear-gradient(160deg,#3a0d2a,#7a1238);box-shadow:0 30px 60px -24px rgba(0,0,0,.8);position:relative}
   .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .cover .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:18px;text-align:center;font-family:'Fraunces',serif;font-size:1.05rem;color:var(--cream)}
@@ -549,8 +562,8 @@ ${SHARED_HEADER}
 <div class="wrap">
   <nav class="crumb"><a href="/">Home</a> / <a href="/smuthub-app.html">Books</a> / <span>${esc(book.title)}</span></nav>
 
-  <section class="bookhero">
-    <div class="cover-col">
+  <div class="book-layout">
+    <aside class="cover-col">
       <div class="cover">${coverHTML}</div>
       <div class="shelf-control" id="shelfControl">
         <button class="shelfbtn" id="shelfBtn" data-act="want">＋ Add to shelf</button>
@@ -563,25 +576,29 @@ ${SHARED_HEADER}
         </select>
         <p class="shelf-note" id="shelfNote"></p>
       </div>
-    </div>
-    <div class="info-col">
-      ${book.subgenre ? `<span class="badge">${esc(humanize(book.subgenre))}</span>` : ''}
-      <h1>${esc(book.title)}</h1>
-      <p class="byline">${author ? `by <a href="/smuthub-app.html?q=${encodeURIComponent(author)}">${esc(author)}</a>` : 'Author unknown'}${book.year ? ` · ${esc(book.year)}` : ''}</p>
-      ${seriesLine}
-      ${spiceMeterHTML(book)}
-      ${warningsHTML(book, tags)}
-    </div>
-  </section>
+    </aside>
+    <main class="info-col">
+      <header class="book-header">
+        ${book.subgenre ? `<span class="badge">${esc(humanize(book.subgenre))}</span>` : ''}
+        <h1>${esc(book.title)}</h1>
+        <p class="byline">${author ? `by <a href="/smuthub-app.html?q=${encodeURIComponent(author)}">${esc(author)}</a>` : 'Author unknown'}${book.year ? ` · ${esc(book.year)}` : ''}</p>
+        ${seriesLine}
+        ${spiceMeterHTML(book)}
+        ${warningsHTML(book, tags)}
+      </header>
+      ${pitchHTML(book, tags)}
+      ${detailsHTML(book)}
+    </main>
+  </div>
 
-  ${pitchHTML(book, tags)}
-  ${detailsHTML(book)}
-  ${inSeries.length ? `<section class="blk" id="series">
-    <h2>More in ${esc(book.series)}</h2>
-    <div class="grid">${inSeries.map(bookCardHTML).join('')}</div>
-  </section>` : ''}
-  ${relatedSection('More like this', likeThis)}
-  ${byAuthor.length ? relatedSection(`More by ${author}`, byAuthor) : ''}
+  <div class="related-stack">
+    ${inSeries.length ? `<section class="blk" id="series">
+      <h2>More in ${esc(book.series)}</h2>
+      <div class="grid">${inSeries.map(bookCardHTML).join('')}</div>
+    </section>` : ''}
+    ${relatedSection('More like this', likeThis)}
+    ${byAuthor.length ? relatedSection(`More by ${author}`, byAuthor) : ''}
+  </div>
 </div>
 
 <script>
