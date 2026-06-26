@@ -204,10 +204,23 @@ const BOOK_CSS = `<style>
   .crumb{padding:18px 0 0;color:var(--muted);font-size:.85rem}
   .crumb a{color:var(--muted);text-decoration:none}.crumb a:hover{color:var(--cream)}
   /* hero */
-  .bookhero{display:grid;grid-template-columns:260px 1fr;gap:34px;padding:26px 0 30px;border-bottom:1px solid var(--line);align-items:start}
-  @media(max-width:720px){.bookhero{grid-template-columns:1fr;gap:22px;max-width:460px}}
-  .cover-col{position:sticky;top:90px}
-  @media(max-width:720px){.cover-col{position:static;justify-self:center;width:200px}}
+  /* Desktop: a single 2-col grid that runs from the hero all the way down through
+     the plot + details. Cover stays sticky on the left while the right column
+     scrolls. The related-books grids ("More in series / like this / by author")
+     sit OUTSIDE this layout as full-width sections, since they need the room.
+     Mobile (≤720px): single column, everything stacks linearly. */
+  .book-layout{display:grid;grid-template-columns:260px 1fr;gap:34px;padding:24px 0 8px;align-items:start}
+  @media(max-width:720px){.book-layout{grid-template-columns:1fr;gap:22px;max-width:460px;margin:0 auto}}
+  .book-layout > .cover-col{position:sticky;top:90px}
+  @media(max-width:720px){.book-layout > .cover-col{position:static;justify-self:center;width:200px}}
+  .book-layout > .info-col{min-width:0}
+  /* Header inside info-col — was the right half of .bookhero before. */
+  .book-header{padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:6px}
+  .info-col > .book-header:only-child{border-bottom:0;padding-bottom:0;margin-bottom:0}
+  /* Inside the layout, .blk sections don't need their own top padding; the grid handles spacing. */
+  .info-col section.blk{padding:22px 0}
+  /* Related-books stack lives below the grid — first item draws a top divider. */
+  .related-stack section.blk:first-child{border-top:1px solid var(--line)}
   .cover{aspect-ratio:2/3;border-radius:14px;overflow:hidden;background:linear-gradient(160deg,#3a0d2a,#7a1238);box-shadow:0 30px 60px -24px rgba(0,0,0,.8);position:relative}
   .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .cover .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:18px;text-align:center;font-family:'Fraunces',serif;font-size:1.05rem;color:var(--cream)}
@@ -228,7 +241,30 @@ const BOOK_CSS = `<style>
   section.blk{padding:26px 0;border-bottom:1px solid var(--line)}
   section.blk:last-of-type{border-bottom:0}
   section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;margin-bottom:14px}
-  .blurb{max-width:66ch;font-size:1.06rem;white-space:pre-line}
+  /* "What it's about" — structured paragraphs from a single blurb column.
+     Conventions a writer types IN the blurb (the only data layer that knows
+     a book's blurb): blank line = paragraph break, > prefix = muted publisher
+     intro, ***text*** = italic pitch callout, **word** = bold .term span. */
+  .sh-plot p{line-height:1.7;margin:0 0 1.05em;font-size:1.02rem;max-width:66ch}
+  .sh-plot p:last-child{margin-bottom:0}
+  .sh-plot .intro{color:var(--muted);font-size:.92rem;line-height:1.6}
+  .sh-plot .lead{color:#fff;font-size:1.18rem;line-height:1.5;font-weight:500;letter-spacing:-.005em;margin-bottom:1.25em}
+  @media(max-width:600px){.sh-plot .lead{font-size:1.06rem}}
+  .sh-plot .term{color:#fff;font-weight:600}
+  .sh-plot .pitch{font-style:italic;color:var(--muted);line-height:1.65;padding:6px 0 6px 18px;margin:1.6em 0 0;
+    border-left:2px solid transparent;border-image:var(--grad) 1;max-width:66ch;font-size:.98rem}
+  .sh-plot .pitch .term{color:var(--cream);font-style:normal;font-weight:600}
+  .sh-plot .more{overflow:hidden;transition:max-height .4s ease}
+  .sh-plot.collapsed .more{max-height:0}
+  .sh-plot:not(.collapsed) .more{max-height:2400px}
+  .sh-plot.collapsed .fade{position:relative;margin-top:-2.4em;height:2.4em;
+    background:linear-gradient(180deg,rgba(12,7,8,0),var(--ink));pointer-events:none}
+  .sh-plot:not(.collapsed) .fade{display:none}
+  .sh-readmore{margin-top:14px;background:none;border:0;cursor:pointer;font-family:inherit;
+    font-size:.88rem;font-weight:600;letter-spacing:.3px;color:var(--amber);padding:6px 0;
+    display:inline-flex;align-items:center;gap:6px}
+  .sh-readmore:hover{color:var(--rose)}
+  .sh-empty{color:var(--muted);font-style:italic;max-width:66ch}
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
   .chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:.35em .9em;font-size:.86rem;text-decoration:none;color:var(--cream);transition:border-color .12s,transform .12s}
   a.chip:hover{border-color:var(--rose);transform:translateY(-1px)}
@@ -299,6 +335,78 @@ function warningsHTML(b, tags){
 // ── The Pitch: blurb + flavour chips that link into the glossary ───────────
 const CHIP_CATS = ['trope','subgenre','mood','vibe','theme','worldbuilding','setting','omegaverse','kink','representation','mc-archetype','li-archetype','culture'];
 const CHIP_ORDER = Object.fromEntries(CHIP_CATS.map((c, i) => [c, i]));
+
+// Render the blurb as structured paragraphs from a single text column.
+// Conventions a writer types IN the blurb field:
+//   blank line     → paragraph break
+//   > prefix       → small muted publisher intro (one paragraph)
+//   ***text***     → italic pitch callout (one paragraph, gradient border)
+//   **word**       → bold .term span (no link — chips below already route to glossary)
+// First non-intro/non-pitch paragraph is auto-promoted to .lead (larger).
+// Tag labels matching the book's own taste tags are also auto-bolded as .term
+// whole-word, case-insensitive — so writers don't have to manually mark them.
+// Returns { html, collapsible } so the caller can decide whether to wrap in
+// a collapse/read-more shell.
+function renderBlurbBody(blurb, tags){
+  const raw = (blurb || '').trim();
+  if (!raw) return { html: `<p class="sh-empty">No blurb yet — the tags below give you the vibe.</p>`, collapsible: false };
+
+  const termLabels = [...new Set(tags
+    .filter(t => CHIP_CATS.includes(t.category))
+    .map(t => (t.label || '').trim())
+    .filter(l => l.length > 2))];
+
+  // Encode emphasis as private-use placeholders BEFORE HTML-escaping, so the
+  // matches can find raw blurb text (without `&amp;` etc.) and so we never
+  // wrap inside an already-emitted <span>.
+  const TS = String.fromCharCode(1), TE = String.fromCharCode(2);
+  function emphasize(text){
+    let s = text;
+    const marks = [];
+    const mark = w => { marks.push(w); return `${TS}${marks.length - 1}${TE}`; };
+    // 1. manual **word** wins (explicit > auto)
+    s = s.replace(/\*\*([^*\n]+?)\*\*/g, (_, w) => mark(w));
+    // 2. auto-bold tag labels, longest first so multi-word terms (Zodiac Academy)
+    //    match before sub-strings (Academy)
+    const sorted = [...termLabels].sort((a, b) => b.length - a.length);
+    for (const term of sorted){
+      const re = new RegExp(`\\b(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})\\b`, 'gi');
+      s = s.replace(re, (m) => mark(m));
+    }
+    // 3. HTML-escape (placeholders survive — they're control chars, not HTML-special)
+    s = esc(s);
+    // 4. swap placeholders → real spans (escape the captured term as well)
+    return s.replace(new RegExp(`${TS}(\\d+)${TE}`, 'g'), (_, i) => `<span class="term">${esc(marks[+i])}</span>`);
+  }
+
+  const paragraphs = raw.split(/\n\s*\n+/).map(p => p.trim()).filter(Boolean);
+  const blocks = paragraphs.map(p => {
+    if (/^\*\*\*[\s\S]+\*\*\*$/.test(p))
+      return { kind: 'pitch', text: p.replace(/^\*\*\*\s*|\s*\*\*\*$/g, '') };
+    if (/^>\s*/.test(p))
+      return { kind: 'intro', text: p.replace(/^>\s*/, '') };
+    return { kind: 'body', text: p };
+  });
+  const leadIdx = blocks.findIndex(b => b.kind === 'body');
+  if (leadIdx >= 0) blocks[leadIdx].kind = 'lead';
+
+  const render = b => {
+    const inner = emphasize(b.text);
+    if (b.kind === 'pitch') return `<p class="pitch">${inner}</p>`;
+    if (b.kind === 'intro') return `<p class="intro">${inner}</p>`;
+    if (b.kind === 'lead')  return `<p class="lead">${inner}</p>`;
+    return `<p>${inner}</p>`;
+  };
+
+  const SHOWN = 3;
+  const shown = blocks.slice(0, SHOWN).map(render).join('');
+  const hidden = blocks.slice(SHOWN).map(render).join('');
+  return {
+    html: shown + (hidden ? `<div class="more">${hidden}</div><div class="fade"></div>` : ''),
+    collapsible: !!hidden,
+  };
+}
+
 function pitchHTML(b, tags){
   const blurb = (b.blurb || '').trim();
   const chips = tags
@@ -309,9 +417,11 @@ function pitchHTML(b, tags){
     ? `<a class="chip" href="${escAttr(t.href)}">${esc(t.label)}</a>`
     : `<span class="chip">${esc(t.label)}</span>`
   ).join('');
-  return `<section class="blk">
+  const { html: blurbHTML, collapsible } = renderBlurbBody(b.blurb, tags);
+  return `<section class="blk sh-plot${collapsible ? ' collapsed' : ''}" id="shPlot">
     <h2>What it's about</h2>
-    ${blurb ? `<p class="blurb">${esc(blurb)}</p>` : `<p class="blurb" style="color:var(--muted);font-style:italic">No blurb yet — the tags below give you the vibe.</p>`}
+    ${blurbHTML}
+    ${collapsible ? `<button class="sh-readmore" id="shToggle" aria-expanded="false">Read more&nbsp;↓</button>` : ''}
     ${chips.length ? `<div class="chips">${chipHTML}</div>` : ''}
   </section>`;
 }
@@ -452,8 +562,8 @@ ${SHARED_HEADER}
 <div class="wrap">
   <nav class="crumb"><a href="/">Home</a> / <a href="/smuthub-app.html">Books</a> / <span>${esc(book.title)}</span></nav>
 
-  <section class="bookhero">
-    <div class="cover-col">
+  <div class="book-layout">
+    <aside class="cover-col">
       <div class="cover">${coverHTML}</div>
       <div class="shelf-control" id="shelfControl">
         <button class="shelfbtn" id="shelfBtn" data-act="want">＋ Add to shelf</button>
@@ -466,25 +576,29 @@ ${SHARED_HEADER}
         </select>
         <p class="shelf-note" id="shelfNote"></p>
       </div>
-    </div>
-    <div class="info-col">
-      ${book.subgenre ? `<span class="badge">${esc(humanize(book.subgenre))}</span>` : ''}
-      <h1>${esc(book.title)}</h1>
-      <p class="byline">${author ? `by <a href="/smuthub-app.html?q=${encodeURIComponent(author)}">${esc(author)}</a>` : 'Author unknown'}${book.year ? ` · ${esc(book.year)}` : ''}</p>
-      ${seriesLine}
-      ${spiceMeterHTML(book)}
-      ${warningsHTML(book, tags)}
-    </div>
-  </section>
+    </aside>
+    <main class="info-col">
+      <header class="book-header">
+        ${book.subgenre ? `<span class="badge">${esc(humanize(book.subgenre))}</span>` : ''}
+        <h1>${esc(book.title)}</h1>
+        <p class="byline">${author ? `by <a href="/smuthub-app.html?q=${encodeURIComponent(author)}">${esc(author)}</a>` : 'Author unknown'}${book.year ? ` · ${esc(book.year)}` : ''}</p>
+        ${seriesLine}
+        ${spiceMeterHTML(book)}
+        ${warningsHTML(book, tags)}
+      </header>
+      ${pitchHTML(book, tags)}
+      ${detailsHTML(book)}
+    </main>
+  </div>
 
-  ${pitchHTML(book, tags)}
-  ${detailsHTML(book)}
-  ${inSeries.length ? `<section class="blk" id="series">
-    <h2>More in ${esc(book.series)}</h2>
-    <div class="grid">${inSeries.map(bookCardHTML).join('')}</div>
-  </section>` : ''}
-  ${relatedSection('More like this', likeThis)}
-  ${byAuthor.length ? relatedSection(`More by ${author}`, byAuthor) : ''}
+  <div class="related-stack">
+    ${inSeries.length ? `<section class="blk" id="series">
+      <h2>More in ${esc(book.series)}</h2>
+      <div class="grid">${inSeries.map(bookCardHTML).join('')}</div>
+    </section>` : ''}
+    ${relatedSection('More like this', likeThis)}
+    ${byAuthor.length ? relatedSection(`More by ${author}`, byAuthor) : ''}
+  </div>
 </div>
 
 <script>
@@ -542,6 +656,20 @@ ${SHARED_HEADER}
       } catch(e){ /* anon — fine */ }
       paint();
     })();
+  })();
+</script>
+
+<script>
+  // Plot read-more — collapses long blurbs to the first 3 paragraphs.
+  // Stays a no-op if the section wasn't rendered with a collapse shell.
+  (function(){
+    var s = document.getElementById('shPlot'); if (!s) return;
+    var b = document.getElementById('shToggle'); if (!b) return;
+    b.addEventListener('click', function(){
+      var open = !s.classList.toggle('collapsed');
+      b.setAttribute('aria-expanded', String(open));
+      b.innerHTML = open ? 'Show less&nbsp;↑' : 'Read more&nbsp;↓';
+    });
   })();
 </script>
 
