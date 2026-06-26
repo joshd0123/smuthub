@@ -51,10 +51,23 @@
   .crumb{padding:18px 0 0;color:var(--muted);font-size:.85rem}
   .crumb a{color:var(--muted);text-decoration:none}.crumb a:hover{color:var(--cream)}
   /* hero */
-  .bookhero{display:grid;grid-template-columns:260px 1fr;gap:34px;padding:26px 0 30px;border-bottom:1px solid var(--line);align-items:start}
-  @media(max-width:720px){.bookhero{grid-template-columns:1fr;gap:22px;max-width:460px}}
-  .cover-col{position:sticky;top:90px}
-  @media(max-width:720px){.cover-col{position:static;justify-self:center;width:200px}}
+  /* Desktop: a single 2-col grid that runs from the hero all the way down through
+     the plot + details. Cover stays sticky on the left while the right column
+     scrolls. The related-books grids ("More in series / like this / by author")
+     sit OUTSIDE this layout as full-width sections, since they need the room.
+     Mobile (≤720px): single column, everything stacks linearly. */
+  .book-layout{display:grid;grid-template-columns:260px 1fr;gap:34px;padding:24px 0 8px;align-items:start}
+  @media(max-width:720px){.book-layout{grid-template-columns:1fr;gap:22px;max-width:460px;margin:0 auto}}
+  .book-layout > .cover-col{position:sticky;top:90px}
+  @media(max-width:720px){.book-layout > .cover-col{position:static;justify-self:center;width:200px}}
+  .book-layout > .info-col{min-width:0}
+  /* Header inside info-col — was the right half of .bookhero before. */
+  .book-header{padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:6px}
+  .info-col > .book-header:only-child{border-bottom:0;padding-bottom:0;margin-bottom:0}
+  /* Inside the layout, .blk sections don't need their own top padding; the grid handles spacing. */
+  .info-col section.blk{padding:22px 0}
+  /* Related-books stack lives below the grid — first item draws a top divider. */
+  .related-stack section.blk:first-child{border-top:1px solid var(--line)}
   .cover{aspect-ratio:2/3;border-radius:14px;overflow:hidden;background:linear-gradient(160deg,#3a0d2a,#7a1238);box-shadow:0 30px 60px -24px rgba(0,0,0,.8);position:relative}
   .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .cover .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:18px;text-align:center;font-family:'Fraunces',serif;font-size:1.05rem;color:var(--cream)}
@@ -75,7 +88,30 @@
   section.blk{padding:26px 0;border-bottom:1px solid var(--line)}
   section.blk:last-of-type{border-bottom:0}
   section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;margin-bottom:14px}
-  .blurb{max-width:66ch;font-size:1.06rem;white-space:pre-line}
+  /* "What it's about" — structured paragraphs from a single blurb column.
+     Conventions a writer types IN the blurb (the only data layer that knows
+     a book's blurb): blank line = paragraph break, > prefix = muted publisher
+     intro, ***text*** = italic pitch callout, **word** = bold .term span. */
+  .sh-plot p{line-height:1.7;margin:0 0 1.05em;font-size:1.02rem;max-width:66ch}
+  .sh-plot p:last-child{margin-bottom:0}
+  .sh-plot .intro{color:var(--muted);font-size:.92rem;line-height:1.6}
+  .sh-plot .lead{color:#fff;font-size:1.18rem;line-height:1.5;font-weight:500;letter-spacing:-.005em;margin-bottom:1.25em}
+  @media(max-width:600px){.sh-plot .lead{font-size:1.06rem}}
+  .sh-plot .term{color:#fff;font-weight:600}
+  .sh-plot .pitch{font-style:italic;color:var(--muted);line-height:1.65;padding:6px 0 6px 18px;margin:1.6em 0 0;
+    border-left:2px solid transparent;border-image:var(--grad) 1;max-width:66ch;font-size:.98rem}
+  .sh-plot .pitch .term{color:var(--cream);font-style:normal;font-weight:600}
+  .sh-plot .more{overflow:hidden;transition:max-height .4s ease}
+  .sh-plot.collapsed .more{max-height:0}
+  .sh-plot:not(.collapsed) .more{max-height:2400px}
+  .sh-plot.collapsed .fade{position:relative;margin-top:-2.4em;height:2.4em;
+    background:linear-gradient(180deg,rgba(12,7,8,0),var(--ink));pointer-events:none}
+  .sh-plot:not(.collapsed) .fade{display:none}
+  .sh-readmore{margin-top:14px;background:none;border:0;cursor:pointer;font-family:inherit;
+    font-size:.88rem;font-weight:600;letter-spacing:.3px;color:var(--amber);padding:6px 0;
+    display:inline-flex;align-items:center;gap:6px}
+  .sh-readmore:hover{color:var(--rose)}
+  .sh-empty{color:var(--muted);font-style:italic;max-width:66ch}
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
   .chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:.35em .9em;font-size:.86rem;text-decoration:none;color:var(--cream);transition:border-color .12s,transform .12s}
   a.chip:hover{border-color:var(--rose);transform:translateY(-1px)}
@@ -133,8 +169,8 @@
 <div class="wrap">
   <nav class="crumb"><a href="/">Home</a> / <a href="/smuthub-app.html">Books</a> / <span>Never Keep</span></nav>
 
-  <section class="bookhero">
-    <div class="cover-col">
+  <div class="book-layout">
+    <aside class="cover-col">
       <div class="cover"><img src="https://covers.smuthub.ca/never-keep-valenti-2024.jpg" alt="Never Keep book cover"></div>
       <div class="shelf-control" id="shelfControl">
         <button class="shelfbtn" id="shelfBtn" data-act="want">＋ Add to shelf</button>
@@ -147,42 +183,46 @@
         </select>
         <p class="shelf-note" id="shelfNote"></p>
       </div>
-    </div>
-    <div class="info-col">
-      <span class="badge">Romantasy</span>
-      <h1>Never Keep</h1>
-      <p class="byline">by <a href="/smuthub-app.html?q=Caroline%20Peckham%2C%20Susanne%20Valenti">Caroline Peckham, Susanne Valenti</a> · 2024</p>
-      <p class="series-line">Book 1 of <b>Sins of the Zodiac</b> · <a href="#series">see the series ↓</a></p>
-      <div class="spicemeter" aria-label="Spice meter"><span class="chilis" title="Spice level 4 of 5"><span class="on">🌶️</span><span class="on">🌶️</span><span class="on">🌶️</span><span class="on">🌶️</span><span class="">🌶️</span></span><span class="sm-tag"><b>Door</b>On-page (open door)</span><span class="sm-tag"><b>Frequency</b>Constant</span><span class="sm-tag">Explicit</span></div>
-      <details class="cw">
+    </aside>
+    <main class="info-col">
+      <header class="book-header">
+        <span class="badge">Romantasy</span>
+        <h1>Never Keep</h1>
+        <p class="byline">by <a href="/smuthub-app.html?q=Caroline%20Peckham%2C%20Susanne%20Valenti">Caroline Peckham, Susanne Valenti</a> · 2024</p>
+        <p class="series-line">Book 1 of <b>Sins of the Zodiac</b> · <a href="#series">see the series ↓</a></p>
+        <div class="spicemeter" aria-label="Spice meter"><span class="chilis" title="Spice level 4 of 5"><span class="on">🌶️</span><span class="on">🌶️</span><span class="on">🌶️</span><span class="on">🌶️</span><span class="">🌶️</span></span><span class="sm-tag"><b>Door</b>On-page (open door)</span><span class="sm-tag"><b>Frequency</b>Constant</span><span class="sm-tag">Explicit</span></div>
+        <details class="cw">
     <summary>⚠️ Content warnings</summary>
     <div class="cwbody">
       <div class="cw-tags"><span>Abuse</span><span>Abuse Between Mcs</span><span>Death</span><span>Death Grief</span><span>Graphic Violence</span><span>Grief</span><span>Mental Trauma</span><span>No Hea</span><span>Past Abuse</span><span>Past Child Abuse</span><span>Past Child Neglect</span><span>Third Party Abuse</span><span>Torture Of Mcs</span><span>Torture Of Side Characters</span></div>
       
     </div>
   </details>
-    </div>
-  </section>
-
-  <section class="blk">
+      </header>
+      <section class="blk sh-plot" id="shPlot">
     <h2>What it's about</h2>
-    <p class="blurb">Fate doesn&#39;t favour the wicked in the highly anticipated first installment in this brand new spin off series to the Booktok phenomenon, the Zodiac Academy series, from the Twisted Sisters and Amazon and Wall Street Journal #1 bestselling authors Caroline Peckham and Susanne Valenti. The dragons are lost. The elements are at war. Enlisting isn’t optional. And I’m falling for a man who wants me dead. I’m a wielder of hearts and summoner of corruption. Heir to nothing and born to a fool in the wrong damn month. But I’m also one of only two Fae in this divided land of hellions who might be starting to see through the lies we’ve swallowed for so long. In the year we turn twenty-one, conscripts from across the warring nations of air, fire, earth and water are sent to Never Keep – the only place in our besieged continent where our magic can be Awakened. But something is wrong inside Never Keep. Something which might extend far beyond the reaches of this desolate fortress. Within the gothic walls of this frigid castle in the snow, we’re left to hold our own against the brutal Fae from the opposing lands. The Reapers are merciless. The Royals are lying. The Werewolves run rampant and Vampires roam the wastelands in bloodthirsty covens. But even though death lurks in every shadow of the Keep, it’s the least of my worries. I’m delving into secrets the stars don’t want me uncovering, making alliances with Fae born to be my enemy, falling for a sinner while promising my heart to a different heathen and somewhere amid it all, I’m supposed to win a war. I thought the only thing I had to do was survive my magical instruction. Turns out, fate doesn’t favour the wicked. ***This is an enemies to lovers romantasy series set in the same world as Zodiac Academy, but it&#39;s a dark and villainous tale of its own. You haven&#39;t met tainted souls like these before or enemies that hate each other as deeply as these characters do. Book 1 in the series will leave your heart raw and bloody. You&#39;ll be left gasping for breath and aching for more of the twisted Fae who lurk between the pages and they might just be irredeemable...***</p>
+    <p class="lead">Fate doesn&#39;t favour the wicked in the highly anticipated first installment in this brand new spin off series to the Booktok phenomenon, the Zodiac <span class="term">Academy</span> series, from the Twisted Sisters and Amazon and Wall Street Journal #1 bestselling authors Caroline Peckham and Susanne Valenti. The dragons are lost. The elements are at <span class="term">war</span>. Enlisting isn’t optional. And I’m falling for a man who wants me dead. I’m a wielder of hearts and summoner of corruption. Heir to nothing and born to a fool in the wrong damn month. But I’m also one of only two <span class="term">Fae</span> in this divided land of hellions who might be starting to see through the lies we’ve swallowed for so long. In the year we turn twenty-one, conscripts from across the warring nations of air, fire, earth and water are sent to Never Keep – the only place in our besieged continent where our <span class="term">magic</span> can be Awakened. But something is wrong inside Never Keep. Something which might extend far beyond the reaches of this desolate fortress. Within the gothic walls of this frigid castle in the snow, we’re left to hold our own against the brutal <span class="term">Fae</span> from the opposing lands. The Reapers are merciless. The Royals are lying. The <span class="term">Werewolves</span> run rampant and <span class="term">Vampires</span> roam the wastelands in bloodthirsty covens. But even though death lurks in every shadow of the Keep, it’s the least of my worries. I’m delving into secrets the stars don’t want me uncovering, making alliances with <span class="term">Fae</span> born to be my enemy, falling for a sinner while promising my heart to a different heathen and somewhere amid it all, I’m supposed to win a <span class="term">war</span>. I thought the only thing I had to do was survive my magical instruction. Turns out, fate doesn’t favour the wicked. *<span class="term">This is an enemies to lovers romantasy series set in the same world as Zodiac Academy, but it&#39;s a dark and villainous tale of its own. You haven&#39;t met tainted souls like these before or enemies that hate each other as deeply as these characters do. Book 1 in the series will leave your heart raw and bloody. You&#39;ll be left gasping for breath and aching for more of the twisted Fae who lurk between the pages and they might just be irredeemable...</span>*</p>
+    
     <div class="chips"><span class="chip">Academy</span><span class="chip">Angst</span><span class="chip">Bear Shifter</span><a class="chip" href="/glossary/trope/betrayal/">Betrayal</a><a class="chip" href="/glossary/trope/court-intrigue/">Court Intrigue</a><a class="chip" href="/glossary/trope/dark-romance/">Dark Romance</a><span class="chip">Dragon Shifter</span><a class="chip" href="/glossary/trope/enemies-to-lovers/">Enemies to Lovers</a><a class="chip" href="/glossary/trope/fae/">Fae</a><a class="chip" href="/glossary/trope/forced-proximity/">Forced Proximity</a><a class="chip" href="/glossary/trope/found-family/">Found Family</a><span class="chip">Grumpy</span><span class="chip">High Fantasy</span><span class="chip">Lion Shifter</span><span class="chip">Magic</span><span class="chip">Paranormal</span><span class="chip">Political Court Intrigue</span><span class="chip">Shapeshifters</span><a class="chip" href="/glossary/trope/slow-burn/">Slow Burn</a><span class="chip">Vampires</span><span class="chip">Vengeance</span><a class="chip" href="/glossary/trope/war/">War</a><span class="chip">Werewolves</span><span class="chip">Action-Packed</span><span class="chip">Angst</span><span class="chip">Audiobook</span><span class="chip">Betrayal</span><span class="chip">Dark</span><span class="chip">Dark Academia</span><span class="chip">Dark Fantasy</span><span class="chip">Dark Romance</span><span class="chip">Fantasy</span><span class="chip">Possessive</span><span class="chip">Romance</span><span class="chip">Romantasy</span><span class="chip">Sassy Heroine</span><span class="chip">Shapeshifters</span><span class="chip">Take Charge Heroine</span><span class="chip">Vampires</span><span class="chip">Vengeance</span><span class="chip">Epic</span><span class="chip">Yearning</span><span class="chip">Revenge</span><span class="chip">War</span><span class="chip">Class Difference</span><span class="chip">Political</span><span class="chip">War</span><span class="chip">Straight</span><span class="chip">Grumpy Cold Hero</span><a class="chip" href="/glossary/mc-archetype/independent-heroine/">Independent Heroine</a><a class="chip" href="/glossary/mc-archetype/sassy-heroine/">Sassy Heroine</a><a class="chip" href="/glossary/mc-archetype/take-charge-heroine/">Take-Charge Heroine</a><a class="chip" href="/glossary/li-archetype/alpha-male/">Alpha Male</a><span class="chip">Fighter / MMA Hero</span><span class="chip">Possessive</span><a class="chip" href="/glossary/li-archetype/possessive-hero/">Possessive Hero</a><a class="chip" href="/glossary/li-archetype/tortured/">Tortured</a></div>
   </section>
-  <section class="blk">
+      <section class="blk">
     <h2>The details</h2>
     <div class="dgrid">
       <div class="drow"><span class="dk">Series</span><span class="dv">Sins of the Zodiac · Book 1</span></div><div class="drow"><span class="dk">Pacing</span><span class="dv">Slow burn</span></div><div class="drow"><span class="dk">Length</span><span class="dv">635 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">High Fantasy</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div><div class="drow"><span class="dk">Energy</span><span class="dv">Heavy</span></div>
     </div>
   </section>
-  <section class="blk" id="series">
-    <h2>More in Sins of the Zodiac</h2>
-    <div class="grid"><a class="card" href="/book/cinder-vale-valenti-2026/">
+    </main>
+  </div>
+
+  <div class="related-stack">
+    <section class="blk" id="series">
+      <h2>More in Sins of the Zodiac</h2>
+      <div class="grid"><a class="card" href="/book/cinder-vale-valenti-2026/">
     <div class="cv"><img src="https://covers.smuthub.ca/cinder-vale-valenti-2026.jpg" alt="Cinder Vale book cover" loading="lazy"></div>
     <div class="m"><div class="t">Cinder Vale</div><div class="a">Caroline Peckham, Susanne Valenti</div></div>
   </a></div>
-  </section>
-  <section class="blk">
+    </section>
+    <section class="blk">
     <h2>More like this</h2>
     <div class="grid"><a class="card" href="/book/fourth-wing-yarros/">
     <div class="cv"><img src="https://covers.smuthub.ca/fourth-wing-yarros.jpg" alt="Fourth Wing book cover" loading="lazy"></div>
@@ -204,7 +244,8 @@
     <div class="m"><div class="t">Clash of Claws</div><div class="a">Elizabeth Dear</div></div>
   </a></div>
   </section>
-  
+    
+  </div>
 </div>
 
 <script>
@@ -262,6 +303,20 @@
       } catch(e){ /* anon — fine */ }
       paint();
     })();
+  })();
+</script>
+
+<script>
+  // Plot read-more — collapses long blurbs to the first 3 paragraphs.
+  // Stays a no-op if the section wasn't rendered with a collapse shell.
+  (function(){
+    var s = document.getElementById('shPlot'); if (!s) return;
+    var b = document.getElementById('shToggle'); if (!b) return;
+    b.addEventListener('click', function(){
+      var open = !s.classList.toggle('collapsed');
+      b.setAttribute('aria-expanded', String(open));
+      b.innerHTML = open ? 'Show less&nbsp;↑' : 'Read more&nbsp;↓';
+    });
   })();
 </script>
 

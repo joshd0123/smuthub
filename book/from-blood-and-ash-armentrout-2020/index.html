@@ -51,10 +51,23 @@
   .crumb{padding:18px 0 0;color:var(--muted);font-size:.85rem}
   .crumb a{color:var(--muted);text-decoration:none}.crumb a:hover{color:var(--cream)}
   /* hero */
-  .bookhero{display:grid;grid-template-columns:260px 1fr;gap:34px;padding:26px 0 30px;border-bottom:1px solid var(--line);align-items:start}
-  @media(max-width:720px){.bookhero{grid-template-columns:1fr;gap:22px;max-width:460px}}
-  .cover-col{position:sticky;top:90px}
-  @media(max-width:720px){.cover-col{position:static;justify-self:center;width:200px}}
+  /* Desktop: a single 2-col grid that runs from the hero all the way down through
+     the plot + details. Cover stays sticky on the left while the right column
+     scrolls. The related-books grids ("More in series / like this / by author")
+     sit OUTSIDE this layout as full-width sections, since they need the room.
+     Mobile (≤720px): single column, everything stacks linearly. */
+  .book-layout{display:grid;grid-template-columns:260px 1fr;gap:34px;padding:24px 0 8px;align-items:start}
+  @media(max-width:720px){.book-layout{grid-template-columns:1fr;gap:22px;max-width:460px;margin:0 auto}}
+  .book-layout > .cover-col{position:sticky;top:90px}
+  @media(max-width:720px){.book-layout > .cover-col{position:static;justify-self:center;width:200px}}
+  .book-layout > .info-col{min-width:0}
+  /* Header inside info-col — was the right half of .bookhero before. */
+  .book-header{padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:6px}
+  .info-col > .book-header:only-child{border-bottom:0;padding-bottom:0;margin-bottom:0}
+  /* Inside the layout, .blk sections don't need their own top padding; the grid handles spacing. */
+  .info-col section.blk{padding:22px 0}
+  /* Related-books stack lives below the grid — first item draws a top divider. */
+  .related-stack section.blk:first-child{border-top:1px solid var(--line)}
   .cover{aspect-ratio:2/3;border-radius:14px;overflow:hidden;background:linear-gradient(160deg,#3a0d2a,#7a1238);box-shadow:0 30px 60px -24px rgba(0,0,0,.8);position:relative}
   .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .cover .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:18px;text-align:center;font-family:'Fraunces',serif;font-size:1.05rem;color:var(--cream)}
@@ -75,7 +88,30 @@
   section.blk{padding:26px 0;border-bottom:1px solid var(--line)}
   section.blk:last-of-type{border-bottom:0}
   section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;margin-bottom:14px}
-  .blurb{max-width:66ch;font-size:1.06rem;white-space:pre-line}
+  /* "What it's about" — structured paragraphs from a single blurb column.
+     Conventions a writer types IN the blurb (the only data layer that knows
+     a book's blurb): blank line = paragraph break, > prefix = muted publisher
+     intro, ***text*** = italic pitch callout, **word** = bold .term span. */
+  .sh-plot p{line-height:1.7;margin:0 0 1.05em;font-size:1.02rem;max-width:66ch}
+  .sh-plot p:last-child{margin-bottom:0}
+  .sh-plot .intro{color:var(--muted);font-size:.92rem;line-height:1.6}
+  .sh-plot .lead{color:#fff;font-size:1.18rem;line-height:1.5;font-weight:500;letter-spacing:-.005em;margin-bottom:1.25em}
+  @media(max-width:600px){.sh-plot .lead{font-size:1.06rem}}
+  .sh-plot .term{color:#fff;font-weight:600}
+  .sh-plot .pitch{font-style:italic;color:var(--muted);line-height:1.65;padding:6px 0 6px 18px;margin:1.6em 0 0;
+    border-left:2px solid transparent;border-image:var(--grad) 1;max-width:66ch;font-size:.98rem}
+  .sh-plot .pitch .term{color:var(--cream);font-style:normal;font-weight:600}
+  .sh-plot .more{overflow:hidden;transition:max-height .4s ease}
+  .sh-plot.collapsed .more{max-height:0}
+  .sh-plot:not(.collapsed) .more{max-height:2400px}
+  .sh-plot.collapsed .fade{position:relative;margin-top:-2.4em;height:2.4em;
+    background:linear-gradient(180deg,rgba(12,7,8,0),var(--ink));pointer-events:none}
+  .sh-plot:not(.collapsed) .fade{display:none}
+  .sh-readmore{margin-top:14px;background:none;border:0;cursor:pointer;font-family:inherit;
+    font-size:.88rem;font-weight:600;letter-spacing:.3px;color:var(--amber);padding:6px 0;
+    display:inline-flex;align-items:center;gap:6px}
+  .sh-readmore:hover{color:var(--rose)}
+  .sh-empty{color:var(--muted);font-style:italic;max-width:66ch}
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
   .chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:.35em .9em;font-size:.86rem;text-decoration:none;color:var(--cream);transition:border-color .12s,transform .12s}
   a.chip:hover{border-color:var(--rose);transform:translateY(-1px)}
@@ -133,8 +169,8 @@
 <div class="wrap">
   <nav class="crumb"><a href="/">Home</a> / <a href="/smuthub-app.html">Books</a> / <span>From Blood and Ash</span></nav>
 
-  <section class="bookhero">
-    <div class="cover-col">
+  <div class="book-layout">
+    <aside class="cover-col">
       <div class="cover"><img src="https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1734440654i/52831200.jpg" alt="From Blood and Ash book cover"></div>
       <div class="shelf-control" id="shelfControl">
         <button class="shelfbtn" id="shelfBtn" data-act="want">＋ Add to shelf</button>
@@ -147,30 +183,34 @@
         </select>
         <p class="shelf-note" id="shelfNote"></p>
       </div>
-    </div>
-    <div class="info-col">
-      <span class="badge">Romantasy</span>
-      <h1>From Blood and Ash</h1>
-      <p class="byline">by <a href="/smuthub-app.html?q=Jennifer%20L.%20Armentrout">Jennifer L. Armentrout</a> · 2020</p>
-      <p class="series-line">Book 1 of <b>Blood and Ash</b></p>
-      <div class="spicemeter" aria-label="Spice meter"><span class="chilis" title="Spice level 2 of 5"><span class="on">🌶️</span><span class="on">🌶️</span><span class="">🌶️</span><span class="">🌶️</span><span class="">🌶️</span></span><span class="sm-tag"><b>Door</b>Wide Open</span></div>
-      
-    </div>
-  </section>
-
-  <section class="blk">
+    </aside>
+    <main class="info-col">
+      <header class="book-header">
+        <span class="badge">Romantasy</span>
+        <h1>From Blood and Ash</h1>
+        <p class="byline">by <a href="/smuthub-app.html?q=Jennifer%20L.%20Armentrout">Jennifer L. Armentrout</a> · 2020</p>
+        <p class="series-line">Book 1 of <b>Blood and Ash</b></p>
+        <div class="spicemeter" aria-label="Spice meter"><span class="chilis" title="Spice level 2 of 5"><span class="on">🌶️</span><span class="on">🌶️</span><span class="">🌶️</span><span class="">🌶️</span><span class="">🌶️</span></span><span class="sm-tag"><b>Door</b>Wide Open</span></div>
+        
+      </header>
+      <section class="blk sh-plot" id="shPlot">
     <h2>What it's about</h2>
-    <p class="blurb">Captivating and action-packed, From Blood and Ash is a sexy, addictive, and unexpected fantasy perfect for fans of Sarah J. Maas and Laura Thalassa. A Maiden… Chosen from birth to usher in a new era, Poppy’s life has never been her own. The life of the Maiden is solitary. Never to be touched. Never to be looked upon. Never to be spoken to. Never to experience pleasure. Waiting for the day of her Ascension, she would rather be with the guards, fighting back the evil that took her family, than preparing to be found worthy by the gods. But the choice has never been hers. A Duty… The entire kingdom’s future rests on Poppy’s shoulders, something she’s not even quite sure she wants for herself. Because a Maiden has a heart. And a soul. And longing. And when Hawke, a golden-eyed guard honor bound to ensure her Ascension, enters her life, destiny and duty become tangled with desire and need. He incites her anger, makes her question everything she believes in, and tempts her with the forbidden. A Kingdom… Forsaken by the gods and feared by mortals, a fallen kingdom is rising once more, determined to take back what they believe is theirs through violence and vengeance. And as the shadow of those cursed draws closer, the line between what is forbidden and what is right becomes blurred. Poppy is not only on the verge of losing her heart and being found unworthy by the gods, but also her life when every blood-soaked thread that holds her world together begins to unravel. Reviews for From Blood and Ash: &quot;Dreamy, twisty, steamy escapism. Take me back!&quot; -New York Times bestseller Wendy Higgins “Jennifer Armentrout has the power to control my emotions with every word she writes. From swooning to crying to racing through the pages to find out what happens next, I couldn&#39;t stop reading about Hawke and Poppy, and you won&#39;t be able to either.” - Brigid Kemmerer, New York Times Bestselling Author of A Curse So Dark and Lonely “Action, adventure, sexiness, and angst! From Blood and Ash has it all and double that. So many feels and so many moments it made me cheer for the character. Read. This. Book! You&#39;ll be obsessed!” - Tijan NYT bestselling author “From Blood and Ash is a phenomenal fantasy novel that is filled to the brim with danger, mystery and heart melting romance. I loved every single second of it and I couldn’t get enough of this new fantastical world. A heart stopping start to what is clearly going to be a stunning series, perfect for both those who love fantasy and those who are new to the genre. A must read.” Kayleigh, K-Books &quot;If you think you are ready for From Blood and Ash, think again. Jennifer L. Armentrout has woven a new fantasy universe that will leave you reeling. Filled with action, heart wrenching twists and the most delicious romance, this unputdownable novel comes with a warning: keep a fan close by, because the temperatures are about to rise.&quot; Elena, The Bibliotheque Blo “In this exciting new novel by Jennifer L. Armentrout, she introduces a fantastical world filled with immense detail, and characters who are poignant and fierce, Jennifer truly has out done herself!” – BookBesties “From Blood and Ash is a fantastic fantasy that will hook you immediately from the very first page! I loved every single moment and all of the characters are ones you will fall in love with! Jennifer L. Armentrout has done it again with her amazing writing skills and lots of detail! Get this book immediately!!!” - Amanda @Stuck In YA Books “Jennifer has stepped into the fantasy genre with this absolutely amazing novel. With characters you will love and more than a few twists and turns, get ready for one amazing adventure.” -Perpetual Fangirl &quot;This magnificent book has so many pieces in it: fantasy, mystery, forbidden romance, supernatural, lies, deceit, betrayal, love, friendship, family. And so, so, so many secrets your head will be spinning. Jennifer L. Armentrout has created another masterpiece that I will be rushing to buy, and will be telling everyone to read it ASAP!&quot; ~Jeraca @My Nose in YA Books “From Blood to Ash is the first high fantasy book from Jennifer L Armentrout, but hopefully not the last. Like all her other works, her ability to create worlds, create swoon worthy men, and feisty strong female characters is amazing. Fantasy, mystery, romance, betrayal, love, and steamy scenes, this book has it all.” - Lisa @ The Blonde Book Lover “From Blood &amp; Ash is everything we love about JLA’s fantasy writing...pumped up on steroids. There’s epic world building and plot twists, a strong female lead, a swoon worthy book hottie, a steamy forbidden love story, and side characters that can’t help but steal your heart. My mind was blown by the end of this book.” - Kris S. (frantic4romantic) “Step into an exciting new fantasy world by Jennifer L. Armentrout, From Blood And Ash takes you on a fantastic ride with twists and turns galore. Characters you will love to laugh and cry with. A phenomenal start to an exciting new series.” - Lori Dunn an avid reader “From Blood and Ash was everything I wanted in a high fantasy novel. The myths, the legends, the epic romance, and an adventure that will keep you on your toes beginning to end. I couldn’t put the book down. Truly a brilliant start to what I believe will be yet another amazing series by Jennifer L. Armentrout.&quot; –Sabrina, Books Are My Life “Jennifer L. Armentrout takes her first step into the high fantasy genre with From Blood and Ash. A story of forbidden love, lies, secrets, and betrayal - it will leave you wanting more after the very last page.” - Love Just Is Books “From Blood and Ash is like reading my favorite book for first time.” - Raquel Herrera “With From Blood and Ash, Jennifer Armentrout successfully takes on the genre of high fantasy, proving, once again, that she is a master of her craft. Filled with epic adventure, forbidden romance, deceit, lies, and betrayal, FB&amp;A draws you in from page one and refuses to let go!” - Erica, The Rest Just Falls Away “Jennifer L. Armentrout comes trough once again with From Blood and Ash as it kept me enthralled throughout the full book. You won&#39;t be able to put down this epic story once you start.” - Julalicious Book Paradise “From Blood and Ash strikes the perfect balance between fantasy and romance elements leaving the world feeling live in and full while allowing the relationship between the main characters feeling real and authentic.” - Nads Book Nook, Nadine Bergeron “Be prepared to spend your whole day reading From Blood and Ash. Once you start reading this high fantasy novel, you won&#39;t want to put it down.” - Love Book Triangle “From Blood and Ash is absolutely breath taking. JLA does what she does best by creating a fantastical world filled with romance, lies, betrayal, adventure and all things we love and expect from JLA characters that melt our hearts and steal our hearts and souls. I cannot wait for the next one!” - Pia Colon “From Blood and Ash, Jennifer L. Armentrout brought to life a high fantasy that is enthralling. Another masterful addition to my collection. Get ready to stay on your toes from start to end.” - Amy Oh, Reader by the Mountains “From Blood and Ash is the first high fantasy novel by Jennifer L Armentrout and she absolutely nails it. This is fantasy for skeptics and unbelievers because it makes you want to be a fantasy fan! This page turner makes you want to devour it in one night and at the same time savor every detail. Heart stopping and inspiring and grips you from page one.” – Tracy Kirby “An intriguing puzzle of a world, a ruthless hero, a determine heroin, and a plot that will keep you up late, this book is one of the best I&#39;ve read this year.” – Valerie from Stuck In Books “From Blood and Ash, a thrilling high fantasy that packs a punch, each page will leave you wanting more!” - Tracey, Books &amp; Other Pursuits</p>
+    <p class="lead">Captivating and action-packed, From Blood and Ash is a sexy, addictive, and unexpected fantasy perfect for fans of Sarah J. Maas and Laura Thalassa. A Maiden… Chosen from birth to usher in a new era, Poppy’s life has never been her own. The life of the Maiden is solitary. Never to be touched. Never to be looked upon. Never to be spoken to. Never to experience pleasure. Waiting for the day of her Ascension, she would rather be with the guards, fighting back the evil that took her family, than preparing to be found worthy by the gods. But the choice has never been hers. A Duty… The entire kingdom’s future rests on Poppy’s shoulders, something she’s not even quite sure she wants for herself. Because a Maiden has a heart. And a soul. And longing. And when Hawke, a golden-eyed guard honor bound to ensure her Ascension, enters her life, destiny and duty become tangled with desire and need. He incites her anger, makes her question everything she believes in, and tempts her with the forbidden. A Kingdom… Forsaken by the gods and feared by mortals, a fallen kingdom is rising once more, determined to take back what they believe is theirs through violence and vengeance. And as the shadow of those cursed draws closer, the line between what is forbidden and what is right becomes blurred. Poppy is not only on the verge of losing her heart and being found unworthy by the gods, but also her life when every blood-soaked thread that holds her world together begins to unravel. Reviews for From Blood and Ash: &quot;Dreamy, twisty, steamy escapism. Take me back!&quot; -New York Times bestseller Wendy Higgins “Jennifer Armentrout has the power to control my emotions with every word she writes. From swooning to crying to racing through the pages to find out what happens next, I couldn&#39;t stop reading about Hawke and Poppy, and you won&#39;t be able to either.” - Brigid Kemmerer, New York Times Bestselling Author of A Curse So Dark and Lonely “Action, adventure, sexiness, and angst! From Blood and Ash has it all and double that. So many feels and so many moments it made me cheer for the character. Read. This. Book! You&#39;ll be obsessed!” - Tijan NYT bestselling author “From Blood and Ash is a phenomenal fantasy novel that is filled to the brim with danger, mystery and heart melting romance. I loved every single second of it and I couldn’t get enough of this new fantastical world. A heart stopping start to what is clearly going to be a stunning series, perfect for both those who love fantasy and those who are new to the genre. A must read.” Kayleigh, K-Books &quot;If you think you are ready for From Blood and Ash, think again. Jennifer L. Armentrout has woven a new fantasy universe that will leave you reeling. Filled with action, heart wrenching twists and the most delicious romance, this unputdownable novel comes with a warning: keep a fan close by, because the temperatures are about to rise.&quot; Elena, The Bibliotheque Blo “In this exciting new novel by Jennifer L. Armentrout, she introduces a fantastical world filled with immense detail, and characters who are poignant and fierce, Jennifer truly has out done herself!” – BookBesties “From Blood and Ash is a fantastic fantasy that will hook you immediately from the very first page! I loved every single moment and all of the characters are ones you will fall in love with! Jennifer L. Armentrout has done it again with her amazing writing skills and lots of detail! Get this book immediately!!!” - Amanda @Stuck In YA Books “Jennifer has stepped into the fantasy genre with this absolutely amazing novel. With characters you will love and more than a few twists and turns, get ready for one amazing adventure.” -Perpetual Fangirl &quot;This magnificent book has so many pieces in it: fantasy, mystery, <span class="term">forbidden romance</span>, supernatural, lies, deceit, betrayal, love, friendship, family. And so, so, so many secrets your head will be spinning. Jennifer L. Armentrout has created another masterpiece that I will be rushing to buy, and will be telling everyone to read it ASAP!&quot; ~Jeraca @My Nose in YA Books “From Blood to Ash is the first high fantasy book from Jennifer L Armentrout, but hopefully not the last. Like all her other works, her ability to create worlds, create swoon worthy men, and feisty strong female characters is amazing. Fantasy, mystery, romance, betrayal, love, and steamy scenes, this book has it all.” - Lisa @ The Blonde Book Lover “From Blood &amp; Ash is everything we love about JLA’s fantasy writing...pumped up on steroids. There’s <span class="term">epic</span> world building and plot twists, a strong female lead, a swoon worthy book hottie, a steamy forbidden love story, and side characters that can’t help but steal your heart. My mind was blown by the end of this book.” - Kris S. (frantic4romantic) “Step into an exciting new fantasy world by Jennifer L. Armentrout, From Blood And Ash takes you on a fantastic ride with twists and turns galore. Characters you will love to laugh and cry with. A phenomenal start to an exciting new series.” - Lori Dunn an avid reader “From Blood and Ash was everything I wanted in a high fantasy novel. The myths, the legends, the <span class="term">epic</span> romance, and an adventure that will keep you on your toes beginning to end. I couldn’t put the book down. Truly a brilliant start to what I believe will be yet another amazing series by Jennifer L. Armentrout.&quot; –Sabrina, Books Are My Life “Jennifer L. Armentrout takes her first step into the high fantasy genre with From Blood and Ash. A story of forbidden love, lies, secrets, and betrayal - it will leave you wanting more after the very last page.” - Love Just Is Books “From Blood and Ash is like reading my favorite book for first time.” - Raquel Herrera “With From Blood and Ash, Jennifer Armentrout successfully takes on the genre of high fantasy, proving, once again, that she is a master of her craft. Filled with <span class="term">epic</span> adventure, <span class="term">forbidden romance</span>, deceit, lies, and betrayal, FB&amp;A draws you in from page one and refuses to let go!” - Erica, The Rest Just Falls Away “Jennifer L. Armentrout comes trough once again with From Blood and Ash as it kept me enthralled throughout the full book. You won&#39;t be able to put down this <span class="term">epic</span> story once you start.” - Julalicious Book Paradise “From Blood and Ash strikes the perfect balance between fantasy and romance elements leaving the world feeling live in and full while allowing the relationship between the main characters feeling real and authentic.” - Nads Book Nook, Nadine Bergeron “Be prepared to spend your whole day reading From Blood and Ash. Once you start reading this high fantasy novel, you won&#39;t want to put it down.” - Love Book Triangle “From Blood and Ash is absolutely breath taking. JLA does what she does best by creating a fantastical world filled with romance, lies, betrayal, adventure and all things we love and expect from JLA characters that melt our hearts and steal our hearts and souls. I cannot wait for the next one!” - Pia Colon “From Blood and Ash, Jennifer L. Armentrout brought to life a high fantasy that is enthralling. Another masterful addition to my collection. Get ready to stay on your toes from start to end.” - Amy Oh, Reader by the Mountains “From Blood and Ash is the first high fantasy novel by Jennifer L Armentrout and she absolutely nails it. This is fantasy for skeptics and unbelievers because it makes you want to be a fantasy fan! This page turner makes you want to devour it in one night and at the same time savor every detail. Heart stopping and inspiring and grips you from page one.” – Tracy Kirby “An intriguing puzzle of a world, a ruthless hero, a determine heroin, and a plot that will keep you up late, this book is one of the best I&#39;ve read this year.” – Valerie from Stuck In Books “From Blood and Ash, a thrilling high fantasy that packs a punch, each page will leave you wanting more!” - Tracey, Books &amp; Other Pursuits</p>
+    
     <div class="chips"><span class="chip">Forbidden Romance</span><span class="chip">Hidden Identity</span><span class="chip">Dangerous</span><span class="chip">Epic</span></div>
   </section>
-  <section class="blk">
+      <section class="blk">
     <h2>The details</h2>
     <div class="dgrid">
       <div class="drow"><span class="dk">Series</span><span class="dv">Blood and Ash · Book 1</span></div><div class="drow"><span class="dk">Pacing</span><span class="dv">Fast</span></div><div class="drow"><span class="dk">Length</span><span class="dv">345 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">Energy</span><span class="dv">High</span></div>
     </div>
   </section>
-  
-  <section class="blk">
+    </main>
+  </div>
+
+  <div class="related-stack">
+    
+    <section class="blk">
     <h2>More like this</h2>
     <div class="grid"><a class="card" href="/book/a-promise-so-bold-and-broken-germain-2025/">
     <div class="cv"><img src="https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1737443345i/222415699.jpg" alt="A Promise so Bold and Broken book cover" loading="lazy"></div>
@@ -189,7 +229,7 @@
     <div class="m"><div class="t">Veil of Ash</div><div class="a">Fallon Hendrix</div></div>
   </a></div>
   </section>
-  <section class="blk">
+    <section class="blk">
     <h2>More by Jennifer L. Armentrout</h2>
     <div class="grid"><a class="card" href="/book/a-soul-of-ash-and-blood-armentrout/">
     <div class="cv"><img src="https://covers.smuthub.ca/a-soul-of-ash-and-blood-armentrout.jpg" alt="A Soul of Ash and Blood book cover" loading="lazy"></div>
@@ -199,6 +239,7 @@
     <div class="m"><div class="t">A Kingdom of Flesh and Fire</div><div class="a">Jennifer L. Armentrout</div></div>
   </a></div>
   </section>
+  </div>
 </div>
 
 <script>
@@ -256,6 +297,20 @@
       } catch(e){ /* anon — fine */ }
       paint();
     })();
+  })();
+</script>
+
+<script>
+  // Plot read-more — collapses long blurbs to the first 3 paragraphs.
+  // Stays a no-op if the section wasn't rendered with a collapse shell.
+  (function(){
+    var s = document.getElementById('shPlot'); if (!s) return;
+    var b = document.getElementById('shToggle'); if (!b) return;
+    b.addEventListener('click', function(){
+      var open = !s.classList.toggle('collapsed');
+      b.setAttribute('aria-expanded', String(open));
+      b.innerHTML = open ? 'Show less&nbsp;↑' : 'Read more&nbsp;↓';
+    });
   })();
 </script>
 

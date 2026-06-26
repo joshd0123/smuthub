@@ -51,10 +51,23 @@
   .crumb{padding:18px 0 0;color:var(--muted);font-size:.85rem}
   .crumb a{color:var(--muted);text-decoration:none}.crumb a:hover{color:var(--cream)}
   /* hero */
-  .bookhero{display:grid;grid-template-columns:260px 1fr;gap:34px;padding:26px 0 30px;border-bottom:1px solid var(--line);align-items:start}
-  @media(max-width:720px){.bookhero{grid-template-columns:1fr;gap:22px;max-width:460px}}
-  .cover-col{position:sticky;top:90px}
-  @media(max-width:720px){.cover-col{position:static;justify-self:center;width:200px}}
+  /* Desktop: a single 2-col grid that runs from the hero all the way down through
+     the plot + details. Cover stays sticky on the left while the right column
+     scrolls. The related-books grids ("More in series / like this / by author")
+     sit OUTSIDE this layout as full-width sections, since they need the room.
+     Mobile (≤720px): single column, everything stacks linearly. */
+  .book-layout{display:grid;grid-template-columns:260px 1fr;gap:34px;padding:24px 0 8px;align-items:start}
+  @media(max-width:720px){.book-layout{grid-template-columns:1fr;gap:22px;max-width:460px;margin:0 auto}}
+  .book-layout > .cover-col{position:sticky;top:90px}
+  @media(max-width:720px){.book-layout > .cover-col{position:static;justify-self:center;width:200px}}
+  .book-layout > .info-col{min-width:0}
+  /* Header inside info-col — was the right half of .bookhero before. */
+  .book-header{padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:6px}
+  .info-col > .book-header:only-child{border-bottom:0;padding-bottom:0;margin-bottom:0}
+  /* Inside the layout, .blk sections don't need their own top padding; the grid handles spacing. */
+  .info-col section.blk{padding:22px 0}
+  /* Related-books stack lives below the grid — first item draws a top divider. */
+  .related-stack section.blk:first-child{border-top:1px solid var(--line)}
   .cover{aspect-ratio:2/3;border-radius:14px;overflow:hidden;background:linear-gradient(160deg,#3a0d2a,#7a1238);box-shadow:0 30px 60px -24px rgba(0,0,0,.8);position:relative}
   .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .cover .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:18px;text-align:center;font-family:'Fraunces',serif;font-size:1.05rem;color:var(--cream)}
@@ -75,7 +88,30 @@
   section.blk{padding:26px 0;border-bottom:1px solid var(--line)}
   section.blk:last-of-type{border-bottom:0}
   section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;margin-bottom:14px}
-  .blurb{max-width:66ch;font-size:1.06rem;white-space:pre-line}
+  /* "What it's about" — structured paragraphs from a single blurb column.
+     Conventions a writer types IN the blurb (the only data layer that knows
+     a book's blurb): blank line = paragraph break, > prefix = muted publisher
+     intro, ***text*** = italic pitch callout, **word** = bold .term span. */
+  .sh-plot p{line-height:1.7;margin:0 0 1.05em;font-size:1.02rem;max-width:66ch}
+  .sh-plot p:last-child{margin-bottom:0}
+  .sh-plot .intro{color:var(--muted);font-size:.92rem;line-height:1.6}
+  .sh-plot .lead{color:#fff;font-size:1.18rem;line-height:1.5;font-weight:500;letter-spacing:-.005em;margin-bottom:1.25em}
+  @media(max-width:600px){.sh-plot .lead{font-size:1.06rem}}
+  .sh-plot .term{color:#fff;font-weight:600}
+  .sh-plot .pitch{font-style:italic;color:var(--muted);line-height:1.65;padding:6px 0 6px 18px;margin:1.6em 0 0;
+    border-left:2px solid transparent;border-image:var(--grad) 1;max-width:66ch;font-size:.98rem}
+  .sh-plot .pitch .term{color:var(--cream);font-style:normal;font-weight:600}
+  .sh-plot .more{overflow:hidden;transition:max-height .4s ease}
+  .sh-plot.collapsed .more{max-height:0}
+  .sh-plot:not(.collapsed) .more{max-height:2400px}
+  .sh-plot.collapsed .fade{position:relative;margin-top:-2.4em;height:2.4em;
+    background:linear-gradient(180deg,rgba(12,7,8,0),var(--ink));pointer-events:none}
+  .sh-plot:not(.collapsed) .fade{display:none}
+  .sh-readmore{margin-top:14px;background:none;border:0;cursor:pointer;font-family:inherit;
+    font-size:.88rem;font-weight:600;letter-spacing:.3px;color:var(--amber);padding:6px 0;
+    display:inline-flex;align-items:center;gap:6px}
+  .sh-readmore:hover{color:var(--rose)}
+  .sh-empty{color:var(--muted);font-style:italic;max-width:66ch}
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
   .chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:.35em .9em;font-size:.86rem;text-decoration:none;color:var(--cream);transition:border-color .12s,transform .12s}
   a.chip:hover{border-color:var(--rose);transform:translateY(-1px)}
@@ -133,8 +169,8 @@
 <div class="wrap">
   <nav class="crumb"><a href="/">Home</a> / <a href="/smuthub-app.html">Books</a> / <span>Shield of Sparrows</span></nav>
 
-  <section class="bookhero">
-    <div class="cover-col">
+  <div class="book-layout">
+    <aside class="cover-col">
       <div class="cover"><img src="https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1733692549i/217171544.jpg" alt="Shield of Sparrows book cover"></div>
       <div class="shelf-control" id="shelfControl">
         <button class="shelfbtn" id="shelfBtn" data-act="want">＋ Add to shelf</button>
@@ -147,36 +183,40 @@
         </select>
         <p class="shelf-note" id="shelfNote"></p>
       </div>
-    </div>
-    <div class="info-col">
-      <span class="badge">Romantasy</span>
-      <h1>Shield of Sparrows</h1>
-      <p class="byline">by <a href="/smuthub-app.html?q=Devney%20Perry">Devney Perry</a> · 2025</p>
-      
-      <div class="spicemeter" aria-label="Spice meter"><span class="chilis" title="Spice level 4 of 5"><span class="on">🌶️</span><span class="on">🌶️</span><span class="on">🌶️</span><span class="on">🌶️</span><span class="">🌶️</span></span><span class="sm-tag"><b>Door</b>On-page (open door)</span></div>
-      <details class="cw">
+    </aside>
+    <main class="info-col">
+      <header class="book-header">
+        <span class="badge">Romantasy</span>
+        <h1>Shield of Sparrows</h1>
+        <p class="byline">by <a href="/smuthub-app.html?q=Devney%20Perry">Devney Perry</a> · 2025</p>
+        
+        <div class="spicemeter" aria-label="Spice meter"><span class="chilis" title="Spice level 4 of 5"><span class="on">🌶️</span><span class="on">🌶️</span><span class="on">🌶️</span><span class="on">🌶️</span><span class="">🌶️</span></span><span class="sm-tag"><b>Door</b>On-page (open door)</span></div>
+        <details class="cw">
     <summary>⚠️ Content warnings</summary>
     <div class="cwbody">
       <div class="cw-tags"><span>Abuse</span><span>Animal Death</span><span>Child Death</span><span>Graphic Violencel Death</span><span>Grief</span><span>Misogny</span><span>No Hea</span><span>Past Child Abuse</span></div>
       
     </div>
   </details>
-    </div>
-  </section>
-
-  <section class="blk">
+      </header>
+      <section class="blk sh-plot" id="shPlot">
     <h2>What it's about</h2>
-    <p class="blurb">Det enda sättet att besegra monstren man fruktar är att själv bli ett. För länge sedan släppte gudarna lös monster över de fem kungadömena för att hålla människorna fogliga. Men jag har aldrig behövt någon påminnelse om min plats. Som prinsessa har min plikt varit att bära kronan och följa min fars vilja. Jag var aldrig menad att härska. Aldrig menad att strida. Men allt förändrades den dag jag steg in i min fars tronhall. Den dag jag tvingades gifta mig med en prins och underteckna ett magiskt fördrag med blod. Nu färdas jag tvärs över kontinenten mot det farligaste riket i världen tillsammans med en monsterjägare som föraktar mig lika mycket som jag föraktar honom, och en make jag knappt känner. Alla vill göra mig till något jag inte är - en drottning, en spion, ett offer. Men tänk om jag vägrar den roll som valts åt mig? Om jag börjar strida för mig själv? Shield of Sparrows är Devney Perrys storslagna romantasy som toppat New York Times bästsäljarlista och passar fans av Sarah J. Maas och Rebecca Yarros. Boken ska dessutom bli film av manusförfattaren bakom John Wick-filmerna. &quot;Den bästa romantasy jag läst på länge. Den här berättelsen liknar inget annat.&quot; - Giana Darling, USA Today- och Wall Street Journal-bästsäljande författare</p>
+    <p class="lead">Det enda sättet att besegra monstren man fruktar är att själv bli ett. För länge sedan släppte gudarna lös monster över de fem kungadömena för att hålla människorna fogliga. Men jag har aldrig behövt någon påminnelse om min plats. Som prinsessa har min plikt varit att bära kronan och följa min fars vilja. Jag var aldrig menad att härska. Aldrig menad att strida. Men allt förändrades den dag jag steg in i min fars tronhall. Den dag jag tvingades gifta mig med en prins och underteckna ett magiskt fördrag med blod. Nu färdas jag tvärs över kontinenten mot det farligaste riket i världen tillsammans med en monsterjägare som föraktar mig lika mycket som jag föraktar honom, och en make jag knappt känner. Alla vill göra mig till något jag inte är - en drottning, en spion, ett offer. Men tänk om jag vägrar den roll som valts åt mig? Om jag börjar strida för mig själv? Shield of Sparrows är Devney Perrys storslagna romantasy som toppat New York Times bästsäljarlista och passar fans av Sarah J. Maas och Rebecca Yarros. Boken ska dessutom bli film av manusförfattaren bakom John Wick-filmerna. &quot;Den bästa romantasy jag läst på länge. Den här berättelsen liknar inget annat.&quot; - Giana Darling, USA Today- och Wall Street Journal-bästsäljande författare</p>
+    
     <div class="chips"><span class="chip">Aristo</span><span class="chip">Arranged</span><a class="chip" href="/glossary/trope/enemies-to-lovers/">Enemies to Lovers</a><span class="chip">Fantasy</span><span class="chip">Forced Marriage</span><a class="chip" href="/glossary/trope/forced-proximity/">Forced Proximity</a><a class="chip" href="/glossary/trope/found-family/">Found Family</a><span class="chip">Monsters</span><span class="chip">Royal Heroine</span><a class="chip" href="/glossary/trope/slow-burn/">Slow Burn</a><span class="chip">Betrayal</span><span class="chip">Fantasy</span><span class="chip">Magic</span><span class="chip">Survival</span><span class="chip">Aristo</span><span class="chip">Political</span><span class="chip">Possessive</span></div>
   </section>
-  <section class="blk">
+      <section class="blk">
     <h2>The details</h2>
     <div class="dgrid">
       <div class="drow"><span class="dk">POV</span><span class="dv">1st Single;</span></div><div class="drow"><span class="dk">Pacing</span><span class="dv">Slow burn</span></div><div class="drow"><span class="dk">Length</span><span class="dv">658 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">High Fantasy</span></div><div class="drow"><span class="dk">Ending</span><span class="dv">Cliffhanger</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div>
     </div>
   </section>
-  
-  <section class="blk">
+    </main>
+  </div>
+
+  <div class="related-stack">
+    
+    <section class="blk">
     <h2>More like this</h2>
     <div class="grid"><a class="card" href="/book/clash-of-claws-dear-2025/">
     <div class="cv"><img src="https://covers.smuthub.ca/clash-of-claws-dear-2025.jpg" alt="Clash of Claws book cover" loading="lazy"></div>
@@ -198,13 +238,14 @@
     <div class="m"><div class="t">Hide the Witches</div><div class="a">Miranda Lyn</div></div>
   </a></div>
   </section>
-  <section class="blk">
+    <section class="blk">
     <h2>More by Devney Perry</h2>
     <div class="grid"><a class="card" href="/book/rites-of-the-starling-perry-2026/">
     <div class="cv"><img src="https://covers.smuthub.ca/rites-of-the-starling-perry-2026.jpg" alt="Rites of the Starling book cover" loading="lazy"></div>
     <div class="m"><div class="t">Rites of the Starling</div><div class="a">Devney Perry</div></div>
   </a></div>
   </section>
+  </div>
 </div>
 
 <script>
@@ -262,6 +303,20 @@
       } catch(e){ /* anon — fine */ }
       paint();
     })();
+  })();
+</script>
+
+<script>
+  // Plot read-more — collapses long blurbs to the first 3 paragraphs.
+  // Stays a no-op if the section wasn't rendered with a collapse shell.
+  (function(){
+    var s = document.getElementById('shPlot'); if (!s) return;
+    var b = document.getElementById('shToggle'); if (!b) return;
+    b.addEventListener('click', function(){
+      var open = !s.classList.toggle('collapsed');
+      b.setAttribute('aria-expanded', String(open));
+      b.innerHTML = open ? 'Show less&nbsp;↑' : 'Read more&nbsp;↓';
+    });
   })();
 </script>
 

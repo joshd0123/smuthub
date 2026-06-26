@@ -51,10 +51,23 @@
   .crumb{padding:18px 0 0;color:var(--muted);font-size:.85rem}
   .crumb a{color:var(--muted);text-decoration:none}.crumb a:hover{color:var(--cream)}
   /* hero */
-  .bookhero{display:grid;grid-template-columns:260px 1fr;gap:34px;padding:26px 0 30px;border-bottom:1px solid var(--line);align-items:start}
-  @media(max-width:720px){.bookhero{grid-template-columns:1fr;gap:22px;max-width:460px}}
-  .cover-col{position:sticky;top:90px}
-  @media(max-width:720px){.cover-col{position:static;justify-self:center;width:200px}}
+  /* Desktop: a single 2-col grid that runs from the hero all the way down through
+     the plot + details. Cover stays sticky on the left while the right column
+     scrolls. The related-books grids ("More in series / like this / by author")
+     sit OUTSIDE this layout as full-width sections, since they need the room.
+     Mobile (≤720px): single column, everything stacks linearly. */
+  .book-layout{display:grid;grid-template-columns:260px 1fr;gap:34px;padding:24px 0 8px;align-items:start}
+  @media(max-width:720px){.book-layout{grid-template-columns:1fr;gap:22px;max-width:460px;margin:0 auto}}
+  .book-layout > .cover-col{position:sticky;top:90px}
+  @media(max-width:720px){.book-layout > .cover-col{position:static;justify-self:center;width:200px}}
+  .book-layout > .info-col{min-width:0}
+  /* Header inside info-col — was the right half of .bookhero before. */
+  .book-header{padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:6px}
+  .info-col > .book-header:only-child{border-bottom:0;padding-bottom:0;margin-bottom:0}
+  /* Inside the layout, .blk sections don't need their own top padding; the grid handles spacing. */
+  .info-col section.blk{padding:22px 0}
+  /* Related-books stack lives below the grid — first item draws a top divider. */
+  .related-stack section.blk:first-child{border-top:1px solid var(--line)}
   .cover{aspect-ratio:2/3;border-radius:14px;overflow:hidden;background:linear-gradient(160deg,#3a0d2a,#7a1238);box-shadow:0 30px 60px -24px rgba(0,0,0,.8);position:relative}
   .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .cover .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:18px;text-align:center;font-family:'Fraunces',serif;font-size:1.05rem;color:var(--cream)}
@@ -75,7 +88,30 @@
   section.blk{padding:26px 0;border-bottom:1px solid var(--line)}
   section.blk:last-of-type{border-bottom:0}
   section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;margin-bottom:14px}
-  .blurb{max-width:66ch;font-size:1.06rem;white-space:pre-line}
+  /* "What it's about" — structured paragraphs from a single blurb column.
+     Conventions a writer types IN the blurb (the only data layer that knows
+     a book's blurb): blank line = paragraph break, > prefix = muted publisher
+     intro, ***text*** = italic pitch callout, **word** = bold .term span. */
+  .sh-plot p{line-height:1.7;margin:0 0 1.05em;font-size:1.02rem;max-width:66ch}
+  .sh-plot p:last-child{margin-bottom:0}
+  .sh-plot .intro{color:var(--muted);font-size:.92rem;line-height:1.6}
+  .sh-plot .lead{color:#fff;font-size:1.18rem;line-height:1.5;font-weight:500;letter-spacing:-.005em;margin-bottom:1.25em}
+  @media(max-width:600px){.sh-plot .lead{font-size:1.06rem}}
+  .sh-plot .term{color:#fff;font-weight:600}
+  .sh-plot .pitch{font-style:italic;color:var(--muted);line-height:1.65;padding:6px 0 6px 18px;margin:1.6em 0 0;
+    border-left:2px solid transparent;border-image:var(--grad) 1;max-width:66ch;font-size:.98rem}
+  .sh-plot .pitch .term{color:var(--cream);font-style:normal;font-weight:600}
+  .sh-plot .more{overflow:hidden;transition:max-height .4s ease}
+  .sh-plot.collapsed .more{max-height:0}
+  .sh-plot:not(.collapsed) .more{max-height:2400px}
+  .sh-plot.collapsed .fade{position:relative;margin-top:-2.4em;height:2.4em;
+    background:linear-gradient(180deg,rgba(12,7,8,0),var(--ink));pointer-events:none}
+  .sh-plot:not(.collapsed) .fade{display:none}
+  .sh-readmore{margin-top:14px;background:none;border:0;cursor:pointer;font-family:inherit;
+    font-size:.88rem;font-weight:600;letter-spacing:.3px;color:var(--amber);padding:6px 0;
+    display:inline-flex;align-items:center;gap:6px}
+  .sh-readmore:hover{color:var(--rose)}
+  .sh-empty{color:var(--muted);font-style:italic;max-width:66ch}
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
   .chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:.35em .9em;font-size:.86rem;text-decoration:none;color:var(--cream);transition:border-color .12s,transform .12s}
   a.chip:hover{border-color:var(--rose);transform:translateY(-1px)}
@@ -133,8 +169,8 @@
 <div class="wrap">
   <nav class="crumb"><a href="/">Home</a> / <a href="/smuthub-app.html">Books</a> / <span>A Dawn of Onyx</span></nav>
 
-  <section class="bookhero">
-    <div class="cover-col">
+  <div class="book-layout">
+    <aside class="cover-col">
       <div class="cover"><img src="https://covers.smuthub.ca/a-dawn-of-onyx-golden.jpg" alt="A Dawn of Onyx book cover"></div>
       <div class="shelf-control" id="shelfControl">
         <button class="shelfbtn" id="shelfBtn" data-act="want">＋ Add to shelf</button>
@@ -147,36 +183,40 @@
         </select>
         <p class="shelf-note" id="shelfNote"></p>
       </div>
-    </div>
-    <div class="info-col">
-      <span class="badge">Romantasy</span>
-      <h1>A Dawn of Onyx</h1>
-      <p class="byline">by <a href="/smuthub-app.html?q=Kate%20Golden">Kate Golden</a> · 2022</p>
-      <p class="series-line">Book 1 of <b>The Sacred Stones</b></p>
-      <div class="spicemeter" aria-label="Spice meter"><span class="chilis" title="Spice level 3 of 5"><span class="on">🌶️</span><span class="on">🌶️</span><span class="on">🌶️</span><span class="">🌶️</span><span class="">🌶️</span></span><span class="sm-tag"><b>Door</b>On-page (open door)</span><span class="sm-tag"><b>Frequency</b>Rare</span></div>
-      <details class="cw">
+    </aside>
+    <main class="info-col">
+      <header class="book-header">
+        <span class="badge">Romantasy</span>
+        <h1>A Dawn of Onyx</h1>
+        <p class="byline">by <a href="/smuthub-app.html?q=Kate%20Golden">Kate Golden</a> · 2022</p>
+        <p class="series-line">Book 1 of <b>The Sacred Stones</b></p>
+        <div class="spicemeter" aria-label="Spice meter"><span class="chilis" title="Spice level 3 of 5"><span class="on">🌶️</span><span class="on">🌶️</span><span class="on">🌶️</span><span class="">🌶️</span><span class="">🌶️</span></span><span class="sm-tag"><b>Door</b>On-page (open door)</span><span class="sm-tag"><b>Frequency</b>Rare</span></div>
+        <details class="cw">
     <summary>⚠️ Content warnings</summary>
     <div class="cwbody">
       <div class="cw-tags"><span>Abuse</span><span>Death</span><span>Death Grief</span><span>Grief</span><span>Mental Trauma</span><span>No Hea</span><span>Past Abuse</span><span>Past Child Abuse</span><span>Sexual Assault</span><span>Third-Party Sexual Abuse</span><span>Torture Of Side Characters</span></div>
       
     </div>
   </details>
-    </div>
-  </section>
-
-  <section class="blk">
+      </header>
+      <section class="blk sh-plot" id="shPlot">
     <h2>What it's about</h2>
-    <p class="blurb">The breakout TikTok fantasy romance! Captured by the king of darkness, she was forced to find the light within. Arwen Valondale never expected to be the brave one, offering her life to save her brother’s. Now she’s been taken prisoner by the most dangerous kingdom on the continent, and made to use her rare magical abilities to heal the soldiers of the vicious Onyx King. Arwen knows better than to face the ancient, wicked woods that surround the castle on her own, which means working with a fellow prisoner might be her only path to freedom. Unfortunately, he’s as infuriating as he is cunning—and seems to take twisted pleasure in playing on Arwen’s deepest fears. But here in Onyx Kingdom, trust is a luxury she can’t afford. To make it out of enemy territory, she&#39;ll have to navigate back-stabbing royals, dark magic, and dangerous beasts. But untold power lies inside Arwen, dormant and waiting for a spark. If she can harness it, she just might be able to escape with her life—and hopefully, her heart.</p>
+    <p class="lead">The breakout TikTok <span class="term">fantasy</span> romance! Captured by the king of darkness, she was forced to find the light within. Arwen Valondale never expected to be the brave one, offering her life to save her brother’s. Now she’s been taken prisoner by the most dangerous kingdom on the continent, and made to use her rare magical abilities to heal the soldiers of the vicious Onyx King. Arwen knows better than to face the ancient, wicked woods that surround the castle on her own, which means working with a fellow prisoner might be her only path to freedom. Unfortunately, he’s as infuriating as he is cunning—and seems to take twisted pleasure in playing on Arwen’s deepest fears. But here in Onyx Kingdom, trust is a luxury she can’t afford. To make it out of enemy territory, she&#39;ll have to navigate back-stabbing royals, dark <span class="term">magic</span>, and dangerous beasts. But untold power lies inside Arwen, dormant and waiting for a spark. If she can harness it, she just might be able to escape with her life—and hopefully, her heart.</p>
+    
     <div class="chips"><a class="chip" href="/glossary/trope/abduction/">Abduction</a><a class="chip" href="/glossary/trope/caretaking/">Caretaking</a><a class="chip" href="/glossary/trope/court-intrigue/">Court Intrigue</a><span class="chip">Dragon Shifter</span><a class="chip" href="/glossary/trope/enemies-to-lovers/">Enemies to Lovers</a><a class="chip" href="/glossary/trope/fae/">Fae</a><span class="chip">Fantasy</span><a class="chip" href="/glossary/trope/forced-proximity/">Forced Proximity</a><span class="chip">Height Difference</span><span class="chip">High Fantasy</span><a class="chip" href="/glossary/trope/hurt-comfort/">Hurt / Comfort</a><span class="chip">Magic</span><span class="chip">Military</span><span class="chip">Monsters</span><span class="chip">Paranormal</span><span class="chip">Political</span><span class="chip">Political Court Intrigue</span><span class="chip">Shapeshifters</span><a class="chip" href="/glossary/trope/slow-burn/">Slow Burn</a><span class="chip">Vengeance</span><a class="chip" href="/glossary/trope/war/">War</a><span class="chip">Witches</span><span class="chip">Betrayal</span><span class="chip">Fae</span><span class="chip">Gifted Super Heroine</span><span class="chip">New Adult</span><span class="chip">Sassy Heroine</span><span class="chip">Vengeance</span><span class="chip">Found Family</span><span class="chip">Class Difference</span><span class="chip">Disabilities</span><a class="chip" href="/glossary/representation/disabilities-scars/">Disabilities &amp; Scars</a><span class="chip">Scars</span><a class="chip" href="/glossary/mc-archetype/competent-heroine/">Competent Heroine</a><span class="chip">Early 20s FMC</span><a class="chip" href="/glossary/mc-archetype/immortal-heroine/">Immortal Heroine</a><a class="chip" href="/glossary/mc-archetype/independent-heroine/">Independent Heroine</a><a class="chip" href="/glossary/mc-archetype/non-human-heroine/">Non-Human Heroine</a><a class="chip" href="/glossary/mc-archetype/sweet-heroine/">Sweet / Gentle Heroine</a><a class="chip" href="/glossary/mc-archetype/take-charge-heroine/">Take-Charge Heroine</a><a class="chip" href="/glossary/mc-archetype/tortured-heroine/">Tortured Heroine</a><a class="chip" href="/glossary/mc-archetype/virgin-heroine/">Virgin Heroine</a><span class="chip">Working-Class Heroine</span><a class="chip" href="/glossary/li-archetype/bad-boy/">Bad Boy</a><a class="chip" href="/glossary/li-archetype/immortal-hero/">Immortal Hero</a><span class="chip">Non-Human Hero</span><a class="chip" href="/glossary/li-archetype/possessive-hero/">Possessive Hero</a><span class="chip">Rich Hero</span><a class="chip" href="/glossary/li-archetype/royal-hero/">Royal Hero</a><a class="chip" href="/glossary/li-archetype/tortured/">Tortured</a></div>
   </section>
-  <section class="blk">
+      <section class="blk">
     <h2>The details</h2>
     <div class="dgrid">
       <div class="drow"><span class="dk">Series</span><span class="dv">The Sacred Stones · Book 1</span></div><div class="drow"><span class="dk">POV</span><span class="dv">First person · single</span></div><div class="drow"><span class="dk">Pacing</span><span class="dv">Slow burn</span></div><div class="drow"><span class="dk">Length</span><span class="dv">Standard · 456 pp</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">High Fantasy</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">NA</span></div><div class="drow"><span class="dk">Energy</span><span class="dv">Light</span></div><div class="drow"><span class="dk">Audiobook</span><span class="dv">Available</span></div>
     </div>
   </section>
-  
-  <section class="blk">
+    </main>
+  </div>
+
+  <div class="related-stack">
+    
+    <section class="blk">
     <h2>More like this</h2>
     <div class="grid"><a class="card" href="/book/fourth-wing-yarros/">
     <div class="cv"><img src="https://covers.smuthub.ca/fourth-wing-yarros.jpg" alt="Fourth Wing book cover" loading="lazy"></div>
@@ -198,7 +238,8 @@
     <div class="m"><div class="t">A Court of Thorns and Roses</div><div class="a">Sarah J. Maas</div></div>
   </a></div>
   </section>
-  
+    
+  </div>
 </div>
 
 <script>
@@ -256,6 +297,20 @@
       } catch(e){ /* anon — fine */ }
       paint();
     })();
+  })();
+</script>
+
+<script>
+  // Plot read-more — collapses long blurbs to the first 3 paragraphs.
+  // Stays a no-op if the section wasn't rendered with a collapse shell.
+  (function(){
+    var s = document.getElementById('shPlot'); if (!s) return;
+    var b = document.getElementById('shToggle'); if (!b) return;
+    b.addEventListener('click', function(){
+      var open = !s.classList.toggle('collapsed');
+      b.setAttribute('aria-expanded', String(open));
+      b.innerHTML = open ? 'Show less&nbsp;↑' : 'Read more&nbsp;↓';
+    });
   })();
 </script>
 
