@@ -359,19 +359,32 @@ function renderBlurbBody(blurb, tags){
   // Encode emphasis as private-use placeholders BEFORE HTML-escaping, so the
   // matches can find raw blurb text (without `&amp;` etc.) and so we never
   // wrap inside an already-emitted <span>.
+  // Auto-bolding is capped: FIRST occurrence per term only, MAX_AUTO_BOLDS
+  // total across the whole blurb. Without these caps a blurb with 8 tags
+  // can end up with 20+ bolded phrases — reads as visual noise.
+  // Manual **word** markers stay unlimited (the writer was deliberate).
   const TS = String.fromCharCode(1), TE = String.fromCharCode(2);
+  const MAX_AUTO_BOLDS = 5;
+  let autoBoldCount = 0;
+  const autoBolded = new Set();
   function emphasize(text){
     let s = text;
     const marks = [];
     const mark = w => { marks.push(w); return `${TS}${marks.length - 1}${TE}`; };
     // 1. manual **word** wins (explicit > auto)
     s = s.replace(/\*\*([^*\n]+?)\*\*/g, (_, w) => mark(w));
-    // 2. auto-bold tag labels, longest first so multi-word terms (Zodiac Academy)
-    //    match before sub-strings (Academy)
+    // 2. auto-bold tag labels — longest first so multi-word terms (Zodiac
+    //    Academy) match before sub-strings (Academy). First occurrence per
+    //    term only; stop entirely once we hit MAX_AUTO_BOLDS.
     const sorted = [...termLabels].sort((a, b) => b.length - a.length);
     for (const term of sorted){
-      const re = new RegExp(`\\b(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})\\b`, 'gi');
-      s = s.replace(re, (m) => mark(m));
+      if (autoBoldCount >= MAX_AUTO_BOLDS) break;
+      const key = term.toLowerCase();
+      if (autoBolded.has(key)) continue;
+      const re = new RegExp(`\\b(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})\\b`, 'i');
+      let matched = false;
+      s = s.replace(re, (m) => { matched = true; return mark(m); });
+      if (matched){ autoBolded.add(key); autoBoldCount++; }
     }
     // 3. HTML-escape (placeholders survive — they're control chars, not HTML-special)
     s = esc(s);
@@ -379,7 +392,27 @@ function renderBlurbBody(blurb, tags){
     return s.replace(new RegExp(`${TS}(\\d+)${TE}`, 'g'), (_, i) => `<span class="term">${esc(marks[+i])}</span>`);
   }
 
-  const paragraphs = raw.split(/\n\s*\n+/).map(p => p.trim()).filter(Boolean);
+  // Parse paragraphs from blank-line splits. Many blurbs come in as one long
+  // unbroken paragraph — without a writer-provided break we can't show a
+  // preview, so the section dominates the page. For single-block blurbs,
+  // split at the sentence boundary CLOSEST to SPLIT_TARGET (searching both
+  // before and after) so the visible hook stays short even if the first
+  // sentence runs long.
+  let paragraphs = raw.split(/\n\s*\n+/).map(p => p.trim()).filter(Boolean);
+  const SPLIT_TARGET = 180;
+  if (paragraphs.length === 1 && paragraphs[0].length > SPLIT_TARGET + 80){
+    const t = paragraphs[0];
+    let cut = -1;
+    const lo = Math.floor(SPLIT_TARGET * 0.55);
+    const hi = Math.min(t.length - 1, Math.floor(SPLIT_TARGET * 2.2));
+    for (let i = lo; i <= hi; i++){
+      if (/[.!?]/.test(t[i]) && (t[i + 1] === ' ' || i === t.length - 1)){
+        if (cut === -1 || Math.abs(i - SPLIT_TARGET) < Math.abs(cut - 1 - SPLIT_TARGET)) cut = i + 1;
+      }
+    }
+    if (cut > 0) paragraphs = [t.slice(0, cut).trim(), t.slice(cut).trim()];
+  }
+
   const blocks = paragraphs.map(p => {
     if (/^\*\*\*[\s\S]+\*\*\*$/.test(p))
       return { kind: 'pitch', text: p.replace(/^\*\*\*\s*|\s*\*\*\*$/g, '') };
@@ -398,9 +431,15 @@ function renderBlurbBody(blurb, tags){
     return `<p>${inner}</p>`;
   };
 
-  const SHOWN = 3;
-  const shown = blocks.slice(0, SHOWN).map(render).join('');
-  const hidden = blocks.slice(SHOWN).map(render).join('');
+  // Visible = the intro (if any) + the lead (the dramatic hook). Everything
+  // else collapses behind Read more. Predictable: writers can see exactly what
+  // shows above the fold no matter how long the rest of the blurb runs.
+  let cut;
+  const leadIdx2 = blocks.findIndex(b => b.kind === 'lead');
+  if (leadIdx2 >= 0) cut = leadIdx2 + 1;
+  else cut = blocks.length; // no lead (intro-only or pitch-only blurb) — show everything
+  const shown = blocks.slice(0, cut).map(render).join('');
+  const hidden = blocks.slice(cut).map(render).join('');
   return {
     html: shown + (hidden ? `<div class="more">${hidden}</div><div class="fade"></div>` : ''),
     collapsible: !!hidden,
