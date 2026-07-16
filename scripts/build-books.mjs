@@ -513,6 +513,26 @@ function relatedSection(title, list){
   </section>`;
 }
 
+// ── Duplicate-safe identity ────────────────────────────────────────────────
+// The catalog can hold two rows for the same book (a year-less seed slug
+// `fourth-wing-yarros` AND an import-generated `fourth-wing-yarros-2023`).
+// Keyed on slug alone, "related books" lets a book recommend its own twin — or
+// itself. Identity = normalized title + author surname collapses twins so they
+// are excluded and never rendered twice.
+const normId = s => String(s == null ? '' : s).toLowerCase().replace(/[^a-z0-9]/g, '');
+const surnameKey = a => { const p = String(a || '').trim().split(/\s+/); return p.length ? normId(p[p.length - 1]) : ''; };
+const bookIdentity = b => normId(b.title) + '|' + surnameKey(b.author);
+// Collapse a list to one row per identity, preferring a cover-bearing row.
+function dedupeByIdentity(list){
+  const seen = new Map();
+  for (const b of list){
+    const id = bookIdentity(b);
+    const cur = seen.get(id);
+    if (!cur || (b.cover_url && !cur.cover_url)) seen.set(id, b);
+  }
+  return [...seen.values()];
+}
+
 // Taste tags drive "more like this" — exclude meta/spice/warning categories so
 // overlap reflects vibe, not "both books have an open door".
 const TASTE_SKIP = new Set(['warning','format','pov','mechanics']);
@@ -523,18 +543,20 @@ function tasteKeys(b){
 }
 const tasteCache = new Map(books.map(b => [b.slug, tasteKeys(b)]));
 
-function moreLikeThis(book, excludeSlugs){
+function moreLikeThis(book, excludeIds){
   const mine = tasteCache.get(book.slug);
   if (!mine.size) return [];
+  const selfId = bookIdentity(book);
   const scored = [];
   for (const b of books){
-    if (b.slug === book.slug || excludeSlugs.has(b.slug)) continue;
+    const id = bookIdentity(b);
+    if (id === selfId || excludeIds.has(id)) continue;
     let overlap = 0;
     for (const k of tasteCache.get(b.slug)) if (mine.has(k)) overlap++;
     if (overlap > 0) scored.push({ b, overlap });
   }
   scored.sort((x, y) => (y.overlap - x.overlap) || ((y.b.featured ? 1 : 0) - (x.b.featured ? 1 : 0)));
-  return scored.slice(0, 6).map(x => x.b);
+  return dedupeByIdentity(scored.map(x => x.b)).slice(0, 6);
 }
 
 // ── Per-book page ──────────────────────────────────────────────────────────
@@ -543,16 +565,23 @@ function renderBookPage(book){
   const author = (book.author || '').trim();
   const cover = absCover(book);
 
-  // Related sets
-  const inSeries = book.series
-    ? books.filter(b => b.slug !== book.slug && b.series && b.series === book.series)
-        .sort((a, c) => (Number(a.series_number) || 99) - (Number(c.series_number) || 99))
-    : [];
-  const byAuthor = author
-    ? books.filter(b => b.slug !== book.slug && (b.author || '').trim() === author && !inSeries.includes(b)).slice(0, 6)
-    : [];
-  const exclude = new Set([...inSeries, ...byAuthor].map(b => b.slug));
-  const likeThis = moreLikeThis(book, exclude);
+  // Related sets — excluded/deduped by identity (title+author) so a book never
+  // recommends its own duplicate row, itself, or shows the same book twice.
+  const selfId = bookIdentity(book);
+  const inSeries = dedupeByIdentity(
+    book.series
+      ? books.filter(b => bookIdentity(b) !== selfId && b.series && b.series === book.series)
+          .sort((a, c) => (Number(a.series_number) || 99) - (Number(c.series_number) || 99))
+      : []
+  );
+  const seriesIds = new Set(inSeries.map(bookIdentity));
+  const byAuthor = dedupeByIdentity(
+    author
+      ? books.filter(b => bookIdentity(b) !== selfId && (b.author || '').trim() === author && !seriesIds.has(bookIdentity(b)))
+      : []
+  ).slice(0, 6);
+  const excludeIds = new Set([...inSeries, ...byAuthor].map(bookIdentity));
+  const likeThis = moreLikeThis(book, excludeIds);
 
   // SEO
   const titleBits = [book.title, author ? `by ${author}` : ''].filter(Boolean).join(' ');

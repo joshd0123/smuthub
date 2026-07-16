@@ -189,7 +189,7 @@
   // ── SEARCH: Google Books first, Open Library as fallback ──
   const DEFAULT_QUERIES = ['romantasy','fae romance','dragon rider romance','fated mates romance','enemies to lovers fantasy','vampire romance'];
   // exclude books *about* romance (writing guides, academic, collectibles) — we want novels
-  const NONFIC_RX = /language arts|literary criticism|education|reference|study aids|biography|history|technology|science|antiques|collectibl|business|self-help|cooking|travel|religion|crafts|music|games|bible|christian|theology|sermons|medical|nursing|law|engineering|economics|sociology|philosophy|magazine|journal|periodical|gazette|annual report|proceedings|congress|senate|labor|commerce|government|public welfare|coloring/i;
+  const NONFIC_RX = /language arts|literary criticism|education|reference|study aids|biography|history|technology|science|antiques|collectibl|business|self-help|cooking|travel|religion|crafts|music|games|bible|christian|theology|sermons|medical|nursing|law|engineering|economics|sociology|philosophy|magazine|journal|periodical|gazette|annual report|proceedings|congress|senate|labor|commerce|government|public welfare|coloring|deposits|metallurg|mining|geolog|mineral|bibliograph|dissertation|thesis|smelting|almaden/i;
   function isNovel(b){ const s=[].concat(b.subject||[]); return !s.some(x=>NONFIC_RX.test(x)) && !NONFIC_RX.test(b.title||''); }
   // require at least ONE meaningful query word in title or author — kills the
   // "Macmillan's Magazine" / "Holy Bible" matches Open Library returns on broad
@@ -209,6 +209,18 @@
     const seen=new Map();
     for(const b of docs){
       const k=((b.title||'')+'|'+((b.author_name&&b.author_name[0])||'')).toLowerCase().replace(/[^a-z0-9]/g,'');
+      const ex=seen.get(k);
+      if(!ex || (coverSrc(b)&&!coverSrc(ex))) seen.set(k,b);
+    }
+    return [...seen.values()];
+  }
+  const normTitle=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+  // collapse to ONE card per TITLE (ignoring author) — for external results, so a
+  // title search doesn't return 15 different same-named books. Keeps the best-covered.
+  function dedupeByTitle(docs){
+    const seen=new Map();
+    for(const b of docs){
+      const k=normTitle(b.title);
       const ex=seen.get(k);
       if(!ex || (coverSrc(b)&&!coverSrc(ex))) seen.set(k,b);
     }
@@ -366,16 +378,29 @@
             cat = (data||[]).map(b=>({ _curated:true, key:b.slug, title:b.title, author_name:b.author?[b.author]:[], cover_url:b.cover_url, cover_i:null, subject:[], ratings:9999, year:b.year||0 }));
           }catch(_){}
         }
-        // 2. external sources
-        try{ docs = await googleBooks(typed); }catch(e){ docs=[]; }
-        if(!docs.length){ docs = await openLib(typed, 0); }
-        // 3. merge: catalog first so dedupe locks it in, then external candidates
-        docs = dedupe(cat.concat(docs));
-        // strict quality gate for external results only — curated catalog books
-        // always pass. Filter kills Open Library's "Macmillan's Magazine" /
-        // "Holy Bible" matches that leak through on broad queries.
-        docs = docs.filter(b => b._curated || (matchesQuery(b, typed) && isNovel(b) && coverSrc(b)));
-        const q=typed.toLowerCase();
+        // 2. external sources (Google → Open Library fallback)
+        let ext=[];
+        try{ ext = await googleBooks(typed); }catch(e){ ext=[]; }
+        if(!ext.length){ ext = await openLib(typed, 0); }
+        // Strict gate for EXTERNAL results so a title search doesn't flood with
+        // same-named junk (curated catalog books bypass all of this — they're
+        // merged in below and always kept):
+        //   • collapse to one card per title (no 15 identical "Quicksilver"s)
+        //   • drop any title we already carry in the catalog (catalog wins)
+        //   • title must START WITH the query (kills "Under a Quicksilver Moon" /
+        //     "The Metallurgy of Quicksilver") — or the author matches the query
+        //   • must read as a novel (no geology/bibliography/etc.) and have a cover
+        //   • cap the count
+        const qn=typed.toLowerCase();
+        const catTitles=new Set(cat.map(b=>normTitle(b.title)));
+        ext = dedupeByTitle(ext).filter(b=>{
+          if(catTitles.has(normTitle(b.title))) return false;
+          const t=(b.title||'').toLowerCase(), a=((b.author_name&&b.author_name[0])||'').toLowerCase();
+          return (t.startsWith(qn) || (qn.length>=4 && a.includes(qn))) && isNovel(b) && coverSrc(b);
+        }).slice(0,12);
+        // 3. merge: catalog first so dedupe locks it in, then external
+        docs = dedupe(cat.concat(ext));
+        const q=qn;
         docs = docs.map(b=>[scoreDoc(b,q) + (b._curated?500:0), b]).sort((x,y)=>y[0]-x[0]).map(x=>x[1]);
       } else {
         // Stable per-session picks: reuse the same shuffle for ~30 min so a tab

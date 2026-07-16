@@ -320,7 +320,10 @@
   async function gBooks(q){
     if(!GB_KEY) return [];   // keyless Google quota is shared + exhausted (429) → use Open Library
     try{ const d=await (await fetch('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)+'&maxResults=12&printType=books&langRestrict=en&country=US&orderBy=relevance&key='+GB_KEY)).json();
-      return (d.items||[]).map(it=>{const v=it.volumeInfo||{},img=v.imageLinks&&(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail);return {key:'gb:'+it.id,title:v.title,author:(v.authors&&v.authors[0])||'Unknown',cover_url:img?img.replace(/^http:/,'https:').replace('&edge=curl','').replace(/zoom=\d/,'zoom=2'):null,cover_i:null};}).filter(b=>b.title);
+      // Only accept REAL cover scans (they carry edge=curl); Google's grey
+      // "image not available" placeholder lacks it — rejecting it lets the card
+      // fall back to a gradient tile instead of an ugly broken-looking cover.
+      return (d.items||[]).map(it=>{const v=it.volumeInfo||{},img=v.imageLinks&&(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail);return {key:'gb:'+it.id,title:v.title,author:(v.authors&&v.authors[0])||'Unknown',cover_url:(img&&/edge=curl/.test(img))?img.replace(/^http:/,'https:').replace('&edge=curl','').replace(/zoom=\d/,'zoom=2'):null,cover_i:null};}).filter(b=>b.title);
     }catch(_){ return []; }
   }
   async function oLib(q){
