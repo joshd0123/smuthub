@@ -438,10 +438,41 @@
   }
 
   // ── trending ──────────────────────────────────────────
-  // Covers are resolved live from Open Library by title+author (cached per session),
-  // so trending.json only needs title/author/badge — no brittle, wrong cover IDs.
-  // returns a cover image URL (Google Books first, Open Library fallback), cached per session
+  // Cover strategy: use OUR catalog's covers first (reliable R2 images we control,
+  // and free — no Google quota spent), then fall back to Google/Open Library only
+  // for trending titles we don't carry. trending.json still only needs
+  // title/author/badge — no brittle, wrong cover IDs.
+  const covNorm = s => String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+  const covSurname = a => { const p=String(a||'').trim().split(/\s+/); return p.length?covNorm(p[p.length-1]):''; };
+  let _catalogCovers = null;   // Map<normTitle, {url, surname}> — fetched once per load
+  async function getCatalogCovers(){
+    if(_catalogCovers) return _catalogCovers;
+    _catalogCovers = new Map();
+    try{
+      const _sb = window.SH && window.SH.sb;
+      if(_sb){
+        const { data } = await _sb.from('books').select('title,author,cover_url')
+          .eq('status','live').not('cover_url','is',null);
+        for(const b of (data||[])){
+          const k = covNorm(b.title);
+          if(k && !_catalogCovers.has(k)) _catalogCovers.set(k, { url:b.cover_url, surname:covSurname(b.author) });
+        }
+      }
+    }catch(_){}
+    return _catalogCovers;
+  }
   async function resolveCover(title, author){
+    // 1. Prefer a cover from our own catalog (reliable, no Google quota). Verify the
+    //    author surname matches so a same-titled catalog book can't lend a wrong cover.
+    try{
+      const cat = await getCatalogCovers();
+      const hit = cat.get(covNorm(title));
+      if(hit && hit.url){
+        const want = covSurname(author);
+        if(!want || !hit.surname || hit.surname===want || hit.surname.includes(want) || want.includes(hit.surname)) return hit.url;
+      }
+    }catch(_){}
+    // 2. Not in the catalog → resolve externally (cached per session).
     const ck = 'sh_cov_' + title + '|' + (author||'');
     try{ const c = sessionStorage.getItem(ck); if(c!==null) return c||null; }catch(_){}
     let url=null;
