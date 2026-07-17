@@ -151,6 +151,7 @@
   <div id="adminbar" style="display:none;text-align:center;margin:0 0 12px">
     <a href="catalog-admin.html" class="catbtn" style="max-width:220px;margin:0 6px 6px 0;display:inline-block;width:auto;text-align:center">✎ Manage catalog</a>
     <button id="adminFill" class="catbtn" style="max-width:240px;margin:0 6px 6px 0;display:inline-block;width:auto">🔧 Fill missing covers</button>
+    <button id="adminBlurb" class="catbtn" style="max-width:240px;margin:0 6px 6px 0;display:inline-block;width:auto">📝 Fill missing blurbs</button>
     <a href="admin.html" class="catbtn" style="max-width:160px;margin:0 0 6px;display:inline-block;width:auto;text-align:center">📥 Bulk import</a>
   </div>
   <div class="status" id="status"></div>
@@ -167,7 +168,7 @@
   window.addEventListener('sh-auth', async (e)=>{
     sb = window.SH.sb; user = e.detail.user;
     isAdmin = !!(e.detail.profile && e.detail.profile.is_admin);
-    const ab=document.getElementById('adminbar'); if(ab){ ab.style.display=isAdmin?'block':'none'; const fb=document.getElementById('adminFill'); if(fb) fb.onclick=fillCatalogCovers; }
+    const ab=document.getElementById('adminbar'); if(ab){ ab.style.display=isAdmin?'block':'none'; const fb=document.getElementById('adminFill'); if(fb) fb.onclick=fillCatalogCovers; const bb=document.getElementById('adminBlurb'); if(bb) bb.onclick=fillCatalogBlurbs; }
     if(window.SH && !window.SH.configured) document.getElementById('setup').classList.add('show');
     if(user){ await loadMine(); } else { Object.keys(spiceMap).forEach(k=>delete spiceMap[k]); shelfSet.clear(); Object.keys(shelfStatus).forEach(k=>delete shelfStatus[k]); }
     render();
@@ -321,6 +322,47 @@
     btn.disabled=false; btn.textContent='🔧 Fill missing covers';
     if(filled>0) bustBrowseCache();   // public browse now has new covers
     toast('Filled '+filled+' cover'+(filled===1?'':'s')+' ★ — reload browse to see them');
+  }
+
+  // admin: walk the catalog and fill any missing blurbs from Google Books.
+  // Runs in the BROWSER (the reliable Google path — plain keyword query, not the
+  // fielded intitle:/inauthor: shape that 503s server-side), one book at a time.
+  // Strict guard: only accepts a result whose title AND author match the book,
+  // so a fuzzy plain search can never attach the wrong blurb.
+  async function fillCatalogBlurbs(){
+    if(!isAdmin || !sb){ toast("Admins only"); return; }
+    if(!GB_KEY){ toast("No Google Books key configured"); return; }
+    const btn=document.getElementById('adminBlurb');
+    const { data, error } = await sb.from('books').select('slug,title,author')
+      .is('blurb',null).neq('status','archived').limit(300);
+    if(error){ toast("Catalog read failed: "+error.message); return; }
+    if(!data || !data.length){ toast("Every catalog book already has a blurb ✓"); return; }
+    const norm = s => String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    const surname = a => { const p=String(a||'').trim().split(/\s+/); return p.length?norm(p[p.length-1]):''; };
+    btn.disabled=true; let filled=0, skipped=0, i=0;
+    for(const row of data){
+      btn.textContent='📝 Filling… '+(++i)+'/'+data.length;
+      try{
+        const q=encodeURIComponent(((row.title||'')+' '+(row.author||'')).trim());
+        const url='https://www.googleapis.com/books/v1/volumes?q='+q+'&maxResults=5&printType=books&langRestrict=en&country=US&key='+GB_KEY;
+        const d=await (await fetch(url)).json();
+        const items=(d.items)||[];
+        const wantT=norm(row.title), wantS=surname(row.author);
+        let desc=null;
+        for(const it of items){
+          const v=it.volumeInfo||{}; const gt=norm(v.title);
+          if(!(gt===wantT || gt.startsWith(wantT) || wantT.startsWith(gt))) continue;   // title matches (allows "(Series Book 1)")
+          if(wantS && !(v.authors||[]).some(a=>norm(a).includes(wantS))) continue;       // author surname must match
+          if(v.description){ desc=v.description.trim(); break; }
+        }
+        if(desc){ const { error:e2 } = await sb.from('books').update({ blurb:desc }).eq('slug',row.slug); if(!e2) filled++; else skipped++; }
+        else skipped++;
+      }catch(_){ skipped++; }
+      await new Promise(r=>setTimeout(r,400));   // gentle: one at a time, ~2.5/sec
+    }
+    btn.disabled=false; btn.textContent='📝 Fill missing blurbs';
+    if(filled>0) bustBrowseCache();
+    toast('Filled '+filled+' blurb'+(filled===1?'':'s')+(skipped?(' · '+skipped+' skipped'):'')+' ★ — rebuild book pages to publish');
   }
 
   // ── filters: explore your catalog by metadata (spice / trope / mood / ending) ──
