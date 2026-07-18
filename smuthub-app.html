@@ -326,43 +326,70 @@
 
   // admin: walk the catalog and fill any missing blurbs from Google Books.
   // Runs in the BROWSER (the reliable Google path — plain keyword query, not the
-  // fielded intitle:/inauthor: shape that 503s server-side), one book at a time.
-  // Strict guard: only accepts a result whose title AND author match the book,
-  // so a fuzzy plain search can never attach the wrong blurb.
+  // fielded intitle:/inauthor: shape that 503s server-side). Google still flakes
+  // intermittently, so each book is RETRIED on failure, and the whole thing loops
+  // in passes until the queue is drained or a pass makes no progress. One click,
+  // walk away. Strict guard: only accepts a result whose title AND author match
+  // the book, so a fuzzy plain search can never attach the wrong blurb.
   async function fillCatalogBlurbs(){
     if(!isAdmin || !sb){ toast("Admins only"); return; }
     if(!GB_KEY){ toast("No Google Books key configured"); return; }
     const btn=document.getElementById('adminBlurb');
-    const { data, error } = await sb.from('books').select('slug,title,author')
-      .is('blurb',null).neq('status','archived').limit(300);
-    if(error){ toast("Catalog read failed: "+error.message); return; }
-    if(!data || !data.length){ toast("Every catalog book already has a blurb ✓"); return; }
     const norm = s => String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
     const surname = a => { const p=String(a||'').trim().split(/\s+/); return p.length?norm(p[p.length-1]):''; };
-    btn.disabled=true; let filled=0, skipped=0, i=0;
-    for(const row of data){
-      btn.textContent='📝 Filling… '+(++i)+'/'+data.length;
-      try{
-        const q=encodeURIComponent(((row.title||'')+' '+(row.author||'')).trim());
-        const url='https://www.googleapis.com/books/v1/volumes?q='+q+'&maxResults=5&printType=books&langRestrict=en&country=US&key='+GB_KEY;
-        const d=await (await fetch(url)).json();
-        const items=(d.items)||[];
-        const wantT=norm(row.title), wantS=surname(row.author);
-        let desc=null;
-        for(const it of items){
-          const v=it.volumeInfo||{}; const gt=norm(v.title);
-          if(!(gt===wantT || gt.startsWith(wantT) || wantT.startsWith(gt))) continue;   // title matches (allows "(Series Book 1)")
-          if(wantS && !(v.authors||[]).some(a=>norm(a).includes(wantS))) continue;       // author surname must match
-          if(v.description){ desc=v.description.trim(); break; }
-        }
-        if(desc){ const { error:e2 } = await sb.from('books').update({ blurb:desc }).eq('slug',row.slug); if(!e2) filled++; else skipped++; }
-        else skipped++;
-      }catch(_){ skipped++; }
-      await new Promise(r=>setTimeout(r,400));   // gentle: one at a time, ~2.5/sec
+    const sleep = ms => new Promise(r=>setTimeout(r,ms));
+
+    // Fetch one book's blurb, retrying transient 503s before giving up.
+    // Returns {ok, desc}: ok=false means Google was unreachable after retries;
+    // ok=true + desc=null means Google answered but had no confident match.
+    async function fetchBlurb(row){
+      const q=encodeURIComponent(((row.title||'')+' '+(row.author||'')).trim());
+      const url='https://www.googleapis.com/books/v1/volumes?q='+q+'&maxResults=5&printType=books&langRestrict=en&country=US&key='+GB_KEY;
+      const wantT=norm(row.title), wantS=surname(row.author);
+      for(let t=0;t<4;t++){
+        try{
+          const r=await fetch(url);
+          if(r.ok){
+            const d=await r.json();
+            for(const it of ((d.items)||[])){
+              const v=it.volumeInfo||{}; const gt=norm(v.title);
+              if(!(gt===wantT || gt.startsWith(wantT) || wantT.startsWith(gt))) continue;  // title (allows "(Series Book 1)")
+              if(wantS && !(v.authors||[]).some(a=>norm(a).includes(wantS))) continue;      // author surname must match
+              if(v.description) return { ok:true, desc:v.description.trim() };
+            }
+            return { ok:true, desc:null };   // reached Google, no confident match
+          }
+        }catch(_){ /* network hiccup → retry */ }
+        await sleep(900*(t+1));   // backoff 0.9s / 1.8s / 2.7s
+      }
+      return { ok:false, desc:null };        // 503-walled after retries
     }
+
+    btn.disabled=true;
+    let totalFilled=0, noMatch=0, pass=0;
+    try{
+      while(pass<6){
+        pass++;
+        const { data, error } = await sb.from('books').select('slug,title,author')
+          .is('blurb',null).neq('status','archived').limit(300);
+        if(error){ toast("Catalog read failed: "+error.message); break; }
+        if(!data || !data.length) break;                 // everything has a blurb now
+        let filledThisPass=0, i=0; noMatch=0;
+        for(const row of data){
+          btn.textContent='📝 Pass '+pass+' · '+totalFilled+' filled · '+(++i)+'/'+data.length;
+          const res=await fetchBlurb(row);
+          if(res.desc){
+            const { error:e2 } = await sb.from('books').update({ blurb:res.desc }).eq('slug',row.slug);
+            if(!e2){ filledThisPass++; totalFilled++; }
+          } else if(res.ok){ noMatch++; }                // genuine no-match (don't keep retrying across passes)
+          await sleep(500);
+        }
+        if(filledThisPass===0) break;                    // no progress → the rest are unmatchable or Google's down
+      }
+    }catch(e){ console.error('blurb fill', e); }
     btn.disabled=false; btn.textContent='📝 Fill missing blurbs';
-    if(filled>0) bustBrowseCache();
-    toast('Filled '+filled+' blurb'+(filled===1?'':'s')+(skipped?(' · '+skipped+' skipped'):'')+' ★ — rebuild book pages to publish');
+    if(totalFilled>0) bustBrowseCache();
+    toast('Filled '+totalFilled+' blurb'+(totalFilled===1?'':'s')+(noMatch?(' · '+noMatch+' had no Google match'):'')+' ★ — rebuild to publish');
   }
 
   // ── filters: explore your catalog by metadata (spice / trope / mood / ending) ──
