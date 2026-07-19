@@ -35,7 +35,7 @@ supabase functions deploy companion-chat
 ```
 
 Without an OpenAI key, the function deliberately returns a small shelf-aware
-preview response. This is useful for testing access, persistence, and the UI.
+preview result. This is useful for testing access, persistence, and the UI.
 
 To enable live AI, set the secret in the Supabase project (never in `config.js`):
 
@@ -51,14 +51,16 @@ cost in conversational use. The function uses low reasoning and short outputs.
 ## 4. Smoke test
 
 1. Signed out: `/companion.html` asks the visitor to sign in.
-2. Signed in without access: the page says it is invitation-only; no launcher
-   appears on Dashboard, Search, or Bookshelf.
-3. Signed in with access: the Dashboard gains a Companion room and the shared
-   launcher appears on Dashboard, Search, and Bookshelf.
+2. Signed in without access: the page says it is invitation-only; no Companion
+   surface appears on Dashboard, Search, or Bookshelf.
+3. Signed in with access: contextual Companion strips appear on Dashboard,
+   Search, and Bookshelf. There is never a floating bubble or chat drawer.
 4. Save a new name and archetype, reload, and verify they persist.
-5. Ask for a TBR pick. Confirm the response names only books from that user's
-   shelf and does not claim unavailable plot details.
-6. Disable the tester's access and confirm both the room and launcher disappear.
+5. Run "Choose My Next Read." Confirm its single result names only books from
+   that user's shelf and does not claim unavailable plot details.
+6. Deep-link to `/companion.html?tool=book-match` and confirm the Book Match
+   workspace opens automatically.
+7. Disable the tester's access and confirm the room and contextual strips disappear.
 
 ## Current spoiler promise
 
