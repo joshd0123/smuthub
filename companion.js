@@ -8,6 +8,14 @@
 
   const C=window.SHCompanion={
     allowed:false,user:null,profile:null,busy:false,
+    personas:{
+      aren:{name:'Aren',image:'/companion-aren.png'},
+      nyra:{name:'Nyra',image:'/companion-nyra.png'},
+      sable:{name:'Sable',image:'/companion-sable.png'}
+    },
+    persona(){
+      return this.personas[this.profile?.persona_key]||this.personas.aren;
+    },
     pageContext(){
       const path=location.pathname;
       if(path.includes('bookcase')) return 'bookshelf';
@@ -34,8 +42,24 @@
       return this.profile;
     },
     revealSurfaces(){
+      const persona=this.persona();
       document.querySelectorAll('[data-companion-beta]').forEach(el=>el.hidden=false);
-      document.querySelectorAll('[data-companion-name]').forEach(el=>el.textContent=this.profile?.companion_name||'Aren');
+      document.querySelectorAll('[data-companion-name]').forEach(el=>el.textContent=this.profile?.companion_name||persona.name);
+      document.querySelectorAll('[data-companion-portrait]').forEach(el=>{
+        el.src=persona.image;
+        el.alt=(this.profile?.companion_name||persona.name)+' companion portrait';
+      });
+      this.revealNavEntry();
+    },
+    revealNavEntry(){
+      const nav=document.querySelector('.navlinks');
+      if(!nav||nav.querySelector('.shc-nav-entry')||location.pathname.includes('companion')) return;
+      const link=document.createElement('a');
+      link.className='shc-nav-entry';
+      link.href='/companion.html';
+      link.setAttribute('aria-label','Open '+(this.profile?.companion_name||this.persona().name)+"'s companion room");
+      link.innerHTML='<span aria-hidden="true">✦</span> Companion';
+      nav.appendChild(link);
     },
     async boot(user){
       this.user=user||null;this.allowed=false;this.profile=null;
