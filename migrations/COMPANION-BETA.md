@@ -7,6 +7,8 @@ exists, nobody passes the beta access check and the Companion remains hidden.
 
 Run `2026-07-18-companion-beta.sql` in the Supabase SQL editor.
 
+It is safe to run again if an earlier beta migration was already applied.
+
 ## 2. Invite individual testers
 
 Run this once for each existing SmutHub account:
