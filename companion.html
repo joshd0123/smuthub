@@ -1,116 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Your Companion — SmutHub Beta</title>
-<meta name="description" content="Your private, spoiler-aware SmutHub reading companion.">
-<meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#0c0708">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta name="description" content="Your private, spoiler-aware SmutHub reading companion."><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0c0708">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/companion.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/config.js"></script>
-<script defer src="/auth.js"></script>
-<script defer src="/companion.js"></script>
-<style>
-  *{margin:0;padding:0;box-sizing:border-box}body{background:#0c0708;color:#f4e8e3}
-  a{color:inherit;text-decoration:none}.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
-  header.sitehead{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.78);border-bottom:1px solid #2a1d22;font-family:'Hanken Grotesk',sans-serif}
-  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px}.logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem}.logo .box{background:linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em}.navlinks{display:flex;gap:18px}.navlinks a{color:#a98a82;font-weight:500;font-size:.92rem}.navlinks a.on,.navlinks a:hover{color:#f4e8e3}.authbox{display:flex;align-items:center;gap:8px}
-  .shc-status{position:fixed;left:50%;bottom:18px;z-index:95;transform:translateX(-50%);padding:.7em 1.1em;border:1px solid #ffab40;border-radius:99px;background:#150e10;color:#f4e8e3;font:700 .8rem 'Hanken Grotesk',sans-serif;opacity:0;pointer-events:none;transition:opacity .2s}.shc-status.show{opacity:1}
-  @media(max-width:680px){.navlinks{display:none}.nav{height:62px}.wrap{padding:0 14px}}
-</style>
+<link rel="stylesheet" href="/companion.css"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="/config.js"></script><script defer src="/auth.js"></script><script defer src="/companion.js"></script>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0c0708;color:#f4e8e3}a{color:inherit;text-decoration:none}.wrap{max-width:1180px;margin:0 auto;padding:0 22px}header.sitehead{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.78);border-bottom:1px solid #2a1d22;font-family:'Hanken Grotesk',sans-serif}.nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px}.logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem}.logo .box{background:linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em}.navlinks{display:flex;gap:18px}.navlinks a{color:#a98a82;font-weight:500;font-size:.92rem}.navlinks a.on,.navlinks a:hover{color:#f4e8e3}.authbox{display:flex;align-items:center;gap:8px}.shc-status{position:fixed;left:50%;bottom:18px;z-index:95;transform:translateX(-50%);padding:.7em 1.1em;border:1px solid #ffab40;border-radius:99px;background:#150e10;color:#f4e8e3;font:700 .8rem 'Hanken Grotesk',sans-serif;opacity:0;pointer-events:none;transition:opacity .2s}.shc-status.show{opacity:1}@media(max-width:680px){.navlinks{display:none}.nav{height:62px}.wrap{padding:0 14px}}</style>
 </head>
 <body class="shc-page">
-<header class="sitehead">
-  <div class="wrap nav">
-    <a href="/index.html" class="logo">smut<span class="box">Hub</span></a>
-    <nav class="navlinks">
-      <a href="/dashboard.html">Dashboard</a><a href="/smuthub-app.html">Search</a><a href="/smuthub-bookcase.html">My Bookshelf</a><a href="/companion.html" class="on">Companion</a><a href="/glossary/">Glossary</a>
-    </nav>
-    <div id="authbox" class="authbox"></div>
-  </div>
-</header>
-
-<main id="companionRoot" class="shc-page-wrap">
-  <div class="shc-gate"><div class="ico">✦</div><h1>Calling your companion…</h1><p>Checking your private beta invitation.</p></div>
-</main>
+<header class="sitehead"><div class="wrap nav"><a href="/index.html" class="logo">smut<span class="box">Hub</span></a><nav class="navlinks"><a href="/dashboard.html">Dashboard</a><a href="/smuthub-app.html">Search</a><a href="/smuthub-bookcase.html">My Bookshelf</a><a href="/companion.html" class="on">Companion</a><a href="/glossary/">Glossary</a></nav><div id="authbox" class="authbox"></div></div></header>
+<main id="companionRoot" class="shc-page-wrap"><div class="shc-gate"><div class="ico">✦</div><h1>Calling your companion…</h1><p>Checking your private beta invitation.</p></div></main>
 <div id="shcStatus" class="shc-status" role="status"></div>
 
 <template id="roomTemplate">
-  <div class="shc-page-grid">
-    <section class="shc-portrait">
-      <img src="/companion-aren.png" alt="Your companion in a candlelit library">
-      <div class="shc-portrait-copy"><div class="shc-kicker" id="portraitRole">Guardian · private beta</div><h1 id="portraitName">Aren</h1><blockquote id="portraitQuote">“Your shelf has opinions. Fortunately, so do I.”</blockquote></div>
-    </section>
-    <section class="shc-room-panel" aria-label="Companion conversation">
-      <div class="shc-room-top"><div><h2 id="roomTitle">Aren is present</h2><p>Ask about your shelf, your mood, or the rest of your day.</p></div><span class="shc-shield">◇ Spoiler shield</span></div>
-      <div class="shc-room-prompts"><button>Pick my next read</button><button>I want something angsty</button><button>What does my shelf say about me?</button><button>Explain your spoiler rules</button></div>
-      <div class="shc-room-messages" id="roomMessages" aria-live="polite"></div>
-      <form class="shc-room-form" id="roomForm"><textarea id="roomInput" maxlength="1000" rows="2" placeholder="Say something…" aria-label="Message your companion"></textarea><button aria-label="Send message">↑</button></form>
-    </section>
-  </div>
-  <details class="shc-settings">
-    <summary>Shape your companion</summary>
-    <div class="shc-settings-grid">
-      <div class="shc-field"><label for="setName">Name</label><input id="setName" maxlength="40"></div>
-      <div class="shc-field"><label for="setArchetype">Energy</label><select id="setArchetype"><option value="guardian">Guardian</option><option value="rival">Rival</option><option value="confidant">Confidant</option></select></div>
-      <div class="shc-field"><label for="setVoice">Voice</label><select id="setVoice"><option value="velvet">Velvet</option><option value="ember">Ember</option><option value="stillwater">Stillwater</option></select></div>
-      <div class="shc-field"><label for="setInitiative">Presence</label><select id="setInitiative"><option value="quiet">Waits for me</option><option value="contextual">Appears when useful</option><option value="proactive">Greets me first</option></select></div>
-      <div class="shc-field"><label for="setFlirt">Flirt level</label><select id="setFlirt"><option value="0">Off</option><option value="1">A little</option><option value="2">Playful</option><option value="3">Bold</option></select></div>
-      <div class="shc-field"><label for="setSpoiler">Spoilers</label><select id="setSpoiler"><option value="strict">Strict shield</option><option value="ask">Ask first</option><option value="off">Off</option></select></div>
-      <button class="shc-save" id="saveCompanion">Save</button>
+  <section class="shc-hero">
+    <article class="shc-portrait"><img src="/companion-aren.png" alt="A companion in a candlelit library"><div class="shc-portrait-copy"><div class="shc-eyebrow" id="portraitRole">Guardian · private beta</div><h1 id="portraitName">Aren</h1><blockquote id="portraitQuote">“Your shelf has opinions. Fortunately, so do I.”</blockquote><div class="shc-presence">Present when useful. Never hovering.</div></div></article>
+    <div class="shc-briefs">
+      <article class="shc-card shc-card-pad"><div class="shc-hello"><div><div class="shc-eyebrow">Your evening brief</div><h2 id="greeting">I saved you a decision.</h2><p id="briefCopy">Your shelf has enough yearning for three lifetimes. Tonight, the best move is one high-momentum read and no guilt about the rest of the TBR.</p></div><span class="shc-shield">◇ Spoiler shield on</span></div></article>
+      <article class="shc-card shc-pick"><div class="shc-pick-copy"><div class="shc-eyebrow">Pulled from your TBR</div><h2 id="pickTitle">Your next read</h2><div class="author" id="pickAuthor">Waiting for your shelf</div><p class="reason" id="pickReason">“Give me a mood and I’ll make the decision—using what you already saved, never invented plot details.”</p><button class="shc-button" data-tool="next-read">Choose for me</button></div><div class="shc-cover" id="pickCover">YOUR<br>NEXT<br>READ</div></article>
     </div>
-  </details>
+  </section>
+
+  <section class="shc-snapshot">
+    <article class="shc-card shc-card-pad"><div class="shc-now"><div class="shc-mini-cover" id="currentCover">CURRENT<br>READ</div><div><div class="shc-eyebrow">Where you left off</div><h3 id="currentTitle">No current read yet</h3><p class="shc-muted" id="currentAuthor">Add one from your bookshelf and I’ll keep the boundary.</p><div class="shc-progress"><i id="progressBar"></i></div><div class="shc-progress-meta"><span id="progressText">Progress not set</span><span>spoiler-safe to here</span></div></div></div></article>
+    <article class="shc-card shc-card-pad"><div class="shc-eyebrow">Shelf pulse</div><h3 style="font-size:1.35rem;margin-top:5px">Your reading life, at a glance</h3><div class="shc-pulse"><div class="shc-stat"><b id="statReading">0</b><span>reading</span></div><div class="shc-stat"><b id="statWant">0</b><span>on TBR</span></div><div class="shc-stat"><b id="statRead">0</b><span>finished</span></div></div></article>
+  </section>
+
+  <div class="shc-section-head"><div><div class="shc-eyebrow">Companion abilities</div><h2>Not a chatbot. A useful presence.</h2></div><p>Pick a task. Your companion uses your SmutHub context, produces one useful result, then gets out of the way.</p></div>
+  <section class="shc-tools" aria-label="Companion abilities">
+    <button class="shc-tool" data-tool="next-read"><small>Shelf-aware</small><span class="glyph">↟</span><b>Choose My Next Read</b><span>Turn your mood and TBR into one confident pick.</span></button>
+    <button class="shc-tool" data-tool="ritual"><span class="glyph">☾</span><b>Build Tonight’s Ritual</b><span>Set the scene, time box, soundtrack energy, and reading goal.</span></button>
+    <button class="shc-tool" data-tool="safe-catchup"><small>Shielded</small><span class="glyph">◇</span><b>Safe Catch-Up</b><span>Get oriented only as far as your recorded progress allows.</span></button>
+    <button class="shc-tool" data-tool="shelf-reading"><span class="glyph">⌁</span><b>Read My Shelf</b><span>See the moods, patterns, and delightful chaos in your library.</span></button>
+    <button class="shc-tool" data-tool="book-match"><span class="glyph">♥</span><b>Book Match</b><span>Describe the exact feeling you want and find its best match.</span></button>
+    <button class="shc-tool" data-tool="decider"><span class="glyph">↝</span><b>Decide For Me</b><span>Read, switch, pause, or DNF—the companion makes the call.</span></button>
+    <button class="shc-tool" data-tool="mood-rescue"><span class="glyph">✦</span><b>Mood Rescue</b><span>For slumps, book hangovers, and evenings with no clear vibe.</span></button>
+    <button class="shc-tool" data-tool="ask"><small>One-shot</small><span class="glyph">?</span><b>Ask Something</b><span>A focused answer for bookish or everyday questions. No chat thread.</span></button>
+  </section>
+
+  <section class="shc-workspace" id="abilityWorkspace" hidden>
+    <div class="shc-workspace-grid"><div class="shc-workspace-intro"><div class="shc-eyebrow">Selected ability</div><h2 id="abilityTitle">Choose My Next Read</h2><p id="abilityDescription">Tell your companion what tonight needs. Your real shelf and spoiler boundary are added automatically.</p></div><form class="shc-workspace-form" id="abilityForm"><div class="shc-field"><label for="abilityPrompt" id="promptLabel">What are you in the mood for?</label><textarea id="abilityPrompt" maxlength="1000" placeholder="Dark and tense, but I still want a satisfying romance…"></textarea></div><div class="shc-form-row"><div class="shc-field"><label for="paceSelect">Pace</label><select id="paceSelect"><option>Surprise me</option><option>Fast and addictive</option><option>Slow burn</option><option>Something in between</option></select></div><div class="shc-field"><label for="timeSelect">Time tonight</label><select id="timeSelect"><option>About an hour</option><option>Twenty minutes</option><option>All evening</option><option>A whole weekend</option></select></div></div><button class="shc-button" id="runAbility" type="submit">Create my result ✦</button><article class="shc-result" id="abilityResult" hidden><div class="shc-eyebrow">Your companion’s result</div><h3 id="resultTitle">The decision</h3><p id="resultCopy"></p><div class="shc-result-meta" id="resultMeta">Built from your SmutHub context · spoiler shield on</div></article></form></div>
+  </section>
+
+  <details class="shc-settings"><summary>Shape your companion</summary><div class="shc-settings-grid"><div class="shc-field"><label for="setName">Name</label><input id="setName" maxlength="40"></div><div class="shc-field"><label for="setArchetype">Energy</label><select id="setArchetype"><option value="guardian">Guardian</option><option value="rival">Rival</option><option value="confidant">Confidant</option></select></div><div class="shc-field"><label for="setVoice">Voice</label><select id="setVoice"><option value="velvet">Velvet</option><option value="ember">Ember</option><option value="stillwater">Stillwater</option></select></div><div class="shc-field"><label for="setInitiative">Presence</label><select id="setInitiative"><option value="quiet">Only in my room</option><option value="contextual">Appears when useful</option><option value="proactive">Greets me on dashboard</option></select></div><div class="shc-field"><label for="setFlirt">Flirt level</label><select id="setFlirt"><option value="0">Off</option><option value="1">A little</option><option value="2">Playful</option><option value="3">Bold</option></select></div><div class="shc-field"><label for="setSpoiler">Spoilers</label><select id="setSpoiler"><option value="strict">Strict shield</option><option value="ask">Ask first</option><option value="off">Off</option></select></div><button class="shc-save" id="saveCompanion">Save</button></div></details>
 </template>
 
 <script>
-  const root=document.getElementById('companionRoot');
-  const statusEl=document.getElementById('shcStatus');
-  const localPreview=['localhost','127.0.0.1','[::1]'].includes(location.hostname)&&new URLSearchParams(location.search).has('preview');
-  const status=m=>{statusEl.textContent=m;statusEl.classList.add('show');setTimeout(()=>statusEl.classList.remove('show'),1800)};
-
-  window.addEventListener('sh-companion-ready',async e=>{
-    const {allowed,user,profile}=e.detail||{};
-    if(localPreview){SHCompanion.allowed=true;SHCompanion.profile=profile||{companion_name:'Aren',archetype:'guardian',voice_style:'velvet',initiative:'contextual',flirt_level:1,spoiler_mode:'strict'};renderRoom(SHCompanion.profile);SHCompanion.addMessage('There you are. I can see the shape of your shelf already. What sort of trouble are we choosing tonight?','assistant',document.getElementById('roomMessages'));return;}
-    if(!user){
-      root.innerHTML='<div class="shc-gate"><div class="ico">✦</div><h1>Your companion is waiting</h1><p>Sign in first. Companion access is currently limited to invited beta readers.</p><button onclick="SH.openAuth()">Log in / Sign up</button></div>';
-      return;
-    }
-    if(!allowed){
-      root.innerHTML='<div class="shc-gate"><div class="ico">◇</div><h1>The door is invitation-only</h1><p>You’re signed in, but this account is not in the Companion beta yet. Your shelf and account are unchanged.</p><a href="/dashboard.html">Back to the Hub</a></div>';
-      return;
-    }
-    renderRoom(profile);
-    const {data:history}=await SH.sb.from('companion_messages').select('role,content').order('created_at',{ascending:false}).limit(16);
-    const messages=document.getElementById('roomMessages');
-    if(history&&history.length) history.reverse().forEach(m=>SHCompanion.addMessage(m.content,m.role,messages));
-    else SHCompanion.addMessage('There you are. I can see the shape of your shelf already. What sort of trouble are we choosing tonight?','assistant',messages);
-  });
-
-  function renderRoom(profile){
-    root.innerHTML='';root.append(document.getElementById('roomTemplate').content.cloneNode(true));
-    fillProfile(profile||SHCompanion.profile);
-    const form=document.getElementById('roomForm'),input=document.getElementById('roomInput'),messages=document.getElementById('roomMessages');
-    form.onsubmit=e=>{e.preventDefault();const v=input.value.trim();if(!v)return;input.value='';SHCompanion.ask(v,messages)};
-    input.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();form.requestSubmit()}};
-    document.querySelectorAll('.shc-room-prompts button').forEach(btn=>btn.onclick=()=>SHCompanion.ask(btn.textContent,messages));
-    document.getElementById('saveCompanion').onclick=saveProfile;
-  }
-  function fillProfile(p){
-    p=p||{};const name=p.companion_name||'Aren';
-    document.getElementById('portraitName').textContent=name;document.getElementById('roomTitle').textContent=name+' is present';document.getElementById('portraitRole').textContent=(p.archetype||'guardian')+' · private beta';
-    document.getElementById('setName').value=name;document.getElementById('setArchetype').value=p.archetype||'guardian';document.getElementById('setVoice').value=p.voice_style||'velvet';document.getElementById('setInitiative').value=p.initiative||'contextual';document.getElementById('setFlirt').value=String(p.flirt_level??1);document.getElementById('setSpoiler').value=p.spoiler_mode||'strict';
-    const quote={guardian:'“Your shelf has opinions. Fortunately, so do I.”',rival:'“You call that a dangerous TBR? Let me improve it.”',confidant:'“Tell me the mood. I’ll find the book that understands it.”'};document.getElementById('portraitQuote').textContent=quote[p.archetype]||quote.guardian;
-  }
-  async function saveProfile(){
-    const values={companion_name:document.getElementById('setName').value.trim()||'Aren',archetype:document.getElementById('setArchetype').value,voice_style:document.getElementById('setVoice').value,initiative:document.getElementById('setInitiative').value,flirt_level:+document.getElementById('setFlirt').value,spoiler_mode:document.getElementById('setSpoiler').value};
-    try{await SHCompanion.saveProfile(values);fillProfile(SHCompanion.profile);status('Companion saved ✨')}catch(e){status("Couldn't save: "+e.message)}
-  }
+const root=document.getElementById('companionRoot'),statusEl=document.getElementById('shcStatus');
+const localPreview=['localhost','127.0.0.1','[::1]'].includes(location.hostname)&&new URLSearchParams(location.search).has('preview');
+const mockShelf=[{title:'Fourth Wing',author:'Rebecca Yarros',status:'want'},{title:'Divine Rivals',author:'Rebecca Ross',status:'reading'},{title:'A Court of Thorns and Roses',author:'Sarah J. Maas',status:'read'}];
+const abilityCopy={
+ 'next-read':['Choose My Next Read','Tell me what tonight needs. I’ll make one shelf-aware choice.','What are you in the mood for?','The pick'],
+ ritual:["Build Tonight’s Ritual",'Give me the energy and time you have. I’ll shape the rest.','What should tonight feel like?','Tonight’s ritual'],
+ 'safe-catchup':['Safe Catch-Up','Set your exact progress. I’ll never wander beyond it.','What book and where did you stop?','Your safe orientation'],
+ 'shelf-reading':['Read My Shelf','Let me find the patterns in what you save, start, and finish.','Anything you want me to focus on?','Your shelf, interpreted'],
+ 'book-match':['Book Match','Describe the feeling. I’ll search your shelf for its closest match.','Describe the exact reading feeling you want.','Your closest match'],
+ decider:['Decide For Me','Hand over the indecision. I’ll make a clear, low-stakes call.','What decision are you stuck on?','Decision made'],
+ 'mood-rescue':['Mood Rescue','For slumps, hangovers, and nights when nothing sounds right.','What kind of reading slump are we fixing?','Your prescription'],
+ ask:['Ask Something','One focused question, one useful answer—no endless chat thread.','What do you want a clear answer on?','The short answer']
+};
+const status=m=>{statusEl.textContent=m;statusEl.classList.add('show');setTimeout(()=>statusEl.classList.remove('show'),1800)};
+window.addEventListener('sh-companion-ready',async e=>{let {allowed,user,profile}=e.detail||{};if(localPreview&&!allowed){allowed=true;profile={companion_name:'Aren',archetype:'guardian',voice_style:'velvet',initiative:'contextual',flirt_level:1,spoiler_mode:'strict'};SHCompanion.allowed=true;SHCompanion.profile=profile}if(!user&&!localPreview){root.innerHTML='<div class="shc-gate"><div class="ico">✦</div><h1>Your companion is waiting</h1><p>Sign in first. Companion access is currently limited to invited beta readers.</p><button onclick="SH.openAuth()">Log in / Sign up</button></div>';return}if(!allowed){root.innerHTML='<div class="shc-gate"><div class="ico">◇</div><h1>The door is invitation-only</h1><p>You’re signed in, but this account is not in the Companion beta yet. Your shelf and account are unchanged.</p><a href="/dashboard.html">Back to the Hub</a></div>';return}renderRoom(profile);await loadShelf(localPreview)});
+function renderRoom(profile){root.innerHTML='';root.append(document.getElementById('roomTemplate').content.cloneNode(true));fillProfile(profile||SHCompanion.profile||{});document.querySelectorAll('[data-tool]').forEach(btn=>btn.onclick=()=>openTool(btn.dataset.tool));document.getElementById('abilityForm').onsubmit=runTool;document.getElementById('saveCompanion').onclick=saveProfile;const tool=new URLSearchParams(location.search).get('tool');if(tool&&abilityCopy[tool])setTimeout(()=>openTool(tool,false),50)}
+function fillProfile(p){const name=p.companion_name||'Aren';document.getElementById('portraitName').textContent=name;document.getElementById('portraitRole').textContent=(p.archetype||'guardian')+' · private beta';document.getElementById('greeting').textContent=name+' saved you a decision.';document.getElementById('setName').value=name;document.getElementById('setArchetype').value=p.archetype||'guardian';document.getElementById('setVoice').value=p.voice_style||'velvet';document.getElementById('setInitiative').value=p.initiative||'contextual';document.getElementById('setFlirt').value=String(p.flirt_level??1);document.getElementById('setSpoiler').value=p.spoiler_mode||'strict';const q={guardian:'“Your shelf has opinions. Fortunately, so do I.”',rival:'“You call that a dangerous TBR? Let me improve it.”',confidant:'“Tell me the mood. I’ll find the book that understands it.”'};document.getElementById('portraitQuote').textContent=q[p.archetype]||q.guardian}
+async function loadShelf(preview){let shelf=mockShelf,progress=[];if(!preview){const [s,p]=await Promise.all([SH.sb.from('shelf').select('book_key,status,title,author,created_at').order('created_at',{ascending:false}).limit(80),SH.sb.from('reading_progress').select('book_key,chapter,percent').limit(30)]);shelf=s.data||[];progress=p.data||[]}const want=shelf.filter(b=>b.status==='want'),reading=shelf.filter(b=>b.status==='reading'),read=shelf.filter(b=>b.status==='read');document.getElementById('statWant').textContent=want.length;document.getElementById('statReading').textContent=reading.length;document.getElementById('statRead').textContent=read.length;const pick=want[0]||reading[0]||shelf[0];if(pick){document.getElementById('pickTitle').textContent=pick.title||'A shelf pick';document.getElementById('pickAuthor').textContent=pick.author||'From your SmutHub shelf';document.getElementById('pickCover').textContent=(pick.title||'YOUR NEXT READ').toUpperCase();document.getElementById('pickReason').textContent='“This is already on your shelf. Give me your mood and I’ll tell you whether it is tonight’s book—without touching the plot.”'}const current=reading[0];if(current){document.getElementById('currentTitle').textContent=current.title||'Current read';document.getElementById('currentAuthor').textContent=current.author||'';document.getElementById('currentCover').textContent=(current.title||'CURRENT READ').toUpperCase();const pg=progress.find(x=>x.book_key===current.book_key);const pct=Math.max(0,Math.min(100,Number(pg?.percent)||0));document.getElementById('progressBar').style.width=pct+'%';document.getElementById('progressText').textContent=pct?pct+'% complete':(pg?.chapter?'Chapter '+pg.chapter:'Progress not set')}}
+function openTool(tool,scroll=true){const copy=abilityCopy[tool]||abilityCopy['next-read'],ws=document.getElementById('abilityWorkspace');ws.dataset.ability=tool;document.getElementById('abilityTitle').textContent=copy[0];document.getElementById('abilityDescription').textContent=copy[1];document.getElementById('promptLabel').textContent=copy[2];document.getElementById('abilityPrompt').placeholder=tool==='ask'?'Should I keep reading tonight or call it?':'Dark, tense, romantic—and fast enough for a weeknight…';document.getElementById('abilityResult').hidden=true;ws.hidden=false;if(scroll)ws.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>document.getElementById('abilityPrompt').focus(),250)}
+async function runTool(e){e.preventDefault();const ws=document.getElementById('abilityWorkspace'),ability=ws.dataset.ability||'next-read',button=document.getElementById('runAbility'),prompt=document.getElementById('abilityPrompt').value.trim()||'Use my shelf and make the best choice for me.';button.disabled=true;ws.classList.add('shc-busy');button.textContent='Working…';try{const data=await SHCompanion.runAbility({ability,message:prompt,parameters:{pace:document.getElementById('paceSelect').value,time:document.getElementById('timeSelect').value}});const copy=abilityCopy[ability]||abilityCopy['next-read'];document.getElementById('resultTitle').textContent=copy[3];document.getElementById('resultCopy').textContent=data.reply;document.getElementById('resultMeta').textContent='Built from your SmutHub context · spoiler shield on · '+(data.mode==='ai'?'AI beta':'preview mode');document.getElementById('abilityResult').hidden=false}catch(err){status(err.message||'The connection slipped. Try again.')}finally{button.disabled=false;button.textContent='Create my result ✦';ws.classList.remove('shc-busy')}}
+async function saveProfile(){const values={companion_name:document.getElementById('setName').value.trim()||'Aren',archetype:document.getElementById('setArchetype').value,voice_style:document.getElementById('setVoice').value,initiative:document.getElementById('setInitiative').value,flirt_level:+document.getElementById('setFlirt').value,spoiler_mode:document.getElementById('setSpoiler').value};try{await SHCompanion.saveProfile(values);fillProfile(SHCompanion.profile);status('Companion saved ✨')}catch(e){status("Couldn't save: "+e.message)}}
 </script>
-</body>
-</html>
+</body></html>
