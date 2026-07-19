@@ -32,6 +32,8 @@ create policy "read own companion beta access" on companion_beta_access
 
 create table if not exists companion_profiles (
   user_id          uuid primary key references auth.users(id) on delete cascade,
+  persona_key      text not null default 'aren'
+                     check (persona_key in ('aren','nyra')),
   companion_name   text not null default 'Aren',
   archetype        text not null default 'guardian'
                      check (archetype in ('guardian','rival','confidant')),
@@ -44,6 +46,12 @@ create table if not exists companion_profiles (
                      check (spoiler_mode in ('strict','ask','off')),
   updated_at       timestamptz not null default now()
 );
+
+-- Makes this migration safe for projects that applied the first beta version.
+alter table companion_profiles add column if not exists persona_key text not null default 'aren';
+alter table companion_profiles drop constraint if exists companion_profiles_persona_key_check;
+alter table companion_profiles add constraint companion_profiles_persona_key_check
+  check (persona_key in ('aren','nyra'));
 
 alter table companion_profiles enable row level security;
 drop policy if exists "manage own companion profile" on companion_profiles;

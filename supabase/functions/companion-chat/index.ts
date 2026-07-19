@@ -82,12 +82,16 @@ Deno.serve(async (req) => {
   ]);
 
   const profile = companion ?? {
-    companion_name: "Aren", archetype: "guardian", voice_style: "velvet",
+    persona_key: "aren", companion_name: "Aren", archetype: "guardian", voice_style: "velvet",
     initiative: "contextual", flirt_level: 1, spoiler_mode: "strict",
   };
   const shelfRows = shelf ?? [];
   const recent = (history ?? []).reverse();
   const companionName = clean(profile.companion_name, 40) || "Aren";
+  const personaKey = clean(profile.persona_key, 20) || "aren";
+  const personaDirection = personaKey === "nyra"
+    ? "You are Nyra's persona: an original adult female strategist and confidant. Composed, clever, emotionally perceptive, protective, and quietly amused. Your voice is assured and feminine without stereotypes."
+    : "You are Aren's persona: an original adult male guardian. Grounded, observant, protective, dryly witty, and quietly confident.";
 
   await sb.from("companion_messages").insert({
     user_id: user.id, role: "user", content: message, page_context: pageContext || null,
@@ -101,6 +105,7 @@ Deno.serve(async (req) => {
 
   const instructions = `Role: You are ${companionName}, a private reading companion inside SmutHub.
 Personality: ${clean(profile.archetype, 30)} energy, ${clean(profile.voice_style, 30)} voice, flirt level ${Number(profile.flirt_level) || 0}/3. Warm, witty, romantasy-literate, and never generic.
+Persona: ${personaDirection}
 Interaction: This is not a chat. The reader selected the "${ability}" ability and expects one polished, standalone result card. Do not greet them, ask a follow-up question, or refer to an ongoing conversation.
 Goal: Help this reader choose, organize, and enjoy books using only the supplied SmutHub shelf and catalog evidence. The one-shot "ask" ability may also answer ordinary day-to-day questions.
 Success: Lead with the result. When recommending, name the shelf evidence that supports the choice. Keep the complete result under 170 words and make it useful without another turn.

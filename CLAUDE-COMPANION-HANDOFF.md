@@ -37,7 +37,8 @@ rounded cards, and mobile-first responsive behavior.
 - `companion.css` — room, abilities, results, and reusable contextual strip.
 - `companion.js` — beta access check, profile loading/saving, surface reveal,
   deep-link routing, and authenticated calls to the Edge Function.
-- `companion-aren.png` — current beta portrait asset.
+- `companion-aren.png` — curated MMC guardian portrait.
+- `companion-nyra.png` — curated FMC strategist portrait.
 - `dashboard.html` — allowlisted dashboard presence strip.
 - `smuthub-app.html` — allowlisted Book Match strip near Search.
 - `smuthub-bookcase.html` — allowlisted Choose For Me strip.
@@ -151,6 +152,8 @@ the contextual surfaces remain hidden and the room remains invitation-only.
 - Friend reading activity and trending books are not included because there is
   not yet a trustworthy friend/privacy data contract in this repo. Do not fake it.
 - Portrait customization and voice are future work. The settings currently store
-  name, archetype, voice style label, presence mode, flirt level, and spoiler mode.
+  persona (`aren` or `nyra`), name, archetype, voice style label, presence mode,
+  flirt level, and spoiler mode. Nyra changes both the portrait and server-side
+  personality direction; she is not a cosmetic reskin.
 - The site is intentionally static. Do not migrate it to a framework merely to
   extend this feature; preserve the existing HTML/CSS/JS + Supabase architecture.

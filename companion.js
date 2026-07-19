@@ -26,11 +26,11 @@
     async loadProfile(){
       if(!this.allowed) return null;
       if(localPreview&&!window.SH?.user){
-        this.profile={companion_name:'Aren',archetype:'guardian',voice_style:'velvet',initiative:'contextual',flirt_level:1,spoiler_mode:'strict'};
+        this.profile={persona_key:'aren',companion_name:'Aren',archetype:'guardian',voice_style:'velvet',initiative:'contextual',flirt_level:1,spoiler_mode:'strict'};
         return this.profile;
       }
       const {data}=await SH.sb.from('companion_profiles').select('*').eq('user_id',SH.user.id).maybeSingle();
-      this.profile=data||{user_id:SH.user.id,companion_name:'Aren',archetype:'guardian',voice_style:'velvet',initiative:'contextual',flirt_level:1,spoiler_mode:'strict'};
+      this.profile=data||{user_id:SH.user.id,persona_key:'aren',companion_name:'Aren',archetype:'guardian',voice_style:'velvet',initiative:'contextual',flirt_level:1,spoiler_mode:'strict'};
       return this.profile;
     },
     revealSurfaces(){
