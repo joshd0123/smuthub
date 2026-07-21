@@ -59,8 +59,17 @@
   .sh-rail-strip i{display:block;width:22px;height:2px;background:var(--muted);border-radius:1px;transition:background .15s,width .15s}
   .sh-rail:hover .sh-rail-strip i,.sh-rail.open .sh-rail-strip i{background:var(--amber)}
   .sh-rail-strip i:nth-child(odd){width:16px}
-  .sh-rail-panel{position:absolute;left:100%;top:50%;transform:translate(-12px,-50%);background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:260px;max-height:80vh;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;box-shadow:0 22px 50px rgba(0,0,0,.55);margin-left:6px}
-  .sh-rail:hover .sh-rail-panel,.sh-rail.open .sh-rail-panel,.sh-rail:focus-within .sh-rail-panel{opacity:1;pointer-events:auto;transform:translate(0,-50%)}
+  .sh-rail-panel{position:absolute;left:100%;top:50%;transform:translate(-12px,-50%);background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:260px;max-height:80vh;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;box-shadow:0 22px 50px rgba(0,0,0,.55);margin-left:8px}
+  /* Invisible bridge across the 8px gap between strip and panel. Without it the
+     pointer crosses dead space that belongs to neither element, the rail loses
+     :hover mid-reach and the panel snaps shut — which is why the rail felt like
+     it only worked on click. The bridge is part of the panel, so travelling it
+     keeps the rail hovered. */
+  .sh-rail-panel::before{content:"";position:absolute;left:-16px;top:0;bottom:0;width:16px}
+  /* Opening is driven by the .open class (JS hover-intent) rather than raw
+     :hover, so a pointer merely sweeping past the strip doesn't fling the panel
+     open. :focus-within keeps the keyboard path working with no JS. */
+  .sh-rail.open .sh-rail-panel,.sh-rail:focus-within .sh-rail-panel{opacity:1;pointer-events:auto;transform:translate(0,-50%)}
   .sh-rail-panel h3{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding:0 8px}
   .sh-rail-panel a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;border-radius:9px;color:var(--cream);text-decoration:none;font-size:.93rem;line-height:1.2}
   .sh-rail-panel a:hover{background:var(--panel)}
@@ -106,7 +115,8 @@
     <a href="/" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
       <a href="/dashboard.html">Dashboard</a>
-      <a href="/smuthub-app.html">Search</a>
+      <a href="/search">Search</a>
+      <a href="/book/">Browse Books</a>
       <a href="/smuthub-bookcase.html">My Bookshelf</a>
       <a href="/glossary/" class="on" >Glossary</a>
     </nav>
@@ -135,7 +145,7 @@
     
     <p class="defn">Sexual activity occurs between main characters without consent.</p>
     
-    <a class="cta" href="/smuthub-app.html?q=non-consent-between-mcs">Find books with this content warning →</a>
+    <a class="cta" href="/search?q=non-consent-between-mcs">Find books with this content warning →</a>
   </section>
 
   
@@ -194,18 +204,105 @@
 <script>(function(){
   var rail = document.getElementById('shRail'); if(!rail) return;
   var strip = rail.querySelector('.sh-rail-strip');
+  var openT, closeT;
+
+  function setOpen(on){
+    rail.classList.toggle('open', on);
+    strip.setAttribute('aria-expanded', on ? 'true' : 'false');
+  }
+  // Asymmetric delays: a short one before opening so a pointer travelling past
+  // the strip doesn't trigger it, and a longer one before closing so the
+  // diagonal move from strip into the panel is forgiven.
+  function hoverOpen(){ clearTimeout(closeT); openT = setTimeout(function(){ setOpen(true); }, 120); }
+  function hoverClose(){ clearTimeout(openT); closeT = setTimeout(function(){ setOpen(false); }, 250); }
+  rail.addEventListener('mouseenter', hoverOpen);
+  rail.addEventListener('mouseleave', hoverClose);
+
+  // Click still toggles. Required on touch devices >=900px (no hover exists
+  // there at all) and preferred by readers who don't want hover-triggered UI.
   strip.addEventListener('click', function(e){
-    e.stopPropagation();
-    var open = rail.classList.toggle('open');
-    strip.setAttribute('aria-expanded', open);
+    e.stopPropagation(); clearTimeout(openT); clearTimeout(closeT);
+    setOpen(!rail.classList.contains('open'));
   });
-  document.addEventListener('click', function(e){ if(!rail.contains(e.target)) { rail.classList.remove('open'); strip.setAttribute('aria-expanded','false'); } });
+
+  // Keyboard: rail is focusable; focus anywhere inside holds it open, Esc closes.
+  rail.addEventListener('focusin', function(){ clearTimeout(closeT); setOpen(true); });
+  rail.addEventListener('focusout', function(){ if(!rail.contains(document.activeElement)) setOpen(false); });
+  rail.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ setOpen(false); strip.focus(); } });
+  document.addEventListener('click', function(e){ if(!rail.contains(e.target)) setOpen(false); });
+
+  // ── Same-page anchoring (glossary index only) ────────────────────────────
+  // The index already renders every category as a .catblock, so following
+  // /glossary/<cat>/ from here would be a full page load to reach content
+  // that is already on screen. Where the matching block exists, scroll to it
+  // instead. On inner category pages no block matches and every link stays
+  // ordinary navigation — so the markup is identical and crawlable either way.
+  var links = [].slice.call(rail.querySelectorAll('.sh-rail-panel a[href^="/glossary/"]'));
+  var targets = [];
+  links.forEach(function(a){
+    var m = a.getAttribute('href').match(/^\/glossary\/([^/]+)\/$/);
+    var block = m && document.getElementById('cat-' + m[1]);
+    if(!block) return;
+    targets.push({ link:a, block:block });
+    a.addEventListener('click', function(e){
+      // Never hijack modified clicks — cmd/ctrl/shift/middle must still open a tab.
+      if(e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+      e.preventDefault();
+      var startY = window.scrollY;
+      block.scrollIntoView({ behavior:'smooth', block:'start' });
+      // Safety net: some renderers (and reduced-motion setups) treat a smooth
+      // scroll request as a no-op rather than falling back to an instant one.
+      // Since this click has already been preventDefault'ed, that would leave
+      // the reader with a dead link. If nothing moved, jump outright.
+      setTimeout(function(){
+        if(Math.abs(window.scrollY - startY) < 4) block.scrollIntoView({ block:'start' });
+      }, 400);
+      history.replaceState(null, '', '#cat-' + m[1]);
+      setOpen(false);
+    });
+  });
+
+  // Scroll-spy so the rail reflects the section actually being read.
+  // Deliberately a rAF-throttled scroll listener rather than an
+  // IntersectionObserver: this is ~17 getBoundingClientRect calls at most once
+  // per frame, and it behaves the same everywhere. Some embedded renderers
+  // never deliver IO callbacks at all, which would silently kill the highlight
+  // with nothing in the console to explain it.
+  if(targets.length){
+    var allTerms = rail.querySelector('.sh-rail-panel a[href="/glossary/"]');
+    var ticking = false;
+    function syncSpy(){
+      ticking = false;
+      // The active section is the last one whose heading has crossed a line
+      // just below the sticky header. A fixed offset rather than a percentage
+      // of the viewport: a percentage sits too far down the page and overshoots
+      // short categories, so jumping to a 5-term section would highlight
+      // whichever longer section happened to follow it. Blocks are in document
+      // order, so the first one starting below the line ends the search.
+      var line = 140, current = null;
+      for(var i = 0; i < targets.length; i++){
+        if(targets[i].block.getBoundingClientRect().top <= line) current = targets[i];
+        else break;
+      }
+      targets.forEach(function(t){ t.link.classList.toggle('active', t === current); });
+      // Nothing has scrolled past yet → the reader is still at the top.
+      if(allTerms) allTerms.classList.toggle('active', !current);
+    }
+    // Throttled with a timer rather than requestAnimationFrame so the highlight
+    // still updates in contexts that don't paint frames on a normal schedule.
+    window.addEventListener('scroll', function(){
+      if(ticking) return;
+      ticking = true;
+      setTimeout(syncSpy, 80);
+    }, { passive:true });
+    syncSpy();
+  }
 })();</script>
 
 <footer>
   <div class="wrap ft">
     <span>© 2026 smutHub · Romantasy, decoded.</span>
-    <span><a href="/glossary/">Glossary</a> · <a href="/smuthub-app.html">Search</a> · <a href="/sitemap.html">Sitemap</a></span>
+    <span><a href="/glossary/">Glossary</a> · <a href="/search">Search</a> · <a href="/sitemap.html">Sitemap</a></span>
   </div>
 </footer>
 </body></html>

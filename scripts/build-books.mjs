@@ -181,7 +181,8 @@ const SHARED_HEADER = `
     <a href="/" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
       <a href="/dashboard.html">Dashboard</a>
-      <a href="/smuthub-app.html">Search</a>
+      <a href="/search">Search</a>
+      <a href="/book/">Browse Books</a>
       <a href="/smuthub-bookcase.html">My Bookshelf</a>
       <a href="/glossary/">Glossary</a>
     </nav>
@@ -194,7 +195,7 @@ const SHARED_FOOTER = `
 <footer>
   <div class="wrap ft">
     <span>© ${new Date().getFullYear()} smutHub · Romantasy, decoded.</span>
-    <span><a href="/glossary/">Glossary</a> · <a href="/smuthub-app.html">Search</a> · <a href="/sitemap.html">Sitemap</a></span>
+    <span><a href="/glossary/">Glossary</a> · <a href="/search">Search</a> · <a href="/sitemap.html">Sitemap</a></span>
   </div>
 </footer>
 </body></html>
@@ -628,7 +629,7 @@ function renderBookPage(book){
   const body = `<body>
 ${SHARED_HEADER}
 <div class="wrap">
-  <nav class="crumb"><a href="/">Home</a> / <a href="/smuthub-app.html">Books</a> / <span>${esc(book.title)}</span></nav>
+  <nav class="crumb"><a href="/">Home</a> / <a href="/book/">All books</a> / <span>${esc(book.title)}</span></nav>
 
   <div class="book-layout">
     <aside class="cover-col">
@@ -649,7 +650,7 @@ ${SHARED_HEADER}
       <header class="book-header">
         ${book.subgenre ? `<span class="badge">${esc(humanize(book.subgenre))}</span>` : ''}
         <h1>${esc(book.title)}</h1>
-        <p class="byline">${author ? `by <a href="/smuthub-app.html?q=${encodeURIComponent(author)}">${esc(author)}</a>` : 'Author unknown'}${book.year ? ` · ${esc(book.year)}` : ''}</p>
+        <p class="byline">${author ? `by <a href="/search?q=${encodeURIComponent(author)}">${esc(author)}</a>` : 'Author unknown'}${book.year ? ` · ${esc(book.year)}` : ''}</p>
         ${seriesLine}
         ${spiceMeterHTML(book)}
         ${warningsHTML(book, tags)}
@@ -670,7 +671,7 @@ ${SHARED_HEADER}
 </div>
 
 <script>
-  // Add-to-shelf — mirrors smuthub-app.html shelveBook(): upsert into the
+  // Add-to-shelf — mirrors /search shelveBook(): upsert into the
   // shelf table keyed on (user_id, book_key) where book_key = this book slug.
   // Server-rendered book metadata is embedded so the shelf row carries a
   // title/author/cover snapshot.
@@ -747,6 +748,213 @@ ${SHARED_FOOTER}`;
 }
 
 // ══════════════════════════════════════════════════════════════════════════
+//  /book/ — the browse index
+// ══════════════════════════════════════════════════════════════════════════
+//  Until this page existed the plot pages were nearly unreachable: the homepage
+//  linked a handful of featured books, Search surfaced a rotating sample of the
+//  catalog, and everything else could only be found by already standing on
+//  another book page. This is the hub — every live book as a real, crawlable
+//  <a>, with filtering done client-side so it stays one static page (and one
+//  strong internal-linking hub for crawlers) rather than paginated slices.
+// ══════════════════════════════════════════════════════════════════════════
+const ARTICLE_RX = /^(the|a|an)\s+/i;
+const sortTitle = b => String(b.title || '').replace(ARTICLE_RX, '').trim().toLowerCase();
+const letterOf = b => { const c = sortTitle(b).charAt(0).toUpperCase(); return /[A-Z]/.test(c) ? c : '#'; };
+
+const INDEX_CSS = `<style>
+  .ihead{padding:34px 0 6px}
+  .ihead h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:-.02em}
+  .ihead h1 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
+  .ihead .sub{color:var(--muted);max-width:62ch;margin-top:12px}
+  .tools{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 6px;align-items:center}
+  .tools input{flex:1;min-width:200px;background:var(--panel);border:1px solid var(--line);color:var(--cream);font-family:inherit;font-size:1rem;border-radius:99px;padding:.7em 1.1em;outline:none}
+  .tools input:focus{border-color:var(--rose)}
+  .tools select{background:var(--panel);border:1px solid var(--line);color:var(--cream);font-family:inherit;font-size:.92rem;border-radius:99px;padding:.6em 1em;cursor:pointer}
+  .tools select:focus{outline:none;border-color:var(--rose)}
+  .tools button{background:none;border:1px solid var(--line);color:var(--muted);font-family:inherit;font-weight:700;font-size:.85rem;padding:.6em 1em;border-radius:99px;cursor:pointer}
+  .tools button:hover{border-color:var(--rose);color:var(--cream)}
+  .azbar{display:flex;flex-wrap:wrap;gap:4px;margin:10px 0 4px}
+  .azbar a{color:var(--muted);text-decoration:none;font-size:.82rem;font-weight:700;padding:.28em .55em;border-radius:7px;line-height:1}
+  .azbar a:hover{background:var(--panel);color:var(--amber)}
+  .meter{color:var(--muted);font-size:.86rem;margin:8px 0 16px}
+  .lgroup{padding-top:10px;scroll-margin-top:88px}
+  .lgroup > h2{font-family:'Fraunces',serif;font-weight:600;font-size:1.15rem;color:var(--amber);border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:14px}
+  .bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;margin-bottom:10px}
+  @media(max-width:600px){.bgrid{grid-template-columns:repeat(2,1fr);gap:12px}}
+  .bcard{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;text-decoration:none;color:inherit;transition:transform .16s,border-color .16s}
+  .bcard:hover{transform:translateY(-3px);border-color:var(--rose)}
+  /* Covers are fit, never cropped — the letterbox is filled by a blurred copy
+     of the same image, so one URL serves both layers from one request. */
+  .bcard .cover{position:relative;aspect-ratio:3/4;overflow:hidden;background:var(--ink-2);flex:0 0 auto}
+  .bcard .cover img{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .bcard .cover-bg{object-fit:cover;filter:blur(18px) saturate(1.35) brightness(.5);transform:scale(1.25)}
+  .bcard .cover-img{object-fit:contain;z-index:1}
+  .bcard .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px;font-family:'Fraunces',serif;font-style:italic;font-size:.95rem;line-height:1.2;color:#fff;background:linear-gradient(160deg,#3a0d2a,#7a1238)}
+  .bmeta{padding:10px 12px 13px;display:flex;flex-direction:column;flex:1}
+  .bmeta .bt{font-family:'Fraunces',serif;font-weight:500;font-size:.98rem;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .bmeta .ba{color:var(--muted);font-size:.78rem;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bmeta .bs{margin-top:6px;font-size:.72rem;letter-spacing:.04em}
+  .noresults{color:var(--muted);font-style:italic;padding:24px 0 40px}
+</style>`;
+
+function renderBookIndex(allBooks){
+  const sorted = allBooks.filter(b => b.slug).slice()
+    .sort((a, b) => sortTitle(a).localeCompare(sortTitle(b)) || String(a.slug).localeCompare(String(b.slug)));
+
+  // Trope options come from tropes actually carried by a live book, so the
+  // dropdown can never offer a filter that returns an empty grid.
+  const tropeCount = new Map();
+  for (const b of sorted){
+    for (const t of tagsOf(b)){
+      if (t.category !== 'trope') continue;
+      const cur = tropeCount.get(t.slug) || { label: t.label, n: 0 };
+      cur.n++; tropeCount.set(t.slug, cur);
+    }
+  }
+  const tropeOptions = [...tropeCount.entries()]
+    .sort((a, b) => b[1].n - a[1].n || a[1].label.localeCompare(b[1].label))
+    .map(([slug, v]) => `<option value="${escAttr(slug)}">${esc(v.label)} (${v.n})</option>`).join('');
+
+  const cardFor = b => {
+    const author = b.author || 'Unknown';
+    const spice = Math.max(0, Math.min(5, Number(b.spice_level) || 0));
+    const tropes = tagsOf(b).filter(t => t.category === 'trope').map(t => t.slug).join(' ');
+    const cover = b.cover_url
+      ? `<img class="cover-bg" src="${escAttr(b.cover_url)}" alt="" aria-hidden="true" loading="lazy">`
+        + `<img class="cover-img" src="${escAttr(b.cover_url)}" alt="${escAttr(b.title)} book cover" loading="lazy">`
+      : `<div class="ph">${esc(b.title)}</div>`;
+    return `<a class="bcard" href="${escAttr(bookPath(b))}" data-s="${escAttr((b.title + ' ' + author).toLowerCase())}" data-tropes="${escAttr(tropes)}" data-spice="${spice}">
+        <div class="cover">${cover}</div>
+        <div class="bmeta">
+          <div class="bt">${esc(b.title)}</div>
+          <div class="ba">${esc(author)}</div>
+          ${spice ? `<div class="bs">${'🌶️'.repeat(spice)}</div>` : ''}
+        </div>
+      </a>`;
+  };
+
+  // Grouped A–Z so the page is skimmable at 289 books and the jump bar has
+  // somewhere to land.
+  const groups = [];
+  for (const b of sorted){
+    const L = letterOf(b);
+    if (!groups.length || groups[groups.length - 1].letter !== L) groups.push({ letter: L, items: [] });
+    groups[groups.length - 1].items.push(b);
+  }
+  const groupsHTML = groups.map(g => `<section class="lgroup" id="letter-${esc(g.letter === '#' ? 'num' : g.letter)}" data-letter="${esc(g.letter)}">
+      <h2>${esc(g.letter)}</h2>
+      <div class="bgrid">${g.items.map(cardFor).join('')}</div>
+    </section>`).join('');
+  const azHTML = groups.map(g => `<a href="#letter-${esc(g.letter === '#' ? 'num' : g.letter)}">${esc(g.letter)}</a>`).join('');
+
+  const title = `All Books — Browse ${sorted.length} Romantasy Titles | smutHub`;
+  const description = `Browse every romantasy and spicy fantasy book on smutHub — ${sorted.length} titles with spice ratings, tropes, and content warnings. Filter by trope, heat level, or search by title and author.`;
+
+  const head = SHARED_HEAD({
+    title,
+    description,
+    canonical: `${SITE}/book/`,
+    jsonld: {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: 'All Books',
+      url: `${SITE}/book/`,
+      description,
+      isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: `${SITE}/` },
+      mainEntity: {
+        '@type': 'ItemList',
+        numberOfItems: sorted.length,
+        itemListElement: sorted.map((b, i) => ({
+          '@type': 'ListItem', position: i + 1, url: bookURL(b), name: b.title
+        }))
+      }
+    },
+    extraCSS: INDEX_CSS
+  });
+
+  const body = `<body>
+${SHARED_HEADER}
+
+<div class="wrap ihead">
+  <nav class="crumb" style="padding:18px 0 0;color:var(--muted);font-size:.85rem"><a href="/" style="color:var(--muted);text-decoration:none">Home</a> / <span>All books</span></nav>
+  <h1>Every book, <em>rated</em> and ready.</h1>
+  <p class="sub">All ${sorted.length} titles in the smutHub catalog — spice level, tropes and content warnings on every one. Filter below, or jump by letter.</p>
+
+  <div class="tools">
+    <input id="q" type="search" placeholder="Search title or author…" aria-label="Search books by title or author" autocomplete="off">
+    <select id="fTrope" aria-label="Filter by trope"><option value="">Any trope</option>${tropeOptions}</select>
+    <select id="fSpice" aria-label="Filter by spice level">
+      <option value="">Any spice</option>
+      <option value="1">1+ 🌶️</option><option value="2">2+ 🌶️</option><option value="3">3+ 🌶️</option><option value="4">4+ 🌶️</option><option value="5">5 🌶️</option>
+    </select>
+    <button id="fClear" type="button">✕ Clear</button>
+  </div>
+  <nav class="azbar" aria-label="Jump to letter">${azHTML}</nav>
+  <p class="meter" id="meter">${sorted.length} books · A–Z by title</p>
+</div>
+
+<div class="wrap" id="results">
+${groupsHTML}
+<p class="noresults" id="noresults" style="display:none">No books match those filters yet — try fewer, or clear them.</p>
+</div>
+
+<script>
+  // Live filtering — pure DOM, same approach as the glossary index. Every card
+  // is already in the HTML (good for crawlers and for no-JS readers); this only
+  // hides and shows.
+  (function(){
+    var q = document.getElementById('q');
+    var fTrope = document.getElementById('fTrope');
+    var fSpice = document.getElementById('fSpice');
+    var clear = document.getElementById('fClear');
+    var meter = document.getElementById('meter');
+    var none = document.getElementById('noresults');
+    var groups = [].slice.call(document.querySelectorAll('.lgroup'));
+    var total = document.querySelectorAll('.bcard').length;
+
+    function apply(){
+      var term = q.value.trim().toLowerCase();
+      var trope = fTrope.value;
+      var spice = parseInt(fSpice.value, 10) || 0;
+      var shown = 0;
+      groups.forEach(function(g){
+        var any = false;
+        [].slice.call(g.querySelectorAll('.bcard')).forEach(function(card){
+          var ok = (!term || card.getAttribute('data-s').indexOf(term) >= 0)
+                && (!trope || (' ' + card.getAttribute('data-tropes') + ' ').indexOf(' ' + trope + ' ') >= 0)
+                && (!spice || parseInt(card.getAttribute('data-spice'), 10) >= spice);
+          card.style.display = ok ? '' : 'none';
+          if (ok){ any = true; shown++; }
+        });
+        g.style.display = any ? '' : 'none';
+      });
+      var filtered = term || trope || spice;
+      meter.textContent = shown + ' book' + (shown === 1 ? '' : 's') + (filtered ? ' matching' : '') + ' · A–Z by title';
+      none.style.display = shown ? 'none' : '';
+      clear.style.display = filtered ? '' : 'none';
+    }
+    q.addEventListener('input', apply);
+    fTrope.addEventListener('change', apply);
+    fSpice.addEventListener('change', apply);
+    clear.addEventListener('click', function(){ q.value=''; fTrope.value=''; fSpice.value=''; apply(); q.focus(); });
+
+    // Deep links from elsewhere on the site: /book/?trope=fated-mates&spice=4&q=maas
+    (function(){
+      var p = new URLSearchParams(location.search);
+      if (p.get('q')) q.value = p.get('q');
+      if (p.get('trope')) fTrope.value = p.get('trope');
+      if (p.get('spice')) fSpice.value = p.get('spice');
+    })();
+    apply();
+  })();
+</script>
+
+${SHARED_FOOTER}`;
+
+  return head + body;
+}
+
+// ══════════════════════════════════════════════════════════════════════════
 //  Write everything
 // ══════════════════════════════════════════════════════════════════════════
 await fs.rm(BOOK_DIR, { recursive: true, force: true });
@@ -761,15 +969,21 @@ for (const b of books){
   wrote++;
 }
 
+// The browse index — the hub that makes all of the above reachable.
+await fs.writeFile(path.join(BOOK_DIR, 'index.html'), renderBookIndex(books));
+
 // ── Update sitemap.xml — replace the BOOK-AUTO block in place ───────────────
 const sitemapPath = path.join(ROOT, 'sitemap.xml');
 let sitemap = await fs.readFile(sitemapPath, 'utf-8');
 const START = '<!-- BOOK-AUTO-START -->';
 const END = '<!-- BOOK-AUTO-END -->';
 const today = new Date().toISOString().slice(0, 10);
-const bookUrls = books
-  .filter(b => b.slug)
-  .map(b => `  <url><loc>${bookURL(b)}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`)
+// The browse index leads, at a higher priority than the individual books —
+// it's the hub crawlers should reach first and the one that links to the rest.
+const bookUrls = [`  <url><loc>${SITE}/book/</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>`]
+  .concat(books
+    .filter(b => b.slug)
+    .map(b => `  <url><loc>${bookURL(b)}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`))
   .join('\n');
 const newBlock = `${START}\n${bookUrls}\n  ${END}`;
 const si = sitemap.indexOf(START);
@@ -782,5 +996,6 @@ if (si >= 0 && ei >= 0 && ei > si){
 await fs.writeFile(sitemapPath, sitemap);
 
 console.log(`✓ Wrote ${wrote} book pages → /book/<slug>/`);
-console.log(`✓ Updated sitemap.xml with ${books.filter(b => b.slug).length} book URLs`);
+console.log(`✓ Wrote the browse index → /book/`);
+console.log(`✓ Updated sitemap.xml with ${books.filter(b => b.slug).length} book URLs + /book/`);
 console.log(`\nNext: git add book/ sitemap.xml && git commit && git push`);

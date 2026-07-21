@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Search — SmutHub</title>
 <meta name="description" content="Search thousands of romantasy & spicy fantasy books by title, author, or trope. Filter by spice level, mood, and ending — and shelf your next obsession.">
-<link rel="canonical" href="https://smuthub.ca/smuthub-app.html">
+<link rel="canonical" href="https://smuthub.ca/search">
 <meta name="theme-color" content="#0c0708">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="smutHub">
 <meta property="og:title" content="Search — SmutHub">
 <meta property="og:description" content="Search thousands of romantasy & spicy fantasy books by title, author, or trope.">
-<meta property="og:url" content="https://smuthub.ca/smuthub-app.html">
+<meta property="og:url" content="https://smuthub.ca/search">
 <meta property="og:image" content="https://smuthub.ca/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Search — SmutHub">
@@ -77,9 +77,16 @@
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;padding:10px 0 60px}
   @media(max-width:600px){.grid{grid-template-columns:repeat(2,1fr);gap:12px}}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;height:100%}
+  /* Covers are never cropped. Book covers arrive at wildly different aspect
+     ratios (tall indie art, near-square omnibus scans), so the artwork is fit
+     with object-fit:contain and the leftover letterbox is filled by a blurred,
+     dimmed copy of the same image. Same URL for both <img> tags, so the browser
+     reuses the one cached request — no extra network cost. */
   .cover{aspect-ratio:3/4;position:relative;background:var(--ink-2);overflow:hidden;flex:0 0 auto}
-  .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-  .cover-link{position:absolute;inset:0;z-index:2}
+  .cover img{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .cover .cover-bg{object-fit:cover;filter:blur(18px) saturate(1.35) brightness(.5);transform:scale(1.25)}
+  .cover .cover-img{object-fit:contain;z-index:1}
+  .cover-link{position:absolute;inset:0;z-index:3}
   .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;font-family:'Fraunces';font-style:italic;color:#fff;background:linear-gradient(160deg,#3a0d2a,#7a1238)}
   .meta{padding:14px 16px 16px;display:flex;flex-direction:column;flex:1}
   .title{font-family:'Fraunces';font-weight:500;font-size:1.08rem;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:calc(1.2em * 2)}
@@ -115,7 +122,8 @@
     <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
       <a href="dashboard.html">Dashboard</a>
-      <a href="smuthub-app.html" class="on">Search</a>
+      <a href="/search" class="on">Search</a>
+      <a href="/book/">Browse Books</a>
       <a href="smuthub-bookcase.html">My Bookshelf</a>
       <a href="/glossary/">Glossary</a>
       <a href="stores.html">Find a Store</a>
@@ -179,6 +187,9 @@
     if(window.SH && !window.SH.configured) document.getElementById('setup').classList.add('show');
     if(user){ await loadMine(); } else { Object.keys(spiceMap).forEach(k=>delete spiceMap[k]); shelfSet.clear(); Object.keys(shelfStatus).forEach(k=>delete shelfStatus[k]); }
     render();
+    // Build the title→slug index in the background, then repaint so any external
+    // result for a book we carry picks up its /book/ link.
+    catalogIndex().then(render);
     // once the Supabase client is ready, refresh an empty-box browse so the catalog loads
     if(!document.getElementById('q').value.trim()) run();
   });
@@ -199,6 +210,10 @@
   // exclude books *about* romance (writing guides, academic, collectibles) — we want novels
   const NONFIC_RX = /language arts|literary criticism|education|reference|study aids|biography|history|technology|science|antiques|collectibl|business|self-help|cooking|travel|religion|crafts|music|games|bible|christian|theology|sermons|medical|nursing|law|engineering|economics|sociology|philosophy|magazine|journal|periodical|gazette|annual report|proceedings|congress|senate|labor|commerce|government|public welfare|coloring|deposits|metallurg|mining|geolog|mineral|bibliograph|dissertation|thesis|smelting|almaden/i;
   function isNovel(b){ const s=[].concat(b.subject||[]); return !s.some(x=>NONFIC_RX.test(x)) && !NONFIC_RX.test(b.title||''); }
+  // Multi-book bundles masquerading as a single result. These share the lead
+  // title of the book you actually searched for, so title-prefix matching alone
+  // lets them through and you get the same book twice in one grid.
+  const COLLECTION_RX=/\b(box(ed)?[\s-]?set|collection|omnibus|bundle|anthology|complete series|series set|\d+\s*books?)\b/i;
   // require at least ONE meaningful query word in title or author — kills the
   // "Macmillan's Magazine" / "Holy Bible" matches Open Library returns on broad
   // queries, while still allowing legit results that share part of the query.
@@ -285,6 +300,17 @@
   // window). A tab switch / quick return reuses the same set; 30 min+ away re-rolls.
   // Admins ALWAYS bypass the cache so catalog edits are visible immediately.
   const BROWSE_TTL=30*60*1000;
+  // Minimum tiles in an empty-box browse. The grid never shows fewer than this
+  // while the catalog can supply them.
+  const MIN_BROWSE=16;
+  // Fisher-Yates. `sort(()=>Math.random()-0.5)` is not a uniform shuffle — it
+  // biases items toward their original position, so against a stable catalog
+  // order the same handful of books kept resurfacing between sessions.
+  function shuffle(arr){
+    const a=arr.slice();
+    for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+    return a;
+  }
   function loadBrowseCache(){ try{ const c=JSON.parse(localStorage.getItem('sh_browse')||'null'); if(c && Array.isArray(c.books) && c.books.length && Date.now()-c.ts<BROWSE_TTL) return c.books; }catch(_){} return null; }
   function saveBrowseCache(books){ try{ localStorage.setItem('sh_browse', JSON.stringify({ts:Date.now(), books})); }catch(_){} }
   function bustBrowseCache(){ try{ localStorage.removeItem('sh_browse'); }catch(_){} }
@@ -308,27 +334,83 @@
   }
   async function browsePopular(){
     if(!POPULAR){ try{ POPULAR=((await (await fetch('popular.json',{cache:'no-cache'})).json()).books)||[]; }catch(_){ POPULAR=[]; } }
-    const pick=[...POPULAR].sort(()=>Math.random()-0.5).slice(0,12);   // randomized each visit
+    const pick=shuffle(POPULAR).slice(0,MIN_BROWSE);   // re-rolled each new session
     return (await Promise.all(pick.map(b=>resolveOne(b.title,b.author)))).filter(Boolean);
   }
 
-  // admin: walk the catalog and fill any missing covers from Google (real covers only)
+  // admin: walk the catalog and fill EVERY missing cover from Google (real
+  // covers only). Loops in passes until the queue is drained or a pass makes no
+  // progress — one click, walk away. Previously capped at 40 books per click,
+  // which meant repeatedly clicking to work through a large backlog.
+  //
+  // Mirrors fillCatalogBlurbs(): transient Google 503s are retried with backoff
+  // (so a flaky minute doesn't permanently skip a book), while a genuine "no
+  // confident match" is remembered for the run so later passes don't re-ask.
+  // Strict guard: title AND author surname must match before a cover is
+  // attached, so a fuzzy search can never staple the wrong art to a book.
   async function fillCatalogCovers(){
     if(!isAdmin || !sb){ toast("Admins only"); return; }
+    if(!GB_KEY){ toast("No Google Books key configured"); return; }
     const btn=document.getElementById('adminFill');
-    const { data, error } = await sb.from('books').select('slug,title,author').is('cover_url',null).limit(40);
-    if(error){ toast("Catalog read failed: "+error.message); return; }
-    if(!data || !data.length){ toast("Every catalog book already has a cover ✓"); return; }
-    btn.disabled=true; let filled=0, i=0;
-    for(const row of data){
-      btn.textContent='🔧 Filling… '+(++i)+'/'+data.length;
-      const b=await resolveOne(row.title, row.author);
-      if(b && b.cover_url){ const { error:e2 } = await sb.from('books').update({ cover_url:b.cover_url }).eq('slug', row.slug); if(!e2) filled++; }
-      await new Promise(r=>setTimeout(r,150));   // gentle on the Google quota
+    const sleep = ms => new Promise(r=>setTimeout(r,ms));
+    const norm = s => String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    const surname = a => { const p=String(a||'').trim().split(/\s+/); return p.length?norm(p[p.length-1]):''; };
+    const giveUp = new Set();   // slugs Google answered on but had no usable cover
+
+    // {ok,url}: ok=false → Google unreachable after retries (worth another pass);
+    // ok=true + url=null → answered, nothing confident (stop asking).
+    async function fetchCover(row){
+      const url='https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(((row.title||'')+' '+(row.author||'')).trim())
+        +'&maxResults=6&printType=books&langRestrict=en&country=US&key='+GB_KEY;
+      const wantT=norm(row.title), wantS=surname(row.author);
+      for(let t=0;t<4;t++){
+        try{
+          const r=await fetch(url);
+          if(r.ok){
+            const d=await r.json();
+            for(const it of ((d.items)||[])){
+              const v=it.volumeInfo||{}, gt=norm(v.title);
+              if(!(gt===wantT || gt.startsWith(wantT) || wantT.startsWith(gt))) continue;  // title (allows "(Series Book 1)")
+              if(wantS && !(v.authors||[]).some(a=>norm(a).includes(wantS))) continue;      // author surname must match
+              const il=v.imageLinks||{}, th=il.thumbnail||il.smallThumbnail;
+              // Real cover scans carry edge=curl; Google's grey "image not
+              // available" placeholder does not — never store that.
+              if(th && /edge=curl/.test(th)) return { ok:true, url:gImg(th) };
+            }
+            return { ok:true, url:null };   // reached Google, no confident cover
+          }
+        }catch(_){ /* network hiccup → retry */ }
+        await sleep(900*(t+1));   // backoff 0.9s / 1.8s / 2.7s
+      }
+      return { ok:false, url:null };   // 503-walled after retries
     }
+
+    btn.disabled=true;
+    let totalFilled=0, noMatch=0, pass=0;
+    try{
+      while(pass<6){
+        pass++;
+        const { data, error } = await sb.from('books').select('slug,title,author')
+          .is('cover_url',null).neq('status','archived').limit(300);
+        if(error){ toast("Catalog read failed: "+error.message); break; }
+        const queue=(data||[]).filter(r=>!giveUp.has(r.slug));
+        if(!queue.length) break;                         // drained, or the rest are unmatchable
+        let filledThisPass=0, i=0;
+        for(const row of queue){
+          btn.textContent='🔧 Pass '+pass+' · '+totalFilled+' filled · '+(++i)+'/'+queue.length;
+          const res=await fetchCover(row);
+          if(res.url){
+            const { error:e2 } = await sb.from('books').update({ cover_url:res.url }).eq('slug',row.slug);
+            if(!e2){ filledThisPass++; totalFilled++; }
+          } else if(res.ok){ giveUp.add(row.slug); noMatch++; }
+          await sleep(300);                              // gentle on the Google quota
+        }
+        if(filledThisPass===0) break;                    // no progress → Google's down or the rest are unmatchable
+      }
+    }catch(e){ console.error('cover fill', e); }
     btn.disabled=false; btn.textContent='🔧 Fill missing covers';
-    if(filled>0) bustBrowseCache();   // public browse now has new covers
-    toast('Filled '+filled+' cover'+(filled===1?'':'s')+' ★ — reload browse to see them');
+    if(totalFilled>0) bustBrowseCache();   // public browse now has new covers
+    toast('Filled '+totalFilled+' cover'+(totalFilled===1?'':'s')+(noMatch?(' · '+noMatch+' had no Google match'):'')+' ★ — rebuild to publish');
   }
 
   // admin: walk the catalog and fill any missing blurbs from Google Books.
@@ -420,7 +502,17 @@
     return (data||[]).map(b=>({ key:b.slug, title:b.title, author_name:b.author?[b.author]:[], cover_url:b.cover_url, cover_i:null, year:b.year||0 }));
   }
 
+  // run() is fired more than once on a cold load: immediately at the bottom of
+  // this script (fast first paint, no Supabase yet) and again when `sh-auth`
+  // lands with a live client. Those two overlap, and the FIRST one is the slow
+  // one — it resolves each popular.json pick through Google one at a time —
+  // so without a guard it finishes last and overwrites the good catalog
+  // results with its own thin, Google-quota-limited set. Each run claims a
+  // sequence number and refuses to paint if a newer run has started since.
+  let runSeq = 0;
   async function run(){
+    const myRun = ++runSeq;
+    const stale = () => myRun !== runSeq;
     const typed = document.getElementById('q').value.trim();
     const st=document.getElementById('status');
     st.textContent="Pulling real books…";
@@ -429,6 +521,7 @@
       // filters active → explore the curated catalog by metadata
       if(anyFilter()){
         docs = await filteredBrowse();
+        if(stale()) return;
         lastDocs = docs.slice(0,24);
         st.innerHTML = lastDocs.length
           ? `Showing <b style="color:var(--cream)">${lastDocs.length}</b> from your catalog matching filters`
@@ -446,9 +539,14 @@
         if(_sb){
           try{
             const like='%'+typed.replace(/[%,]/g,' ')+'%';
+            // NOTE: deliberately NOT filtered on cover_url. A catalog book with
+            // no cover yet still has a published plot page, and suppressing it
+            // here was pushing our own titles out of their own search results
+            // in favour of external Google editions. Cover-less rows render the
+            // styled title tile and still link to /book/<slug>/.
             const { data } = await _sb.from('books')
               .select('slug,title,author,cover_url,year,spice_level')
-              .eq('status','live').not('cover_url','is',null)
+              .eq('status','live')
               .or('title.ilike.'+like+',author.ilike.'+like)
               .limit(24);
             cat = (data||[]).map(b=>({ _curated:true, key:b.slug, title:b.title, author_name:b.author?[b.author]:[], cover_url:b.cover_url, cover_i:null, subject:[], ratings:9999, year:b.year||0 }));
@@ -472,7 +570,18 @@
         ext = dedupeByTitle(ext).filter(b=>{
           if(catTitles.has(normTitle(b.title))) return false;
           const t=(b.title||'').toLowerCase(), a=((b.author_name&&b.author_name[0])||'').toLowerCase();
-          return (t.startsWith(qn) || (qn.length>=4 && a.includes(qn))) && isNovel(b) && coverSrc(b);
+          // Box sets, omnibuses and multi-book bundles are not separate books.
+          // Searching "Powerless" was returning both the novel AND "Powerless
+          // Trilogy and a Powerless Story 5 Books Box Set…", because the only
+          // gate was startsWith(query) and the bundle does start with it.
+          if(COLLECTION_RX.test(b.title||'')) return false;
+          // A genuine match is the title itself, optionally with a series/edition
+          // suffix — "Powerless (Powerless Trilogy Book 1)". A title that starts
+          // with the query but then runs on for another 30+ characters is a
+          // bundle or an unrelated longer title, not the book being searched for.
+          const titleMatch = t.startsWith(qn) && t.length <= qn.length + 30;
+          const authorMatch = qn.length>=4 && a.includes(qn);
+          return (titleMatch || authorMatch) && isNovel(b) && coverSrc(b);
         }).slice(0,12);
         // 3. merge: catalog first so dedupe locks it in, then external
         docs = dedupe(cat.concat(ext));
@@ -488,23 +597,29 @@
             would make the cache effectively immortal for any user who visits
             inside the TTL, locking in stale popular-fallback content forever */
         } else {
-          // 1. YOUR catalog (covers you control) — reliable, no Google dependency.
-          //    Only live books with a cover; RLS keeps drafts out of public browse.
+          // 1. YOUR catalog — reliable, no Google dependency. RLS keeps drafts
+          //    out of public browse. Books WITH a cover are preferred so the
+          //    grid looks its best, but cover-less live books are held in
+          //    reserve and used to guarantee MIN_BROWSE rather than showing a
+          //    short grid. Every one of them links to its own plot page.
           try{
             const _sb = window.SH && window.SH.sb;
             if(_sb){
-              const { data } = await _sb.from('books').select('slug,title,author,cover_url,spice_level,year').eq('status','live').not('cover_url','is',null);
+              const { data } = await _sb.from('books').select('slug,title,author,cover_url,spice_level,year').eq('status','live');
               if(data && data.length){
-                docs = data.sort(()=>Math.random()-0.5).slice(0,12)
-                  .map(b=>({ key:b.slug, title:b.title, author_name:b.author?[b.author]:[], cover_url:b.cover_url, cover_i:null, year:b.year||0, ratings:0 }));
+                const toDoc = b=>({ key:b.slug, title:b.title, author_name:b.author?[b.author]:[], cover_url:b.cover_url, cover_i:null, year:b.year||0, ratings:0 });
+                const covered = shuffle(data.filter(b=>b.cover_url)).map(toDoc);
+                const bare    = shuffle(data.filter(b=>!b.cover_url)).map(toDoc);
+                docs = covered.slice(0, MIN_BROWSE);
+                if(docs.length < MIN_BROWSE) docs = docs.concat(bare.slice(0, MIN_BROWSE - docs.length));
               }
             }
           }catch(_){}
-          // 2. top up to ~12 with the curated popular.json list (Google-resolved covers)
-          if(docs.length < 12){
-            const have = new Set(docs.map(b=>(b.title||'').toLowerCase()));
-            const more = (await browsePopular()).filter(b=>!have.has((b.title||'').toLowerCase()));
-            docs = docs.concat(more).slice(0,12);
+          // 2. top up with the curated popular.json list (Google-resolved covers)
+          if(docs.length < MIN_BROWSE){
+            const have = new Set(docs.map(b=>normTitle(b.title)));
+            const more = (await browsePopular()).filter(b=>!have.has(normTitle(b.title)));
+            docs = docs.concat(more).slice(0, MIN_BROWSE);
           }
           // 3. last-resort keyword fallback (no key / nothing resolved yet)
           if(!docs.length){
@@ -517,23 +632,78 @@
           // bypass on read (above) so it's pointless to populate it for them
           // — and skipping the write avoids ever locking THEIR session into a
           // partial mid-edit catalog snapshot.
-          if(sbReady && !isAdmin) saveBrowseCache(docs.slice(0,16));
+          if(sbReady && !isAdmin && !stale()) saveBrowseCache(docs.slice(0,MIN_BROWSE));
         }
       }
-      lastDocs = docs.slice(0,16);
+      if(stale()) return;
+      // A typed search may legitimately return more than a browse grid (matching
+      // the filtered-browse cap of 24); an empty-box browse shows exactly MIN_BROWSE.
+      lastDocs = docs.slice(0, typed ? 24 : MIN_BROWSE);
       st.innerHTML = lastDocs.length
-        ? (typed ? `Showing <b style="color:var(--cream)">${lastDocs.length}</b> real books`
-                 : `Popular right now — <b style="color:var(--cream)">${lastDocs.length}</b> picks`)
+        ? (typed ? `Showing <b style="color:var(--cream)">${lastDocs.length}</b> real book${lastDocs.length===1?'':'s'}`
+                 : `Popular right now — <b style="color:var(--cream)">${lastDocs.length}</b> pick${lastDocs.length===1?'':'s'}`)
         : "No books found — try a title or author.";
       render();
     }catch(e){ console.error('search failed', e); st.textContent="Couldn't reach the book catalog — try again in a moment."; }
   }
 
+  // Titles/authors come from Google + Open Library, which happily return
+  // ampersands, quotes and angle brackets. Escape everything before it hits
+  // innerHTML so a punctuation-heavy title can't break the card markup.
+  const escH = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  // ── catalog index: normalized title → {slug, author surname} ──────────────
+  // Every live book has a published plot page at /book/<slug>/. Catalog rows
+  // already carry their slug as the key, but an EXTERNAL result (Google /
+  // Open Library) for a book we DO carry arrives with a "gb:" id and would
+  // otherwise render as a dead, unclickable card. This index resolves those
+  // back to our own page, so anything we have a page for is always clickable.
+  // Loaded once per page load, in the background.
+  let _catIndex=null, _catIndexPromise=null;
+  const surnameOf = a => { const p=String(a||'').trim().split(/\s+/); return p.length?normTitle(p[p.length-1]):''; };
+  function catalogIndex(){
+    if(_catIndexPromise) return _catIndexPromise;
+    _catIndexPromise = (async ()=>{
+      const m=new Map();
+      try{
+        const _sb = window.SH && window.SH.sb;
+        if(_sb){
+          const { data } = await _sb.from('books').select('slug,title,author').eq('status','live');
+          for(const b of (data||[])){
+            const k=normTitle(b.title);
+            if(k && !m.has(k)) m.set(k,{ slug:b.slug, surname:surnameOf(b.author) });
+          }
+        }
+      }catch(_){}
+      _catIndex=m; return m;
+    })();
+    return _catIndexPromise;
+  }
+  function bookHref(b){
+    // A bare slug key (not "gb:…" and not an Open Library "/works/…" path) is
+    // already one of ours.
+    if(b.key && b.key.indexOf('gb:')!==0 && b.key.indexOf('/')<0) return '/book/'+encodeURIComponent(b.key)+'/';
+    if(!_catIndex) return null;
+    const hit=_catIndex.get(normTitle(b.title));
+    if(!hit) return null;
+    // Same title, different author (e.g. the other "Powerless") must NOT borrow
+    // our page — require the surname to line up before linking.
+    const want=surnameOf((b.author_name&&b.author_name[0])||'');
+    if(want && hit.surname && !(hit.surname===want || hit.surname.includes(want) || want.includes(hit.surname))) return null;
+    return '/book/'+encodeURIComponent(hit.slug)+'/';
+  }
+
   function coverHTML(b){
     const s=coverSrc(b);
-    return s
-      ? `<img src="${s}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="ph" style="display:none">${b.title}</div>`
-      : `<div class="ph">${b.title}</div>`;
+    const title=escH(b.title);
+    if(!s) return `<div class="ph">${title}</div>`;
+    // Two layers, one URL: a blurred backdrop that fills the letterbox and the
+    // uncropped artwork on top. The browser serves the second <img> from cache,
+    // so this costs one request. If the cover 404s, both layers hide and the
+    // styled title tile takes over.
+    return `<img class="cover-bg" src="${escH(s)}" alt="" aria-hidden="true" onerror="this.style.display='none'">`
+      + `<img class="cover-img" src="${escH(s)}" alt="${title} book cover" loading="lazy" onerror="var c=this.closest('.cover');c.querySelectorAll('img').forEach(function(i){i.style.display='none'});c.querySelector('.ph').style.display='flex'">`
+      + `<div class="ph" style="display:none">${title}</div>`;
   }
   const idOf=k=>'b_'+k.replace(/[^a-z0-9]/gi,'');
 
@@ -558,15 +728,13 @@
       const id=idOf(b.key), sp=spiceMap[b.key]||0, on=shelfSet.has(b.key);
       const author=(b.author_name&&b.author_name[0])||"Unknown";
       const chilis=[1,2,3,4,5].map(n=>`<span data-n="${n}" class="${sp>=n?'on':''}">🌶️</span>`).join('');
-      // Catalog books (key === slug; not a Google "gb:" or OpenLibrary "/works/" id)
-      // link to their plot page. External search results stay un-linked.
-      const slug=(b.key && b.key.indexOf('gb:')!==0 && b.key.indexOf('/')<0) ? b.key : null;
-      const href=slug ? '/book/'+encodeURIComponent(slug)+'/' : null;
+      const href=bookHref(b);
+      const title=escH(b.title);
       return `<article class="card" data-key="${encodeURIComponent(b.key)}">
-        <div class="cover">${coverHTML(b)}${href?`<a class="cover-link" href="${href}" aria-label="${(b.title||'').replace(/"/g,'&quot;')} — details"></a>`:''}</div>
+        <div class="cover">${coverHTML(b)}${href?`<a class="cover-link" href="${href}" aria-label="${title} — details"></a>`:''}</div>
         <div class="meta">
-          ${href?`<a class="title" href="${href}">${b.title}</a>`:`<div class="title">${b.title}</div>`}
-          <div class="author">by ${author}</div>
+          ${href?`<a class="title" href="${href}">${title}</a>`:`<div class="title">${title}</div>`}
+          <div class="author">by ${escH(author)}</div>
           <div class="actions">
             <div class="spice" id="sp_${id}">${chilis}</div>
             ${addControlHTML(b.key, id, on)}

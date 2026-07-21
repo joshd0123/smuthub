@@ -23,7 +23,7 @@
 <meta name="twitter:description" content="Find your next romantasy obsession. Browse by trope, sort by heat, and shelf the spicy fantasy reads you can't put down.">
 <meta name="twitter:image" content="https://smuthub.ca/og-image.png">
 <!-- Structured data: WebSite (with SERP search box) + Organization -->
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"smutHub","url":"https://smuthub.ca/","description":"Find your next romantasy obsession. Browse by trope, sort by heat.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://smuthub.ca/smuthub-app.html?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"smutHub","url":"https://smuthub.ca/","description":"Find your next romantasy obsession. Browse by trope, sort by heat.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://smuthub.ca/search?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"smutHub","url":"https://smuthub.ca/","logo":"https://smuthub.ca/favicon.svg"}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -123,12 +123,22 @@
   .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
   @media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:520px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .2s,box-shadow .2s}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column}
   .card:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
-  .cover{aspect-ratio:3/4;display:flex;align-items:flex-end;padding:18px;position:relative;color:#fff}
-  .cover .ribbon{position:absolute;top:12px;left:12px;background:rgba(12,7,8,.6);backdrop-filter:blur(6px);font-size:.7rem;font-weight:700;padding:.35em .7em;border-radius:99px;letter-spacing:.04em}
-  .cover h3{font-family:'Fraunces';font-style:italic;font-weight:500;font-size:1.5rem;line-height:1.05;text-shadow:0 2px 14px rgba(0,0,0,.5)}
+  /* The title used to sit ON the artwork in white type, which collided with
+     whatever the cover already had printed there. The cover is now clean
+     artwork only and the title lives in .meta below it, as real text.
+     Artwork is never cropped: object-fit:contain, with a blurred copy of the
+     same image filling the letterbox (one URL = one cached request). */
+  .cover{aspect-ratio:3/4;position:relative;overflow:hidden;color:#fff;flex:0 0 auto}
+  .cover .ribbon{position:absolute;top:12px;left:12px;z-index:2;background:rgba(12,7,8,.6);backdrop-filter:blur(6px);font-size:.7rem;font-weight:700;padding:.35em .7em;border-radius:99px;letter-spacing:.04em}
+  .cover img{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .cover .cover-bg{object-fit:cover;filter:blur(18px) saturate(1.35) brightness(.5);transform:scale(1.25)}
+  .cover .cover-img{object-fit:contain;z-index:1}
+  /* Cover-less books fall back to a styled title tile rather than a blank panel. */
+  .cover .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;font-family:'Fraunces';font-style:italic;font-size:1.3rem;line-height:1.15}
   .card .meta{padding:14px 16px 18px}
+  .card .btitle{font-family:'Fraunces';font-weight:500;font-size:1.15rem;line-height:1.2;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .card .author{color:var(--muted);font-size:.85rem}
   .spice{margin-top:8px;font-size:.95rem;letter-spacing:.08em;white-space:nowrap}
   .spice .off{filter:grayscale(1);opacity:.28}
@@ -181,7 +191,8 @@
     <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
       <a href="dashboard.html">Dashboard</a>
-      <a href="smuthub-app.html">Search</a>
+      <a href="/search">Search</a>
+      <a href="/book/">Browse Books</a>
       <a href="smuthub-bookcase.html">My Bookshelf</a>
       <a href="/glossary/">Glossary</a>
       <a href="stores.html">Find a Store</a>
@@ -205,7 +216,7 @@
   <section id="tropes" class="wrap">
     <div class="sec-head">
       <h2>Browse by trope</h2>
-      <a href="smuthub-app.html">Browse all →</a>
+      <a href="/search">Browse all →</a>
     </div>
     <!-- Curated 8 flagship tropes; counts + links resolve from the live catalog
          at the bottom of this page. Markup is filled by JS — empty placeholder
@@ -218,7 +229,7 @@
   <section id="trending" class="wrap" style="display:none">
     <div class="sec-head">
       <h2>🔥 <span class="hot">Featured</span> reads</h2>
-      <a href="smuthub-app.html">Browse all →</a>
+      <a href="/search">Browse all →</a>
     </div>
     <div class="grid" id="trendingGrid"></div>
   </section>
@@ -313,7 +324,7 @@
     grid.innerHTML = FLAGSHIP_TROPES.map(t=>{
       const n = counts && counts[t.slug];
       const sub = (n!=null && n>0) ? (n+' book'+(n===1?'':'s')) : 'Explore';
-      return `<a class="trope" href="smuthub-app.html?trope=${escH(t.slug)}">
+      return `<a class="trope" href="/search?trope=${escH(t.slug)}">
         <span class="emoji">${t.emoji}</span>
         <div><div class="name">${escH(t.label)}</div><div class="count">${escH(sub)}</div></div>
       </a>`;
@@ -324,19 +335,56 @@
   function trendingCardHTML(b){
     const spice = Math.max(0, Math.min(5, Number(b.spice_level)||0));
     const chilis = '🌶️'.repeat(spice) + '<span class="off">' + '🌶️'.repeat(5-spice) + '</span>';
+    const title = escH(b.title);
+    // Blurred backdrop + uncropped artwork share one URL, so the browser makes
+    // a single request and the second <img> is served from cache.
     const cover = b.cover_url
-      ? `<img src="${escH(b.cover_url)}" alt="${escH(b.title)} book cover" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`
-      : '';
-    return `<a class="card" href="/book/${escH(b.slug)}/" style="text-decoration:none;color:inherit;display:block">
-      <div class="cover c1" style="position:relative;overflow:hidden">
-        ${cover}
-        <h3 style="position:relative;z-index:1">${escH(b.title)}</h3>
-      </div>
+      ? `<img class="cover-bg" src="${escH(b.cover_url)}" alt="" aria-hidden="true" loading="lazy">`
+        + `<img class="cover-img" src="${escH(b.cover_url)}" alt="${title} book cover" loading="lazy">`
+      : `<div class="ph">${title}</div>`;
+    return `<a class="card" href="/book/${escH(b.slug)}/" style="text-decoration:none;color:inherit">
+      <div class="cover c1">${cover}</div>
       <div class="meta">
+        <div class="btitle">${title}</div>
         <div class="author">by ${escH(b.author||'Unknown')}</div>
         ${spice>0 ? `<div class="spice">${chilis}</div>` : ''}
       </div>
     </a>`;
+  }
+
+  // ── Featured rotation ────────────────────────────────────────────────────
+  // Previously this was a bare `.limit(8)` with no ordering, so featuring a 9th
+  // book meant one of them silently never appeared. Now the FULL featured set
+  // is fetched and a random 8 are drawn, with the draw held stable for a
+  // 30-minute inactivity window (same rule as the Search page's browse grid) so
+  // the homepage doesn't reshuffle under you on a quick back-navigation, but a
+  // visit later in the day shows a different eight.
+  const FEATURED_SHOWN = 8;
+  const FEATURED_TTL = 30*60*1000;
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+    return a;
+  }
+  // Remembers WHICH books were drawn (by slug), not their data, so a returning
+  // visitor inside the window sees the same eight with fresh catalog values.
+  function pickFeatured(rows){
+    const bySlug = new Map(rows.map(b=>[b.slug,b]));
+    try{
+      const c = JSON.parse(localStorage.getItem('sh_featured')||'null');
+      if(c && Array.isArray(c.slugs) && Date.now()-c.ts < FEATURED_TTL){
+        const kept = c.slugs.map(s=>bySlug.get(s)).filter(Boolean);
+        // Only reuse the remembered draw if it's still a full set; if books were
+        // un-featured since, fall through and re-draw.
+        if(kept.length === Math.min(FEATURED_SHOWN, rows.length)) return kept;
+      }
+    }catch(_){}
+    // Books with cover art lead; cover-less featured books fill in behind them.
+    const covered = shuffle(rows.filter(b=>b.cover_url));
+    const bare    = shuffle(rows.filter(b=>!b.cover_url));
+    const pick    = covered.concat(bare).slice(0, FEATURED_SHOWN);
+    try{ localStorage.setItem('sh_featured', JSON.stringify({ ts:Date.now(), slugs:pick.map(b=>b.slug) })); }catch(_){}
+    return pick;
   }
 
   async function loadHomepageCatalog(){
@@ -355,10 +403,12 @@
     // Featured books — admin-curated. If 0, the section stays hidden so the
     // landing never shows an empty grid.
     try{
+      // No .limit() — the whole featured set is fetched so pickFeatured() can
+      // rotate across all of it rather than always serving the same first eight.
       const { data } = await sb.from('books')
-        .select('slug,title,author,cover_url,spice_level').eq('status','live').eq('featured',true).limit(8);
+        .select('slug,title,author,cover_url,spice_level').eq('status','live').eq('featured',true);
       if(data && data.length){
-        document.getElementById('trendingGrid').innerHTML = data.map(trendingCardHTML).join('');
+        document.getElementById('trendingGrid').innerHTML = pickFeatured(data).map(trendingCardHTML).join('');
         document.getElementById('trending').style.display = '';
       }
     }catch(_){}
@@ -381,7 +431,7 @@
     <div class="cols">
       <div>
         <h4>Browse</h4>
-        <a href="/glossary/">Glossary</a><a href="/glossary/trope/">Tropes</a><a href="smuthub-app.html">Search</a><a href="#" id="footTrending">Trending</a>
+        <a href="/book/">All Books</a><a href="/glossary/">Glossary</a><a href="/glossary/trope/">Tropes</a><a href="/search">Search</a><a href="#" id="footTrending">Trending</a>
       </div>
       <div>
         <h4>The Hub</h4>

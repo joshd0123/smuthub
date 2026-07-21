@@ -158,7 +158,8 @@
     <a href="/" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
       <a href="/dashboard.html">Dashboard</a>
-      <a href="/smuthub-app.html">Search</a>
+      <a href="/search">Search</a>
+      <a href="/book/">Browse Books</a>
       <a href="/smuthub-bookcase.html">My Bookshelf</a>
       <a href="/glossary/">Glossary</a>
     </nav>
@@ -167,7 +168,7 @@
 </header>
 
 <div class="wrap">
-  <nav class="crumb"><a href="/">Home</a> / <a href="/smuthub-app.html">Books</a> / <span>Never Keep</span></nav>
+  <nav class="crumb"><a href="/">Home</a> / <a href="/book/">All books</a> / <span>Never Keep</span></nav>
 
   <div class="book-layout">
     <aside class="cover-col">
@@ -188,7 +189,7 @@
       <header class="book-header">
         <span class="badge">Romantasy</span>
         <h1>Never Keep</h1>
-        <p class="byline">by <a href="/smuthub-app.html?q=Caroline%20Peckham%2C%20Susanne%20Valenti">Caroline Peckham, Susanne Valenti</a> · 2024</p>
+        <p class="byline">by <a href="/search?q=Caroline%20Peckham%2C%20Susanne%20Valenti">Caroline Peckham, Susanne Valenti</a> · 2024</p>
         <p class="series-line">Book 1 of <b>Sins of the Zodiac</b> · <a href="#series">see the series ↓</a></p>
         <div class="spicemeter" aria-label="Spice meter"><span class="chilis" title="Spice level 4 of 5"><span class="on">🌶️</span><span class="on">🌶️</span><span class="on">🌶️</span><span class="on">🌶️</span><span class="">🌶️</span></span><span class="sm-tag"><b>Door</b>On-page (open door)</span><span class="sm-tag"><b>Frequency</b>Constant</span><span class="sm-tag">Explicit</span></div>
         <details class="cw">
@@ -270,7 +271,7 @@
 </div>
 
 <script>
-  // Add-to-shelf — mirrors smuthub-app.html shelveBook(): upsert into the
+  // Add-to-shelf — mirrors /search shelveBook(): upsert into the
   // shelf table keyed on (user_id, book_key) where book_key = this book slug.
   // Server-rendered book metadata is embedded so the shelf row carries a
   // title/author/cover snapshot.
@@ -345,7 +346,7 @@
 <footer>
   <div class="wrap ft">
     <span>© 2026 smutHub · Romantasy, decoded.</span>
-    <span><a href="/glossary/">Glossary</a> · <a href="/smuthub-app.html">Search</a> · <a href="/sitemap.html">Sitemap</a></span>
+    <span><a href="/glossary/">Glossary</a> · <a href="/search">Search</a> · <a href="/sitemap.html">Sitemap</a></span>
   </div>
 </footer>
 </body></html>
