@@ -132,11 +132,11 @@
     <input id="q" type="text" placeholder="Title, author, or trope…">
     <button onclick="searchNow()">Search</button>
   </div>
-  <aside class="shc-context" data-companion-beta hidden>
-    <span class="shc-context-mark">♥</span>
-    <div class="shc-context-copy"><b>Searching for a feeling, not a title?</b><span><span data-companion-name>Aren</span> can turn tonight’s exact mood into one shelf-aware match.</span></div>
-    <a href="/companion.html?tool=book-match">Find my match →</a>
-  </aside>
+  <a class="shc-cameo" data-companion-beta hidden href="/companion.html?tool=book-match" aria-label="Ask your companion for a book match">
+    <span class="shc-cameo-portrait"><img data-companion-portrait src="/companion-aren.png" alt="Companion portrait"></span>
+    <span class="shc-cameo-copy"><small>Search by feeling</small><strong>Ask <span data-companion-name>Aren</span> for a match</strong><span>Turn tonight’s mood into one book</span></span>
+    <span class="shc-cameo-arrow" aria-hidden="true">→</span>
+  </a>
   <div class="filters" id="filters">
     <select id="fSpice" aria-label="Spice">
       <option value="">🌶️ Any spice</option><option value="1">1+ 🌶️</option><option value="2">2+ 🌶️</option><option value="3">3+ 🌶️</option><option value="4">4+ 🌶️</option><option value="5">5 🌶️</option>
