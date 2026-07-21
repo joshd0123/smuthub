@@ -181,8 +181,8 @@ const SHARED_HEADER = `
     <a href="/" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
       <a href="/dashboard.html">Dashboard</a>
-      <a href="/search">Search</a>
       <a href="/book/">Browse Books</a>
+      <a href="/search">Add a Book</a>
       <a href="/smuthub-bookcase.html">My Bookshelf</a>
       <a href="/glossary/">Glossary</a>
     </nav>
@@ -195,7 +195,7 @@ const SHARED_FOOTER = `
 <footer>
   <div class="wrap ft">
     <span>© ${new Date().getFullYear()} smutHub · Romantasy, decoded.</span>
-    <span><a href="/glossary/">Glossary</a> · <a href="/search">Search</a> · <a href="/sitemap.html">Sitemap</a></span>
+    <span><a href="/book/">All Books</a> · <a href="/glossary/">Glossary</a> · <a href="/sitemap.html">Sitemap</a></span>
   </div>
 </footer>
 </body></html>
@@ -650,7 +650,7 @@ ${SHARED_HEADER}
       <header class="book-header">
         ${book.subgenre ? `<span class="badge">${esc(humanize(book.subgenre))}</span>` : ''}
         <h1>${esc(book.title)}</h1>
-        <p class="byline">${author ? `by <a href="/search?q=${encodeURIComponent(author)}">${esc(author)}</a>` : 'Author unknown'}${book.year ? ` · ${esc(book.year)}` : ''}</p>
+        <p class="byline">${author ? `by <a href="/book/?q=${encodeURIComponent(author)}">${esc(author)}</a>` : 'Author unknown'}${book.year ? ` · ${esc(book.year)}` : ''}</p>
         ${seriesLine}
         ${spiceMeterHTML(book)}
         ${warningsHTML(book, tags)}
@@ -777,6 +777,13 @@ const INDEX_CSS = `<style>
   .azbar a{color:var(--muted);text-decoration:none;font-size:.82rem;font-weight:700;padding:.28em .55em;border-radius:7px;line-height:1}
   .azbar a:hover{background:var(--panel);color:var(--amber)}
   .meter{color:var(--muted);font-size:.86rem;margin:8px 0 16px}
+  /* Active-filter chip for a ?tag= arrival that has no dropdown of its own
+     (kinks, warnings, archetypes …) — without it the grid would look
+     mysteriously short with nothing on screen explaining why. */
+  .tagchip{margin:10px 0 0}
+  .tagchip .tc{display:inline-flex;align-items:center;gap:8px;background:rgba(255,171,64,.14);border:1px solid rgba(255,171,64,.45);color:var(--amber);font-size:.85rem;font-weight:700;padding:.4em .5em .4em .9em;border-radius:99px}
+  .tagchip .tc button{background:none;border:0;color:inherit;font-family:inherit;font-size:.9rem;cursor:pointer;line-height:1;padding:0 .2em}
+  .tagchip .tc button:hover{color:var(--cream)}
   .lgroup{padding-top:10px;scroll-margin-top:88px}
   .lgroup > h2{font-family:'Fraunces',serif;font-weight:600;font-size:1.15rem;color:var(--amber);border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:14px}
   .bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;margin-bottom:10px}
@@ -801,29 +808,42 @@ function renderBookIndex(allBooks){
   const sorted = allBooks.filter(b => b.slug).slice()
     .sort((a, b) => sortTitle(a).localeCompare(sortTitle(b)) || String(a.slug).localeCompare(String(b.slug)));
 
-  // Trope options come from tropes actually carried by a live book, so the
-  // dropdown can never offer a filter that returns an empty grid.
-  const tropeCount = new Map();
-  for (const b of sorted){
-    for (const t of tagsOf(b)){
-      if (t.category !== 'trope') continue;
-      const cur = tropeCount.get(t.slug) || { label: t.label, n: 0 };
-      cur.n++; tropeCount.set(t.slug, cur);
+  // Dropdown options are built only from tags a live book actually carries, so
+  // a filter can never be offered that returns an empty grid. Values are full
+  // "category:slug" keys, matching the data-tags on each card — which lets the
+  // same matching logic serve the dropdowns AND the ?tag= deep link below.
+  const optionsFor = cat => {
+    const counts = new Map();
+    for (const b of sorted){
+      for (const t of tagsOf(b)){
+        if (t.category !== cat) continue;
+        const cur = counts.get(t.slug) || { label: t.label, n: 0 };
+        cur.n++; counts.set(t.slug, cur);
+      }
     }
-  }
-  const tropeOptions = [...tropeCount.entries()]
-    .sort((a, b) => b[1].n - a[1].n || a[1].label.localeCompare(b[1].label))
-    .map(([slug, v]) => `<option value="${escAttr(slug)}">${esc(v.label)} (${v.n})</option>`).join('');
+    return [...counts.entries()]
+      .sort((a, b) => b[1].n - a[1].n || a[1].label.localeCompare(b[1].label))
+      .map(([slug, v]) => `<option value="${escAttr(cat + ':' + slug)}">${esc(v.label)} (${v.n})</option>`).join('');
+  };
+  const tropeOptions = optionsFor('trope');
+  const moodOptions  = optionsFor('mood');
+
+  // Human label for any tag key, so a ?tag= deep link can name itself in the
+  // active-filter chip rather than showing a raw slug.
+  const tagLabels = {};
+  for (const b of sorted) for (const t of tagsOf(b)) tagLabels[t.category + ':' + t.slug] = t.label;
 
   const cardFor = b => {
     const author = b.author || 'Unknown';
     const spice = Math.max(0, Math.min(5, Number(b.spice_level) || 0));
-    const tropes = tagsOf(b).filter(t => t.category === 'trope').map(t => t.slug).join(' ');
+    // ALL tag keys, not just tropes: every glossary term — kink, warning,
+    // setting, archetype — can then deep link into this page via ?tag=.
+    const tagKeys = tagsOf(b).map(t => t.category + ':' + t.slug).join(' ');
     const cover = b.cover_url
       ? `<img class="cover-bg" src="${escAttr(b.cover_url)}" alt="" aria-hidden="true" loading="lazy">`
         + `<img class="cover-img" src="${escAttr(b.cover_url)}" alt="${escAttr(b.title)} book cover" loading="lazy">`
       : `<div class="ph">${esc(b.title)}</div>`;
-    return `<a class="bcard" href="${escAttr(bookPath(b))}" data-s="${escAttr((b.title + ' ' + author).toLowerCase())}" data-tropes="${escAttr(tropes)}" data-spice="${spice}">
+    return `<a class="bcard" href="${escAttr(bookPath(b))}" data-s="${escAttr((b.title + ' ' + author).toLowerCase())}" data-tags="${escAttr(tagKeys)}" data-spice="${spice}">
         <div class="cover">${cover}</div>
         <div class="bmeta">
           <div class="bt">${esc(b.title)}</div>
@@ -881,14 +901,16 @@ ${SHARED_HEADER}
   <p class="sub">All ${sorted.length} titles in the smutHub catalog — spice level, tropes and content warnings on every one. Filter below, or jump by letter.</p>
 
   <div class="tools">
-    <input id="q" type="search" placeholder="Search title or author…" aria-label="Search books by title or author" autocomplete="off">
+    <input id="q" type="search" placeholder="Filter these ${sorted.length} books by title or author…" aria-label="Filter books by title or author" autocomplete="off">
     <select id="fTrope" aria-label="Filter by trope"><option value="">Any trope</option>${tropeOptions}</select>
+    <select id="fMood" aria-label="Filter by mood"><option value="">Any mood</option>${moodOptions}</select>
     <select id="fSpice" aria-label="Filter by spice level">
       <option value="">Any spice</option>
       <option value="1">1+ 🌶️</option><option value="2">2+ 🌶️</option><option value="3">3+ 🌶️</option><option value="4">4+ 🌶️</option><option value="5">5 🌶️</option>
     </select>
     <button id="fClear" type="button">✕ Clear</button>
   </div>
+  <div id="tagchip" class="tagchip" hidden></div>
   <nav class="azbar" aria-label="Jump to letter">${azHTML}</nav>
   <p class="meter" id="meter">${sorted.length} books · A–Z by title</p>
 </div>
@@ -905,45 +927,93 @@ ${groupsHTML}
   (function(){
     var q = document.getElementById('q');
     var fTrope = document.getElementById('fTrope');
+    var fMood = document.getElementById('fMood');
     var fSpice = document.getElementById('fSpice');
     var clear = document.getElementById('fClear');
     var meter = document.getElementById('meter');
     var none = document.getElementById('noresults');
+    var chip = document.getElementById('tagchip');
     var groups = [].slice.call(document.querySelectorAll('.lgroup'));
-    var total = document.querySelectorAll('.bcard').length;
+    var TAG_LABELS = ${JSON.stringify(tagLabels)};
+    var deepTag = '';   // set by ?tag=category:slug
+
+    // Every active tag must be present on a card (AND, not OR), so combining
+    // a trope with a mood narrows rather than widens.
+    function activeTags(){
+      return [fTrope.value, fMood.value, deepTag].filter(Boolean);
+    }
+    function hasTag(card, key){
+      return (' ' + card.getAttribute('data-tags') + ' ').indexOf(' ' + key + ' ') >= 0;
+    }
 
     function apply(){
       var term = q.value.trim().toLowerCase();
-      var trope = fTrope.value;
       var spice = parseInt(fSpice.value, 10) || 0;
+      var tags = activeTags();
       var shown = 0;
       groups.forEach(function(g){
         var any = false;
         [].slice.call(g.querySelectorAll('.bcard')).forEach(function(card){
           var ok = (!term || card.getAttribute('data-s').indexOf(term) >= 0)
-                && (!trope || (' ' + card.getAttribute('data-tropes') + ' ').indexOf(' ' + trope + ' ') >= 0)
-                && (!spice || parseInt(card.getAttribute('data-spice'), 10) >= spice);
+                && (!spice || parseInt(card.getAttribute('data-spice'), 10) >= spice)
+                && tags.every(function(t){ return hasTag(card, t); });
           card.style.display = ok ? '' : 'none';
           if (ok){ any = true; shown++; }
         });
         g.style.display = any ? '' : 'none';
       });
-      var filtered = term || trope || spice;
+      var filtered = term || spice || tags.length;
       meter.textContent = shown + ' book' + (shown === 1 ? '' : 's') + (filtered ? ' matching' : '') + ' · A–Z by title';
       none.style.display = shown ? 'none' : '';
       clear.style.display = filtered ? '' : 'none';
     }
+
+    function paintChip(){
+      if (!deepTag){ chip.hidden = true; chip.innerHTML = ''; return; }
+      var label = TAG_LABELS[deepTag] || deepTag.split(':').pop().replace(/-/g, ' ');
+      chip.hidden = false;
+      chip.innerHTML = '<span class="tc">' + label + '<button type="button" aria-label="Remove this filter">✕</button></span>';
+      chip.querySelector('button').addEventListener('click', function(){
+        deepTag = '';
+        paintChip();
+        // Drop ?tag= from the URL so a refresh or share doesn't reapply it.
+        var p = new URLSearchParams(location.search); p.delete('tag');
+        history.replaceState(null, '', location.pathname + (p.toString() ? '?' + p : ''));
+        apply();
+      });
+    }
+
     q.addEventListener('input', apply);
     fTrope.addEventListener('change', apply);
+    fMood.addEventListener('change', apply);
     fSpice.addEventListener('change', apply);
-    clear.addEventListener('click', function(){ q.value=''; fTrope.value=''; fSpice.value=''; apply(); q.focus(); });
+    clear.addEventListener('click', function(){
+      q.value=''; fTrope.value=''; fMood.value=''; fSpice.value=''; deepTag='';
+      paintChip();
+      history.replaceState(null, '', location.pathname);
+      apply(); q.focus();
+    });
 
-    // Deep links from elsewhere on the site: /book/?trope=fated-mates&spice=4&q=maas
+    // Deep links from elsewhere on the site:
+    //   /book/?tag=trope:fated-mates   — from any glossary term page
+    //   /book/?q=Sarah%20J.%20Maas     — from a book page's author byline
+    //   /book/?trope=…&spice=4         — legacy shape, still honoured
     (function(){
       var p = new URLSearchParams(location.search);
       if (p.get('q')) q.value = p.get('q');
-      if (p.get('trope')) fTrope.value = p.get('trope');
       if (p.get('spice')) fSpice.value = p.get('spice');
+      var t = p.get('tag');
+      if (t){
+        // If it maps onto a dropdown, drive that instead of the chip so the
+        // control visibly reflects the filter the reader arrived with.
+        if (t.indexOf('trope:') === 0 && [].some.call(fTrope.options, function(o){ return o.value === t; })) fTrope.value = t;
+        else if (t.indexOf('mood:') === 0 && [].some.call(fMood.options, function(o){ return o.value === t; })) fMood.value = t;
+        else deepTag = t;
+      }
+      // Legacy bare ?trope=/?mood= values, normalised to full tag keys.
+      var lt = p.get('trope'); if (lt && !fTrope.value) fTrope.value = lt.indexOf(':') < 0 ? 'trope:' + lt : lt;
+      var lm = p.get('mood');  if (lm && !fMood.value)  fMood.value  = lm.indexOf(':') < 0 ? 'mood:' + lm : lm;
+      paintChip();
     })();
     apply();
   })();

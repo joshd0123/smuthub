@@ -55,6 +55,26 @@ const tags = allTags.filter(t => (t.has_page !== false) && t.description);
 const tier3Tags = allTags.filter(t => !((t.has_page !== false) && t.description));
 console.log(`◇ Building ${tags.length} term pages + ${tier3Tags.length} tier-3 cards (no own URL)`);
 
+// Which "category:slug" keys does at least one LIVE book actually carry? The
+// "Find books with this …" CTA links into /book/?tag=<key>, and that page
+// filters the static catalog — so a CTA for a key no book uses lands on an
+// empty grid. (This is common: the glossary defines far more terms than the
+// catalog has been tagged with yet, and a few glossary slugs differ from the
+// book slug, e.g. kink:praise-kink vs kink:praise.) Gate the CTA on real usage
+// so every "Find books" button leads somewhere. The per-term page still lists
+// its own books client-side and shows a friendly empty state regardless.
+const usedTagKeys = new Set();
+try {
+  const usedBooks = await pgGet(`${SUPABASE_URL.replace(/\/+$/,'')}/rest/v1/books?select=tag_ids&status=eq.live`);
+  for (const b of usedBooks) for (const k of (b.tag_ids || [])) usedTagKeys.add(k);
+  console.log(`  · ${usedTagKeys.size} distinct tag keys are used by at least one live book`);
+} catch (e) {
+  console.log('  (could not load book tag usage — every filterable term will show a Find-books CTA)');
+}
+// When the usage set is unavailable, don't suppress every CTA — fall back to
+// showing them (old behaviour) rather than hiding all of them.
+const tagHasBooks = key => usedTagKeys.size === 0 || usedTagKeys.has(key);
+
 // ── Editorial tag relations (optional; falls back to sibling tags if empty) ──
 const tagById = Object.fromEntries(tags.map(t => [t.id, t]));
 let relations = [];
@@ -216,8 +236,8 @@ const SHARED_HEADER = `
     <a href="/" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
       <a href="/dashboard.html">Dashboard</a>
-      <a href="/search">Search</a>
       <a href="/book/">Browse Books</a>
+      <a href="/search">Add a Book</a>
       <a href="/smuthub-bookcase.html">My Bookshelf</a>
       <a href="/glossary/" class="on">Glossary</a>
     </nav>
@@ -368,7 +388,7 @@ const SHARED_FOOTER = `
 <footer>
   <div class="wrap ft">
     <span>© ${new Date().getFullYear()} smutHub · Romantasy, decoded.</span>
-    <span><a href="/glossary/">Glossary</a> · <a href="/search">Search</a> · <a href="/sitemap.html">Sitemap</a></span>
+    <span><a href="/book/">All Books</a> · <a href="/glossary/">Glossary</a> · <a href="/sitemap.html">Sitemap</a></span>
   </div>
 </footer>
 </body></html>
@@ -450,7 +470,7 @@ ${renderRail(catKey(tag.category))}
     ${tag.voice_tagline ? `<p class="tagline">${esc(tag.voice_tagline)}</p>` : ''}
     <p class="defn">${esc(tag.description)}</p>
     ${tag.also_known_as && tag.also_known_as.length ? `<p class="aka"><b>Also known as:</b> ${tag.also_known_as.map(esc).join(' · ')}</p>` : ''}
-    ${tag.is_filterable ? `<a class="cta" href="/search?${tag.category === 'trope' ? 'trope' : tag.category === 'mood' ? 'mood' : 'q'}=${encodeURIComponent(tag.slug)}">Find books with this ${esc(cat.label.replace(/s$/,'').toLowerCase())} →</a>` : ''}
+    ${tag.is_filterable && tagHasBooks(tag.category + ':' + tag.slug) ? `<a class="cta" href="/book/?tag=${encodeURIComponent(tag.category + ':' + tag.slug)}">Find books with this ${esc(cat.label.replace(/s$/,'').toLowerCase())} →</a>` : ''}
   </section>
 
   ${tag.why_it_works ? `<section class="detail">
