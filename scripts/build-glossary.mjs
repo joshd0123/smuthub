@@ -77,16 +77,22 @@ const CATS = {
   'subgenre':        { label:'Subgenres',       emoji:'📚', order:5 },
   'worldbuilding':   { label:'Worldbuilding',   emoji:'🗺️', order:6 },
   'setting':         { label:'Settings',        emoji:'🏰', order:7 },
-  'mechanics':       { label:'Spice & Door',    emoji:'🌶️', order:8 },
-  'format':          { label:'Format',          emoji:'📖', order:9 },
-  'pov':             { label:'POV',             emoji:'👁️', order:10 },
-  'culture':         { label:'Reader Culture',  emoji:'💬', order:11 },
-  'omegaverse':      { label:'Omegaverse',      emoji:'🐺', order:12 },
-  'kink':            { label:'Kinks',           emoji:'🔥', order:13 },
-  'mc-archetype':    { label:'MC Archetypes',   emoji:'👤', order:14 },
-  'li-archetype':    { label:'LI Archetypes',   emoji:'💖', order:15 },
-  'representation':  { label:'Representation',  emoji:'🌈', order:16 },
-  'warning':         { label:'Content Warnings', emoji:'⚠️', order:17 },
+  // 'time-period' and 'sport' carry live tags and generate term pages, but were
+  // missing here — so their category landing pages were never built and all 18
+  // of their term pages linked to a 404. Grouped with Settings as the
+  // "where and when" block.
+  'time-period':     { label:'Time Periods',    emoji:'🕰️', order:8 },
+  'sport':           { label:'Sports',          emoji:'🏅', order:9 },
+  'mechanics':       { label:'Spice & Door',    emoji:'🌶️', order:10 },
+  'format':          { label:'Format',          emoji:'📖', order:11 },
+  'pov':             { label:'POV',             emoji:'👁️', order:12 },
+  'culture':         { label:'Reader Culture',  emoji:'💬', order:13 },
+  'omegaverse':      { label:'Omegaverse',      emoji:'🐺', order:14 },
+  'kink':            { label:'Kinks',           emoji:'🔥', order:15 },
+  'mc-archetype':    { label:'MC Archetypes',   emoji:'👤', order:16 },
+  'li-archetype':    { label:'LI Archetypes',   emoji:'💖', order:17 },
+  'representation':  { label:'Representation',  emoji:'🌈', order:18 },
+  'warning':         { label:'Content Warnings', emoji:'⚠️', order:19 },
 };
 const catKey = c => (CATS[c] ? c : 'culture');
 
