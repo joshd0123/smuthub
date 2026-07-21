@@ -18,10 +18,23 @@
 //    node scripts/migrate-covers.mjs
 //
 //  Getting ADMIN_TOKEN — log into smutHub as your admin account, then in the
-//  browser devtools console run:
-//    JSON.parse(localStorage.getItem(
-//      Object.keys(localStorage).find(k => k.endsWith('-auth-token'))
-//    )).access_token
+//  browser devtools console on that SAME origin run:
+//    await SH.sb.auth.getSession().then(r => r.data.session.access_token)
+//
+//  Ask the live Supabase client rather than reading localStorage by hand: the
+//  storage key is 'sb-<project-ref>-auth-token', so a .endsWith('-auth-token')
+//  lookup is brittle and a miss yields the confusing
+//  "Cannot read properties of null (reading 'access_token')".
+//  getSession() also refreshes an almost-expired token before handing it over.
+//
+//  Origin matters: localStorage is per-origin, so a session created on
+//  smuthub.ca is invisible from smuthub.joshd0123.workers.dev and vice versa.
+//  Run the console command on whichever origin you actually logged in to.
+//
+//  This must be a logged-in ADMIN USER's access token — NOT the anon /
+//  publishable key. The publishable key carries no user identity, so
+//  auth.uid() is null and every RLS-protected write is rejected.
+//
 //  (Access tokens expire ~1h; if the run errors with 401, grab a fresh one.)
 // ════════════════════════════════════════════════════════════════════════
 
