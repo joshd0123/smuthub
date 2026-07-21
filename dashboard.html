@@ -107,7 +107,9 @@
   @media(max-width:880px){.row6{grid-template-columns:repeat(4,1fr)}}
   @media(max-width:520px){.row6{grid-template-columns:repeat(3,1fr)}}
 
-  .tile{position:relative;aspect-ratio:3/4;border-radius:8px;overflow:hidden;display:flex;align-items:flex-end;padding:6px;color:#fff;font-family:'Fraunces',serif;font-style:italic;font-size:.7rem;text-shadow:0 1px 6px rgba(0,0,0,.6);cursor:pointer;background:var(--ph)}
+  /* .tile renders as an <a> whenever the book has a plot page to link to, and
+     as a <div> only for the rare book we don't carry — hence text-decoration. */
+  .tile{position:relative;aspect-ratio:3/4;border-radius:8px;overflow:hidden;display:flex;align-items:flex-end;padding:6px;color:#fff;font-family:'Fraunces',serif;font-style:italic;font-size:.7rem;text-shadow:0 1px 6px rgba(0,0,0,.6);cursor:pointer;background:var(--ph);text-decoration:none}
   .tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
   .tile .ttitle{position:relative;z-index:2;line-height:1.1}
   .tile.dnf{filter:grayscale(.5)}
@@ -166,7 +168,8 @@
     <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
       <a href="dashboard.html" class="on">Dashboard</a>
-      <a href="smuthub-app.html">Search</a>
+      <a href="/search">Search</a>
+      <a href="/book/">Browse Books</a>
       <a href="smuthub-bookcase.html">My Bookshelf</a>
       <a href="/glossary/">Glossary</a>
       <a href="stores.html">Find a Store</a>
@@ -223,7 +226,7 @@
   <section>
     <div class="sechead">
       <div><h2>🔥 Trending this week <span class="note">the romantasy internet collectively lost it</span></h2></div>
-      <a href="smuthub-app.html">See more →</a>
+      <a href="/search">See more →</a>
     </div>
     <div class="row6" id="trending"></div>
   </section>
@@ -397,12 +400,16 @@
     }
 
     renderPills();
+    // Load the catalog index BEFORE the first render so "Your reading" tiles
+    // resolve their /book/<slug>/ links on the very first paint rather than
+    // rendering as un-linked tiles and needing a repaint.
+    await getCatalogIndex();
     renderReading();
     loadTrending();
   });
 
   // safety net for un-configured local opens
-  setTimeout(async ()=>{ if(!myShelf.length && !user){ $('demobar').classList.add('show'); await loadDemoReading(); renderPills(); renderReading(); loadTrending(); } }, 2800);
+  setTimeout(async ()=>{ if(!myShelf.length && !user){ $('demobar').classList.add('show'); await loadDemoReading(); renderPills(); await getCatalogIndex(); renderReading(); loadTrending(); } }, 2800);
 
   // ── pills ─────────────────────────────────────────────
   function renderPills(){
@@ -421,12 +428,17 @@
     const spice = mySpice[b.key] || mySpice[b.book_key] || b.spice;
     const cov = coverSrc(b);
     const img = cov ? `<img src="${cov}" alt="" onerror="this.style.display='none'">` : '';
-    return `<div class="tile ${status==='dnf'?'dnf':''}" onclick="openBook('${esc(b.key||b.book_key)}')">
-      ${img}
+    const inner = `${img}
       <span class="badge status ${status}">${STATUS_LABELS[status]||status}</span>
       ${spice?`<span class="spice">🌶️${spice}</span>`:''}
-      <span class="ttitle">${esc(b.title)}</span>
-    </div>`;
+      <span class="ttitle">${esc(b.title)}</span>`;
+    // Anything we carry goes straight to its plot page as a real link — so it
+    // middle-clicks, previews on hover, and needs no login (plot pages are
+    // public). Only books with no page of their own keep the old JS fallback.
+    const slug = shelfSlug(b);
+    return slug
+      ? `<a class="tile ${status==='dnf'?'dnf':''}" href="${bookPath(slug)}">${inner}</a>`
+      : `<div class="tile ${status==='dnf'?'dnf':''}" onclick="openBook('${esc(b.key||b.book_key)}')">${inner}</div>`;
   }
   function renderReading(){
     const slots = [...myShelf].slice(0,5);
@@ -442,7 +454,7 @@
   }
   function goAddNext(){
     if (!user){ if (window.SH) SH.openAuth(); return; }
-    location.href = 'smuthub-app.html'; // search → add
+    location.href = '/search'; // search → add
   }
 
   // ── trending ──────────────────────────────────────────
@@ -452,33 +464,62 @@
   // title/author/badge — no brittle, wrong cover IDs.
   const covNorm = s => String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
   const covSurname = a => { const p=String(a||'').trim().split(/\s+/); return p.length?covNorm(p[p.length-1]):''; };
-  let _catalogCovers = null;   // Map<normTitle, {url, surname}> — fetched once per load
-  async function getCatalogCovers(){
-    if(_catalogCovers) return _catalogCovers;
-    _catalogCovers = new Map();
+  // Map<normTitle, {slug, url, surname}> — fetched once per load. This is both
+  // the cover source AND the title→/book/<slug>/ resolver for the two tile rows,
+  // so it deliberately includes live books that have no cover yet: a cover-less
+  // book still has a published plot page and must still be reachable.
+  let _catalogIndex = null;
+  let _catalogSlugs = null;    // Set<slug> — confirms a shelf key is a real page
+  async function getCatalogIndex(){
+    if(_catalogIndex) return _catalogIndex;
+    _catalogIndex = new Map(); _catalogSlugs = new Set();
     try{
       const _sb = window.SH && window.SH.sb;
       if(_sb){
-        const { data } = await _sb.from('books').select('title,author,cover_url')
-          .eq('status','live').not('cover_url','is',null);
+        const { data } = await _sb.from('books').select('slug,title,author,cover_url').eq('status','live');
         for(const b of (data||[])){
+          _catalogSlugs.add(b.slug);
           const k = covNorm(b.title);
-          if(k && !_catalogCovers.has(k)) _catalogCovers.set(k, { url:b.cover_url, surname:covSurname(b.author) });
+          if(k && !_catalogIndex.has(k)) _catalogIndex.set(k, { slug:b.slug, url:b.cover_url||null, surname:covSurname(b.author) });
         }
       }
     }catch(_){}
-    return _catalogCovers;
+    return _catalogIndex;
+  }
+  // Author-surname guard, shared by cover and page lookups, so a same-titled
+  // book by a different author can never lend its cover or its page.
+  function catalogHit(title, author){
+    if(!_catalogIndex) return null;
+    const hit = _catalogIndex.get(covNorm(title));
+    if(!hit) return null;
+    const want = covSurname(author);
+    if(want && hit.surname && !(hit.surname===want || hit.surname.includes(want) || want.includes(hit.surname))) return null;
+    return hit;
+  }
+  const bookPath = slug => '/book/' + encodeURIComponent(slug) + '/';
+  // A shelf row's book_key IS the catalog slug for anything added from our own
+  // catalog (build-books.mjs shelves on book.slug); the logged-out demo rows
+  // prefix it with "demo-". Rows shelved from an external search carry a "gb:"
+  // or "/works/" id and have no page of their own, so those fall back to a
+  // title+author lookup before giving up.
+  function shelfSlug(b){
+    let k = b.key || b.book_key || '';
+    if(k.indexOf('demo-') === 0) k = k.slice(5);
+    if(k && k.indexOf('gb:') !== 0 && k.indexOf('/') < 0){
+      // Trust the key only if it's still a live book — otherwise it would link
+      // to a page that was archived out from under it.
+      if(!_catalogSlugs || _catalogSlugs.has(k)) return k;
+    }
+    const hit = catalogHit(b.title, b.author);
+    return hit ? hit.slug : null;
   }
   async function resolveCover(title, author){
     // 1. Prefer a cover from our own catalog (reliable, no Google quota). Verify the
     //    author surname matches so a same-titled catalog book can't lend a wrong cover.
     try{
-      const cat = await getCatalogCovers();
-      const hit = cat.get(covNorm(title));
-      if(hit && hit.url){
-        const want = covSurname(author);
-        if(!want || !hit.surname || hit.surname===want || hit.surname.includes(want) || want.includes(hit.surname)) return hit.url;
-      }
+      await getCatalogIndex();
+      const hit = catalogHit(title, author);
+      if(hit && hit.url) return hit.url;
     }catch(_){}
     // 2. Not in the catalog → resolve externally (cached per session).
     const ck = 'sh_cov_' + title + '|' + (author||'');
@@ -508,6 +549,10 @@
       }
     }
     await Promise.all(trendingFetched.map(async b=>{ if(b._cover===undefined) b._cover = await resolveCover(b.title, b.author); }));
+    // resolveCover() has already loaded the catalog index, so the slug lookup
+    // that turns each tile into a link to its plot page costs nothing extra.
+    await getCatalogIndex();
+    trendingFetched.forEach(b=>{ if(b._slug===undefined){ const h = catalogHit(b.title, b.author); b._slug = h ? h.slug : null; } });
     renderTrending(trendingFetched);
   }
   function renderTrending(books){
@@ -516,16 +561,19 @@
       const cov = b._cover;
       const badgeText = b.badge==='hot' ? `#${b.rank} HOT` : b.badge==='new' ? 'NEW' : `↑ #${b.rank}`;
       const badgeClass = b.badge==='hot' || b.badge==='new' ? 'hot' : '';
-      return `<div class="tile" onclick="openTrending('${esc(b.title)}')">
-        ${cov?`<img src="${cov}" alt="" onerror="this.style.display='none'">`:''}
+      const inner = `${cov?`<img src="${cov}" alt="" onerror="this.style.display='none'">`:''}
         <span class="badge rank ${badgeClass}">${badgeText}</span>
-        <span class="ttitle">${esc(b.title)}</span>
-      </div>`;
+        <span class="ttitle">${esc(b.title)}</span>`;
+      // Trending titles we carry link straight to the plot page. Only titles
+      // genuinely absent from the catalog fall back to a search.
+      return b._slug
+        ? `<a class="tile" href="${bookPath(b._slug)}">${inner}</a>`
+        : `<div class="tile" onclick="openTrending('${esc(b.title)}')">${inner}</div>`;
     }).join('');
   }
+  // Fallback only — reached for trending titles that have no page on smutHub yet.
   function openTrending(title){
-    if (!user){ if (window.SH) SH.openAuth(); return; }
-    location.href = 'smuthub-app.html?q=' + encodeURIComponent(title);
+    location.href = '/search?q=' + encodeURIComponent(title);
   }
 
   // ── search (shelf-first) ──────────────────────────────
@@ -594,7 +642,7 @@
   }
   function addFromSearch(title){
     if (!user){ if (window.SH) SH.openAuth(); return; }
-    location.href = 'smuthub-app.html?q=' + encodeURIComponent(title);
+    location.href = '/search?q=' + encodeURIComponent(title);
   }
 
   // click outside to close results

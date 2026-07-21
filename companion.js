@@ -19,7 +19,7 @@
     pageContext(){
       const path=location.pathname;
       if(path.includes('bookcase')) return 'bookshelf';
-      if(path.includes('smuthub-app')) return 'search';
+      if(path.includes('/search')) return 'search';
       if(path.includes('dashboard')) return 'dashboard';
       if(path.includes('/book/')) return 'book:'+path.split('/book/')[1].replace(/\/$/,'');
       if(path.includes('companion')) return 'companion-room';

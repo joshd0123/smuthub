@@ -1,0 +1,14 @@
+# smutHub — permanent redirects (Cloudflare Workers static assets)
+#
+# Format: [source] [destination] [code]   — see
+# https://developers.cloudflare.com/workers/static-assets/redirects/
+# Limits: 2,000 static + 100 dynamic rules. Query strings on the incoming
+# request are preserved and re-appended to the destination automatically,
+# so /smuthub-app.html?q=Powerless lands on /search?q=Powerless.
+#
+# The search page was renamed smuthub-app.html -> search.html (serving at
+# /search) before launch. These 301s keep every previously-shared link,
+# bookmark, and indexed URL working, and tell crawlers the move is permanent
+# so ranking signals transfer to the new URL.
+/smuthub-app.html  /search  301
+/smuthub-app       /search  301

@@ -308,7 +308,8 @@
     <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
       <a href="dashboard.html">Dashboard</a>
-      <a href="smuthub-app.html">Search</a>
+      <a href="/search">Search</a>
+      <a href="/book/">Browse Books</a>
       <a href="smuthub-bookcase.html" class="on">My Bookshelf</a>
       <a href="/glossary/">Glossary</a>
       <a href="stores.html">Find a Store</a>
@@ -472,7 +473,7 @@
       + '<div class="spineinner" style="--spine:'+color+'"><span class="stitle">'+esc(b.title||'Untitled')+'</span></div>'
       + badges + '</div>';
   }
-  const ghostHTML='<a class="ghost" href="smuthub-app.html"><span style="font-size:1.4rem">＋</span>Add</a>';
+  const ghostHTML='<a class="ghost" href="/search"><span style="font-size:1.4rem">＋</span>Add</a>';
 
   function renderRoom(){
     const ordered=[...shelf].sort(shelfCmp);
