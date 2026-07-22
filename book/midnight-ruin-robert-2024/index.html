@@ -657,6 +657,74 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   })();
 </script>
 
+<script>
+  // ── Analytics: how readers reach and use this page ───────────────────────
+  // Event reference lives in ANALYTICS.md.
+  (function(){
+    var SLUG = "midnight-ruin-robert-2024";
+
+    // Where did this view come from? A click on one of our own rails leaves a
+    // hint in sessionStorage — the referrer alone cannot tell "series" from
+    // "related", since both are /book/<slug>/ pages. Everything else is
+    // derived from the referrer path.
+    function source(){
+      var hint = null;
+      try { hint = sessionStorage.getItem('sh_from'); sessionStorage.removeItem('sh_from'); } catch(_){}
+      if (hint) return hint;
+      var r = document.referrer;
+      if (!r) return 'direct';
+      try {
+        var u = new URL(r);
+        if (u.origin !== location.origin) return 'external';
+        var p = u.pathname;
+        if (p === '/book/') return 'browse';
+        if (p.indexOf('/book/') === 0) return 'book';
+        if (p === '/search' || p === '/search.html') return 'search';
+        if (p.indexOf('/dashboard') === 0) return 'dashboard';
+        if (p.indexOf('/glossary/') === 0) return 'glossary';
+        if (p.indexOf('/smuthub-bookcase') === 0) return 'bookshelf';
+        if (p === '/' || p.indexOf('/index.html') === 0) return 'home';
+        return 'internal';
+      } catch(_) { return 'direct'; }
+    }
+    // auth.js is deferred, so SH may not exist yet during parse. Wait for it,
+    // then hand off to SH.trackWhenReady, which additionally queues the event
+    // until the external Umami script has loaded — otherwise this fires into a
+    // no-op on cold visits and book-open under-reports exactly when it matters.
+    function fireOnLoad(name, data){
+      if (window.SH && SH.trackWhenReady){ SH.trackWhenReady(name, data); return; }
+      var tries = 0;
+      var iv = setInterval(function(){
+        if (window.SH && SH.trackWhenReady){ clearInterval(iv); SH.trackWhenReady(name, data); }
+        else if (++tries > 40) clearInterval(iv);          // give up after ~4s
+      }, 100);
+    }
+    fireOnLoad('book-open', { slug: SLUG, from: source() });
+
+    // Leave a hint for the NEXT page when a rail card is clicked, so the
+    // continuation flow (series -> related -> author) can be measured.
+    document.addEventListener('click', function(e){
+      var card = e.target.closest ? e.target.closest('.af-bcard') : null;
+      if (!card) return;
+      var sec = card.closest('.af-disc');
+      try { sessionStorage.setItem('sh_from', sec ? sec.id.replace('af-', '') : 'book'); } catch(_){}
+    });
+
+    // Does "answers first" work? Which of the six questions readers actually
+    // pick — and whether the short answer suffices or they always open the
+    // full blurb — is what says whether this hierarchy is the right one.
+    document.addEventListener('click', function(e){
+      var a = e.target.closest ? e.target.closest('.af-ask nav a') : null;
+      if (!a) return;
+      if (window.SH && SH.track) SH.track('ask-jump', { question: (a.getAttribute('href') || '').replace('#af-', ''), slug: SLUG });
+    });
+    var blurb = document.querySelector('.af-blurb');
+    if (blurb) blurb.addEventListener('toggle', function(){
+      if (blurb.open && window.SH && SH.track) SH.track('blurb-expand', { slug: SLUG });
+    });
+  })();
+</script>
+
 
 <footer>
   <div class="wrap ft">

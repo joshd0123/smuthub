@@ -1199,6 +1199,74 @@ ${SHARED_HEADER}
   })();
 </script>
 
+<script>
+  // ── Analytics: how readers reach and use this page ───────────────────────
+  // Event reference lives in ANALYTICS.md.
+  (function(){
+    var SLUG = ${JSON.stringify(book.slug)};
+
+    // Where did this view come from? A click on one of our own rails leaves a
+    // hint in sessionStorage — the referrer alone cannot tell "series" from
+    // "related", since both are /book/<slug>/ pages. Everything else is
+    // derived from the referrer path.
+    function source(){
+      var hint = null;
+      try { hint = sessionStorage.getItem('sh_from'); sessionStorage.removeItem('sh_from'); } catch(_){}
+      if (hint) return hint;
+      var r = document.referrer;
+      if (!r) return 'direct';
+      try {
+        var u = new URL(r);
+        if (u.origin !== location.origin) return 'external';
+        var p = u.pathname;
+        if (p === '/book/') return 'browse';
+        if (p.indexOf('/book/') === 0) return 'book';
+        if (p === '/search' || p === '/search.html') return 'search';
+        if (p.indexOf('/dashboard') === 0) return 'dashboard';
+        if (p.indexOf('/glossary/') === 0) return 'glossary';
+        if (p.indexOf('/smuthub-bookcase') === 0) return 'bookshelf';
+        if (p === '/' || p.indexOf('/index.html') === 0) return 'home';
+        return 'internal';
+      } catch(_) { return 'direct'; }
+    }
+    // auth.js is deferred, so SH may not exist yet during parse. Wait for it,
+    // then hand off to SH.trackWhenReady, which additionally queues the event
+    // until the external Umami script has loaded — otherwise this fires into a
+    // no-op on cold visits and book-open under-reports exactly when it matters.
+    function fireOnLoad(name, data){
+      if (window.SH && SH.trackWhenReady){ SH.trackWhenReady(name, data); return; }
+      var tries = 0;
+      var iv = setInterval(function(){
+        if (window.SH && SH.trackWhenReady){ clearInterval(iv); SH.trackWhenReady(name, data); }
+        else if (++tries > 40) clearInterval(iv);          // give up after ~4s
+      }, 100);
+    }
+    fireOnLoad('book-open', { slug: SLUG, from: source() });
+
+    // Leave a hint for the NEXT page when a rail card is clicked, so the
+    // continuation flow (series -> related -> author) can be measured.
+    document.addEventListener('click', function(e){
+      var card = e.target.closest ? e.target.closest('.af-bcard') : null;
+      if (!card) return;
+      var sec = card.closest('.af-disc');
+      try { sessionStorage.setItem('sh_from', sec ? sec.id.replace('af-', '') : 'book'); } catch(_){}
+    });
+
+    // Does "answers first" work? Which of the six questions readers actually
+    // pick — and whether the short answer suffices or they always open the
+    // full blurb — is what says whether this hierarchy is the right one.
+    document.addEventListener('click', function(e){
+      var a = e.target.closest ? e.target.closest('.af-ask nav a') : null;
+      if (!a) return;
+      if (window.SH && SH.track) SH.track('ask-jump', { question: (a.getAttribute('href') || '').replace('#af-', ''), slug: SLUG });
+    });
+    var blurb = document.querySelector('.af-blurb');
+    if (blurb) blurb.addEventListener('toggle', function(){
+      if (blurb.open && window.SH && SH.track) SH.track('blurb-expand', { slug: SLUG });
+    });
+  })();
+</script>
+
 ${SHARED_FOOTER}`;
 
   return head + body;
@@ -1439,6 +1507,42 @@ ${groupsHTML}
         apply();
       });
     }
+
+    // ── Analytics ──────────────────────────────────────────────────────────
+    // Which filters readers actually reach for tells us which metadata is
+    // worth the tagging effort. Debounced on the text field so a typed word
+    // is one event, not one per keystroke. See ANALYTICS.md.
+    var qTimer = null;
+    function trackFilter(type, value){
+      if (!value || !(window.SH && SH.track)) return;
+      SH.track('browse-filter', { type: type, value: String(value).slice(0, 60) });
+    }
+    q.addEventListener('input', function(){
+      clearTimeout(qTimer);
+      qTimer = setTimeout(function(){ trackFilter('text', q.value.trim()); }, 900);
+    });
+    fTrope.addEventListener('change', function(){ trackFilter('trope', fTrope.value); });
+    fMood.addEventListener('change',  function(){ trackFilter('mood',  fMood.value); });
+    fSpice.addEventListener('change', function(){ trackFilter('spice', fSpice.value); });
+    // Arriving already filtered from a glossary term — proves those CTAs
+    // convert. Fired on load, so it goes through trackWhenReady: auth.js is
+    // deferred AND the Umami script is external, so a plain track() here would
+    // be dropped on most cold visits.
+    (function(){
+      var t = new URLSearchParams(location.search).get('tag');
+      if (!t) return;
+      var tries = 0;
+      var iv = setInterval(function(){
+        if (window.SH && SH.trackWhenReady){ clearInterval(iv); SH.trackWhenReady('browse-tag-arrival', { tag: t }); }
+        else if (++tries > 40) clearInterval(iv);
+      }, 100);
+    })();
+    // Hint the book page about where the click came from.
+    document.addEventListener('click', function(e){
+      if (e.target.closest && e.target.closest('.bcard')){
+        try { sessionStorage.setItem('sh_from', 'browse'); } catch(_){}
+      }
+    });
 
     q.addEventListener('input', apply);
     fTrope.addEventListener('change', apply);

@@ -2289,6 +2289,42 @@
       });
     }
 
+    // ── Analytics ──────────────────────────────────────────────────────────
+    // Which filters readers actually reach for tells us which metadata is
+    // worth the tagging effort. Debounced on the text field so a typed word
+    // is one event, not one per keystroke. See ANALYTICS.md.
+    var qTimer = null;
+    function trackFilter(type, value){
+      if (!value || !(window.SH && SH.track)) return;
+      SH.track('browse-filter', { type: type, value: String(value).slice(0, 60) });
+    }
+    q.addEventListener('input', function(){
+      clearTimeout(qTimer);
+      qTimer = setTimeout(function(){ trackFilter('text', q.value.trim()); }, 900);
+    });
+    fTrope.addEventListener('change', function(){ trackFilter('trope', fTrope.value); });
+    fMood.addEventListener('change',  function(){ trackFilter('mood',  fMood.value); });
+    fSpice.addEventListener('change', function(){ trackFilter('spice', fSpice.value); });
+    // Arriving already filtered from a glossary term — proves those CTAs
+    // convert. Fired on load, so it goes through trackWhenReady: auth.js is
+    // deferred AND the Umami script is external, so a plain track() here would
+    // be dropped on most cold visits.
+    (function(){
+      var t = new URLSearchParams(location.search).get('tag');
+      if (!t) return;
+      var tries = 0;
+      var iv = setInterval(function(){
+        if (window.SH && SH.trackWhenReady){ clearInterval(iv); SH.trackWhenReady('browse-tag-arrival', { tag: t }); }
+        else if (++tries > 40) clearInterval(iv);
+      }, 100);
+    })();
+    // Hint the book page about where the click came from.
+    document.addEventListener('click', function(e){
+      if (e.target.closest && e.target.closest('.bcard')){
+        try { sessionStorage.setItem('sh_from', 'browse'); } catch(_){}
+      }
+    });
+
     q.addEventListener('input', apply);
     fTrope.addEventListener('change', apply);
     fMood.addEventListener('change', apply);

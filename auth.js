@@ -7,7 +7,7 @@
 (function(){
   const cfg = window.SMUTHUB_CONFIG || {};
   const configured = (cfg.SUPABASE_URL||"").startsWith("http") && (cfg.SUPABASE_KEY||"").length > 20;
-  const SH = window.SH = { sb:null, user:null, profile:null, configured, openAuth, saveTheme, logout, openFeedback, track };
+  const SH = window.SH = { sb:null, user:null, profile:null, configured, openAuth, saveTheme, logout, openFeedback, track, trackWhenReady };
 
   // ── Umami analytics (self-hosted, cookieless) ────────────────────────────
   // Served over a public Cloudflare Tunnel (cloudflared on the Umami box →
@@ -18,8 +18,51 @@
   };
   // Fire a custom event. Safe no-op until the Umami script is loaded, so pages
   // can call SH.track(...) unconditionally.
+  // Admin activity is excluded from analytics. The admin PAGES are already kept
+  // out by mountUmami(), but curating a catalog means browsing /search, /book/
+  // and the book pages constantly — exactly the pages being measured — so an
+  // admin's own sessions would otherwise read as reader behaviour.
+  //
+  // The flag is mirrored into sessionStorage because SH.profile loads
+  // asynchronously: without it, every event fired before the profile resolves
+  // (page load, first click) would still be recorded on an admin's first page.
+  const ADMIN_FLAG = 'sh_is_admin';
+  function isAdminSession(){
+    try {
+      if (SH.profile && SH.profile.is_admin){ sessionStorage.setItem(ADMIN_FLAG, '1'); return true; }
+      if (SH.profile && SH.profile.is_admin === false){ sessionStorage.removeItem(ADMIN_FLAG); return false; }
+      return sessionStorage.getItem(ADMIN_FLAG) === '1';   // profile not loaded yet
+    } catch(_) { return !!(SH.profile && SH.profile.is_admin); }
+  }
+  const umamiReady = () => !!(window.umami && typeof window.umami.track === 'function');
   function track(name, data){
-    try { if (window.umami && typeof window.umami.track === 'function') { data ? window.umami.track(name, data) : window.umami.track(name); } } catch(_) {}
+    try {
+      if (isAdminSession()) return;
+      if (umamiReady()) { data ? window.umami.track(name, data) : window.umami.track(name); }
+    } catch(_) {}
+  }
+
+  // Same as track(), but for events fired during page load.
+  //
+  // The Umami script is injected deferred from an external host, so it is
+  // routinely NOT loaded yet when a page-load event fires — and track() would
+  // silently drop it. Interaction events are safe (they happen long after
+  // load); anything fired on load must queue and flush once the script lands,
+  // or metrics like book-open would under-report on every cold visit.
+  const pendingEvents = [];
+  function flushPending(){
+    if (!umamiReady()) return false;
+    while (pendingEvents.length){ const e = pendingEvents.shift(); track(e[0], e[1]); }
+    return true;
+  }
+  function trackWhenReady(name, data){
+    try {
+      if (isAdminSession()) return;
+      if (umamiReady()) { track(name, data); return; }
+      pendingEvents.push([name, data]);
+      let tries = 0;
+      const iv = setInterval(() => { if (flushPending() || ++tries > 60) clearInterval(iv); }, 100);  // ~6s
+    } catch(_) {}
   }
   function mountUmami(){
     if (!/^https:\/\//.test(UMAMI.src)) return;                 // dormant until a public https URL is set
