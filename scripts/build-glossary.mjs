@@ -197,11 +197,11 @@ const SHARED_HEAD = (page) => `<!DOCTYPE html>
 <meta property="og:title" content="${escAttr(page.title)}">
 <meta property="og:description" content="${escAttr(page.description)}">
 <meta property="og:url" content="${escAttr(page.canonical)}">
-<meta property="og:image" content="${SITE}/og-image.png">
+<meta property="og:image" content="${SITE}/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${escAttr(page.title)}">
 <meta name="twitter:description" content="${escAttr(page.description)}">
-<meta name="twitter:image" content="${SITE}/og-image.png">
+<meta name="twitter:image" content="${SITE}/og-image.jpg">
 ${page.jsonld ? `<script type="application/ld+json">${JSON.stringify(page.jsonld)}</script>` : ''}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

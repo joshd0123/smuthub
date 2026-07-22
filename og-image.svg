@@ -28,7 +28,7 @@
     <text x="237" y="9" text-anchor="middle" font-family="Hanken Grotesk, Inter, system-ui, sans-serif" font-weight="800" font-size="58" fill="#1a0c10" letter-spacing="-1">Hub</text>
   </g>
 
-  <g font-family="Fraunces, Georgia, serif" fill="#f4e8e3">
+  <g font-family="Georgia, Fraunces, serif" fill="#f4e8e3">
     <text x="80" y="290" font-size="92" font-weight="500" letter-spacing="-2">The hub for</text>
     <text x="80" y="395" font-size="92" font-weight="400" font-style="italic" fill="url(#logobox)" letter-spacing="-2">spicy fantasy</text>
     <text x="80" y="500" font-size="92" font-weight="500" letter-spacing="-2">reads.</text>
