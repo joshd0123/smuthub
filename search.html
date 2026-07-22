@@ -167,6 +167,7 @@
     <a href="catalog-admin.html" class="catbtn" style="max-width:220px;margin:0 6px 6px 0;display:inline-block;width:auto;text-align:center">✎ Manage catalog</a>
     <button id="adminFill" class="catbtn" style="max-width:240px;margin:0 6px 6px 0;display:inline-block;width:auto">🔧 Fill missing covers</button>
     <button id="adminBlurb" class="catbtn" style="max-width:240px;margin:0 6px 6px 0;display:inline-block;width:auto">📝 Fill missing blurbs</button>
+    <button id="adminPages" class="catbtn" style="max-width:250px;margin:0 6px 6px 0;display:inline-block;width:auto">📐 Fill missing page counts</button>
     <a href="admin.html" class="catbtn" style="max-width:160px;margin:0 0 6px;display:inline-block;width:auto;text-align:center">📥 Bulk import</a>
   </div>
   <div class="status" id="status"></div>
@@ -183,7 +184,7 @@
   window.addEventListener('sh-auth', async (e)=>{
     sb = window.SH.sb; user = e.detail.user;
     isAdmin = !!(e.detail.profile && e.detail.profile.is_admin);
-    const ab=document.getElementById('adminbar'); if(ab){ ab.style.display=isAdmin?'block':'none'; const fb=document.getElementById('adminFill'); if(fb) fb.onclick=fillCatalogCovers; const bb=document.getElementById('adminBlurb'); if(bb) bb.onclick=fillCatalogBlurbs; }
+    const ab=document.getElementById('adminbar'); if(ab){ ab.style.display=isAdmin?'block':'none'; const fb=document.getElementById('adminFill'); if(fb) fb.onclick=fillCatalogCovers; const bb=document.getElementById('adminBlurb'); if(bb) bb.onclick=fillCatalogBlurbs; const pb=document.getElementById('adminPages'); if(pb) pb.onclick=fillCatalogPages; }
     if(window.SH && !window.SH.configured) document.getElementById('setup').classList.add('show');
     if(user){ await loadMine(); } else { Object.keys(spiceMap).forEach(k=>delete spiceMap[k]); shelfSet.clear(); Object.keys(shelfStatus).forEach(k=>delete shelfStatus[k]); }
     render();
@@ -479,6 +480,80 @@
     btn.disabled=false; btn.textContent='📝 Fill missing blurbs';
     if(totalFilled>0) bustBrowseCache();
     toast('Filled '+totalFilled+' blurb'+(totalFilled===1?'':'s')+(noMatch?(' · '+noMatch+' had no Google match'):'')+' ★ — rebuild to publish');
+  }
+
+  // admin: fill missing page counts from Google Books. Page count is one of the
+  // six quick facts on the redesigned book page and drives "What's the
+  // commitment?", so a book without it loses two of the answers readers came
+  // for. Same pass/retry shape as the cover and blurb fillers.
+  async function fillCatalogPages(){
+    if(!isAdmin || !sb){ toast("Admins only"); return; }
+    if(!GB_KEY){ toast("No Google Books key configured"); return; }
+    const btn=document.getElementById('adminPages');
+    const sleep = ms => new Promise(r=>setTimeout(r,ms));
+    const norm = s => String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    const surname = a => { const p=String(a||'').trim().split(/\s+/); return p.length?norm(p[p.length-1]):''; };
+    const giveUp = new Set();
+
+    // {ok,pages}: ok=false → Google unreachable after retries (retry next pass);
+    // ok=true + pages=null → answered but nothing confident (stop asking).
+    async function fetchPages(row){
+      // Prefer an ISBN lookup when we have one — it pins the exact edition, so
+      // the page count matches the book we actually carry.
+      const queries = [];
+      if(row.isbn) queries.push('isbn:'+String(row.isbn).replace(/[^0-9Xx]/g,''));
+      queries.push(((row.title||'')+' '+(row.author||'')).trim());
+      const wantT=norm(row.title), wantS=surname(row.author);
+      for(let t=0;t<4;t++){
+        for(const q of queries){
+          try{
+            const url='https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)
+              +'&maxResults=6&printType=books&langRestrict=en&country=US&key='+GB_KEY;
+            const r=await fetch(url);
+            if(!r.ok) continue;
+            const d=await r.json();
+            for(const it of ((d.items)||[])){
+              const v=it.volumeInfo||{};
+              const pc=Number(v.pageCount);
+              if(!Number.isFinite(pc) || pc<40 || pc>3000) continue;   // junk/omnibus guard
+              if(q.indexOf('isbn:')===0) return { ok:true, pages:pc };  // ISBN match needs no title check
+              const gt=norm(v.title);
+              if(!(gt===wantT || gt.startsWith(wantT) || wantT.startsWith(gt))) continue;
+              if(wantS && !(v.authors||[]).some(a=>norm(a).includes(wantS))) continue;
+              return { ok:true, pages:pc };
+            }
+          }catch(_){ /* network hiccup → fall through to retry */ }
+        }
+        await sleep(900*(t+1));
+      }
+      return { ok:false, pages:null };
+    }
+
+    btn.disabled=true;
+    let totalFilled=0, noMatch=0, pass=0;
+    try{
+      while(pass<6){
+        pass++;
+        const { data, error } = await sb.from('books').select('slug,title,author,isbn')
+          .is('page_count',null).neq('status','archived').limit(300);
+        if(error){ toast("Catalog read failed: "+error.message); break; }
+        const queue=(data||[]).filter(r=>!giveUp.has(r.slug));
+        if(!queue.length) break;
+        let filledThisPass=0, i=0;
+        for(const row of queue){
+          btn.textContent='📐 Pass '+pass+' · '+totalFilled+' filled · '+(++i)+'/'+queue.length;
+          const res=await fetchPages(row);
+          if(res.pages){
+            const { error:e2 } = await sb.from('books').update({ page_count:res.pages }).eq('slug',row.slug);
+            if(!e2){ filledThisPass++; totalFilled++; }
+          } else if(res.ok){ giveUp.add(row.slug); noMatch++; }
+          await sleep(300);
+        }
+        if(filledThisPass===0) break;
+      }
+    }catch(e){ console.error('page-count fill', e); }
+    btn.disabled=false; btn.textContent='📐 Fill missing page counts';
+    toast('Filled '+totalFilled+' page count'+(totalFilled===1?'':'s')+(noMatch?(' · '+noMatch+' had no Google match'):'')+' ★ — rebuild to publish');
   }
 
   // ── filters: explore your catalog by metadata (spice / trope / mood / ending) ──

@@ -201,9 +201,171 @@ const SHARED_FOOTER = `
 </body></html>
 `;
 
+// ── "Ask First" book-page styles ──────────────────────────────────────────
+// The approved prototype shipped its own palette (Georgia/Arial, #f04455 red,
+// cream "paper" panels). Per the handoff's own constraint — reuse production
+// colours, typography and spacing so the page reads as a native evolution
+// rather than a separate microsite — the STRUCTURE and INTERACTIONS are ported
+// faithfully while the skin uses smutHub's existing tokens: Fraunces headings,
+// Hanken Grotesk body, --panel surfaces, --rose accent.
+// Namespaced `af-` throughout so nothing collides with the existing BOOK_CSS.
+const ASK_CSS = `
+  .af-hero{display:grid;grid-template-columns:220px minmax(320px,1fr) minmax(300px,380px);gap:clamp(22px,3vw,44px);align-items:start;padding:22px 0 8px}
+  @media(max-width:1080px){.af-hero{grid-template-columns:190px 1fr}.af-ask{grid-column:1/-1}}
+  @media(max-width:720px){.af-hero{grid-template-columns:100px 1fr;gap:16px}.af-cover-col{display:contents}}
+
+  /* ── column 1: cover, format, rate, shelf ── */
+  .af-cover{position:relative;aspect-ratio:2/3;border-radius:12px;overflow:hidden;background:var(--ink-2);border:1px solid var(--line)}
+  .af-cover img{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .af-cover .cover-bg{object-fit:cover;filter:blur(18px) saturate(1.35) brightness(.5);transform:scale(1.25)}
+  .af-cover .cover-img{object-fit:contain;z-index:1}
+  .af-cover .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px;font-family:'Fraunces',serif;font-style:italic;color:#fff;background:linear-gradient(160deg,#3a0d2a,#7a1238)}
+  .af-format{margin-top:10px;color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.1em;text-align:center}
+  @media(max-width:720px){.af-format{display:none}}
+
+  /* Compact review utility, high on the page. smutHub has no reviews table,
+     so the "Finished it?" slot drives the per-reader SPICE rating that already
+     exists in book_tags — an honest action rather than a dead control. */
+  .af-rate{margin-top:12px;padding:11px 12px;border:1px solid var(--line);border-top:2px solid var(--rose);border-radius:10px;background:var(--ink-2)}
+  .af-rate>span{display:block;color:var(--amber);font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+  .af-stars{margin-top:8px;display:flex;justify-content:space-between}
+  .af-stars button{padding:0 1px;background:none;border:0;cursor:pointer;font-size:1.05rem;line-height:1;filter:grayscale(1);opacity:.34;transition:.15s}
+  .af-stars button.on{filter:none;opacity:1}
+  .af-stars button:hover{transform:scale(1.15)}
+  .af-rate-note{margin-top:7px;color:var(--muted);font-size:.68rem;min-height:1em}
+  .af-rate-note a{color:var(--amber)}
+  @media(max-width:720px){.af-rate{grid-column:1/-1}}
+
+  /* ── column 2: title, actions, quick facts ── */
+  .af-flags{display:flex;flex-wrap:wrap;gap:7px}
+  .af-flags span{padding:5px 8px;border:1px solid var(--line);border-radius:99px;color:var(--muted);font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase}
+  .af-core h1{margin:16px 0 6px;font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.9rem,4.4vw,3.1rem);line-height:1.03;letter-spacing:-.02em}
+  .af-byline{margin:0;color:var(--muted);font-size:.95rem}
+  .af-byline a{color:var(--cream);font-weight:700}
+  .af-pulse{margin:16px 0 14px;padding:11px 0;display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .af-pulse b{font-family:'Fraunces',serif;font-weight:600;font-size:1.4rem}
+  .af-pulse small{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em}
+  .af-actions{display:flex;flex-wrap:wrap;gap:8px}
+  .af-actions button,.af-actions select{font-family:inherit;font-weight:800;font-size:.8rem;padding:.7em 1em;border-radius:10px;cursor:pointer;border:1px solid var(--line);background:var(--ink-2);color:var(--cream)}
+  .af-actions .af-primary{background:var(--grad);color:#1a0c10;border-color:transparent}
+  .af-actions .af-primary.on{background:var(--panel);color:var(--cream);border-color:var(--rose)}
+  .af-facts{margin:18px 0 0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
+  @media(max-width:720px){.af-facts{grid-column:1/-1;grid-template-columns:repeat(2,1fr)}}
+  .af-facts>div{padding:11px 12px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .af-facts dt,.af-facts small{display:block;color:var(--muted);font-size:.64rem;text-transform:uppercase;letter-spacing:.1em}
+  .af-facts dd{margin:6px 0 4px;font-family:'Fraunces',serif;font-weight:500;font-size:1.02rem}
+
+  /* ── column 3: the Ask First jump menu ── */
+  .af-ask{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .af-ask-head{padding:16px 18px;background:var(--ink-2);border-bottom:1px solid var(--line)}
+  .af-ask-head>span{color:var(--amber);font-size:.62rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+  .af-ask-head h2{margin:9px 0 0;font-family:'Fraunces',serif;font-weight:600;font-size:1.5rem;line-height:1.05;letter-spacing:-.02em}
+  .af-ask-head h2 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
+  .af-ask nav a{min-height:52px;padding:10px 16px;display:grid;grid-template-columns:22px 1fr auto;align-items:center;gap:9px;text-decoration:none;color:var(--cream);border-bottom:1px solid var(--line);transition:background .16s,padding .16s}
+  .af-ask nav a:last-child{border-bottom:0}
+  .af-ask nav a:hover,.af-ask nav a:focus-visible{padding-left:21px;background:var(--ink-2);outline:none}
+  .af-ask nav a>span{color:var(--muted);font-size:.66rem;font-variant-numeric:tabular-nums}
+  .af-ask nav a>b{font-family:'Fraunces',serif;font-weight:500;font-size:1rem;line-height:1.15}
+  /* The right-hand summary must stay strongly bold and legible on mobile —
+     this was the specific documented feedback on the prototype. */
+  .af-ask nav a>em{font-style:normal;font-weight:800;font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;color:var(--amber);text-align:right}
+  @media(max-width:720px){.af-ask nav a>em{font-size:.72rem}}
+
+  /* ── answer stack ── */
+  .af-answers{padding:8px 0 10px}
+  .af-sec{scroll-margin-top:88px;padding:30px 0;display:grid;grid-template-columns:52px 1fr;gap:6px;border-bottom:1px solid var(--line)}
+  @media(max-width:720px){.af-sec{grid-template-columns:30px 1fr;padding:24px 0}}
+  .af-num{color:var(--rose);font-size:.72rem;font-weight:800;font-variant-numeric:tabular-nums;padding-top:.5em}
+  .af-label{margin:0 0 10px;color:var(--muted);font-size:.7rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+  .af-sec h2{margin:0;font-family:'Fraunces',serif;font-weight:400;font-size:clamp(1.35rem,2.9vw,2.1rem);line-height:1.14;letter-spacing:-.02em;max-width:34ch}
+  .af-sec p{max-width:70ch;color:var(--muted);line-height:1.62;margin-top:12px}
+  .af-tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:7px;max-width:900px}
+  .af-tags a,.af-tags span{padding:7px 10px;border:1px solid var(--line);border-radius:99px;color:var(--cream);text-decoration:none;font-size:.76rem}
+  .af-tags a:hover{border-color:var(--rose)}
+  .af-tags.is-warn span,.af-tags.is-warn a{color:#ffb3a7;border-color:rgba(255,122,77,.4)}
+  .af-tags.is-warn span:before,.af-tags.is-warn a:before{content:"!";margin-right:6px;color:var(--rose);font-weight:800}
+  .af-seeall{margin-top:14px;padding:7px 0;background:none;border:0;border-bottom:1px solid var(--line);color:var(--cream);font-family:inherit;font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+  .af-seeall span{margin-left:7px;color:var(--amber)}
+  .af-seeall:hover{border-color:var(--rose)}
+  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto 1fr 1fr;gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
+  @media(max-width:720px){.af-spice{grid-template-columns:1fr;gap:10px}}
+  .af-spice b{display:block;margin-bottom:3px;color:var(--cream);font-size:.66rem;text-transform:uppercase;letter-spacing:.09em}
+  .af-gauge{display:flex;gap:5px}
+  .af-gauge i{width:30px;height:7px;border-radius:2px;background:#4f4448;display:block}
+  .af-gauge i.on{background:var(--grad)}
+  .af-blurb{max-width:80ch;margin-top:16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .af-blurb summary{padding:14px 0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;list-style:none;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+  .af-blurb summary::-webkit-details-marker{display:none}
+  .af-blurb summary span{color:var(--amber);font-size:1.1rem;line-height:.7;transition:transform .2s}
+  .af-blurb[open] summary span{transform:rotate(45deg)}
+  .af-blurb .af-blurb-body{padding-bottom:18px}
+  .af-commit{max-width:900px;margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  @media(max-width:720px){.af-commit{grid-template-columns:1fr}.af-commit>div{border-right:0!important;border-bottom:1px solid var(--line)}}
+  .af-commit>div{padding:16px;border-right:1px solid var(--line)}
+  .af-commit>div:last-child{border-right:0}
+  .af-commit span,.af-commit small{display:block;color:var(--muted);font-size:.64rem;text-transform:uppercase;letter-spacing:.1em}
+  .af-commit b{display:block;margin:7px 0;font-family:'Fraunces',serif;font-weight:600;font-size:1.35rem}
+  .af-more{margin-top:16px}
+  .af-more summary{cursor:pointer;color:var(--muted);font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:10px 0}
+  .af-more summary::-webkit-details-marker{display:none}
+  .af-more summary:hover{color:var(--cream)}
+
+  /* ── series + related: one continuation flow, swipeable on mobile ── */
+  .af-disc{padding:30px 0 6px;border-bottom:1px solid var(--line)}
+  .af-disc:last-child{border-bottom:0}
+  .af-disc-head{margin-bottom:18px;display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
+  .af-disc-head>div>span{color:var(--amber);font-size:.64rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+  .af-disc-head h2{margin:7px 0 4px;font-family:'Fraunces',serif;font-weight:600;font-size:1.6rem}
+  .af-disc-head p{margin:0;color:var(--muted);font-size:.82rem}
+  .af-disc-head>a{flex:none;color:var(--muted);text-decoration:none;font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--line);padding-bottom:5px}
+  .af-disc-head>a:hover{color:var(--cream);border-color:var(--rose)}
+  .af-rail{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+  @media(max-width:900px){.af-rail{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media(max-width:720px){
+    .af-rail{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin-right:-22px;padding:2px 22px 14px 0;-webkit-overflow-scrolling:touch}
+    .af-rail>a{flex:0 0 142px;scroll-snap-align:start}
+    .af-disc-head>a{display:none}
+  }
+  .af-bcard{display:flex;flex-direction:column;min-width:0;text-decoration:none;color:inherit}
+  .af-bcard .cv{position:relative;aspect-ratio:2/3;border-radius:10px;overflow:hidden;background:var(--ink-2);border:1px solid var(--line);transition:transform .18s,border-color .18s}
+  .af-bcard:hover .cv{transform:translateY(-4px);border-color:var(--rose)}
+  .af-bcard .cv img{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .af-bcard .cv .cover-bg{object-fit:cover;filter:blur(16px) brightness(.5) saturate(1.3);transform:scale(1.25)}
+  .af-bcard .cv .cover-img{object-fit:contain;z-index:1}
+  .af-bcard .cv .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-family:'Fraunces',serif;font-style:italic;font-size:.82rem;color:#fff;background:linear-gradient(160deg,#3a0d2a,#7a1238)}
+  .af-bcard.is-current .cv{outline:2px solid var(--rose);outline-offset:2px}
+  .af-bcard .bm{padding-top:10px}
+  .af-bcard .bm>span{color:var(--amber);font-size:.62rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+  .af-bcard .bm h3{margin:5px 0 3px;font-family:'Fraunces',serif;font-weight:500;font-size:.98rem;line-height:1.15}
+  .af-bcard .bm p{margin:0;color:var(--muted);font-size:.76rem}
+
+  /* ── drawers: full tropes / full warnings ── */
+  body.af-drawer-open{overflow:hidden}
+  .af-layer{position:fixed;inset:0;z-index:80;display:flex;justify-content:flex-end;background:rgba(4,2,3,.72);backdrop-filter:blur(4px);animation:af-fade .18s ease-out}
+  .af-drawer{width:min(520px,94vw);height:100%;padding:26px;overflow-y:auto;background:var(--panel);border-left:1px solid var(--line);box-shadow:-20px 0 50px rgba(0,0,0,.45);animation:af-slide .26s ease-out}
+  @media(max-width:720px){.af-drawer{width:100vw;padding:20px}}
+  .af-drawer-head{padding-bottom:18px;display:flex;justify-content:space-between;align-items:flex-start;gap:18px;border-bottom:1px solid var(--line)}
+  .af-drawer-head span{color:var(--amber);font-size:.64rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+  .af-drawer-head h2{margin:8px 0 0;font-family:'Fraunces',serif;font-weight:600;font-size:1.6rem}
+  .af-drawer-head button{flex:0 0 38px;height:38px;background:none;border:1px solid var(--line);border-radius:50%;color:var(--cream);font-size:1.4rem;line-height:1;cursor:pointer}
+  .af-drawer-head button:hover{border-color:var(--rose)}
+  .af-drawer-note{margin:16px 0;color:var(--muted);font-size:.86rem;line-height:1.5}
+  .af-drawer-list>div,.af-drawer-list>a{padding:13px 0;display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:center;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+  .af-drawer-list>a:hover b{color:var(--rose)}
+  .af-drawer-list span{color:var(--muted);font-size:.66rem;font-variant-numeric:tabular-nums}
+  .af-drawer-list b{font-family:'Fraunces',serif;font-weight:500;font-size:1.05rem}
+  .af-drawer-detail{margin-top:16px;color:var(--muted);font-size:.88rem;line-height:1.6}
+  .af-drawer-done{width:100%;margin-top:22px;padding:13px;background:var(--grad);color:#1a0c10;border:0;border-radius:10px;font-family:inherit;font-size:.76rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+  @keyframes af-slide{from{transform:translateX(100%)}to{transform:translateX(0)}}
+  @keyframes af-fade{from{opacity:0}to{opacity:1}}
+  @media(prefers-reduced-motion:reduce){.af-layer,.af-drawer{animation:none}}
+`;
+
 const BOOK_CSS = `<style>
+
   .crumb{padding:18px 0 0;color:var(--muted);font-size:.85rem}
-  .crumb a{color:var(--muted);text-decoration:none}.crumb a:hover{color:var(--cream)}
+.crumb a{color:var(--muted);text-decoration:none}
+.crumb a:hover{color:var(--cream)}
   /* hero */
   /* Desktop: a single 2-col grid that runs from the hero all the way down through
      the plot + details. Cover stays sticky on the left while the right column
@@ -211,128 +373,63 @@ const BOOK_CSS = `<style>
      sit OUTSIDE this layout as full-width sections, since they need the room.
      Mobile (≤720px): single column, everything stacks linearly. */
   .book-layout{display:grid;grid-template-columns:260px 1fr;gap:34px;padding:24px 0 8px;align-items:start}
-  @media(max-width:720px){.book-layout{grid-template-columns:1fr;gap:22px;max-width:460px;margin:0 auto}}
-  .book-layout > .cover-col{position:sticky;top:90px}
-  @media(max-width:720px){.book-layout > .cover-col{position:static;justify-self:center;width:200px}}
-  .book-layout > .info-col{min-width:0}
-  /* Header inside info-col — was the right half of .bookhero before. */
-  .book-header{padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:6px}
-  .info-col > .book-header:only-child{border-bottom:0;padding-bottom:0;margin-bottom:0}
-  /* Inside the layout, .blk sections don't need their own top padding; the grid handles spacing. */
-  .info-col section.blk{padding:22px 0}
-  /* Related-books stack lives below the grid — first item draws a top divider. */
-  .related-stack section.blk:first-child{border-top:1px solid var(--line)}
-  .cover{aspect-ratio:2/3;border-radius:14px;overflow:hidden;background:linear-gradient(160deg,#3a0d2a,#7a1238);box-shadow:0 30px 60px -24px rgba(0,0,0,.8);position:relative}
-  .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  .cover .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:18px;text-align:center;font-family:'Fraunces',serif;font-size:1.05rem;color:var(--cream)}
-  .badge{display:inline-block;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:.18em .8em;font-size:.74rem;font-weight:700;letter-spacing:.06em;color:var(--amber);text-transform:uppercase;margin-bottom:12px}
-  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.9rem,4.4vw,3rem);letter-spacing:-.02em;line-height:1.06}
-  .byline{margin-top:10px;font-size:1.05rem;color:var(--cream)}
-  .byline a{color:var(--amber);text-decoration:none}.byline a:hover{text-decoration:underline}
-  .series-line{margin-top:6px;color:var(--muted);font-size:.95rem}
-  .series-line a{color:var(--muted)}.series-line a:hover{color:var(--cream)}
-  /* spice meter */
-  .spicemeter{margin-top:20px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
-  .chilis{font-size:1.15rem;letter-spacing:.08em;white-space:nowrap}
-  .chilis span{filter:grayscale(1);opacity:.3}
-  .chilis span.on{filter:none;opacity:1}
-  .sm-tag{display:inline-flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:.28em .8em;font-size:.82rem;color:var(--cream)}
-  .sm-tag b{color:var(--muted);font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em}
-  /* sections */
-  section.blk{padding:26px 0;border-bottom:1px solid var(--line)}
-  section.blk:last-of-type{border-bottom:0}
-  section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;margin-bottom:14px}
+@media(max-width:720px){.book-layout{grid-template-columns:1fr;gap:22px;max-width:460px;margin:0 auto}}
+@media(max-width:720px){.book-layout > .cover-col{position:static;justify-self:center;width:200px}}
+.cover{aspect-ratio:2/3;border-radius:14px;overflow:hidden;background:linear-gradient(160deg,#3a0d2a,#7a1238);box-shadow:0 30px 60px -24px rgba(0,0,0,.8);position:relative}
+.cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cover .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:18px;text-align:center;font-family:'Fraunces',serif;font-size:1.05rem;color:var(--cream)}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.9rem,4.4vw,3rem);letter-spacing:-.02em;line-height:1.06}
+.chilis span.on{filter:none;opacity:1}
+section.blk:last-of-type{border-bottom:0}
+section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;margin-bottom:14px}
   /* "What it's about" — structured paragraphs from a single blurb column.
      Conventions a writer types IN the blurb (the only data layer that knows
      a book's blurb): blank line = paragraph break, > prefix = muted publisher
      intro, ***text*** = italic pitch callout, **word** = bold .term span. */
   .sh-plot p{line-height:1.7;margin:0 0 1.05em;font-size:1.02rem;max-width:66ch}
-  .sh-plot p:last-child{margin-bottom:0}
-  .sh-plot .intro{color:var(--muted);font-size:.92rem;line-height:1.6}
-  .sh-plot .lead{color:#fff;font-size:1.18rem;line-height:1.5;font-weight:500;letter-spacing:-.005em;margin-bottom:1.25em}
-  @media(max-width:600px){.sh-plot .lead{font-size:1.06rem}}
-  .sh-plot .term{color:#fff;font-weight:600}
-  .sh-plot .pitch{font-style:italic;color:var(--muted);line-height:1.65;padding:6px 0 6px 18px;margin:1.6em 0 0;
+.sh-plot .intro{color:var(--muted);font-size:.92rem;line-height:1.6}
+.sh-plot .lead{color:#fff;font-size:1.18rem;line-height:1.5;font-weight:500;letter-spacing:-.005em;margin-bottom:1.25em}
+@media(max-width:600px){.sh-plot .lead{font-size:1.06rem}}
+.sh-plot .term{color:#fff;font-weight:600}
+.sh-plot .pitch{font-style:italic;color:var(--muted);line-height:1.65;padding:6px 0 6px 18px;margin:1.6em 0 0;
     border-left:2px solid transparent;border-image:var(--grad) 1;max-width:66ch;font-size:.98rem}
-  .sh-plot .pitch .term{color:var(--cream);font-style:normal;font-weight:600}
-  .sh-plot .more{overflow:hidden;transition:max-height .4s ease}
-  .sh-plot.collapsed .more{max-height:0}
-  .sh-plot:not(.collapsed) .more{max-height:2400px}
-  .sh-plot.collapsed .fade{position:relative;margin-top:-2.4em;height:2.4em;
+.sh-plot .pitch .term{color:var(--cream);font-style:normal;font-weight:600}
+.sh-plot .more{overflow:hidden;transition:max-height .4s ease}
+.sh-plot.collapsed .more{max-height:0}
+.sh-plot:not(.collapsed) .more{max-height:2400px}
+.sh-plot.collapsed .fade{position:relative;margin-top:-2.4em;height:2.4em;
     background:linear-gradient(180deg,rgba(12,7,8,0),var(--ink));pointer-events:none}
-  .sh-plot:not(.collapsed) .fade{display:none}
-  .sh-readmore{margin-top:14px;background:none;border:0;cursor:pointer;font-family:inherit;
-    font-size:.88rem;font-weight:600;letter-spacing:.3px;color:var(--amber);padding:6px 0;
-    display:inline-flex;align-items:center;gap:6px}
-  .sh-readmore:hover{color:var(--rose)}
-  .sh-empty{color:var(--muted);font-style:italic;max-width:66ch}
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
-  .chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:.35em .9em;font-size:.86rem;text-decoration:none;color:var(--cream);transition:border-color .12s,transform .12s}
-  a.chip:hover{border-color:var(--rose);transform:translateY(-1px)}
-  .chip .c{color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.06em}
+.sh-plot:not(.collapsed) .fade{display:none}
+.sh-empty{color:var(--muted);font-style:italic;max-width:66ch}
+.chip .c{color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.06em}
   /* content warnings */
   details.cw{margin-top:22px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:2px 16px;max-width:66ch}
-  details.cw summary{cursor:pointer;list-style:none;padding:13px 0;font-weight:700;color:var(--amber);display:flex;align-items:center;gap:8px;font-size:.95rem}
-  details.cw summary::-webkit-details-marker{display:none}
-  details.cw summary::after{content:"▾";margin-left:auto;color:var(--muted);transition:transform .15s}
-  details.cw[open] summary::after{transform:rotate(180deg)}
-  details.cw .cwbody{padding:0 0 14px}
-  .cw-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}
-  .cw-tags span{background:var(--ink-2);border:1px solid var(--line);border-radius:99px;padding:.28em .8em;font-size:.82rem;color:var(--cream)}
-  .cw-detail{color:var(--muted);font-size:.92rem;max-width:60ch}
-  /* details grid */
+/* details grid — still used by detailsHTML() inside "What's the commitment?" */
   .dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-  .drow{background:var(--ink-2);padding:13px 16px}
-  .drow .dk{display:block;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:3px}
-  .drow .dv{font-size:.98rem;color:var(--cream)}
+.drow{background:var(--ink-2);padding:13px 16px}
+.drow .dk{display:block;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:3px}
+.drow .dv{font-size:.98rem;color:var(--cream)}
   /* related grids */
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}
-  @media(max-width:600px){.grid{grid-template-columns:repeat(2,1fr);gap:12px}}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:border-color .12s,transform .12s}
-  .card:hover{border-color:var(--rose);transform:translateY(-2px)}
-  .card .cv{aspect-ratio:2/3;position:relative;background:linear-gradient(160deg,#3a0d2a,#7a1238);overflow:hidden}
-  .card .cv img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  .card .cv .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10px;text-align:center;font-family:'Fraunces',serif;font-size:.84rem;color:var(--cream)}
-  .card .m{padding:10px 12px 13px}
-  .card .m .t{font-family:'Fraunces',serif;font-weight:500;line-height:1.2;font-size:.95rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:calc(1.2em * 2)}
-  .card .m .a{color:var(--muted);font-size:.78rem;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:600px){.grid{grid-template-columns:repeat(2,1fr);gap:12px}}
+.card .cv{aspect-ratio:2/3;position:relative;background:linear-gradient(160deg,#3a0d2a,#7a1238);overflow:hidden}
+.card .cv img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.card .cv .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10px;text-align:center;font-family:'Fraunces',serif;font-size:.84rem;color:var(--cream)}
+.card .m{padding:10px 12px 13px}
+.card .m .t{font-family:'Fraunces',serif;font-weight:500;line-height:1.2;font-size:.95rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:calc(1.2em * 2)}
+.card .m .a{color:var(--muted);font-size:.78rem;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   /* add to shelf */
   .shelf-control{margin-top:18px;display:flex;flex-direction:column;gap:8px}
-  .shelfbtn{width:100%;background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;font-size:.95rem;padding:.72em 1em;border-radius:12px;cursor:pointer;transition:transform .1s}
-  .shelfbtn:hover{transform:translateY(-1px)}
-  .shelfbtn.on{background:var(--panel);color:var(--cream);border:1px solid var(--line)}
-  .statussel{width:100%;background:var(--ink-2);border:1px solid var(--line);color:var(--cream);font-family:inherit;font-weight:700;font-size:.85rem;padding:.6em;border-radius:10px;cursor:pointer}
-  .shelf-note{color:var(--muted);font-size:.8rem;text-align:center}
-  .shelf-note a{color:var(--amber);text-decoration:none}
+.shelfbtn{width:100%;background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;font-size:.95rem;padding:.72em 1em;border-radius:12px;cursor:pointer;transition:transform .1s}
+.shelfbtn:hover{transform:translateY(-1px)}
+.shelfbtn.on{background:var(--panel);color:var(--cream);border:1px solid var(--line)}
+.statussel{width:100%;background:var(--ink-2);border:1px solid var(--line);color:var(--cream);font-family:inherit;font-weight:700;font-size:.85rem;padding:.6em;border-radius:10px;cursor:pointer}
+.shelf-note{color:var(--muted);font-size:.8rem;text-align:center}
+.shelf-note a{color:var(--amber);text-decoration:none}
+
 </style>`;
 
 // ── Spice meter ────────────────────────────────────────────────────────────
-function spiceMeterHTML(b){
-  const lvl = Math.max(0, Math.min(5, Number(b.spice_level) || 0));
-  const has = b.spice_level != null || b.door || b.spice_frequency || (Array.isArray(b.heat_type) && b.heat_type.length);
-  if (!has) return '';
-  const chilis = [1,2,3,4,5].map(n => `<span class="${n <= lvl ? 'on' : ''}">🌶️</span>`).join('');
-  const parts = [`<span class="chilis" title="Spice level ${lvl} of 5">${chilis}</span>`];
-  if (b.door)            parts.push(`<span class="sm-tag"><b>Door</b>${esc(DOOR[b.door] || humanize(b.door))}</span>`);
-  if (b.spice_frequency) parts.push(`<span class="sm-tag"><b>Frequency</b>${esc(FREQ[b.spice_frequency] || humanize(b.spice_frequency))}</span>`);
-  for (const h of (Array.isArray(b.heat_type) ? b.heat_type : [])) parts.push(`<span class="sm-tag">${esc(humanize(h))}</span>`);
-  return `<div class="spicemeter" aria-label="Spice meter">${parts.join('')}</div>`;
-}
-
-// ── Content warnings panel (collapsed — readers opt in past spoilers) ───────
-function warningsHTML(b, tags){
-  const warns = tags.filter(t => t.category === 'warning');
-  const detail = (b.triggers_detail || '').trim();
-  if (!warns.length && !detail) return '';
-  return `<details class="cw">
-    <summary>⚠️ Content warnings</summary>
-    <div class="cwbody">
-      ${warns.length ? `<div class="cw-tags">${warns.map(w => `<span>${esc(w.label)}</span>`).join('')}</div>` : ''}
-      ${detail ? `<p class="cw-detail">${esc(detail)}</p>` : ''}
-    </div>
-  </details>`;
-}
-
 // ── The Pitch: blurb + flavour chips that link into the glossary ───────────
 const CHIP_CATS = ['trope','subgenre','mood','vibe','theme','worldbuilding','setting','omegaverse','kink','representation','mc-archetype','li-archetype','culture'];
 const CHIP_ORDER = Object.fromEntries(CHIP_CATS.map((c, i) => [c, i]));
@@ -447,25 +544,6 @@ function renderBlurbBody(blurb, tags){
   };
 }
 
-function pitchHTML(b, tags){
-  const blurb = (b.blurb || '').trim();
-  const chips = tags
-    .filter(t => CHIP_CATS.includes(t.category))
-    .sort((a, c) => (CHIP_ORDER[a.category] - CHIP_ORDER[c.category]) || a.label.localeCompare(c.label));
-  if (!blurb && !chips.length) return '';
-  const chipHTML = chips.map(t => t.href
-    ? `<a class="chip" href="${escAttr(t.href)}">${esc(t.label)}</a>`
-    : `<span class="chip">${esc(t.label)}</span>`
-  ).join('');
-  const { html: blurbHTML, collapsible } = renderBlurbBody(b.blurb, tags);
-  return `<section class="blk sh-plot${collapsible ? ' collapsed' : ''}" id="shPlot">
-    <h2>What it's about</h2>
-    ${blurbHTML}
-    ${collapsible ? `<button class="sh-readmore" id="shToggle" aria-expanded="false">Read more&nbsp;↓</button>` : ''}
-    ${chips.length ? `<div class="chips">${chipHTML}</div>` : ''}
-  </section>`;
-}
-
 // ── The Details grid (only rows with a value) ──────────────────────────────
 function detailsHTML(b){
   const rows = [];
@@ -493,24 +571,6 @@ function detailsHTML(b){
     <div class="dgrid">
       ${rows.map(([k, v]) => `<div class="drow"><span class="dk">${esc(k)}</span><span class="dv">${esc(v)}</span></div>`).join('')}
     </div>
-  </section>`;
-}
-
-// ── Related-book card + section ────────────────────────────────────────────
-function bookCardHTML(b){
-  const cov = b.cover_url
-    ? `<img src="${escAttr(b.cover_url)}" alt="${escAttr(b.title)} book cover" loading="lazy">`
-    : `<div class="ph">${esc(b.title)}</div>`;
-  return `<a class="card" href="${escAttr(bookPath(b))}">
-    <div class="cv">${cov}</div>
-    <div class="m"><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div>
-  </a>`;
-}
-function relatedSection(title, list){
-  if (!list.length) return '';
-  return `<section class="blk">
-    <h2>${esc(title)}</h2>
-    <div class="grid">${list.map(bookCardHTML).join('')}</div>
   </section>`;
 }
 
@@ -561,6 +621,133 @@ function moreLikeThis(book, excludeIds){
 }
 
 // ── Per-book page ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════
+//  "Ask First" helpers
+// ══════════════════════════════════════════════════════════════════════════
+// Everything below derives strictly from stored fields. Where a value is
+// absent the element is omitted entirely — the handoff is explicit that a
+// missing fact must never become an empty card, a fabricated value, or "N/A".
+
+// Cover with a blurred backdrop filling the letterbox (same URL, one request).
+function afCover(b, alt){
+  if (!b.cover_url) return `<div class="ph">${esc(b.title)}</div>`;
+  return `<img class="cover-bg" src="${escAttr(b.cover_url)}" alt="" aria-hidden="true" loading="lazy">`
+       + `<img class="cover-img" src="${escAttr(b.cover_url)}" alt="${escAttr(alt || (b.title + ' book cover'))}" loading="lazy">`;
+}
+
+// The "30-second answer": the opening of the stored blurb, cut at a sentence
+// boundary. Not a new field and not generated prose — just the first thing the
+// publisher says, surfaced before the full text.
+// Abbreviations and initials that end in a period but do NOT end a sentence.
+// Without this, "…for fans of E.L. James" gets cut after "E.L." and the answer
+// reads as though it broke mid-thought.
+// The leading class includes "." so the SECOND period of an initial pair
+// ("E.L.") is recognised too — there the capital is preceded by a dot, not a space.
+const NOT_SENTENCE_END = /(?:^|[\s(.])(?:[A-Z]|Mr|Mrs|Ms|Dr|St|Jr|Sr|vs|etc|no|vol|ed|Prof|Rev|Hon|Inc|Ltd|Co)$/;
+
+function afShortAnswer(blurb){
+  const raw = String(blurb || '').replace(/\s+/g, ' ').trim();
+  if (!raw) return '';
+  if (raw.length <= 190) return raw;
+  const cut = raw.slice(0, 280);
+  // Walk real sentence boundaries, skipping any whose preceding token is an
+  // initial or abbreviation, and take the last one that leaves a usable answer.
+  let best = -1;
+  for (const m of cut.matchAll(/[.!?](?=\s)/g)){
+    const i = m.index;
+    if (m[0] === '.' && NOT_SENTENCE_END.test(cut.slice(Math.max(0, i - 6), i))) continue;
+    // 60 rather than 90: once initials are excluded, the first genuine sentence
+    // is often the whole hook, and a clean short sentence beats a long one that
+    // has to be ellipsed.
+    if (i >= 60) best = i;
+  }
+  if (best > 0) return cut.slice(0, best + 1);
+  return cut.replace(/\s+\S*$/, '') + '…';
+}
+
+// Quick facts — only rows the book actually has a value for.
+function afFacts(b){
+  const f = [];
+  if (b.page_count) f.push(['Length', `${b.page_count} pages`, b.audiobook ? 'Audiobook too' : '']);
+  if (b.series && b.series_number) f.push(['Series', `Book ${b.series_number}`, b.series]);
+  else if (b.standalone) f.push(['Series', 'Standalone', '']);
+  if (b.pov) f.push(['POV', POV[b.pov] || humanize(b.pov), '']);
+  if (b.relationship_type) f.push(['Pairing', REL[b.relationship_type] || humanize(b.relationship_type), 'Central romance']);
+  if (b.ending) f.push(['Ending', ENDING[b.ending] || humanize(b.ending), b.cliffhanger ? 'Cliffhanger' : 'No cliffhanger']);
+  else if (b.cliffhanger) f.push(['Ending', 'Cliffhanger', '']);
+  if (b.pacing) f.push(['Pace', PACING[b.pacing] || humanize(b.pacing), '']);
+  return f;
+}
+
+// "Is it for me?" — assembled from stored fields only. Each clause is traceable
+// to a column (spice_level, pacing, ending, cliffhanger, warning tags); nothing
+// is inferred about content the catalog doesn't record.
+function afFit(b, tags){
+  const lvl = Number(b.spice_level);
+  const forYou = [];
+  if (Number.isFinite(lvl) && lvl > 0){
+    forYou.push(lvl >= 4 ? 'you want the heat high'
+              : lvl === 3 ? 'you want real heat without it taking over'
+              : 'you want tension and yearning more than explicit heat');
+  }
+  if (b.pacing === 'slow-burn') forYou.push('a slow burn is the point, not a problem');
+  else if (b.pacing === 'fast') forYou.push('you want it to move quickly');
+  if (b.ending === 'HEA') forYou.push('you need the happy ending guaranteed');
+  else if (b.ending === 'HFN') forYou.push('hopeful-for-now is enough');
+
+  const warns = tags.filter(t => t.category === 'warning').map(t => t.label.toLowerCase());
+  const skip = [];
+  if (warns.length){
+    const list = warns.slice(0, 3).join(', ');
+    skip.push(`${list}${warns.length > 3 ? ` (and ${warns.length - 3} more flagged)` : ''} ${warns.length === 1 ? 'is' : 'are'} a hard no for you`);
+  }
+  if (b.cliffhanger) skip.push('you need this one to resolve on its own');
+  if (Number.isFinite(lvl) && lvl > 0 && lvl <= 2) skip.push('you want high heat straight away');
+
+  const headline = forYou.length
+    ? `Yes — if ${forYou.slice(0, 2).join(', and ')}.`
+    : 'Depends on what you want from it.';
+  const body = skip.length ? `Skip it if ${skip.slice(0, 2).join(', or ')}.` : '';
+  return { headline, body };
+}
+
+// The next book in reading order — the design requires "next book is obvious".
+function nextInSeries(ordered, current){
+  const pos = Number(current.series_number);
+  if (!Number.isFinite(pos)) return null;
+  return ordered.find(b => Number(b.series_number) > pos && b.slug !== current.slug) || null;
+}
+
+function afSection({ id, num, label, headline, body }){
+  return `<section class="af-sec" id="${id}">
+    <span class="af-num">${num}</span>
+    <div><p class="af-label">${esc(label)}</p><h2>${headline}</h2>${body || ''}</div>
+  </section>`;
+}
+
+// Series / related rail. Mobile turns this into a scroll-snapping swipe rail
+// via CSS; markup stays one list either way.
+function afDiscovery({ id, eyebrow, heading, note, books: list, moreHref, moreLabel, currentSlug, ordered }){
+  if (!list.length) return '';
+  const cards = list.map(b => {
+    const isCurrent = currentSlug && b.slug === currentSlug;
+    const note = ordered
+      ? (b.series_number ? `Book ${b.series_number}${isCurrent ? ' · You are here' : ''}` : (isCurrent ? 'You are here' : ''))
+      : (b.spice_level ? `${'🌶️'.repeat(Math.min(5, Number(b.spice_level)))}` : '');
+    return `<a class="af-bcard${isCurrent ? ' is-current' : ''}" href="${escAttr(bookPath(b))}"${isCurrent ? ' aria-current="page"' : ''}>
+      <div class="cv">${afCover(b)}</div>
+      <div class="bm">${note ? `<span>${esc(note)}</span>` : ''}<h3>${esc(b.title)}</h3><p>${esc(b.author || '')}</p></div>
+    </a>`;
+  }).join('');
+  return `<section class="af-disc" id="${id}" aria-labelledby="${id}-h">
+    <div class="af-disc-head">
+      <div><span>${esc(eyebrow)}</span><h2 id="${id}-h">${esc(heading)}</h2><p>${esc(note)}</p></div>
+      ${moreHref ? `<a href="${escAttr(moreHref)}">${esc(moreLabel)} →</a>` : ''}
+    </div>
+    <div class="af-rail">${cards}</div>
+  </section>`;
+}
+
 function renderBookPage(book){
   const tags = tagsOf(book);
   const author = (book.author || '').trim();
@@ -615,25 +802,55 @@ function renderBookPage(book){
     ogType: 'book',
     ogImage: cover || `${SITE}/og-image.png`,
     jsonld,
-    extraCSS: BOOK_CSS,
+    extraCSS: BOOK_CSS + `<style>${ASK_CSS}</style>`,
   });
 
-  const coverHTML = book.cover_url
-    ? `<img src="${escAttr(book.cover_url)}" alt="${escAttr(book.title)} book cover">`
-    : `<div class="ph">${esc(book.title)}</div>`;
+  // ── Ask First page data ─────────────────────────────────────────────────
+  const tropeTags = tags.filter(t => t.category === 'trope');
+  const warnTags  = tags.filter(t => t.category === 'warning');
+  const spiceLvl  = Number(book.spice_level);
+  const hasSpice  = Number.isFinite(spiceLvl) && spiceLvl > 0;
+  const shortAns  = afShortAnswer(book.blurb);
+  const facts     = afFacts(book);
+  const fit       = afFit(book, tags);
+  const triggers  = (book.triggers_detail || '').trim();
+  // The full series, current book included, in reading order — the design calls
+  // for the current book to be identifiable and the next one obvious.
+  const fullSeries = book.series
+    ? dedupeByIdentity(books.filter(b => b.series === book.series))
+        .sort((a, c) => (Number(a.series_number) || 99) - (Number(c.series_number) || 99))
+    : [];
 
-  const seriesLine = book.series
-    ? `<p class="series-line">${book.series_number ? `Book ${esc(book.series_number)} of ` : ''}<b>${esc(book.series)}</b>${inSeries.length ? ` · <a href="#series">see the series ↓</a>` : ''}</p>`
-    : (book.standalone ? `<p class="series-line">Standalone</p>` : '');
+  // Jump menu — a row is only offered when the section it points at will exist.
+  const askRows = [
+    shortAns || book.blurb ? ['#af-plot', "What's it about?", '30-sec answer'] : null,
+    hasSpice || book.door ? ['#af-spice', 'How spicy is it?', hasSpice ? `${spiceLvl} / 5${book.door ? ` · ${esc((DOOR[book.door] || book.door).split(' ')[0].toLowerCase())}` : ''}` : 'the details'] : null,
+    tropeTags.length ? ['#af-tropes', 'Which tropes?', `${tropeTags.length} tagged`] : null,
+    (warnTags.length || triggers) ? ['#af-warnings', 'Any hard nos?', warnTags.length ? `${warnTags.length} warning${warnTags.length === 1 ? '' : 's'}` : 'read first'] : null,
+    ['#af-fit', 'Is it for me?', 'quick fit check'],
+    (book.page_count || book.series_number || book.ending) ? ['#af-commitment', "What's the commitment?",
+      [book.page_count ? `${book.page_count} pp` : '', book.series_number ? `book ${book.series_number}` : ''].filter(Boolean).join(' · ') || 'the details'] : null,
+  ].filter(Boolean);
 
   const body = `<body>
 ${SHARED_HEADER}
 <div class="wrap">
   <nav class="crumb"><a href="/">Home</a> / <a href="/book/">All books</a> / <span>${esc(book.title)}</span></nav>
 
-  <div class="book-layout">
-    <aside class="cover-col">
-      <div class="cover">${coverHTML}</div>
+  <!-- ── Above the fold: cover + rate, core info, Ask First menu ── -->
+  <section class="af-hero">
+    <div class="af-cover-col">
+      <div class="af-cover">${afCover(book)}</div>
+      ${book.page_count || book.audiobook ? `<p class="af-format">${[book.page_count ? `${book.page_count} pages` : '', book.audiobook ? 'audiobook' : ''].filter(Boolean).join(' · ')}</p>` : ''}
+
+      <div class="af-rate" id="af-review">
+        <span>Finished it?</span>
+        <div class="af-stars" id="afStars" role="group" aria-label="Rate how spicy this book was, out of five">
+          ${[1,2,3,4,5].map(n => `<button type="button" data-n="${n}" aria-label="Rate ${n} of 5 chili${n === 1 ? '' : 's'}" aria-pressed="false">🌶️</button>`).join('')}
+        </div>
+        <p class="af-rate-note" id="afRateNote">How spicy was it?</p>
+      </div>
+
       <div class="shelf-control" id="shelfControl">
         <button class="shelfbtn" id="shelfBtn" data-act="want">＋ Add to shelf</button>
         <select class="statussel" id="shelfSel" aria-label="Add to shelf">
@@ -645,30 +862,138 @@ ${SHARED_HEADER}
         </select>
         <p class="shelf-note" id="shelfNote"></p>
       </div>
-    </aside>
-    <main class="info-col">
-      <header class="book-header">
-        ${book.subgenre ? `<span class="badge">${esc(humanize(book.subgenre))}</span>` : ''}
-        <h1>${esc(book.title)}</h1>
-        <p class="byline">${author ? `by <a href="/book/?q=${encodeURIComponent(author)}">${esc(author)}</a>` : 'Author unknown'}${book.year ? ` · ${esc(book.year)}` : ''}</p>
-        ${seriesLine}
-        ${spiceMeterHTML(book)}
-        ${warningsHTML(book, tags)}
-      </header>
-      ${pitchHTML(book, tags)}
-      ${detailsHTML(book)}
-    </main>
-  </div>
+    </div>
 
-  <div class="related-stack">
-    ${inSeries.length ? `<section class="blk" id="series">
-      <h2>More in ${esc(book.series)}</h2>
-      <div class="grid">${inSeries.map(bookCardHTML).join('')}</div>
-    </section>` : ''}
-    ${relatedSection('More like this', likeThis)}
-    ${byAuthor.length ? relatedSection(`More by ${author}`, byAuthor) : ''}
+    <div class="af-core">
+      <div class="af-flags">
+        ${book.series && book.series_number ? `<span>${esc(book.series)} #${esc(book.series_number)}</span>` : ''}
+        ${book.subgenre ? `<span>${esc(humanize(book.subgenre))}</span>` : ''}
+        ${book.age_category ? `<span>${esc(book.age_category)}</span>` : ''}
+      </div>
+      <h1>${esc(book.title)}</h1>
+      <p class="af-byline">${author ? `by <a href="/book/?q=${encodeURIComponent(author)}">${esc(author)}</a>` : 'Author unknown'}${book.year ? ` · ${esc(book.year)}` : ''}</p>
+      ${book.rating_avg ? `<div class="af-pulse"><b>${esc(Number(book.rating_avg).toFixed(2))}</b><small>average reader rating</small></div>` : ''}
+
+      <div class="af-actions">
+        <button type="button" class="af-primary" id="afWant">＋ Want to read</button>
+        <button type="button" id="afRead">Mark as read</button>
+        <button type="button" id="afShare" aria-label="Share this book">↗ Share</button>
+      </div>
+
+      ${facts.length ? `<dl class="af-facts" aria-label="Quick book facts">
+        ${facts.map(([k, v, sub]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd>${sub ? `<small>${esc(sub)}</small>` : ''}</div>`).join('')}
+      </dl>` : ''}
+    </div>
+
+    <aside class="af-ask" aria-labelledby="af-ask-h">
+      <div class="af-ask-head">
+        <span>The fastest way in</span>
+        <h2 id="af-ask-h">What do you <em>actually</em> want to know?</h2>
+      </div>
+      <nav aria-label="Jump to an answer about this book">
+        ${askRows.map(([href, q, sum], i) => `<a href="${href}"><span>${String(i + 1).padStart(2, '0')}</span><b>${esc(q)}</b><em>${esc(sum)}</em></a>`).join('')}
+      </nav>
+    </aside>
+  </section>
+
+  <!-- ── The answers, in the order the menu promises ── -->
+  <div class="af-answers" id="af-answers">
+    ${shortAns || book.blurb ? afSection({
+      id: 'af-plot', num: '01', label: "What's it about?",
+      headline: esc(shortAns || book.title),
+      body: book.blurb ? `<details class="af-blurb">
+        <summary>Read the full blurb <span>+</span></summary>
+        <div class="af-blurb-body">${renderBlurbBody(book.blurb, tags).html}</div>
+      </details>` : '',
+    }) : ''}
+
+    ${hasSpice || book.door || book.spice_frequency ? afSection({
+      id: 'af-spice', num: '02', label: 'How spicy is it?',
+      headline: hasSpice
+        ? esc(`${spiceLvl} / 5${book.door ? ` — ${(DOOR[book.door] || book.door).toLowerCase()}` : ''}.`)
+        : esc(DOOR[book.door] || humanize(book.door || '')),
+      body: `<div class="af-spice">
+        ${hasSpice ? `<span class="af-gauge" aria-label="Spice level ${spiceLvl} of 5">${[1,2,3,4,5].map(n => `<i class="${n <= spiceLvl ? 'on' : ''}"></i>`).join('')}</span>` : '<span></span>'}
+        ${book.door ? `<span><b>Door</b>${esc(DOOR[book.door] || humanize(book.door))}</span>` : '<span></span>'}
+        ${book.spice_frequency ? `<span><b>Frequency</b>${esc(FREQ[book.spice_frequency] || humanize(book.spice_frequency))}</span>` : '<span></span>'}
+      </div>${book.spice_notes ? `<p>${esc(book.spice_notes)}</p>` : ''}`,
+    }) : ''}
+
+    ${tropeTags.length ? afSection({
+      id: 'af-tropes', num: '03', label: 'Which tropes?',
+      headline: esc(tropeTags.slice(0, 3).map(t => t.label).join(', ') + (tropeTags.length > 3 ? ', and more.' : '.')),
+      body: `<div class="af-tags">${tropeTags.slice(0, 8).map(t => t.href
+          ? `<a href="${escAttr(t.href)}">${esc(t.label)}</a>` : `<span>${esc(t.label)}</span>`).join('')}</div>
+        ${tropeTags.length > 8 ? `<button type="button" class="af-seeall" data-drawer="tropes">See all ${tropeTags.length} tropes <span>→</span></button>` : ''}`,
+    }) : ''}
+
+    ${warnTags.length || triggers ? afSection({
+      id: 'af-warnings', num: '04', label: 'Any hard nos?',
+      headline: warnTags.length
+        ? esc(`Flagged: ${warnTags.slice(0, 3).map(t => t.label.toLowerCase()).join(', ')}${warnTags.length > 3 ? ', and more.' : '.'}`)
+        : 'Read the detail before you start.',
+      body: `${warnTags.length ? `<div class="af-tags is-warn">${warnTags.slice(0, 6).map(t => t.href
+          ? `<a href="${escAttr(t.href)}">${esc(t.label)}</a>` : `<span>${esc(t.label)}</span>`).join('')}</div>` : ''}
+        ${warnTags.length > 6 || triggers ? `<button type="button" class="af-seeall" data-drawer="warnings">See all ${warnTags.length ? `${warnTags.length} warnings` : 'the detail'} <span>→</span></button>` : ''}`,
+    }) : ''}
+
+    ${afSection({
+      id: 'af-fit', num: '05', label: 'Is it for me?',
+      headline: esc(fit.headline),
+      body: fit.body ? `<p>${esc(fit.body)}</p>` : '',
+    })}
+
+    ${book.page_count || book.series_number || book.ending ? afSection({
+      id: 'af-commitment', num: '06', label: "What's the commitment?",
+      headline: esc([
+        book.page_count ? `${book.page_count} pages` : '',
+        book.series_number ? `book ${book.series_number} of the series` : (book.standalone ? 'a standalone' : ''),
+      ].filter(Boolean).join(', ') + '.'),
+      body: `<div class="af-commit">
+          ${book.page_count ? `<div><span>Book length</span><b>${esc(book.page_count)} pages</b>${book.audiobook ? '<small>Audiobook available</small>' : ''}</div>` : ''}
+          ${book.series_number ? `<div><span>Series position</span><b>Book ${esc(book.series_number)}</b>${nextInSeries(fullSeries, book) ? `<small>Next: ${esc(nextInSeries(fullSeries, book).title)}</small>` : ''}</div>`
+            : (book.standalone ? `<div><span>Series position</span><b>Standalone</b><small>Reads on its own</small></div>` : '')}
+          ${book.ending ? `<div><span>Ending</span><b>${esc(ENDING[book.ending] || humanize(book.ending))}</b><small>${book.cliffhanger ? 'Ends on a cliffhanger' : 'No cliffhanger'}</small></div>` : ''}
+        </div>
+        ${detailsHTML(book) ? `<details class="af-more"><summary>Every recorded detail +</summary>${detailsHTML(book)}</details>` : ''}`,
+    }) : ''}
+
+    ${afDiscovery({
+      id: 'af-series', eyebrow: 'Keep reading', heading: 'Books in the series',
+      note: 'The full reading order, without leaving this page.',
+      books: fullSeries, currentSlug: book.slug, ordered: true,
+      moreHref: book.series ? `/book/?q=${encodeURIComponent(book.series)}` : '', moreLabel: 'View full series',
+    })}
+
+    ${afDiscovery({
+      id: 'af-related', eyebrow: 'What next?', heading: 'Related books',
+      note: 'Matched on tropes, heat and setting.',
+      books: likeThis.slice(0, 5), moreHref: '/book/', moreLabel: 'See all matches',
+    })}
+
+    ${afDiscovery({
+      id: 'af-author', eyebrow: 'Same author', heading: `More by ${author}`,
+      note: 'Other books by this author in the catalog.',
+      books: byAuthor.slice(0, 5),
+      moreHref: author ? `/book/?q=${encodeURIComponent(author)}` : '', moreLabel: 'See all',
+    })}
   </div>
 </div>
+
+<!-- Drawer content is server-rendered and hidden, so the complete trope and
+     warning lists exist in the HTML for crawlers and for no-JS readers. -->
+<template id="afDrawerTropes">${tropeTags.map((t, i) => t.href
+  ? `<a href="${escAttr(t.href)}"><span>${String(i + 1).padStart(2, '0')}</span><b>${esc(t.label)}</b></a>`
+  : `<div><span>${String(i + 1).padStart(2, '0')}</span><b>${esc(t.label)}</b></div>`).join('')}</template>
+<template id="afDrawerWarnings">${warnTags.map((t, i) => t.href
+  ? `<a href="${escAttr(t.href)}"><span>${String(i + 1).padStart(2, '0')}</span><b>${esc(t.label)}</b></a>`
+  : `<div><span>${String(i + 1).padStart(2, '0')}</span><b>${esc(t.label)}</b></div>`).join('')}${triggers ? `<p class="af-drawer-detail">${esc(triggers)}</p>` : ''}</template>
+<noscript>
+  <div class="wrap">
+    ${tropeTags.length ? `<section class="blk"><h2>All tropes</h2><div class="af-tags">${tropeTags.map(t => `<span>${esc(t.label)}</span>`).join('')}</div></section>` : ''}
+    ${warnTags.length ? `<section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn">${warnTags.map(t => `<span>${esc(t.label)}</span>`).join('')}</div>${triggers ? `<p>${esc(triggers)}</p>` : ''}</section>` : ''}
+  </div>
+</noscript>
 
 <script>
   // Add-to-shelf — mirrors /search shelveBook(): upsert into the
@@ -712,6 +1037,38 @@ ${SHARED_HEADER}
     btn.addEventListener('click', function(){ if (!user){ paint(); return; } if (current) remove(); else shelve('want'); });
     sel.addEventListener('change', function(){ if (sel.value) shelve(sel.value); });
 
+    // The Ask First action row drives the same shelf routes — one source of
+    // truth, so the two controls can never disagree about this book's state.
+    var afWant = document.getElementById('afWant');
+    var afRead = document.getElementById('afRead');
+    var afShare = document.getElementById('afShare');
+    function paintAsk(){
+      if (!afWant) return;
+      var on = current === 'want' || current === 'reading';
+      afWant.textContent = current ? ('✓ ' + (LABEL[current] || 'Shelved')) : '＋ Want to read';
+      afWant.classList.toggle('on', !!current);
+      afWant.setAttribute('aria-pressed', current ? 'true' : 'false');
+      if (afRead) afRead.textContent = current === 'read' ? '✓ Read' : 'Mark as read';
+    }
+    var basePaint = paint;
+    paint = function(){ basePaint(); paintAsk(); };
+    if (afWant) afWant.addEventListener('click', function(){
+      if (!user){ note.innerHTML = '<a href="/dashboard.html">Log in</a> to build your shelf'; return; }
+      if (current) remove(); else shelve('want');
+    });
+    if (afRead) afRead.addEventListener('click', function(){
+      if (!user){ note.innerHTML = '<a href="/dashboard.html">Log in</a> to build your shelf'; return; }
+      shelve('read');
+    });
+    if (afShare) afShare.addEventListener('click', async function(){
+      var url = location.href, title = BOOK.title;
+      try {
+        if (navigator.share){ await navigator.share({ title: title, url: url }); }
+        else { await navigator.clipboard.writeText(url); afShare.textContent = '✓ Link copied'; setTimeout(function(){ afShare.textContent = '↗ Share'; }, 1800); }
+        if (window.SH && SH.track) SH.track('share', { where: 'book-page' });
+      } catch(e){ /* user dismissed the share sheet — nothing to report */ }
+    });
+
     (async function init(){
       sb = client();
       if (!sb){ note.textContent=''; return; }
@@ -729,16 +1086,116 @@ ${SHARED_HEADER}
 </script>
 
 <script>
-  // Plot read-more — collapses long blurbs to the first 3 paragraphs.
-  // Stays a no-op if the section wasn't rendered with a collapse shell.
+  // ── Tropes / warnings drawers ────────────────────────────────────────────
+  // Accessible modal dialog: closes on the close button, backdrop click and
+  // Escape; locks body scroll while open; traps Tab inside; and restores focus
+  // to the button that opened it. Content comes from server-rendered <template>
+  // elements, so the complete lists are in the HTML even before JS runs.
   (function(){
-    var s = document.getElementById('shPlot'); if (!s) return;
-    var b = document.getElementById('shToggle'); if (!b) return;
-    b.addEventListener('click', function(){
-      var open = !s.classList.toggle('collapsed');
-      b.setAttribute('aria-expanded', String(open));
-      b.innerHTML = open ? 'Show less&nbsp;↑' : 'Read more&nbsp;↓';
+    var layer = null, lastFocus = null;
+    var COPY = {
+      tropes:   { eyebrow: 'Complete book data', title: 'All tropes',            note: 'Every trope recorded for this book. Tap one to see its glossary entry.' },
+      warnings: { eyebrow: 'Complete book data', title: 'All content warnings',  note: 'Nothing hidden. Scan the full list before deciding if this book fits.' }
+    };
+    function close(){
+      if (!layer) return;
+      layer.remove(); layer = null;
+      document.body.classList.remove('af-drawer-open');
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+    function open(kind){
+      var tpl = document.getElementById(kind === 'tropes' ? 'afDrawerTropes' : 'afDrawerWarnings');
+      if (!tpl) return;
+      lastFocus = document.activeElement;
+      var c = COPY[kind];
+      layer = document.createElement('div');
+      layer.className = 'af-layer';
+      layer.innerHTML =
+        '<aside class="af-drawer" role="dialog" aria-modal="true" aria-labelledby="afDrawerTitle">'
+        + '<div class="af-drawer-head"><div><span>' + c.eyebrow + '</span>'
+        + '<h2 id="afDrawerTitle">' + c.title + '</h2></div>'
+        + '<button type="button" class="af-close" aria-label="Close">×</button></div>'
+        + '<p class="af-drawer-note">' + c.note + '</p>'
+        + '<div class="af-drawer-list"></div>'
+        + '<button type="button" class="af-drawer-done">Done</button></aside>';
+      layer.querySelector('.af-drawer-list').appendChild(tpl.content.cloneNode(true));
+      document.body.appendChild(layer);
+      document.body.classList.add('af-drawer-open');
+      layer.querySelector('.af-close').focus();
+
+      layer.addEventListener('mousedown', function(e){ if (e.target === layer) close(); });
+      layer.querySelector('.af-close').addEventListener('click', close);
+      layer.querySelector('.af-drawer-done').addEventListener('click', close);
+      if (window.SH && SH.track) SH.track('drawer-open', { kind: kind });
+    }
+    document.addEventListener('click', function(e){
+      var t = e.target.closest ? e.target.closest('[data-drawer]') : null;
+      if (t) open(t.getAttribute('data-drawer'));
     });
+    document.addEventListener('keydown', function(e){
+      if (!layer) return;
+      if (e.key === 'Escape'){ e.preventDefault(); close(); return; }
+      if (e.key !== 'Tab') return;
+      // Keep Tab inside the dialog while it's open.
+      var f = layer.querySelectorAll('a[href], button, [tabindex]:not([tabindex="-1"])');
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    });
+  })();
+</script>
+
+<script>
+  // ── "Finished it?" — per-reader spice rating ─────────────────────────────
+  // smutHub has no reviews table, so this drives the rating that DOES exist:
+  // book_tags.spice, the same value the search grid and dashboard already read.
+  (function(){
+    var wrap = document.getElementById('afStars'); if (!wrap) return;
+    var note = document.getElementById('afRateNote');
+    var KEY = ${JSON.stringify(book.slug)};
+    var btns = [].slice.call(wrap.querySelectorAll('button'));
+    var sb = null, user = null, mine = 0;
+
+    function client(){
+      if (window.SH && window.SH.sb) return window.SH.sb;
+      var cfg = window.SMUTHUB_CONFIG || {};
+      if (window.supabase && cfg.SUPABASE_URL && cfg.SUPABASE_KEY)
+        return window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_KEY, { auth:{ persistSession:true } });
+      return null;
+    }
+    function paint(){
+      btns.forEach(function(b){
+        var on = Number(b.dataset.n) <= mine;
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-pressed', String(Number(b.dataset.n) === mine));
+      });
+    }
+    async function save(n){
+      if (!user){ note.innerHTML = '<a href="/dashboard.html">Log in</a> to save your rating'; return; }
+      var res = await sb.from('book_tags').upsert({ book_key: KEY, spice: n }, { onConflict:'user_id,book_key' });
+      if (res.error){ note.textContent = 'Could not save'; console.error('spice save', res.error); return; }
+      mine = n; paint();
+      note.textContent = 'Saved — you rated it ' + n + '/5';
+      if (window.SH && SH.track) SH.track('spice-rate', { n: n, where: 'book-page' });
+    }
+    wrap.addEventListener('click', function(e){
+      var b = e.target.closest('button[data-n]'); if (b) save(Number(b.dataset.n));
+    });
+
+    (async function init(){
+      sb = client(); if (!sb) return;
+      try {
+        var u = await sb.auth.getUser();
+        user = u && u.data ? u.data.user : null;
+        if (user){
+          var r = await sb.from('book_tags').select('spice').eq('book_key', KEY).maybeSingle();
+          if (r.data && r.data.spice){ mine = r.data.spice; paint(); note.textContent = 'You rated it ' + mine + '/5'; }
+        } else {
+          note.innerHTML = '<a href="/dashboard.html">Log in</a> to save your rating';
+        }
+      } catch(e){ /* anon — leave the prompt as-is */ }
+    })();
   })();
 </script>
 
