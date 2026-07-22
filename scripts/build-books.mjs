@@ -990,7 +990,11 @@ ${SHARED_HEADER}
     ${afDiscovery({
       id: 'af-series', eyebrow: 'Keep reading', heading: 'Books in the series',
       note: 'The full reading order, without leaving this page.',
-      books: fullSeries, currentSlug: book.slug, ordered: true,
+      // Suppress the rail when the only book in the series is this one — that
+      // happens whenever the catalog carries a single title from a series, and
+      // a "keep reading" shelf holding just the page you're on is noise.
+      books: fullSeries.some(b => b.slug !== book.slug) ? fullSeries : [],
+      currentSlug: book.slug, ordered: true,
       moreHref: book.series ? `/book/?q=${encodeURIComponent(book.series)}` : '', moreLabel: 'View full series',
     })}
 
