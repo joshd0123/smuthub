@@ -64,16 +64,47 @@ console.log(`◇ Building ${tags.length} term pages + ${tier3Tags.length} tier-3
 // so every "Find books" button leads somewhere. The per-term page still lists
 // its own books client-side and shows a friendly empty state regardless.
 const usedTagKeys = new Set();
+// tagKey -> live books carrying it, best first. Used to SERVER-RENDER each
+// term's book list. Previously that grid was fetched client-side, which meant
+// crawlers saw an empty div: 356 term pages carried zero links to /book/ pages
+// and sat at ~155 words, reading as thin content at scale. Rendering at build
+// time turns each term into a real landing page for its own query and creates
+// thousands of internal links into the catalog.
+const booksByTag = new Map();
 try {
-  const usedBooks = await pgGet(`${SUPABASE_URL.replace(/\/+$/,'')}/rest/v1/books?select=tag_ids&status=eq.live`);
-  for (const b of usedBooks) for (const k of (b.tag_ids || [])) usedTagKeys.add(k);
-  console.log(`  · ${usedTagKeys.size} distinct tag keys are used by at least one live book`);
+  const usedBooks = await pgGet(`${SUPABASE_URL.replace(/\/+$/,'')}/rest/v1/books?select=slug,title,author,cover_url,spice_level,year,featured,tag_ids&status=eq.live&order=featured.desc,title.asc`);
+  for (const b of usedBooks){
+    for (const k of (b.tag_ids || [])){
+      usedTagKeys.add(k);
+      if (!booksByTag.has(k)) booksByTag.set(k, []);
+      booksByTag.get(k).push(b);
+    }
+  }
+  console.log(`  · ${usedTagKeys.size} tag keys carried by at least one live book (server-rendering their lists)`);
 } catch (e) {
-  console.log('  (could not load book tag usage — every filterable term will show a Find-books CTA)');
+  console.log('  (could not load books — term pages will fall back to the client-side fetch)');
 }
 // When the usage set is unavailable, don't suppress every CTA — fall back to
 // showing them (old behaviour) rather than hiding all of them.
 const tagHasBooks = key => usedTagKeys.size === 0 || usedTagKeys.has(key);
+
+// Server-rendered book cards for a term. Mirrors the markup the client-side
+// loader produces, so the runtime refresh can replace it seamlessly — but this
+// version exists in the HTML, which is what crawlers and no-JS readers get.
+const BOOKS_PER_TERM = 12;
+function serverBookCards(tagKey){
+  const list = (booksByTag.get(tagKey) || []).slice(0, BOOKS_PER_TERM);
+  if (!list.length) return `<p class="empty">No books shelved here yet — check back as the catalog grows.</p>`;
+  return list.map(b => {
+    const cov = b.cover_url
+      ? `<img src="${escAttr(b.cover_url)}" alt="${escAttr(b.title)} book cover" loading="lazy">`
+      : '';
+    return `<a class="card" href="/book/${encodeURIComponent(b.slug)}/">`
+      + `<div class="cover">${cov}</div>`
+      + `<div class="meta"><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div>`
+      + `</a>`;
+  }).join('');
+}
 
 // ── Editorial tag relations (optional; falls back to sibling tags if empty) ──
 const tagById = Object.fromEntries(tags.map(t => [t.id, t]));
@@ -120,6 +151,9 @@ const catKey = c => (CATS[c] ? c : 'culture');
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const escAttr = esc;
 const termPath = t => `/glossary/${t.category}/${t.slug}/`;
+// "affinity-magic" -> "Affinity Magic". Used to disambiguate two tags that
+// share a label inside one category, so their <title>s stay unique.
+const humanizeSlug = s => String(s || '').replace(/[-_]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 const termURL = t => `${SITE}${termPath(t)}`;
 const ensureDir = p => fs.mkdir(p, { recursive: true });
 
@@ -402,17 +436,45 @@ function renderTermPage(tag){
   const tagKey = `${tag.category}:${tag.slug}`;
   const related = relatedFor(tag);
 
-  const seoTitle = `${tag.label} — ${cat.label.replace(/s$/,'')} Guide | ${SITE_NAME}`;
-  const metaDesc = (tag.description || '').slice(0, 158);
+  // Two tags can share a label within a category (e.g. worldbuilding has two
+  // rows both labelled "Magic System"), which would ship duplicate <title>s.
+  // Fall back to the slug to keep every title unique.
+  const dupLabel = tags.some(t => t !== tag && t.category === tag.category && t.label === tag.label);
+  const titleName = dupLabel ? `${tag.label} (${humanizeSlug(tag.slug)})` : tag.label;
+  const seoTitle = `${titleName} — ${cat.label.replace(/s$/,'')} Guide | ${SITE_NAME}`;
+
+  // Short definitions made for thin, low-value snippets. Append what the page
+  // actually offers so the description earns its place in a result.
+  const bookCount = (booksByTag.get(tagKey) || []).length;
+  const metaDesc = (() => {
+    const base = (tag.description || '').trim();
+    const suffix = bookCount
+      ? ` See ${bookCount} romantasy book${bookCount === 1 ? '' : 's'} tagged ${tag.label.toLowerCase()} on smutHub.`
+      : ` A ${cat.label.replace(/s$/,'').toLowerCase()} term in the smutHub romantasy glossary.`;
+    return (base.length < 90 ? base + suffix : base).slice(0, 158);
+  })();
 
   const jsonld = {
     "@context": "https://schema.org",
-    "@type": "DefinedTerm",
-    name: tag.label,
-    description: tag.description,
-    inDefinedTermSet: { "@type":"DefinedTermSet", name:"smutHub Romantasy Glossary", url: `${SITE}/glossary/` },
-    url: termURL(tag),
-    ...(tag.also_known_as && tag.also_known_as.length ? { alternateName: tag.also_known_as } : {}),
+    "@graph": [
+      {
+        "@type": "DefinedTerm",
+        name: tag.label,
+        description: tag.description,
+        inDefinedTermSet: { "@type":"DefinedTermSet", name:"smutHub Romantasy Glossary", url: `${SITE}/glossary/` },
+        url: termURL(tag),
+        ...(tag.also_known_as && tag.also_known_as.length ? { alternateName: tag.also_known_as } : {}),
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/` },
+          { "@type": "ListItem", position: 2, name: "Glossary", item: `${SITE}/glossary/` },
+          { "@type": "ListItem", position: 3, name: cat.label, item: `${SITE}/glossary/${catKey(tag.category)}/` },
+          { "@type": "ListItem", position: 4, name: tag.label, item: termURL(tag) },
+        ],
+      },
+    ],
   };
 
   const extraCSS = `<style>
@@ -485,7 +547,7 @@ ${renderRail(catKey(tag.category))}
 
   <section class="detail" id="books">
     <h2>Books featuring this ${esc(cat.label.replace(/s$/,'').toLowerCase())}</h2>
-    <div class="grid" id="bookGrid"><p class="empty">Loading…</p></div>
+    <div class="grid" id="bookGrid">${serverBookCards(tagKey)}</div>
   </section>
 
   ${tag.origin_note ? `<section class="detail muted">
@@ -516,14 +578,18 @@ ${renderRail(catKey(tag.category))}
         sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_KEY, { auth:{ persistSession:false } });
       }
     }
-    if(!sb){ grid.innerHTML = '<p class="empty">Catalog unavailable.</p>'; return; }
+    // The grid is already SERVER-RENDERED at build time; this fetch only
+    // refreshes it so books added since the last build appear without a
+    // rebuild. Every failure path therefore leaves the existing markup alone
+    // rather than replacing good content with an error message.
+    if(!sb) return;
     try{
       const { data, error } = await sb.from('books')
         .select('slug,title,author,cover_url,spice_level,year')
         .eq('status','live').contains('tag_ids', [tagKey])
         .order('featured', { ascending:false }).limit(12);
       if(error) throw error;
-      if(!data || !data.length){ grid.innerHTML = '<p class="empty">No books shelved here yet — check back as the catalog grows.</p>'; return; }
+      if(!data || !data.length) return;   // keep whatever was built in
       grid.innerHTML = data.map(function(b){
         const cov = b.cover_url ? '<img src="'+escH(b.cover_url)+'" alt="'+escH(b.title)+' book cover" loading="lazy">' : '';
         return '<a class="card" href="/book/'+encodeURIComponent(b.slug)+'/">'
@@ -531,7 +597,7 @@ ${renderRail(catKey(tag.category))}
           +    '<div class="meta"><div class="t">'+escH(b.title)+'</div><div class="a">'+escH(b.author||'')+'</div></div>'
           +    '</a>';
       }).join('');
-    }catch(e){ console.error(e); grid.innerHTML = '<p class="empty">Couldn\\'t load books just now.</p>'; }
+    }catch(e){ console.error(e); /* keep the server-rendered cards */ }
   })();
 </script>
 

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cheerful / Sunshine Heroine — MC Archetype Guide | smutHub</title>
-<meta name="description" content="An optimistic, upbeat female protagonist. Sunshine to his grump.">
+<meta name="description" content="An optimistic, upbeat female protagonist. Sunshine to his grump. See 2 romantasy books tagged cheerful / sunshine heroine on smutHub.">
 <link rel="canonical" href="https://smuthub.ca/glossary/mc-archetype/cheerful-heroine/">
 <meta name="theme-color" content="#0c0708">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -12,14 +12,14 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="smutHub">
 <meta property="og:title" content="Cheerful / Sunshine Heroine — MC Archetype Guide | smutHub">
-<meta property="og:description" content="An optimistic, upbeat female protagonist. Sunshine to his grump.">
+<meta property="og:description" content="An optimistic, upbeat female protagonist. Sunshine to his grump. See 2 romantasy books tagged cheerful / sunshine heroine on smutHub.">
 <meta property="og:url" content="https://smuthub.ca/glossary/mc-archetype/cheerful-heroine/">
 <meta property="og:image" content="https://smuthub.ca/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Cheerful / Sunshine Heroine — MC Archetype Guide | smutHub">
-<meta name="twitter:description" content="An optimistic, upbeat female protagonist. Sunshine to his grump.">
+<meta name="twitter:description" content="An optimistic, upbeat female protagonist. Sunshine to his grump. See 2 romantasy books tagged cheerful / sunshine heroine on smutHub.">
 <meta name="twitter:image" content="https://smuthub.ca/og-image.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"DefinedTerm","name":"Cheerful / Sunshine Heroine","description":"An optimistic, upbeat female protagonist. Sunshine to his grump.","inDefinedTermSet":{"@type":"DefinedTermSet","name":"smutHub Romantasy Glossary","url":"https://smuthub.ca/glossary/"},"url":"https://smuthub.ca/glossary/mc-archetype/cheerful-heroine/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"DefinedTerm","name":"Cheerful / Sunshine Heroine","description":"An optimistic, upbeat female protagonist. Sunshine to his grump.","inDefinedTermSet":{"@type":"DefinedTermSet","name":"smutHub Romantasy Glossary","url":"https://smuthub.ca/glossary/"},"url":"https://smuthub.ca/glossary/mc-archetype/cheerful-heroine/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smuthub.ca/"},{"@type":"ListItem","position":2,"name":"Glossary","item":"https://smuthub.ca/glossary/"},{"@type":"ListItem","position":3,"name":"MC Archetypes","item":"https://smuthub.ca/glossary/mc-archetype/"},{"@type":"ListItem","position":4,"name":"Cheerful / Sunshine Heroine","item":"https://smuthub.ca/glossary/mc-archetype/cheerful-heroine/"}]}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -154,7 +154,7 @@
 
   <section class="detail" id="books">
     <h2>Books featuring this mc archetype</h2>
-    <div class="grid" id="bookGrid"><p class="empty">Loading…</p></div>
+    <div class="grid" id="bookGrid"><a class="card" href="/book/assistant-to-the-villain-maehrer/"><div class="cover"><img src="https://covers.smuthub.ca/assistant-to-the-villain-maehrer.jpg" alt="Assistant to the Villain book cover" loading="lazy"></div><div class="meta"><div class="t">Assistant to the Villain</div><div class="a">Hannah Nicole Maehrer</div></div></a><a class="card" href="/book/his-empress-rossi-2026/"><div class="cover"><img src="https://covers.smuthub.ca/his-empress-rossi-2026.jpg" alt="His Empress book cover" loading="lazy"></div><div class="meta"><div class="t">His Empress</div><div class="a">Emilia Rossi</div></div></a></div>
   </section>
 
   
@@ -182,14 +182,18 @@
         sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_KEY, { auth:{ persistSession:false } });
       }
     }
-    if(!sb){ grid.innerHTML = '<p class="empty">Catalog unavailable.</p>'; return; }
+    // The grid is already SERVER-RENDERED at build time; this fetch only
+    // refreshes it so books added since the last build appear without a
+    // rebuild. Every failure path therefore leaves the existing markup alone
+    // rather than replacing good content with an error message.
+    if(!sb) return;
     try{
       const { data, error } = await sb.from('books')
         .select('slug,title,author,cover_url,spice_level,year')
         .eq('status','live').contains('tag_ids', [tagKey])
         .order('featured', { ascending:false }).limit(12);
       if(error) throw error;
-      if(!data || !data.length){ grid.innerHTML = '<p class="empty">No books shelved here yet — check back as the catalog grows.</p>'; return; }
+      if(!data || !data.length) return;   // keep whatever was built in
       grid.innerHTML = data.map(function(b){
         const cov = b.cover_url ? '<img src="'+escH(b.cover_url)+'" alt="'+escH(b.title)+' book cover" loading="lazy">' : '';
         return '<a class="card" href="/book/'+encodeURIComponent(b.slug)+'/">'
@@ -197,7 +201,7 @@
           +    '<div class="meta"><div class="t">'+escH(b.title)+'</div><div class="a">'+escH(b.author||'')+'</div></div>'
           +    '</a>';
       }).join('');
-    }catch(e){ console.error(e); grid.innerHTML = '<p class="empty">Couldn\'t load books just now.</p>'; }
+    }catch(e){ console.error(e); /* keep the server-rendered cards */ }
   })();
 </script>
 

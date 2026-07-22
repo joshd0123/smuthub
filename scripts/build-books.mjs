@@ -773,14 +773,41 @@ function renderBookPage(book){
 
   // SEO
   const titleBits = [book.title, author ? `by ${author}` : ''].filter(Boolean).join(' ');
-  const seoTitle = `${titleBits} — Spice, Tropes & Content Warnings | ${SITE_NAME}`;
+  // Google truncates titles around 60 characters. The previous format
+  // ("<title> by <author> — Spice, Tropes & Content Warnings | smutHub")
+  // ran 79 chars at the median and clipped on ALL 289 book pages, cutting off
+  // the descriptive half. Pick the richest variant that still fits: short
+  // titles keep the author, long ones drop the extras rather than be cut
+  // mid-word by the SERP.
+  const seoTitle = (() => {
+    const brand = ` | ${SITE_NAME}`;
+    const variants = [
+      author ? `${book.title} by ${author} — Spice & Tropes` : null,
+      `${book.title} — Spice, Tropes & Warnings`,
+      `${book.title} — Spice & Tropes`,
+      book.title,
+    ].filter(Boolean);
+    return (variants.find(v => (v + brand).length <= 60) || variants[variants.length - 1]) + brand;
+  })();
   const tasteLabels = tags.filter(t => ['trope','mood','vibe'].includes(t.category)).slice(0, 4).map(t => t.label);
   const metaDesc = ((book.blurb || '').trim()
     || `${book.title}${author ? ` by ${author}` : ''}: spice level, content warnings, tropes${tasteLabels.length ? ` (${tasteLabels.join(', ')})` : ''}, and where it fits in the series — decoded on smutHub.`
   ).replace(/\s+/g, ' ').trim().slice(0, 158);
 
-  const jsonld = {
-    "@context": "https://schema.org",
+  // Breadcrumbs, matching the visual trail rendered below. Without this Google
+  // prints the raw URL in results; with it, "smuthub.ca › All books › Powerless".
+  const breadcrumb = {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/` },
+      { "@type": "ListItem", position: 2, name: "All books", item: `${SITE}/book/` },
+      { "@type": "ListItem", position: 3, name: book.title, item: bookURL(book) },
+    ],
+  };
+
+  // Two entities on this page (the book and its breadcrumb trail), so they ship
+  // in one @graph rather than two competing <script> blocks.
+  const bookEntity = {
     "@type": "Book",
     name: book.title,
     url: bookURL(book),
@@ -794,6 +821,8 @@ function renderBookPage(book){
     ...(book.subgenre ? { genre: humanize(book.subgenre) } : {}),
     ...(book.series ? { isPartOf: { "@type": "BookSeries", name: book.series, ...(book.series_number ? { position: Number(book.series_number) } : {}) } } : {}),
   };
+
+  const jsonld = { "@context": "https://schema.org", "@graph": [bookEntity, breadcrumb] };
 
   const head = SHARED_HEAD({
     title: seoTitle,

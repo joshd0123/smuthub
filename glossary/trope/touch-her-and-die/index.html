@@ -19,7 +19,7 @@
 <meta name="twitter:title" content="Touch Her and Die — Trope Guide | smutHub">
 <meta name="twitter:description" content="A possessive hero archetype where the love interest&#39;s extreme protectiveness becomes a threat to anyone who looks sideways at the heroine.">
 <meta name="twitter:image" content="https://smuthub.ca/og-image.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"DefinedTerm","name":"Touch Her and Die","description":"A possessive hero archetype where the love interest's extreme protectiveness becomes a threat to anyone who looks sideways at the heroine.","inDefinedTermSet":{"@type":"DefinedTermSet","name":"smutHub Romantasy Glossary","url":"https://smuthub.ca/glossary/"},"url":"https://smuthub.ca/glossary/trope/touch-her-and-die/","alternateName":["protective hero"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"DefinedTerm","name":"Touch Her and Die","description":"A possessive hero archetype where the love interest's extreme protectiveness becomes a threat to anyone who looks sideways at the heroine.","inDefinedTermSet":{"@type":"DefinedTermSet","name":"smutHub Romantasy Glossary","url":"https://smuthub.ca/glossary/"},"url":"https://smuthub.ca/glossary/trope/touch-her-and-die/","alternateName":["protective hero"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smuthub.ca/"},{"@type":"ListItem","position":2,"name":"Glossary","item":"https://smuthub.ca/glossary/"},{"@type":"ListItem","position":3,"name":"Tropes","item":"https://smuthub.ca/glossary/trope/"},{"@type":"ListItem","position":4,"name":"Touch Her and Die","item":"https://smuthub.ca/glossary/trope/touch-her-and-die/"}]}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -157,7 +157,7 @@
 
   <section class="detail" id="books">
     <h2>Books featuring this trope</h2>
-    <div class="grid" id="bookGrid"><p class="empty">Loading…</p></div>
+    <div class="grid" id="bookGrid"><a class="card" href="/book/a-court-of-silver-flames-maas-2021/"><div class="cover"><img src="https://covers.smuthub.ca/a-court-of-silver-flames-maas-2021.png" alt="A Court of Silver Flames book cover" loading="lazy"></div><div class="meta"><div class="t">A Court of Silver Flames</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/book/a-hunger-like-no-other-cole-2006/"><div class="cover"><img src="https://covers.smuthub.ca/a-hunger-like-no-other-cole-2006.png" alt="A Hunger Like No Other book cover" loading="lazy"></div><div class="meta"><div class="t">A Hunger Like No Other</div><div class="a">Kresley Cole</div></div></a><a class="card" href="/book/angels-blood-singh-2009/"><div class="cover"><img src="https://covers.smuthub.ca/angels-blood-singh-2009.png" alt="Angels&#39; Blood book cover" loading="lazy"></div><div class="meta"><div class="t">Angels&#39; Blood</div><div class="a">Nalini Singh</div></div></a><a class="card" href="/book/dark-lover-ward-2005/"><div class="cover"><img src="https://covers.smuthub.ca/dark-lover-ward-2005.jpg" alt="Dark Lover book cover" loading="lazy"></div><div class="meta"><div class="t">Dark Lover</div><div class="a">J. R. Ward</div></div></a><a class="card" href="/book/gleam-kennedy-2021/"><div class="cover"></div><div class="meta"><div class="t">Gleam</div><div class="a">Raven Kennedy</div></div></a><a class="card" href="/book/glint-kennedy-2021/"><div class="cover"><img src="https://covers.smuthub.ca/glint-kennedy-2021.jpg" alt="Glint book cover" loading="lazy"></div><div class="meta"><div class="t">Glint</div><div class="a">Raven Kennedy</div></div></a><a class="card" href="/book/neon-gods-robert-2021/"><div class="cover"><img src="https://covers.smuthub.ca/neon-gods-robert-2021.jpg" alt="Neon Gods book cover" loading="lazy"></div><div class="meta"><div class="t">Neon Gods</div><div class="a">Katee Robert</div></div></a><a class="card" href="/book/radiant-sin-robert-2023/"><div class="cover"><img src="https://covers.smuthub.ca/radiant-sin-robert-2023.jpg" alt="Radiant Sin book cover" loading="lazy"></div><div class="meta"><div class="t">Radiant Sin</div><div class="a">Katee Robert</div></div></a><a class="card" href="/book/shatter-me-mafi-2011/"><div class="cover"><img src="https://covers.smuthub.ca/shatter-me-mafi-2011.jpg" alt="Shatter Me book cover" loading="lazy"></div><div class="meta"><div class="t">Shatter Me</div><div class="a">Tahereh Mafi</div></div></a><a class="card" href="/book/slave-to-sensation-singh-2006/"><div class="cover"></div><div class="meta"><div class="t">Slave to Sensation</div><div class="a">Nalini Singh</div></div></a><a class="card" href="/book/the-war-of-two-queens-armentrout-2022/"><div class="cover"><img src="https://covers.smuthub.ca/the-war-of-two-queens-armentrout-2022.jpg" alt="The War of Two Queens book cover" loading="lazy"></div><div class="meta"><div class="t">The War of Two Queens</div><div class="a">Jennifer L. Armentrout</div></div></a><a class="card" href="/book/veil-of-ash-hendrix-2026/"><div class="cover"><img src="https://covers.smuthub.ca/veil-of-ash-hendrix-2026.jpg" alt="Veil of Ash book cover" loading="lazy"></div><div class="meta"><div class="t">Veil of Ash</div><div class="a">Fallon Hendrix</div></div></a></div>
   </section>
 
   
@@ -185,14 +185,18 @@
         sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_KEY, { auth:{ persistSession:false } });
       }
     }
-    if(!sb){ grid.innerHTML = '<p class="empty">Catalog unavailable.</p>'; return; }
+    // The grid is already SERVER-RENDERED at build time; this fetch only
+    // refreshes it so books added since the last build appear without a
+    // rebuild. Every failure path therefore leaves the existing markup alone
+    // rather than replacing good content with an error message.
+    if(!sb) return;
     try{
       const { data, error } = await sb.from('books')
         .select('slug,title,author,cover_url,spice_level,year')
         .eq('status','live').contains('tag_ids', [tagKey])
         .order('featured', { ascending:false }).limit(12);
       if(error) throw error;
-      if(!data || !data.length){ grid.innerHTML = '<p class="empty">No books shelved here yet — check back as the catalog grows.</p>'; return; }
+      if(!data || !data.length) return;   // keep whatever was built in
       grid.innerHTML = data.map(function(b){
         const cov = b.cover_url ? '<img src="'+escH(b.cover_url)+'" alt="'+escH(b.title)+' book cover" loading="lazy">' : '';
         return '<a class="card" href="/book/'+encodeURIComponent(b.slug)+'/">'
@@ -200,7 +204,7 @@
           +    '<div class="meta"><div class="t">'+escH(b.title)+'</div><div class="a">'+escH(b.author||'')+'</div></div>'
           +    '</a>';
       }).join('');
-    }catch(e){ console.error(e); grid.innerHTML = '<p class="empty">Couldn\'t load books just now.</p>'; }
+    }catch(e){ console.error(e); /* keep the server-rendered cards */ }
   })();
 </script>
 

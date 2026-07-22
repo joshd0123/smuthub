@@ -19,7 +19,7 @@
 <meta name="twitter:title" content="Morally Grey — Trope Guide | smutHub">
 <meta name="twitter:description" content="A character whose ethics are flexible — capable of cruelty, manipulation, or violence, usually with a justification that makes the reader complicit.">
 <meta name="twitter:image" content="https://smuthub.ca/og-image.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"DefinedTerm","name":"Morally Grey","description":"A character whose ethics are flexible — capable of cruelty, manipulation, or violence, usually with a justification that makes the reader complicit.","inDefinedTermSet":{"@type":"DefinedTermSet","name":"smutHub Romantasy Glossary","url":"https://smuthub.ca/glossary/"},"url":"https://smuthub.ca/glossary/trope/morally-grey/","alternateName":["morally gray","mg","morally ambiguous"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"DefinedTerm","name":"Morally Grey","description":"A character whose ethics are flexible — capable of cruelty, manipulation, or violence, usually with a justification that makes the reader complicit.","inDefinedTermSet":{"@type":"DefinedTermSet","name":"smutHub Romantasy Glossary","url":"https://smuthub.ca/glossary/"},"url":"https://smuthub.ca/glossary/trope/morally-grey/","alternateName":["morally gray","mg","morally ambiguous"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smuthub.ca/"},{"@type":"ListItem","position":2,"name":"Glossary","item":"https://smuthub.ca/glossary/"},{"@type":"ListItem","position":3,"name":"Tropes","item":"https://smuthub.ca/glossary/trope/"},{"@type":"ListItem","position":4,"name":"Morally Grey","item":"https://smuthub.ca/glossary/trope/morally-grey/"}]}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -157,7 +157,7 @@
 
   <section class="detail" id="books">
     <h2>Books featuring this trope</h2>
-    <div class="grid" id="bookGrid"><p class="empty">Loading…</p></div>
+    <div class="grid" id="bookGrid"><a class="card" href="/book/a-court-of-silver-flames-maas-2021/"><div class="cover"><img src="https://covers.smuthub.ca/a-court-of-silver-flames-maas-2021.png" alt="A Court of Silver Flames book cover" loading="lazy"></div><div class="meta"><div class="t">A Court of Silver Flames</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/book/a-court-of-wings-and-ruin-maas-2017/"><div class="cover"><img src="https://covers.smuthub.ca/a-court-of-wings-and-ruin-maas-2017.png" alt="A Court of Wings and Ruin book cover" loading="lazy"></div><div class="meta"><div class="t">A Court of Wings and Ruin</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/book/a-reaper-at-the-gates-tahir-2018/"><div class="cover"><img src="https://covers.smuthub.ca/a-reaper-at-the-gates-tahir-2018.jpg" alt="A Reaper at the Gates book cover" loading="lazy"></div><div class="meta"><div class="t">A Reaper at the Gates</div><div class="a">Sabaa Tahir</div></div></a><a class="card" href="/book/black-sun-roanhorse-2020/"><div class="cover"></div><div class="meta"><div class="t">Black Sun</div><div class="a">Rebecca Roanhorse</div></div></a><a class="card" href="/book/blessed-monsters-duncan-2021/"><div class="cover"><img src="https://covers.smuthub.ca/blessed-monsters-duncan-2021.jpg" alt="Blessed Monsters book cover" loading="lazy"></div><div class="meta"><div class="t">Blessed Monsters</div><div class="a">Emily A. Duncan</div></div></a><a class="card" href="/book/blood-honey-mahurin-2020/"><div class="cover"></div><div class="meta"><div class="t">Blood &amp; Honey</div><div class="a">Shelby Mahurin</div></div></a><a class="card" href="/book/bloom-blood-chase-2026/"><div class="cover"><img src="https://covers.smuthub.ca/bloom-blood-chase-2026.jpg" alt="Bloom &amp; Blood book cover" loading="lazy"></div><div class="meta"><div class="t">Bloom &amp; Blood</div><div class="a">Eva Chase</div></div></a><a class="card" href="/book/book-of-night-black-2022/"><div class="cover"><img src="https://covers.smuthub.ca/book-of-night-black-2022.jpg" alt="Book of Night book cover" loading="lazy"></div><div class="meta"><div class="t">Book of Night</div><div class="a">Holly Black</div></div></a><a class="card" href="/book/crown-of-midnight-maas-2013/"><div class="cover"><img src="https://covers.smuthub.ca/crown-of-midnight-maas-2013.jpg" alt="Crown of Midnight book cover" loading="lazy"></div><div class="meta"><div class="t">Crown of Midnight</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/book/gleam-kennedy-2021/"><div class="cover"></div><div class="meta"><div class="t">Gleam</div><div class="a">Raven Kennedy</div></div></a><a class="card" href="/book/glimmer-kennedy-2023/"><div class="cover"></div><div class="meta"><div class="t">Glimmer</div><div class="a">Raven Kennedy</div></div></a><a class="card" href="/book/glint-kennedy-2021/"><div class="cover"><img src="https://covers.smuthub.ca/glint-kennedy-2021.jpg" alt="Glint book cover" loading="lazy"></div><div class="meta"><div class="t">Glint</div><div class="a">Raven Kennedy</div></div></a></div>
   </section>
 
   
@@ -185,14 +185,18 @@
         sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_KEY, { auth:{ persistSession:false } });
       }
     }
-    if(!sb){ grid.innerHTML = '<p class="empty">Catalog unavailable.</p>'; return; }
+    // The grid is already SERVER-RENDERED at build time; this fetch only
+    // refreshes it so books added since the last build appear without a
+    // rebuild. Every failure path therefore leaves the existing markup alone
+    // rather than replacing good content with an error message.
+    if(!sb) return;
     try{
       const { data, error } = await sb.from('books')
         .select('slug,title,author,cover_url,spice_level,year')
         .eq('status','live').contains('tag_ids', [tagKey])
         .order('featured', { ascending:false }).limit(12);
       if(error) throw error;
-      if(!data || !data.length){ grid.innerHTML = '<p class="empty">No books shelved here yet — check back as the catalog grows.</p>'; return; }
+      if(!data || !data.length) return;   // keep whatever was built in
       grid.innerHTML = data.map(function(b){
         const cov = b.cover_url ? '<img src="'+escH(b.cover_url)+'" alt="'+escH(b.title)+' book cover" loading="lazy">' : '';
         return '<a class="card" href="/book/'+encodeURIComponent(b.slug)+'/">'
@@ -200,7 +204,7 @@
           +    '<div class="meta"><div class="t">'+escH(b.title)+'</div><div class="a">'+escH(b.author||'')+'</div></div>'
           +    '</a>';
       }).join('');
-    }catch(e){ console.error(e); grid.innerHTML = '<p class="empty">Couldn\'t load books just now.</p>'; }
+    }catch(e){ console.error(e); /* keep the server-rendered cards */ }
   })();
 </script>
 
