@@ -14,6 +14,26 @@
   "assets": {
     "directory": "."
   },
+
+  // ── LAUNCH: point smuthub.ca at this Worker ────────────────────────────
+  // Today the site serves only from smuthub.joshd0123.workers.dev; smuthub.ca
+  // is still a parked GoDaddy page, while every canonical, og:url and all 672
+  // sitemap URLs already claim https://smuthub.ca/. Uncommenting the block
+  // below makes that true.
+  //
+  // BEFORE uncommenting, delete the existing smuthub.ca (and www) DNS records
+  // in Cloudflare that currently point at GoDaddy. With `custom_domain: true`
+  // wrangler creates the DNS records itself, and the deploy FAILS if a
+  // conflicting record already exists.
+  //
+  // Adding the apex does not touch covers.smuthub.ca or analytics.smuthub.ca —
+  // those are separate records — but verify both still resolve afterwards,
+  // since every book cover on the site depends on the first one.
+  //
+  // "routes": [
+  //   { "pattern": "smuthub.ca", "custom_domain": true },
+  //   { "pattern": "www.smuthub.ca", "custom_domain": true }
+  // ],
   "compatibility_flags": [
     "nodejs_compat"
   ]
