@@ -103,9 +103,13 @@
   .sechead .note{font-size:.78rem;color:var(--muted);font-style:italic;margin-left:8px}
   .sechead a{color:var(--amber);font-weight:700;font-size:.78rem}
 
-  .row6{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
-  @media(max-width:880px){.row6{grid-template-columns:repeat(4,1fr)}}
-  @media(max-width:520px){.row6{grid-template-columns:repeat(3,1fr)}}
+  /* Match the /search browse grid exactly, so a book is the same size whether
+     you're browsing logged-out or looking at your dashboard. Previously this
+     was a hardcoded 6-across grid (~183px covers) while /search auto-fills at
+     minmax(200px) (~210px) — which made the logged-in dashboard read as
+     noticeably smaller than the logged-out browse. */
+  .row6{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px}
+  @media(max-width:600px){.row6{grid-template-columns:repeat(2,1fr);gap:12px}}
 
   /* .tile renders as an <a> whenever the book has a plot page to link to, and
      as a <div> only for the rare book we don't carry — hence text-decoration. */
@@ -441,7 +445,9 @@
       : `<div class="tile ${status==='dnf'?'dnf':''}" onclick="openBook('${esc(b.key||b.book_key)}')">${inner}</div>`;
   }
   function renderReading(){
-    const slots = [...myShelf].slice(0,5);
+    // 4 books + the Next Read tile = 5, one clean row at the new larger tile
+    // size (5 across). Was 5 books + Next Read = 6, which fit the old 6-col grid.
+    const slots = [...myShelf].slice(0,4);
     const slotsHTML = slots.map(readingTileHTML).join('');
     const nextTile = `<div class="tile empty" onclick="goAddNext()">
       <div><div class="plus">+</div><div class="lab">Next Read</div><div class="sub">add to TBR</div></div>
@@ -557,7 +563,7 @@
   }
   function renderTrending(books){
     const withCovers = books.filter(b=>b._cover);   // only show books that have a real cover
-    $('trending').innerHTML = (withCovers.length?withCovers:books).slice(0,6).map(b=>{
+    $('trending').innerHTML = (withCovers.length?withCovers:books).slice(0,5).map(b=>{
       const cov = b._cover;
       const badgeText = b.badge==='hot' ? `#${b.rank} HOT` : b.badge==='new' ? 'NEW' : `↑ #${b.rank}`;
       const badgeClass = b.badge==='hot' || b.badge==='new' ? 'hot' : '';
