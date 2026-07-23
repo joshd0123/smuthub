@@ -1344,7 +1344,14 @@ const INDEX_CSS = `<style>
   .tagchip .tc button:hover{color:var(--cream)}
   .lgroup{padding-top:10px;scroll-margin-top:88px}
   .lgroup > h2{font-family:'Fraunces',serif;font-weight:600;font-size:1.15rem;color:var(--amber);border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:14px}
-  .bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;margin-bottom:10px}
+  /* This is a BROWSE page, so widen its content to /search's 1180px rather than
+     inheriting the 1100px reading width the book DETAIL pages use. Only the
+     index's own header + results widen; the shared nav is untouched. */
+  .ihead, #results{max-width:1180px}
+  /* minmax(200px) then gives exactly 5 across at ~213px — the same cover size
+     as /search and the dashboard, so a book looks identical on every browse
+     surface. Was minmax(150px) (~6-7 across, noticeably smaller). */
+  .bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;margin-bottom:10px}
   @media(max-width:600px){.bgrid{grid-template-columns:repeat(2,1fr);gap:12px}}
   .bcard{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;text-decoration:none;color:inherit;transition:transform .16s,border-color .16s}
   .bcard:hover{transform:translateY(-3px);border-color:var(--rose)}

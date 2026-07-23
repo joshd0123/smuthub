@@ -113,25 +113,37 @@
 
   /* .tile renders as an <a> whenever the book has a plot page to link to, and
      as a <div> only for the rare book we don't carry — hence text-decoration. */
-  .tile{position:relative;aspect-ratio:3/4;border-radius:8px;overflow:hidden;display:flex;align-items:flex-end;padding:6px;color:#fff;font-family:'Fraunces',serif;font-style:italic;font-size:.7rem;text-shadow:0 1px 6px rgba(0,0,0,.6);cursor:pointer;background:var(--ph);text-decoration:none}
-  .tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
-  .tile .ttitle{position:relative;z-index:2;line-height:1.1}
-  .tile.dnf{filter:grayscale(.5)}
-  .tile.empty{cursor:default;background:none;border:1.5px dashed rgba(255,171,64,.55);color:var(--amber);align-items:center;justify-content:center;text-align:center;font-family:inherit;font-style:normal;text-shadow:none}
-  .tile.empty:hover{border-color:var(--amber);background:rgba(255,171,64,.06)}
-  .tile.empty .plus{font-size:1.3rem;line-height:1}
-  .tile.empty .lab{font-size:.7rem;font-weight:700;margin-top:3px}
-  .tile.empty .sub{font-size:.6rem;color:var(--muted);margin-top:2px}
-  .badge{position:absolute;font-size:.55rem;font-weight:800;padding:.15em .42em;border-radius:3px;z-index:3;letter-spacing:.04em}
-  .badge.status{top:5px;right:5px;color:#fff}
-  .badge.status.reading{background:rgba(255,61,118,.85)}
-  .badge.status.want{background:rgba(255,171,64,.9);color:#1a0c10}
-  .badge.status.read{background:rgba(122,220,150,.85);color:#0a2014}
-  .badge.status.dnf{background:rgba(255,255,255,.22);color:#fff}
-  .badge.rank{top:5px;left:5px;color:#fff;background:rgba(8,4,5,.78)}
+  /* Card-style tile: cover on top, title + author below — the same look as
+     /book/ and /search. The old tile used object-fit:cover (which CROPPED the
+     artwork) and printed the title over the cover (which collided with the
+     cover's own text). Now the cover is shown whole (object-fit:contain over a
+     blurred copy of itself) and the title sits underneath as real text. */
+  .tile{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;cursor:pointer;transition:transform .16s,border-color .16s}
+  .tile:hover{transform:translateY(-3px);border-color:var(--rose)}
+  .tile .cov{position:relative;aspect-ratio:3/4;overflow:hidden;background:var(--ink-2);flex:0 0 auto}
+  .tile .cov img{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .tile .cov .cover-bg{object-fit:cover;filter:blur(16px) saturate(1.3) brightness(.5);transform:scale(1.25)}
+  .tile .cov .cover-img{object-fit:contain;z-index:1}
+  .tile .cov .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;font-family:'Fraunces',serif;font-style:italic;font-size:.92rem;line-height:1.15;color:#fff;background:var(--ph)}
+  .tile .cap{padding:9px 11px 12px}
+  .tile .cap .ct{font-family:'Fraunces',serif;font-weight:500;font-size:.95rem;line-height:1.16;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .tile .cap .ca{color:var(--muted);font-size:.76rem;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tile.dnf .cov{filter:grayscale(.5)}
+  .tile.empty{cursor:default;background:none;border:1.5px dashed rgba(255,171,64,.55);color:var(--amber);align-items:center;justify-content:center;text-align:center;min-height:100%}
+  .tile.empty:hover{border-color:var(--amber);background:rgba(255,171,64,.06);transform:none}
+  .tile.empty .plus{font-size:1.5rem;line-height:1}
+  .tile.empty .lab{font-size:.8rem;font-weight:700;margin-top:4px}
+  .tile.empty .sub{font-size:.68rem;color:var(--muted);margin-top:2px}
+  .badge{position:absolute;font-size:.58rem;font-weight:800;padding:.2em .5em;border-radius:4px;z-index:2;letter-spacing:.04em}
+  .badge.status{top:6px;right:6px;color:#fff}
+  .badge.status.reading{background:rgba(255,61,118,.92)}
+  .badge.status.want{background:rgba(255,171,64,.95);color:#1a0c10}
+  .badge.status.read{background:rgba(122,220,150,.92);color:#0a2014}
+  .badge.status.dnf{background:rgba(60,50,54,.95);color:#fff}
+  .badge.rank{top:6px;left:6px;color:#fff;background:rgba(8,4,5,.82)}
   .badge.rank.hot{background:var(--grad);color:#1a0c10}
   .badge.rank.new{background:var(--grad);color:#1a0c10}
-  .spice{position:absolute;bottom:5px;right:5px;font-size:.6rem;letter-spacing:.04em;z-index:3;white-space:nowrap}
+  .spice{position:absolute;bottom:6px;right:6px;font-size:.62rem;letter-spacing:.04em;z-index:2;white-space:nowrap;background:rgba(8,4,5,.72);padding:.15em .45em;border-radius:99px}
 
   /* ── PLACEHOLDER ROOMS ── */
   .rooms{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
@@ -330,6 +342,15 @@
   function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   function coverUrl(cover_i){ return cover_i ? `https://covers.openlibrary.org/b/id/${cover_i}-L.jpg` : null; }
   const coverSrc=b=>b.cover_url||coverUrl(b.cover_i);
+  // Uncropped cover for a tile: contained artwork over a blurred copy of itself
+  // (one URL, one request), with a styled title tile if there's no cover or it
+  // fails to load. Mirrors the /book/ and /search treatment.
+  function tileCover(cov, title){
+    if(!cov) return '<div class="ph">'+esc(title)+'</div>';
+    return '<img class="cover-bg" src="'+esc(cov)+'" alt="" aria-hidden="true" onerror="this.style.display=\'none\'">'
+      + '<img class="cover-img" src="'+esc(cov)+'" alt="" loading="lazy" onerror="var c=this.closest(\'.cov\');c.querySelectorAll(\'img\').forEach(function(i){i.style.display=\'none\'});var p=c.querySelector(\'.ph\');if(p)p.style.display=\'flex\'">'
+      + '<div class="ph" style="display:none">'+esc(title)+'</div>';
+  }
   // Google Books first, Open Library fallback — normalized {key,title,author,cover_url,cover_i}
   const GB_KEY=(window.SMUTHUB_CONFIG||{}).GOOGLE_BOOKS_KEY||'';
   async function gBooks(q){
@@ -431,11 +452,11 @@
     const status = b.status || 'want';
     const spice = mySpice[b.key] || mySpice[b.book_key] || b.spice;
     const cov = coverSrc(b);
-    const img = cov ? `<img src="${cov}" alt="" onerror="this.style.display='none'">` : '';
-    const inner = `${img}
-      <span class="badge status ${status}">${STATUS_LABELS[status]||status}</span>
-      ${spice?`<span class="spice">🌶️${spice}</span>`:''}
-      <span class="ttitle">${esc(b.title)}</span>`;
+    const inner = `<div class="cov">${tileCover(cov, b.title)}
+        <span class="badge status ${status}">${STATUS_LABELS[status]||status}</span>
+        ${spice?`<span class="spice">🌶️${spice}</span>`:''}
+      </div>
+      <div class="cap"><div class="ct">${esc(b.title)}</div>${b.author?`<div class="ca">${esc(b.author)}</div>`:''}</div>`;
     // Anything we carry goes straight to its plot page as a real link — so it
     // middle-clicks, previews on hover, and needs no login (plot pages are
     // public). Only books with no page of their own keep the old JS fallback.
@@ -567,9 +588,10 @@
       const cov = b._cover;
       const badgeText = b.badge==='hot' ? `#${b.rank} HOT` : b.badge==='new' ? 'NEW' : `↑ #${b.rank}`;
       const badgeClass = b.badge==='hot' || b.badge==='new' ? 'hot' : '';
-      const inner = `${cov?`<img src="${cov}" alt="" onerror="this.style.display='none'">`:''}
-        <span class="badge rank ${badgeClass}">${badgeText}</span>
-        <span class="ttitle">${esc(b.title)}</span>`;
+      const inner = `<div class="cov">${tileCover(cov, b.title)}
+          <span class="badge rank ${badgeClass}">${badgeText}</span>
+        </div>
+        <div class="cap"><div class="ct">${esc(b.title)}</div>${b.author?`<div class="ca">${esc(b.author)}</div>`:''}</div>`;
       // Trending titles we carry link straight to the plot page. Only titles
       // genuinely absent from the catalog fall back to a search.
       return b._slug
