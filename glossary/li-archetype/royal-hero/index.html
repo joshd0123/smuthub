@@ -115,7 +115,7 @@
     <a href="/" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
       <a href="/dashboard.html">Dashboard</a>
-      <a href="/book/">Browse Books</a>
+      <a href="/books/">Browse Books</a>
       <a href="/search">Add a Book</a>
       <a href="/smuthub-bookcase.html">My Bookshelf</a>
       <a href="/glossary/" class="on" >Glossary</a>
@@ -145,7 +145,7 @@
     
     <p class="defn">A king, prince, duke, or noble hero. Crown, duty, one extremely inconvenient feeling.</p>
     
-    <a class="cta" href="/book/?tag=li-archetype%3Aroyal-hero">Find books with this li archetype →</a>
+    <a class="cta" href="/books/?tag=li-archetype%3Aroyal-hero">Find books with this li archetype →</a>
   </section>
 
   
@@ -154,7 +154,7 @@
 
   <section class="detail" id="books">
     <h2>Books featuring this li archetype</h2>
-    <div class="grid" id="bookGrid"><a class="card" href="/book/a-court-of-thorns-and-roses-maas/"><div class="cover"><img src="https://covers.smuthub.ca/a-court-of-thorns-and-roses-maas.jpg" alt="A Court of Thorns and Roses book cover" loading="lazy"></div><div class="meta"><div class="t">A Court of Thorns and Roses</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/book/a-dawn-of-onyx-golden/"><div class="cover"><img src="https://covers.smuthub.ca/a-dawn-of-onyx-golden.jpg" alt="A Dawn of Onyx book cover" loading="lazy"></div><div class="meta"><div class="t">A Dawn of Onyx</div><div class="a">Kate Golden</div></div></a><a class="card" href="/book/how-the-king-of-elfhame-learned-to-hate-stories-black-2020/"><div class="cover"><img src="https://covers.smuthub.ca/how-the-king-of-elfhame-learned-to-hate-stories-black-2020.jpg" alt="How the King of Elfhame Learned to Hate Stories book cover" loading="lazy"></div><div class="meta"><div class="t">How the King of Elfhame Learned to Hate Stories</div><div class="a">Holly Black</div></div></a><a class="card" href="/book/rites-of-the-starling-perry-2026/"><div class="cover"><img src="https://covers.smuthub.ca/rites-of-the-starling-perry-2026.jpg" alt="Rites of the Starling book cover" loading="lazy"></div><div class="meta"><div class="t">Rites of the Starling</div><div class="a">Devney Perry</div></div></a></div>
+    <div class="grid" id="bookGrid"><a class="card" href="/books/a-court-of-thorns-and-roses-maas/"><div class="cover"><img src="https://covers.smuthub.ca/a-court-of-thorns-and-roses-maas.jpg" alt="A Court of Thorns and Roses book cover" loading="lazy"></div><div class="meta"><div class="t">A Court of Thorns and Roses</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/books/a-dawn-of-onyx-golden/"><div class="cover"><img src="https://covers.smuthub.ca/a-dawn-of-onyx-golden.jpg" alt="A Dawn of Onyx book cover" loading="lazy"></div><div class="meta"><div class="t">A Dawn of Onyx</div><div class="a">Kate Golden</div></div></a><a class="card" href="/books/how-the-king-of-elfhame-learned-to-hate-stories-black-2020/"><div class="cover"><img src="https://covers.smuthub.ca/how-the-king-of-elfhame-learned-to-hate-stories-black-2020.jpg" alt="How the King of Elfhame Learned to Hate Stories book cover" loading="lazy"></div><div class="meta"><div class="t">How the King of Elfhame Learned to Hate Stories</div><div class="a">Holly Black</div></div></a><a class="card" href="/books/rites-of-the-starling-perry-2026/"><div class="cover"><img src="https://covers.smuthub.ca/rites-of-the-starling-perry-2026.jpg" alt="Rites of the Starling book cover" loading="lazy"></div><div class="meta"><div class="t">Rites of the Starling</div><div class="a">Devney Perry</div></div></a></div>
   </section>
 
   
@@ -196,7 +196,7 @@
       if(!data || !data.length) return;   // keep whatever was built in
       grid.innerHTML = data.map(function(b){
         const cov = b.cover_url ? '<img src="'+escH(b.cover_url)+'" alt="'+escH(b.title)+' book cover" loading="lazy">' : '';
-        return '<a class="card" href="/book/'+encodeURIComponent(b.slug)+'/">'
+        return '<a class="card" href="/books/'+encodeURIComponent(b.slug)+'/">'
           +    '<div class="cover">'+cov+'</div>'
           +    '<div class="meta"><div class="t">'+escH(b.title)+'</div><div class="a">'+escH(b.author||'')+'</div></div>'
           +    '</a>';
@@ -306,7 +306,7 @@
 <footer>
   <div class="wrap ft">
     <span>© 2026 smutHub · Romantasy, decoded.</span>
-    <span><a href="/book/">All Books</a> · <a href="/glossary/">Glossary</a> · <a href="/sitemap.html">Sitemap</a></span>
+    <span><a href="/books/">All Books</a> · <a href="/glossary/">Glossary</a> · <a href="/sitemap.html">Sitemap</a></span>
   </div>
 </footer>
 </body></html>

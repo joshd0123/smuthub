@@ -1,6 +1,6 @@
 # Book "Plot / About" Pages
 
-Per-book static HTML pages (`/book/<slug>/`) — the Goodreads-style page a reader
+Per-book static HTML pages (`/books/<slug>/`) — the Goodreads-style page a reader
 lands on when they tap a book cover anywhere on the site. Generated from the
 `books` table by `scripts/build-books.mjs`. Same DB as the catalog and glossary;
 the page just renders one book's metadata and links its tropes/moods/vibes back
@@ -17,7 +17,7 @@ scripts/build-books.mjs
        │  one page per LIVE book; resolves tag_ids → glossary links;
        │  computes "more like this / by author / in series" from the full catalog
        ▼
-/book/<slug>/index.html             ← canonical plot page (one per live book)
+/books/<slug>/index.html             ← canonical plot page (one per live book)
        │
        ▼
 Cloudflare static deploy            ← fully pre-rendered HTML, per-book SEO
@@ -144,12 +144,12 @@ git add glossary/ book/ sitemap.xml && git commit -m "build: refresh glossary + 
 
 ## Where book links point
 
-Every book card across the site now deep-links to `/book/<slug>/`:
+Every book card across the site now deep-links to `/books/<slug>/`:
 
 | Surface | File | Behavior |
 |---|---|---|
-| Homepage "Trending/Featured" | `index.html` | featured cards → `/book/<slug>/` |
-| Glossary "Books featuring this term" | `scripts/build-glossary.mjs` (runtime fetch) | each cover → `/book/<slug>/` |
+| Homepage "Trending/Featured" | `index.html` | featured cards → `/books/<slug>/` |
+| Glossary "Books featuring this term" | `scripts/build-glossary.mjs` (runtime fetch) | each cover → `/books/<slug>/` |
 | Search results | `smuthub-app.html` | **catalog** results (key = slug) link cover + title; external Google/OpenLibrary results stay un-linked |
 | Bookshelf detail sheet | `smuthub-bookcase.html` | "📖 View book page" action for catalog shelf entries only |
 
@@ -163,7 +163,7 @@ shelf). External search hits and demo tiles never link, because they have no pag
 |---|---|
 | Edited a book's content (blurb, spice, tags, series, cover…) | **Yes** — the content is baked into the static HTML |
 | Published a new book (`status` → `live`) | **Yes** — its page must be generated + added to the sitemap |
-| Archived/unpublished a book | **Yes** — its page should disappear from the sitemap (stale `/book/<slug>/` 404s on next deploy since `book/` is wiped & rebuilt) |
+| Archived/unpublished a book | **Yes** — its page should disappear from the sitemap (stale `/books/<slug>/` 404s on next deploy since `book/` is wiped & rebuilt) |
 | Edited a glossary tag's `description`/`has_page` | Optional — only changes whether a chip links; rebuild to refresh chip links |
 | A user shelved/rated a book | **No** — shelf state is per-user, loaded client-side |
 

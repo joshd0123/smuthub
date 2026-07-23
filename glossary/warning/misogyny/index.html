@@ -115,7 +115,7 @@
     <a href="/" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
       <a href="/dashboard.html">Dashboard</a>
-      <a href="/book/">Browse Books</a>
+      <a href="/books/">Browse Books</a>
       <a href="/search">Add a Book</a>
       <a href="/smuthub-bookcase.html">My Bookshelf</a>
       <a href="/glossary/" class="on" >Glossary</a>
@@ -145,7 +145,7 @@
     
     <p class="defn">Sexism, discrimination, or prejudice against women appears in the story.</p>
     
-    <a class="cta" href="/book/?tag=warning%3Amisogyny">Find books with this content warning →</a>
+    <a class="cta" href="/books/?tag=warning%3Amisogyny">Find books with this content warning →</a>
   </section>
 
   
@@ -154,7 +154,7 @@
 
   <section class="detail" id="books">
     <h2>Books featuring this content warning</h2>
-    <div class="grid" id="bookGrid"><a class="card" href="/book/clash-of-claws-dear-2025/"><div class="cover"><img src="https://covers.smuthub.ca/clash-of-claws-dear-2025.jpg" alt="Clash of Claws book cover" loading="lazy"></div><div class="meta"><div class="t">Clash of Claws</div><div class="a">Elizabeth Dear</div></div></a><a class="card" href="/book/shield-of-sparrows-perry-2025/"><div class="cover"><img src="https://covers.smuthub.ca/shield-of-sparrows-perry-2025.jpg" alt="Shield of Sparrows book cover" loading="lazy"></div><div class="meta"><div class="t">Shield of Sparrows</div><div class="a">Devney Perry</div></div></a></div>
+    <div class="grid" id="bookGrid"><a class="card" href="/books/clash-of-claws-dear-2025/"><div class="cover"><img src="https://covers.smuthub.ca/clash-of-claws-dear-2025.jpg" alt="Clash of Claws book cover" loading="lazy"></div><div class="meta"><div class="t">Clash of Claws</div><div class="a">Elizabeth Dear</div></div></a><a class="card" href="/books/shield-of-sparrows-perry-2025/"><div class="cover"><img src="https://covers.smuthub.ca/shield-of-sparrows-perry-2025.jpg" alt="Shield of Sparrows book cover" loading="lazy"></div><div class="meta"><div class="t">Shield of Sparrows</div><div class="a">Devney Perry</div></div></a></div>
   </section>
 
   
@@ -196,7 +196,7 @@
       if(!data || !data.length) return;   // keep whatever was built in
       grid.innerHTML = data.map(function(b){
         const cov = b.cover_url ? '<img src="'+escH(b.cover_url)+'" alt="'+escH(b.title)+' book cover" loading="lazy">' : '';
-        return '<a class="card" href="/book/'+encodeURIComponent(b.slug)+'/">'
+        return '<a class="card" href="/books/'+encodeURIComponent(b.slug)+'/">'
           +    '<div class="cover">'+cov+'</div>'
           +    '<div class="meta"><div class="t">'+escH(b.title)+'</div><div class="a">'+escH(b.author||'')+'</div></div>'
           +    '</a>';
@@ -306,7 +306,7 @@
 <footer>
   <div class="wrap ft">
     <span>© 2026 smutHub · Romantasy, decoded.</span>
-    <span><a href="/book/">All Books</a> · <a href="/glossary/">Glossary</a> · <a href="/sitemap.html">Sitemap</a></span>
+    <span><a href="/books/">All Books</a> · <a href="/glossary/">Glossary</a> · <a href="/sitemap.html">Sitemap</a></span>
   </div>
 </footer>
 </body></html>

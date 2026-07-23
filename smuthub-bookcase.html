@@ -308,7 +308,7 @@
     <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
       <a href="dashboard.html">Dashboard</a>
-      <a href="/book/">Browse Books</a>
+      <a href="/books/">Browse Books</a>
       <a href="/search">Add a Book</a>
       <a href="smuthub-bookcase.html" class="on">My Bookshelf</a>
       <a href="/glossary/">Glossary</a>
@@ -584,7 +584,7 @@
     // Catalog books (book_key === slug; not a Google "gb:"/OpenLibrary "/works/"/demo key)
     // get a link to their plot page. External shelf entries don't have one.
     const slug=(key && key.indexOf('gb:')!==0 && key.indexOf('/')<0 && key.indexOf('demo-')!==0) ? key : null;
-    const viewBtn = slug ? '<a class="pillbtn view" href="/book/'+encodeURIComponent(slug)+'/">📖 View book page</a>' : '';
+    const viewBtn = slug ? '<a class="pillbtn view" href="/books/'+encodeURIComponent(slug)+'/">📖 View book page</a>' : '';
     $('sheetbg').innerHTML = '<div class="sheet"><div class="top"><div class="bigcov">'+cov+'</div>'
       + '<div><h3>'+esc(b.title||'Untitled')+'</h3><div class="au">by '+esc(b.author||'Unknown')+'</div>'
       + '<div class="rate" id="srate" onclick="rate(event,\''+esc(key)+'\')">'+chilis+'</div></div></div>'

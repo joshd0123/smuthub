@@ -5,7 +5,7 @@
 //  Generates the static "plot / about" page for every LIVE book — the
 //  Goodreads-style page a reader lands on when they click a cover anywhere
 //  on the site:
-//    /book/<slug>/index.html
+//    /books/<slug>/index.html
 //
 //  Each page is FULLY SERVER-RENDERED HTML (no SPA) with per-book SEO:
 //  unique title / meta description / canonical / Open Graph + Twitter Card
@@ -41,7 +41,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
-const BOOK_DIR = path.join(ROOT, 'book');
+const BOOK_DIR = path.join(ROOT, 'books');
 const SITE = 'https://smuthub.ca';
 const SITE_NAME = 'smutHub';
 
@@ -98,7 +98,7 @@ const tagsOf = b => (Array.isArray(b.tag_ids) ? b.tag_ids : []).map(resolveTag);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const escAttr = esc;
 const ensureDir = p => fs.mkdir(p, { recursive: true });
-const bookPath = b => `/book/${b.slug}/`;
+const bookPath = b => `/books/${b.slug}/`;
 const bookURL = b => `${SITE}${bookPath(b)}`;
 
 // Absolute cover URL for OG/Twitter + JSON-LD image. Covers live on
@@ -181,7 +181,7 @@ const SHARED_HEADER = `
     <a href="/" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
       <a href="/dashboard.html">Dashboard</a>
-      <a href="/book/">Browse Books</a>
+      <a href="/books/">Browse Books</a>
       <a href="/search">Add a Book</a>
       <a href="/smuthub-bookcase.html">My Bookshelf</a>
       <a href="/glossary/">Glossary</a>
@@ -195,7 +195,7 @@ const SHARED_FOOTER = `
 <footer>
   <div class="wrap ft">
     <span>© ${new Date().getFullYear()} smutHub · Romantasy, decoded.</span>
-    <span><a href="/book/">All Books</a> · <a href="/glossary/">Glossary</a> · <a href="/sitemap.html">Sitemap</a></span>
+    <span><a href="/books/">All Books</a> · <a href="/glossary/">Glossary</a> · <a href="/sitemap.html">Sitemap</a></span>
   </div>
 </footer>
 </body></html>
@@ -800,7 +800,7 @@ function renderBookPage(book){
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/` },
-      { "@type": "ListItem", position: 2, name: "All books", item: `${SITE}/book/` },
+      { "@type": "ListItem", position: 2, name: "All books", item: `${SITE}/books/` },
       { "@type": "ListItem", position: 3, name: book.title, item: bookURL(book) },
     ],
   };
@@ -864,7 +864,7 @@ function renderBookPage(book){
   const body = `<body>
 ${SHARED_HEADER}
 <div class="wrap">
-  <nav class="crumb"><a href="/">Home</a> / <a href="/book/">All books</a> / <span>${esc(book.title)}</span></nav>
+  <nav class="crumb"><a href="/">Home</a> / <a href="/books/">All books</a> / <span>${esc(book.title)}</span></nav>
 
   <!-- ── Above the fold: cover + rate, core info, Ask First menu ── -->
   <section class="af-hero">
@@ -900,7 +900,7 @@ ${SHARED_HEADER}
         ${book.age_category ? `<span>${esc(book.age_category)}</span>` : ''}
       </div>
       <h1>${esc(book.title)}</h1>
-      <p class="af-byline">${author ? `by <a href="/book/?q=${encodeURIComponent(author)}">${esc(author)}</a>` : 'Author unknown'}${book.year ? ` · ${esc(book.year)}` : ''}</p>
+      <p class="af-byline">${author ? `by <a href="/books/?q=${encodeURIComponent(author)}">${esc(author)}</a>` : 'Author unknown'}${book.year ? ` · ${esc(book.year)}` : ''}</p>
       ${book.rating_avg ? `<div class="af-pulse"><b>${esc(Number(book.rating_avg).toFixed(2))}</b><small>average reader rating</small></div>` : ''}
 
       <div class="af-actions">
@@ -995,20 +995,20 @@ ${SHARED_HEADER}
       // a "keep reading" shelf holding just the page you're on is noise.
       books: fullSeries.some(b => b.slug !== book.slug) ? fullSeries : [],
       currentSlug: book.slug, ordered: true,
-      moreHref: book.series ? `/book/?q=${encodeURIComponent(book.series)}` : '', moreLabel: 'View full series',
+      moreHref: book.series ? `/books/?q=${encodeURIComponent(book.series)}` : '', moreLabel: 'View full series',
     })}
 
     ${afDiscovery({
       id: 'af-related', eyebrow: 'What next?', heading: 'Related books',
       note: 'Matched on tropes, heat and setting.',
-      books: likeThis.slice(0, 5), moreHref: '/book/', moreLabel: 'See all matches',
+      books: likeThis.slice(0, 5), moreHref: '/books/', moreLabel: 'See all matches',
     })}
 
     ${afDiscovery({
       id: 'af-author', eyebrow: 'Same author', heading: `More by ${author}`,
       note: 'Other books by this author in the catalog.',
       books: byAuthor.slice(0, 5),
-      moreHref: author ? `/book/?q=${encodeURIComponent(author)}` : '', moreLabel: 'See all',
+      moreHref: author ? `/books/?q=${encodeURIComponent(author)}` : '', moreLabel: 'See all',
     })}
   </div>
 </div>
@@ -1240,7 +1240,7 @@ ${SHARED_HEADER}
 
     // Where did this view come from? A click on one of our own rails leaves a
     // hint in sessionStorage — the referrer alone cannot tell "series" from
-    // "related", since both are /book/<slug>/ pages. Everything else is
+    // "related", since both are /books/<slug>/ pages. Everything else is
     // derived from the referrer path.
     function source(){
       var hint = null;
@@ -1252,8 +1252,8 @@ ${SHARED_HEADER}
         var u = new URL(r);
         if (u.origin !== location.origin) return 'external';
         var p = u.pathname;
-        if (p === '/book/') return 'browse';
-        if (p.indexOf('/book/') === 0) return 'book';
+        if (p === '/books/') return 'browse';
+        if (p.indexOf('/books/') === 0) return 'book';
         if (p === '/search' || p === '/search.html') return 'search';
         if (p.indexOf('/dashboard') === 0) return 'dashboard';
         if (p.indexOf('/glossary/') === 0) return 'glossary';
@@ -1306,7 +1306,7 @@ ${SHARED_FOOTER}`;
 }
 
 // ══════════════════════════════════════════════════════════════════════════
-//  /book/ — the browse index
+//  /books/ — the browse index
 // ══════════════════════════════════════════════════════════════════════════
 //  Until this page existed the plot pages were nearly unreachable: the homepage
 //  linked a handful of featured books, Search surfaced a rotating sample of the
@@ -1438,12 +1438,12 @@ function renderBookIndex(allBooks){
   const head = SHARED_HEAD({
     title,
     description,
-    canonical: `${SITE}/book/`,
+    canonical: `${SITE}/books/`,
     jsonld: {
       '@context': 'https://schema.org',
       '@type': 'CollectionPage',
       name: 'All Books',
-      url: `${SITE}/book/`,
+      url: `${SITE}/books/`,
       description,
       isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: `${SITE}/` },
       mainEntity: {
@@ -1596,9 +1596,9 @@ ${groupsHTML}
     });
 
     // Deep links from elsewhere on the site:
-    //   /book/?tag=trope:fated-mates   — from any glossary term page
-    //   /book/?q=Sarah%20J.%20Maas     — from a book page's author byline
-    //   /book/?trope=…&spice=4         — legacy shape, still honoured
+    //   /books/?tag=trope:fated-mates   — from any glossary term page
+    //   /books/?q=Sarah%20J.%20Maas     — from a book page's author byline
+    //   /books/?trope=…&spice=4         — legacy shape, still honoured
     (function(){
       var p = new URLSearchParams(location.search);
       if (p.get('q')) q.value = p.get('q');
@@ -1651,7 +1651,7 @@ const END = '<!-- BOOK-AUTO-END -->';
 const today = new Date().toISOString().slice(0, 10);
 // The browse index leads, at a higher priority than the individual books —
 // it's the hub crawlers should reach first and the one that links to the rest.
-const bookUrls = [`  <url><loc>${SITE}/book/</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>`]
+const bookUrls = [`  <url><loc>${SITE}/books/</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>`]
   .concat(books
     .filter(b => b.slug)
     .map(b => `  <url><loc>${bookURL(b)}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`))
@@ -1666,7 +1666,7 @@ if (si >= 0 && ei >= 0 && ei > si){
 }
 await fs.writeFile(sitemapPath, sitemap);
 
-console.log(`✓ Wrote ${wrote} book pages → /book/<slug>/`);
-console.log(`✓ Wrote the browse index → /book/`);
-console.log(`✓ Updated sitemap.xml with ${books.filter(b => b.slug).length} book URLs + /book/`);
+console.log(`✓ Wrote ${wrote} book pages → /books/<slug>/`);
+console.log(`✓ Wrote the browse index → /books/`);
+console.log(`✓ Updated sitemap.xml with ${books.filter(b => b.slug).length} book URLs + /books/`);
 console.log(`\nNext: git add book/ sitemap.xml && git commit && git push`);

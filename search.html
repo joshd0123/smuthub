@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Search — SmutHub</title>
+<title>Add a Book — SmutHub</title>
+<!-- /search is a tool (find + shelve any book), not indexable content — the
+     catalog lives at /books/. noindex keeps it out of results; follow lets its
+     links pass equity. Effective once robots.txt goes permissive at launch. -->
+<meta name="robots" content="noindex, follow">
 <meta name="description" content="Search thousands of romantasy & spicy fantasy books by title, author, or trope. Filter by spice level, mood, and ending — and shelf your next obsession.">
 <link rel="canonical" href="https://smuthub.ca/search">
 <meta name="theme-color" content="#0c0708">
@@ -122,7 +126,7 @@
     <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
       <a href="dashboard.html">Dashboard</a>
-      <a href="/book/">Browse Books</a>
+      <a href="/books/">Browse Books</a>
       <a href="/search" class="on">Add a Book</a>
       <a href="smuthub-bookcase.html">My Bookshelf</a>
       <a href="/glossary/">Glossary</a>
@@ -189,7 +193,7 @@
     if(user){ await loadMine(); } else { Object.keys(spiceMap).forEach(k=>delete spiceMap[k]); shelfSet.clear(); Object.keys(shelfStatus).forEach(k=>delete shelfStatus[k]); }
     render();
     // Build the title→slug index in the background, then repaint so any external
-    // result for a book we carry picks up its /book/ link.
+    // result for a book we carry picks up its /books/ link.
     catalogIndex().then(render);
     // once the Supabase client is ready, refresh an empty-box browse so the catalog loads
     if(!document.getElementById('q').value.trim()) run();
@@ -618,7 +622,7 @@
             // no cover yet still has a published plot page, and suppressing it
             // here was pushing our own titles out of their own search results
             // in favour of external Google editions. Cover-less rows render the
-            // styled title tile and still link to /book/<slug>/.
+            // styled title tile and still link to /books/<slug>/.
             const { data } = await _sb.from('books')
               .select('slug,title,author,cover_url,year,spice_level')
               .eq('status','live')
@@ -732,7 +736,7 @@
   const escH = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
   // ── catalog index: normalized title → {slug, author surname} ──────────────
-  // Every live book has a published plot page at /book/<slug>/. Catalog rows
+  // Every live book has a published plot page at /books/<slug>/. Catalog rows
   // already carry their slug as the key, but an EXTERNAL result (Google /
   // Open Library) for a book we DO carry arrives with a "gb:" id and would
   // otherwise render as a dead, unclickable card. This index resolves those
@@ -761,7 +765,7 @@
   function bookHref(b){
     // A bare slug key (not "gb:…" and not an Open Library "/works/…" path) is
     // already one of ours.
-    if(b.key && b.key.indexOf('gb:')!==0 && b.key.indexOf('/')<0) return '/book/'+encodeURIComponent(b.key)+'/';
+    if(b.key && b.key.indexOf('gb:')!==0 && b.key.indexOf('/')<0) return '/books/'+encodeURIComponent(b.key)+'/';
     if(!_catIndex) return null;
     const hit=_catIndex.get(normTitle(b.title));
     if(!hit) return null;
@@ -769,7 +773,7 @@
     // our page — require the surname to line up before linking.
     const want=surnameOf((b.author_name&&b.author_name[0])||'');
     if(want && hit.surname && !(hit.surname===want || hit.surname.includes(want) || want.includes(hit.surname))) return null;
-    return '/book/'+encodeURIComponent(hit.slug)+'/';
+    return '/books/'+encodeURIComponent(hit.slug)+'/';
   }
 
   function coverHTML(b){

@@ -114,7 +114,7 @@
   /* .tile renders as an <a> whenever the book has a plot page to link to, and
      as a <div> only for the rare book we don't carry — hence text-decoration. */
   /* Card-style tile: cover on top, title + author below — the same look as
-     /book/ and /search. The old tile used object-fit:cover (which CROPPED the
+     /books/ and /search. The old tile used object-fit:cover (which CROPPED the
      artwork) and printed the title over the cover (which collided with the
      cover's own text). Now the cover is shown whole (object-fit:contain over a
      blurred copy of itself) and the title sits underneath as real text. */
@@ -184,7 +184,7 @@
     <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
       <a href="dashboard.html" class="on">Dashboard</a>
-      <a href="/book/">Browse Books</a>
+      <a href="/books/">Browse Books</a>
       <a href="/search">Add a Book</a>
       <a href="smuthub-bookcase.html">My Bookshelf</a>
       <a href="/glossary/">Glossary</a>
@@ -242,7 +242,7 @@
   <section>
     <div class="sechead">
       <div><h2>🔥 Trending this week <span class="note">the romantasy internet collectively lost it</span></h2></div>
-      <a href="/book/">See more →</a>
+      <a href="/books/">See more →</a>
     </div>
     <div class="row6" id="trending"></div>
   </section>
@@ -344,7 +344,7 @@
   const coverSrc=b=>b.cover_url||coverUrl(b.cover_i);
   // Uncropped cover for a tile: contained artwork over a blurred copy of itself
   // (one URL, one request), with a styled title tile if there's no cover or it
-  // fails to load. Mirrors the /book/ and /search treatment.
+  // fails to load. Mirrors the /books/ and /search treatment.
   function tileCover(cov, title){
     if(!cov) return '<div class="ph">'+esc(title)+'</div>';
     return '<img class="cover-bg" src="'+esc(cov)+'" alt="" aria-hidden="true" onerror="this.style.display=\'none\'">'
@@ -426,7 +426,7 @@
 
     renderPills();
     // Load the catalog index BEFORE the first render so "Your reading" tiles
-    // resolve their /book/<slug>/ links on the very first paint rather than
+    // resolve their /books/<slug>/ links on the very first paint rather than
     // rendering as un-linked tiles and needing a repaint.
     await getCatalogIndex();
     renderReading();
@@ -492,7 +492,7 @@
   const covNorm = s => String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
   const covSurname = a => { const p=String(a||'').trim().split(/\s+/); return p.length?covNorm(p[p.length-1]):''; };
   // Map<normTitle, {slug, url, surname}> — fetched once per load. This is both
-  // the cover source AND the title→/book/<slug>/ resolver for the two tile rows,
+  // the cover source AND the title→/books/<slug>/ resolver for the two tile rows,
   // so it deliberately includes live books that have no cover yet: a cover-less
   // book still has a published plot page and must still be reachable.
   let _catalogIndex = null;
@@ -523,7 +523,7 @@
     if(want && hit.surname && !(hit.surname===want || hit.surname.includes(want) || want.includes(hit.surname))) return null;
     return hit;
   }
-  const bookPath = slug => '/book/' + encodeURIComponent(slug) + '/';
+  const bookPath = slug => '/books/' + encodeURIComponent(slug) + '/';
   // A shelf row's book_key IS the catalog slug for anything added from our own
   // catalog (build-books.mjs shelves on book.slug); the logged-out demo rows
   // prefix it with "demo-". Rows shelved from an external search carry a "gb:"

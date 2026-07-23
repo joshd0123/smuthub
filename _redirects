@@ -12,3 +12,12 @@
 # so ranking signals transfer to the new URL.
 /smuthub-app.html  /search  301
 /smuthub-app       /search  301
+
+# The book collection + detail pages moved /book/ -> /books/ before launch
+# (plural is the convention for a collection that parents its detail pages).
+# The splat preserves the rest of the path AND the query string, so
+# /book/powerless-roberts-2023/ -> /books/powerless-roberts-2023/ and
+# /book/?tag=trope:fae -> /books/?tag=trope:fae. The bare /book has its own
+# rule because a splat needs a trailing segment to match.
+/book/*  /books/:splat  301
+/book    /books         301

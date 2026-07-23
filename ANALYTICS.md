@@ -23,7 +23,7 @@ The script is injected by `mountUmami()` in `auth.js`, so every page that loads
 1. **Admin pages.** `mountUmami()` refuses to load on `admin.html` and
    `catalog-admin.html`.
 2. **Admin people.** `SH.track()` is a no-op when the signed-in profile has
-   `is_admin`. Curating the catalog means browsing `/search`, `/book/` and the
+   `is_admin`. Curating the catalog means browsing `/search`, `/books/` and the
    book pages constantly — the exact pages being measured — so without this an
    admin's own sessions read as reader behaviour. The flag is mirrored into
    `sessionStorage` because the profile loads asynchronously; without that,
@@ -46,7 +46,7 @@ When looking at anything longer than a few weeks, query both paths and add them
 together. `_redirects` 301s the old paths, so any lingering traffic on
 `/smuthub-app` after the cutover is an external link, not a real user journey.
 
-The `/book/` browse index did not exist before that date either, so its numbers
+The `/books/` browse index did not exist before that date either, so its numbers
 start from zero rather than being a decline from anything.
 
 ---
@@ -67,15 +67,15 @@ Two entry points, both from `auth.js`:
 | Event | Payload | Fired from | Question it answers |
 |---|---|---|---|
 | `book-open` | `slug`, `from` | every book page, on load | **Which discovery path actually works.** `from` is one of `browse`, `search`, `dashboard`, `series`, `related`, `author`, `glossary`, `bookshelf`, `home`, `book`, `internal`, `external`, `direct` |
-| `browse-filter` | `type`, `value` | `/book/` | Which metadata is worth tagging. `type` is `trope`, `mood`, `spice` or `text` |
-| `browse-tag-arrival` | `tag` | `/book/` | Whether the glossary "Find books with this…" CTAs convert |
+| `browse-filter` | `type`, `value` | `/books/` | Which metadata is worth tagging. `type` is `trope`, `mood`, `spice` or `text` |
+| `browse-tag-arrival` | `tag` | `/books/` | Whether the glossary "Find books with this…" CTAs convert |
 | `search` | `q` | `/search`, dashboard | What readers look for |
 | `search-zero` | `q` | `/search` | **The acquisition list** — deliberate searches that returned nothing |
 | `filter` | `type`, `value` | `/search` | Filter use on the search page |
 
 `book-open.from` is derived from `document.referrer`, except for clicks on the
 book page's own rails: those write a hint to `sessionStorage` first, because the
-referrer cannot distinguish "series" from "related" (both are `/book/<slug>/`).
+referrer cannot distinguish "series" from "related" (both are `/books/<slug>/`).
 
 ### Engagement — does the page do its job
 
@@ -99,7 +99,7 @@ referrer cannot distinguish "series" from "related" (both are `/book/<slug>/`).
 
 ## Questions worth asking the data
 
-**Is `/book/` earning its place?**
+**Is `/books/` earning its place?**
 Compare `book-open` by `from`. Before the browse index existed, the only routes
 in were the homepage's featured books and search. If `from=browse` isn't a
 meaningful share, the index isn't doing its job.
@@ -134,7 +134,7 @@ leaving, versus reading three pages.
 ## Adding a new event
 
 1. Call it: `if (window.SH && SH.track) SH.track('my-event', { key: 'value' });`
-2. On generated pages (`/book/**`, `/glossary/**`) edit the **generator**
+2. On generated pages (`/books/**`, `/glossary/**`) edit the **generator**
    (`scripts/build-books.mjs` / `scripts/build-glossary.mjs`), not the output,
    then rebuild.
 3. **Page-load events must use `SH.trackWhenReady()`.** Two things are not

@@ -21,7 +21,7 @@
       if(path.includes('bookcase')) return 'bookshelf';
       if(path.includes('/search')) return 'search';
       if(path.includes('dashboard')) return 'dashboard';
-      if(path.includes('/book/')) return 'book:'+path.split('/book/')[1].replace(/\/$/,'');
+      if(path.includes('/books/')) return 'book:'+path.split('/books/')[1].replace(/\/$/,'');
       if(path.includes('companion')) return 'companion-room';
       return path||'home';
     },

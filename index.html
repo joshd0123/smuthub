@@ -23,7 +23,7 @@
 <meta name="twitter:description" content="Find your next romantasy obsession. Browse by trope, sort by heat, and shelf the spicy fantasy reads you can't put down.">
 <meta name="twitter:image" content="https://smuthub.ca/og-image.jpg">
 <!-- Structured data: WebSite (with SERP search box) + Organization -->
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"smutHub","url":"https://smuthub.ca/","description":"Find your next romantasy obsession. Browse by trope, sort by heat.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://smuthub.ca/book/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"smutHub","url":"https://smuthub.ca/","description":"Find your next romantasy obsession. Browse by trope, sort by heat.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://smuthub.ca/books/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"smutHub","url":"https://smuthub.ca/","logo":"https://smuthub.ca/favicon.svg"}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -191,7 +191,7 @@
     <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
       <a href="dashboard.html">Dashboard</a>
-      <a href="/book/">Browse Books</a>
+      <a href="/books/">Browse Books</a>
       <a href="/search">Add a Book</a>
       <a href="smuthub-bookcase.html">My Bookshelf</a>
       <a href="/glossary/">Glossary</a>
@@ -216,7 +216,7 @@
   <section id="tropes" class="wrap">
     <div class="sec-head">
       <h2>Browse by trope</h2>
-      <a href="/book/">Browse all →</a>
+      <a href="/books/">Browse all →</a>
     </div>
     <!-- Curated 8 flagship tropes; counts + links resolve from the live catalog
          at the bottom of this page. Markup is filled by JS — empty placeholder
@@ -229,7 +229,7 @@
   <section id="trending" class="wrap" style="display:none">
     <div class="sec-head">
       <h2>🔥 <span class="hot">Featured</span> reads</h2>
-      <a href="/book/">Browse all →</a>
+      <a href="/books/">Browse all →</a>
     </div>
     <div class="grid" id="trendingGrid"></div>
   </section>
@@ -324,7 +324,7 @@
     grid.innerHTML = FLAGSHIP_TROPES.map(t=>{
       const n = counts && counts[t.slug];
       const sub = (n!=null && n>0) ? (n+' book'+(n===1?'':'s')) : 'Explore';
-      return `<a class="trope" href="/book/?tag=trope:${escH(t.slug)}">
+      return `<a class="trope" href="/books/?tag=trope:${escH(t.slug)}">
         <span class="emoji">${t.emoji}</span>
         <div><div class="name">${escH(t.label)}</div><div class="count">${escH(sub)}</div></div>
       </a>`;
@@ -342,7 +342,7 @@
       ? `<img class="cover-bg" src="${escH(b.cover_url)}" alt="" aria-hidden="true" loading="lazy">`
         + `<img class="cover-img" src="${escH(b.cover_url)}" alt="${title} book cover" loading="lazy">`
       : `<div class="ph">${title}</div>`;
-    return `<a class="card" href="/book/${escH(b.slug)}/" style="text-decoration:none;color:inherit">
+    return `<a class="card" href="/books/${escH(b.slug)}/" style="text-decoration:none;color:inherit">
       <div class="cover c1">${cover}</div>
       <div class="meta">
         <div class="btitle">${title}</div>
@@ -431,7 +431,7 @@
     <div class="cols">
       <div>
         <h4>Browse</h4>
-        <a href="/book/">All Books</a><a href="/glossary/">Glossary</a><a href="/glossary/trope/">Tropes</a><a href="/search">Add a Book</a><a href="#" id="footTrending">Trending</a>
+        <a href="/books/">All Books</a><a href="/glossary/">Glossary</a><a href="/glossary/trope/">Tropes</a><a href="/search">Add a Book</a><a href="#" id="footTrending">Trending</a>
       </div>
       <div>
         <h4>The Hub</h4>

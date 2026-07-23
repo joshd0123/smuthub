@@ -115,7 +115,7 @@
     <a href="/" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
       <a href="/dashboard.html">Dashboard</a>
-      <a href="/book/">Browse Books</a>
+      <a href="/books/">Browse Books</a>
       <a href="/search">Add a Book</a>
       <a href="/smuthub-bookcase.html">My Bookshelf</a>
       <a href="/glossary/" class="on" >Glossary</a>
@@ -145,7 +145,7 @@
     <p class="tagline">Close quarters, bad gas-station coffee, slow-building want.</p>
     <p class="defn">Romance that develops while characters travel together.</p>
     
-    <a class="cta" href="/book/?tag=trope%3Aroad-trip">Find books with this trope →</a>
+    <a class="cta" href="/books/?tag=trope%3Aroad-trip">Find books with this trope →</a>
   </section>
 
   
@@ -154,7 +154,7 @@
 
   <section class="detail" id="books">
     <h2>Books featuring this trope</h2>
-    <div class="grid" id="bookGrid"><a class="card" href="/book/a-torch-against-the-night-tahir-2016/"><div class="cover"><img src="https://covers.smuthub.ca/a-torch-against-the-night-tahir-2016.jpg" alt="A Torch Against the Night book cover" loading="lazy"></div><div class="meta"><div class="t">A Torch Against the Night</div><div class="a">Sabaa Tahir</div></div></a><a class="card" href="/book/an-enchantment-of-ravens-rogerson-2017/"><div class="cover"><img src="https://covers.smuthub.ca/an-enchantment-of-ravens-rogerson-2017.jpg" alt="An Enchantment of Ravens book cover" loading="lazy"></div><div class="meta"><div class="t">An Enchantment of Ravens</div><div class="a">Margaret Rogerson</div></div></a><a class="card" href="/book/emily-wilde-s-map-of-the-otherlands-fawcett-2024/"><div class="cover"><img src="https://covers.smuthub.ca/emily-wilde-s-map-of-the-otherlands-fawcett-2024.jpg" alt="Emily Wilde&#39;s Map of the Otherlands book cover" loading="lazy"></div><div class="meta"><div class="t">Emily Wilde&#39;s Map of the Otherlands</div><div class="a">Heather Fawcett</div></div></a><a class="card" href="/book/the-stardust-thief-abdullah-2022/"><div class="cover"><img src="https://covers.smuthub.ca/the-stardust-thief-abdullah-2022.jpg" alt="The Stardust Thief book cover" loading="lazy"></div><div class="meta"><div class="t">The Stardust Thief</div><div class="a">Chelsea Abdullah</div></div></a><a class="card" href="/book/the-stolen-heir-black-2023/"><div class="cover"><img src="https://covers.smuthub.ca/the-stolen-heir-black-2023.jpg" alt="The Stolen Heir book cover" loading="lazy"></div><div class="meta"><div class="t">The Stolen Heir</div><div class="a">Holly Black</div></div></a><a class="card" href="/book/the-wolf-and-the-woodsman-reid-2021/"><div class="cover"><img src="https://covers.smuthub.ca/the-wolf-and-the-woodsman-reid-2021.jpg" alt="The Wolf and the Woodsman book cover" loading="lazy"></div><div class="meta"><div class="t">The Wolf and the Woodsman</div><div class="a">Ava Reid</div></div></a></div>
+    <div class="grid" id="bookGrid"><a class="card" href="/books/a-torch-against-the-night-tahir-2016/"><div class="cover"><img src="https://covers.smuthub.ca/a-torch-against-the-night-tahir-2016.jpg" alt="A Torch Against the Night book cover" loading="lazy"></div><div class="meta"><div class="t">A Torch Against the Night</div><div class="a">Sabaa Tahir</div></div></a><a class="card" href="/books/an-enchantment-of-ravens-rogerson-2017/"><div class="cover"><img src="https://covers.smuthub.ca/an-enchantment-of-ravens-rogerson-2017.jpg" alt="An Enchantment of Ravens book cover" loading="lazy"></div><div class="meta"><div class="t">An Enchantment of Ravens</div><div class="a">Margaret Rogerson</div></div></a><a class="card" href="/books/emily-wilde-s-map-of-the-otherlands-fawcett-2024/"><div class="cover"><img src="https://covers.smuthub.ca/emily-wilde-s-map-of-the-otherlands-fawcett-2024.jpg" alt="Emily Wilde&#39;s Map of the Otherlands book cover" loading="lazy"></div><div class="meta"><div class="t">Emily Wilde&#39;s Map of the Otherlands</div><div class="a">Heather Fawcett</div></div></a><a class="card" href="/books/the-stardust-thief-abdullah-2022/"><div class="cover"><img src="https://covers.smuthub.ca/the-stardust-thief-abdullah-2022.jpg" alt="The Stardust Thief book cover" loading="lazy"></div><div class="meta"><div class="t">The Stardust Thief</div><div class="a">Chelsea Abdullah</div></div></a><a class="card" href="/books/the-stolen-heir-black-2023/"><div class="cover"><img src="https://covers.smuthub.ca/the-stolen-heir-black-2023.jpg" alt="The Stolen Heir book cover" loading="lazy"></div><div class="meta"><div class="t">The Stolen Heir</div><div class="a">Holly Black</div></div></a><a class="card" href="/books/the-wolf-and-the-woodsman-reid-2021/"><div class="cover"><img src="https://covers.smuthub.ca/the-wolf-and-the-woodsman-reid-2021.jpg" alt="The Wolf and the Woodsman book cover" loading="lazy"></div><div class="meta"><div class="t">The Wolf and the Woodsman</div><div class="a">Ava Reid</div></div></a></div>
   </section>
 
   
@@ -196,7 +196,7 @@
       if(!data || !data.length) return;   // keep whatever was built in
       grid.innerHTML = data.map(function(b){
         const cov = b.cover_url ? '<img src="'+escH(b.cover_url)+'" alt="'+escH(b.title)+' book cover" loading="lazy">' : '';
-        return '<a class="card" href="/book/'+encodeURIComponent(b.slug)+'/">'
+        return '<a class="card" href="/books/'+encodeURIComponent(b.slug)+'/">'
           +    '<div class="cover">'+cov+'</div>'
           +    '<div class="meta"><div class="t">'+escH(b.title)+'</div><div class="a">'+escH(b.author||'')+'</div></div>'
           +    '</a>';
@@ -306,7 +306,7 @@
 <footer>
   <div class="wrap ft">
     <span>© 2026 smutHub · Romantasy, decoded.</span>
-    <span><a href="/book/">All Books</a> · <a href="/glossary/">Glossary</a> · <a href="/sitemap.html">Sitemap</a></span>
+    <span><a href="/books/">All Books</a> · <a href="/glossary/">Glossary</a> · <a href="/sitemap.html">Sitemap</a></span>
   </div>
 </footer>
 </body></html>

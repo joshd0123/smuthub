@@ -19,7 +19,7 @@
   // Fire a custom event. Safe no-op until the Umami script is loaded, so pages
   // can call SH.track(...) unconditionally.
   // Admin activity is excluded from analytics. The admin PAGES are already kept
-  // out by mountUmami(), but curating a catalog means browsing /search, /book/
+  // out by mountUmami(), but curating a catalog means browsing /search, /books/
   // and the book pages constantly — exactly the pages being measured — so an
   // admin's own sessions would otherwise read as reader behaviour.
   //

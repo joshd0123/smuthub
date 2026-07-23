@@ -40,7 +40,7 @@ apex leaves `www.smuthub.ca` dead.
 ```bash
 curl -sI https://smuthub.ca/ | head -1                 # expect HTTP/2 200
 curl -s https://smuthub.ca/ | grep -o "<title>[^<]*"   # expect the smutHub title
-curl -s https://smuthub.ca/book/ | grep -c "bcard"     # expect 289
+curl -s https://smuthub.ca/books/ | grep -c "bcard"     # expect 289
 ```
 
 If you still see GoDaddy content, a DNS record from step 1 survived.
@@ -58,12 +58,37 @@ Google, indefinitely.
 curl -s https://smuthub.ca/robots.txt      # must NOT contain "Disallow: /"
 ```
 
+`/search` stays out of the index regardless — it carries its own
+`<meta name="robots" content="noindex, follow">` and is excluded from the
+sitemap, because it's a tool, not content. Nothing to toggle.
+
+### 4a. ⚠️ Disable the workers.dev preview host
+
+Once `smuthub.ca` serves the site and crawling is on, **turn off the
+`workers.dev` host** so Google can't index the preview as a duplicate of
+production. Every canonical already points at `smuthub.ca`, but the cleanest
+guarantee is for the preview host to stop resolving entirely.
+
+Add to [`wrangler.jsonc`](wrangler.jsonc) and redeploy:
+
+```jsonc
+"workers_dev": false
+```
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" https://smuthub.joshd0123.workers.dev/   # expect 404/522, not 200
+```
+
+Why this and not a `noindex` header on the preview: Cloudflare's `_headers`
+file matches on **path only**, not hostname, so it can't noindex one host and
+not the other. Removing the host is the reliable fix.
+
 ### 5. Verify the canonicals resolve
 
 Every page claims `https://smuthub.ca/...`. Spot-check that those URLs are real:
 
 ```bash
-for u in / /book/ /search /glossary/ /book/powerless-roberts-2023/; do
+for u in / /books/ /search /glossary/ /books/powerless-roberts-2023/; do
   echo "$u -> $(curl -s -o /dev/null -w '%{http_code}' https://smuthub.ca$u)"
 done
 ```
@@ -115,7 +140,7 @@ Not launch blockers, but worth knowing:
   [`migrations/2026-07-21-link-missing-series.sql`](migrations/2026-07-21-link-missing-series.sql).
 - **27 covers are oversized** (7 over 1 MB, largest 3.9 MB) against a ~150px
   display size. Lazy loading covers the first paint; it costs mobile data when
-  scrolling `/book/`.
+  scrolling `/books/`.
 - The **homepage hero search box** does not search — the button scrolls to the
   waitlist. Deliberate pre-launch, but it reads as broken to a first-time visitor.
 
