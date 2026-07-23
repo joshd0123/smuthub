@@ -262,7 +262,64 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-drawer-done{width:100%;margin-top:22px;padding:13px;background:var(--grad);color:#1a0c10;border:0;border-radius:10px;font-family:inherit;font-size:.76rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
   @keyframes af-slide{from{transform:translateX(100%)}to{transform:translateX(0)}}
   @keyframes af-fade{from{opacity:0}to{opacity:1}}
-  @media(prefers-reduced-motion:reduce){.af-layer,.af-drawer{animation:none}}
+  @media(prefers-reduced-motion:reduce){.af-layer,.af-drawer,.af-sheet{animation:none}}
+
+  /* intentional empty-state copy — never a blank block */
+  .af-empty-note{margin-top:12px;color:var(--muted);font-size:.9rem;line-height:1.55;max-width:60ch}
+
+  /* ── Mobile: persistent bottom action dock (book pages only) ──────────────
+     On mobile the top action row and the "Finished it?" review block are
+     hidden (they'd duplicate the dock) and their functions move here, within
+     thumb's reach. The dock is fixed only at the mobile breakpoint; on desktop
+     it never renders or reserves space. */
+  .af-dock{display:none}
+  @media(max-width:720px){
+    /* the duplicated top-of-page shelf + review controls */
+    .af-actions, .af-rate, .shelf-control{display:none}
+
+    .af-dock{
+      display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:stretch;
+      position:fixed;z-index:40;left:0;right:0;bottom:0;
+      padding:9px max(12px,env(safe-area-inset-right)) calc(9px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));
+      background:rgba(12,7,8,.92);backdrop-filter:blur(14px);border-top:1px solid var(--line)
+    }
+    .af-dock button{font-family:inherit;font-weight:800;border-radius:12px;cursor:pointer;min-height:48px;padding:.7em 1em;font-size:.86rem;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+    /* Want to Read = the one primary action (full gradient). */
+    .af-dock .af-dock-want{background:var(--grad);color:#1a0c10;border:0}
+    .af-dock .af-dock-want.on{background:var(--panel);color:var(--cream);border:1px solid var(--rose)}
+    /* Review = secondary (outline). Share = tertiary, deliberately smaller so
+       it never reads as equal to the two reader actions. */
+    .af-dock .af-dock-review{background:var(--panel);color:var(--cream);border:1px solid var(--line)}
+    .af-dock .af-dock-share{background:var(--panel);color:var(--cream);border:1px solid var(--line);min-width:48px;padding:.7em .8em;font-size:1.1rem}
+    .af-dock-note{position:fixed;left:0;right:0;bottom:calc(56px + env(safe-area-inset-bottom));z-index:40;text-align:center;font-size:.72rem;color:var(--muted);pointer-events:none;opacity:0;transition:opacity .2s}
+    .af-dock-note.show{opacity:1}
+    .af-dock-note a{color:var(--amber);pointer-events:auto}
+
+    /* Reserve room so the dock never covers the last rail or the footer. */
+    body{padding-bottom:calc(74px + env(safe-area-inset-bottom))}
+  }
+
+  /* ── Review bottom sheet (mobile) — the relocated "Finished it?" spice rating.
+     Slides up from the bottom; focus-trapped, Escape closes, backdrop dismisses. */
+  body.af-sheet-open{overflow:hidden}
+  .af-sheet-layer{position:fixed;inset:0;z-index:90;display:flex;align-items:flex-end;background:rgba(4,2,3,.72);backdrop-filter:blur(4px);animation:af-fade .18s ease-out}
+  .af-sheet{width:100%;max-height:80vh;overflow-y:auto;background:var(--panel);border-top:1px solid var(--line);border-radius:18px 18px 0 0;padding:20px 20px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -20px 50px rgba(0,0,0,.5);animation:af-up .26s ease-out}
+  .af-sheet-grip{width:40px;height:4px;border-radius:99px;background:var(--line);margin:0 auto 14px}
+  .af-sheet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+  .af-sheet-head h2{font-family:'Fraunces',serif;font-weight:600;font-size:1.3rem}
+  .af-sheet-head>div>span{color:var(--amber);font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+  .af-sheet-head button{flex:0 0 38px;height:38px;background:none;border:1px solid var(--line);border-radius:50%;color:var(--cream);font-size:1.3rem;line-height:1;cursor:pointer}
+  .af-sheet-head button:hover{border-color:var(--rose)}
+  /* The review sheet reuses the real .af-rate block (moved in on open), so the
+     rating logic operates on the same nodes with no duplication. These rules
+     un-hide it inside the sheet and strip its box chrome (the sheet supplies
+     its own) and its redundant "Finished it?" label (the sheet head has it). */
+  .af-sheet .af-rate{display:block;border:0;background:transparent;padding:0;margin:0}
+  .af-sheet .af-rate>span{display:none}
+  .af-sheet .af-stars{margin-top:4px;justify-content:space-between;gap:8px}
+  .af-sheet .af-stars button{font-size:2.1rem;padding:4px}
+  .af-sheet .af-rate-note{margin-top:14px;font-size:.9rem}
+  @keyframes af-up{from{transform:translateY(100%)}to{transform:translateY(0)}}
 </style>
 </head><body>
 
@@ -337,7 +394,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <h2 id="af-ask-h">What do you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        <a href="#af-plot"><span>01</span><b>What&#39;s it about?</b><em>30-sec answer</em></a><a href="#af-tropes"><span>02</span><b>Which tropes?</b><em>1 tagged</em></a><a href="#af-fit"><span>03</span><b>Is it for me?</b><em>quick fit check</em></a><a href="#af-commitment"><span>04</span><b>What&#39;s the commitment?</b><em>416 pp · book 2</em></a>
+        <a href="#af-plot"><span>01</span><b>What&#39;s it about?</b><em>30-sec answer</em></a><a href="#af-tropes"><span>02</span><b>Which tropes?</b><em>1 tagged</em></a><a href="#af-warnings"><span>03</span><b>Any hard nos?</b><em>none recorded</em></a><a href="#af-fit"><span>04</span><b>Is it for me?</b><em>quick fit check</em></a><a href="#af-commitment"><span>05</span><b>What&#39;s the commitment?</b><em>416 pp · book 2</em></a>
       </nav>
     </aside>
   </section>
@@ -360,7 +417,12 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         </div>
   </section>
 
-    
+    <section class="af-sec" id="af-warnings">
+    <span class="af-num">04</span>
+    <div><p class="af-label">Any hard nos?</p><h2>No content warnings recorded for this book.</h2>
+        
+        <p class="af-empty-note">Nobody has flagged content warnings here yet. That's not a guarantee the book is warning-free — just that we don't have them recorded.</p></div>
+  </section>
 
     <section class="af-sec" id="af-fit">
     <span class="af-num">05</span>
@@ -410,6 +472,17 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     
   </div>
 </div>
+
+<!-- Persistent mobile action dock — CSS hides it entirely above 720px, so it
+     never renders or reserves space on desktop. Book/blurb pages only: it lives
+     in this template and nowhere else on the site. Buttons reuse the same shelf,
+     rating and share routes as the desktop controls, so state can't diverge. -->
+<nav class="af-dock" aria-label="Book actions">
+  <button type="button" class="af-dock-want" id="afDockWant">＋ Want to read</button>
+  <button type="button" class="af-dock-review" id="afDockReview">☆ Review</button>
+  <button type="button" class="af-dock-share" id="afDockShare" aria-label="Share this book">↗</button>
+</nav>
+<p class="af-dock-note" id="afDockNote" role="status" aria-live="polite"></p>
 
 <!-- Drawer content is server-rendered and hidden, so the complete trope and
      warning lists exist in the HTML for crawlers and for no-JS readers. -->
@@ -469,32 +542,55 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     var afWant = document.getElementById('afWant');
     var afRead = document.getElementById('afRead');
     var afShare = document.getElementById('afShare');
+    // Mobile dock buttons — same three actions, kept in sync with the desktop
+    // ones through paintAsk so their state can never diverge.
+    var dockWant = document.getElementById('afDockWant');
+    var dockShare = document.getElementById('afDockShare');
+    var dockNote = document.getElementById('afDockNote');
     function paintAsk(){
-      if (!afWant) return;
-      var on = current === 'want' || current === 'reading';
-      afWant.textContent = current ? ('✓ ' + (LABEL[current] || 'Shelved')) : '＋ Want to read';
-      afWant.classList.toggle('on', !!current);
-      afWant.setAttribute('aria-pressed', current ? 'true' : 'false');
-      if (afRead) afRead.textContent = current === 'read' ? '✓ Read' : 'Mark as read';
+      if (afWant){
+        afWant.textContent = current ? ('✓ ' + (LABEL[current] || 'Shelved')) : '＋ Want to read';
+        afWant.classList.toggle('on', !!current);
+        afWant.setAttribute('aria-pressed', current ? 'true' : 'false');
+        if (afRead) afRead.textContent = current === 'read' ? '✓ Read' : 'Mark as read';
+      }
+      if (dockWant){
+        dockWant.textContent = current ? ('✓ ' + (LABEL[current] || 'Shelved')) : '＋ Want to read';
+        dockWant.classList.toggle('on', !!current);
+        dockWant.setAttribute('aria-pressed', current ? 'true' : 'false');
+      }
     }
     var basePaint = paint;
     paint = function(){ basePaint(); paintAsk(); };
-    if (afWant) afWant.addEventListener('click', function(){
-      if (!user){ note.innerHTML = '<a href="/dashboard.html">Log in</a> to build your shelf'; return; }
-      if (current) remove(); else shelve('want');
-    });
+    // Brief transient feedback above the dock (the sidebar shelf note is hidden
+    // on mobile). Auto-clears so it never sits over the footer.
+    var dockNoteTimer = null;
+    function dockToast(html){
+      if (!dockNote) return;
+      dockNote.innerHTML = html; dockNote.classList.add('show');
+      clearTimeout(dockNoteTimer); dockNoteTimer = setTimeout(function(){ dockNote.classList.remove('show'); }, 2600);
+    }
+    function toggleWant(){
+      if (!user){ note.innerHTML = '<a href="/dashboard.html">Log in</a> to build your shelf'; dockToast('<a href="/dashboard.html">Log in</a> to build your shelf'); return; }
+      if (current){ remove(); dockToast('Removed from shelf'); }
+      else { shelve('want'); dockToast('Added to your shelf 📚'); }
+    }
+    if (afWant) afWant.addEventListener('click', toggleWant);
+    if (dockWant) dockWant.addEventListener('click', toggleWant);
     if (afRead) afRead.addEventListener('click', function(){
       if (!user){ note.innerHTML = '<a href="/dashboard.html">Log in</a> to build your shelf'; return; }
       shelve('read');
     });
-    if (afShare) afShare.addEventListener('click', async function(){
+    async function doShare(){
       var url = location.href, title = BOOK.title;
       try {
         if (navigator.share){ await navigator.share({ title: title, url: url }); }
-        else { await navigator.clipboard.writeText(url); afShare.textContent = '✓ Link copied'; setTimeout(function(){ afShare.textContent = '↗ Share'; }, 1800); }
+        else { await navigator.clipboard.writeText(url); if (afShare) afShare.textContent = '✓ Link copied'; dockToast('Link copied'); setTimeout(function(){ if (afShare) afShare.textContent = '↗ Share'; }, 1800); }
         if (window.SH && SH.track) SH.track('share', { where: 'book-page' });
       } catch(e){ /* user dismissed the share sheet — nothing to report */ }
-    });
+    }
+    if (afShare) afShare.addEventListener('click', doShare);
+    if (dockShare) dockShare.addEventListener('click', doShare);
 
     (async function init(){
       sb = client();
@@ -565,6 +661,60 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       if (e.key !== 'Tab') return;
       // Keep Tab inside the dialog while it's open.
       var f = layer.querySelectorAll('a[href], button, [tabindex]:not([tabindex="-1"])');
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    });
+  })();
+</script>
+
+<script>
+  // ── Review bottom sheet (mobile dock) ────────────────────────────────────
+  // Opening relocates the real .af-rate block (#af-review) into the sheet so
+  // the existing spice-rating logic keeps working on the same nodes — one
+  // rating control, no duplicate state. Accessible dialog: focus-trapped,
+  // Escape and backdrop close, focus restored, body scroll locked. On close
+  // the rating block is returned to its original position.
+  (function(){
+    var trigger = document.getElementById('afDockReview');
+    var rate = document.getElementById('af-review');
+    if (!trigger || !rate) return;
+    var homeParent = rate.parentNode, homeNext = rate.nextSibling;   // where to put it back
+    var layer = null, lastFocus = null;
+
+    function close(){
+      if (!layer) return;
+      if (homeNext) homeParent.insertBefore(rate, homeNext); else homeParent.appendChild(rate);
+      layer.remove(); layer = null;
+      document.body.classList.remove('af-sheet-open');
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+    function open(){
+      lastFocus = document.activeElement;
+      layer = document.createElement('div');
+      layer.className = 'af-sheet-layer';
+      layer.innerHTML =
+        '<aside class="af-sheet" role="dialog" aria-modal="true" aria-labelledby="afSheetTitle">'
+        + '<div class="af-sheet-grip" aria-hidden="true"></div>'
+        + '<div class="af-sheet-head"><div><span>Finished it?</span>'
+        + '<h2 id="afSheetTitle">Rate the spice</h2></div>'
+        + '<button type="button" class="af-sheet-close" aria-label="Close">×</button></div>'
+        + '<div class="af-sheet-body"></div></aside>';
+      layer.querySelector('.af-sheet-body').appendChild(rate);   // move the live rating in
+      document.body.appendChild(layer);
+      document.body.classList.add('af-sheet-open');
+      layer.querySelector('.af-sheet-close').focus();
+      layer.addEventListener('mousedown', function(e){ if (e.target === layer) close(); });
+      layer.querySelector('.af-sheet-close').addEventListener('click', close);
+      if (window.SH && SH.track) SH.track('review-open', { where: 'book-page-dock' });
+    }
+    trigger.addEventListener('click', open);
+    document.addEventListener('keydown', function(e){
+      if (!layer) return;
+      if (e.key === 'Escape'){ e.preventDefault(); close(); return; }
+      if (e.key !== 'Tab') return;
+      var f = layer.querySelectorAll('a[href],button,[tabindex]:not([tabindex="-1"])');
       if (!f.length) return;
       var first = f[0], last = f[f.length - 1];
       if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
