@@ -32,7 +32,7 @@
   body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
   body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(800px 500px at 10% -5%,rgba(255,61,118,.12),transparent 60%)}
   a{color:inherit}
-  .wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
   .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
   .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
   header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
@@ -114,7 +114,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 .shelf-note a{color:var(--amber);text-decoration:none}
 
 </style><style>
-  .af-hero{display:grid;grid-template-columns:220px minmax(320px,1fr) minmax(300px,380px);gap:clamp(22px,3vw,44px);align-items:start;padding:22px 0 8px}
+  .af-hero{display:grid;grid-template-columns:235px minmax(390px,1fr) minmax(320px,380px);gap:clamp(26px,2.8vw,46px);align-items:start;padding:30px 0 12px}
   @media(max-width:1080px){.af-hero{grid-template-columns:190px 1fr}.af-ask{grid-column:1/-1}}
   @media(max-width:720px){.af-hero{grid-template-columns:100px 1fr;gap:16px}.af-cover-col{display:contents}}
 
@@ -143,33 +143,33 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   /* ── column 2: title, actions, quick facts ── */
   .af-flags{display:flex;flex-wrap:wrap;gap:7px}
   .af-flags span{padding:5px 8px;border:1px solid var(--line);border-radius:99px;color:var(--muted);font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase}
-  .af-core h1{margin:16px 0 6px;font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.9rem,4.4vw,3.1rem);line-height:1.03;letter-spacing:-.02em}
-  .af-byline{margin:0;color:var(--muted);font-size:.95rem}
+  .af-core h1{margin:20px 0 10px;font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.1rem,5.2vw,4.8rem);line-height:.92;letter-spacing:-.025em}
+  .af-byline{margin:0;color:var(--muted);font-size:1.05rem}
   .af-byline a{color:var(--cream);font-weight:700}
   .af-pulse{margin:16px 0 14px;padding:11px 0;display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  .af-pulse b{font-family:'Fraunces',serif;font-weight:600;font-size:1.4rem}
+  .af-pulse b{font-family:'Fraunces',serif;font-weight:600;font-size:1.6rem}
   .af-pulse small{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em}
   .af-actions{display:flex;flex-wrap:wrap;gap:8px}
   .af-actions button,.af-actions select{font-family:inherit;font-weight:800;font-size:.8rem;padding:.7em 1em;border-radius:10px;cursor:pointer;border:1px solid var(--line);background:var(--ink-2);color:var(--cream)}
   .af-actions .af-primary{background:var(--grad);color:#1a0c10;border-color:transparent}
   .af-actions .af-primary.on{background:var(--panel);color:var(--cream);border-color:var(--rose)}
-  .af-facts{margin:18px 0 0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
+  .af-facts{margin:24px 0 0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
   @media(max-width:720px){.af-facts{grid-column:1/-1;grid-template-columns:repeat(2,1fr)}}
-  .af-facts>div{padding:11px 12px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .af-facts>div{padding:15px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
   .af-facts dt,.af-facts small{display:block;color:var(--muted);font-size:.64rem;text-transform:uppercase;letter-spacing:.1em}
-  .af-facts dd{margin:6px 0 4px;font-family:'Fraunces',serif;font-weight:500;font-size:1.02rem}
+  .af-facts dd{margin:7px 0 5px;font-family:'Fraunces',serif;font-weight:500;font-size:1.16rem}
 
   /* ── column 3: the Ask First jump menu ── */
   .af-ask{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-  .af-ask-head{padding:16px 18px;background:var(--ink-2);border-bottom:1px solid var(--line)}
+  .af-ask-head{padding:20px 22px;background:var(--ink-2);border-bottom:1px solid var(--line)}
   .af-ask-head>span{color:var(--amber);font-size:.62rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
-  .af-ask-head h2{margin:9px 0 0;font-family:'Fraunces',serif;font-weight:600;font-size:1.5rem;line-height:1.05;letter-spacing:-.02em}
+  .af-ask-head h2{margin:11px 0 0;font-family:'Fraunces',serif;font-weight:600;font-size:1.95rem;line-height:1.05;letter-spacing:-.02em}
   .af-ask-head h2 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
-  .af-ask nav a{min-height:52px;padding:10px 16px;display:grid;grid-template-columns:22px 1fr auto;align-items:center;gap:9px;text-decoration:none;color:var(--cream);border-bottom:1px solid var(--line);transition:background .16s,padding .16s}
+  .af-ask nav a{min-height:60px;padding:13px 20px;display:grid;grid-template-columns:22px 1fr auto;align-items:center;gap:9px;text-decoration:none;color:var(--cream);border-bottom:1px solid var(--line);transition:background .16s,padding .16s}
   .af-ask nav a:last-child{border-bottom:0}
   .af-ask nav a:hover,.af-ask nav a:focus-visible{padding-left:21px;background:var(--ink-2);outline:none}
   .af-ask nav a>span{color:var(--muted);font-size:.66rem;font-variant-numeric:tabular-nums}
-  .af-ask nav a>b{font-family:'Fraunces',serif;font-weight:500;font-size:1rem;line-height:1.15}
+  .af-ask nav a>b{font-family:'Fraunces',serif;font-weight:500;font-size:1.12rem;line-height:1.15}
   /* The right-hand summary must stay strongly bold and legible on mobile —
      this was the specific documented feedback on the prototype. */
   .af-ask nav a>em{font-style:normal;font-weight:800;font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;color:var(--amber);text-align:right}
@@ -384,7 +384,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       </div>
 
       <dl class="af-facts" aria-label="Quick book facts">
-        <div><dt>Length</dt><dd>352 pages</dd></div><div><dt>Series</dt><dd>Standalone</dd></div><div><dt>POV</dt><dd>First person · dual</dd></div><div><dt>Pairing</dt><dd>M/F</dd><small>Central romance</small></div><div><dt>Ending</dt><dd>Happily Ever After (HEA)</dd><small>No cliffhanger</small></div>
+        <div><dt>Length</dt><dd>352 pages</dd></div><div><dt>Series</dt><dd>Standalone</dd></div><div><dt>POV</dt><dd>First person</dd><small>Dual POV</small></div><div><dt>Pairing</dt><dd>M/F</dd><small>Central romance</small></div><div><dt>Ending</dt><dd>HEA</dd><small>No cliffhanger</small></div>
       </dl>
     </div>
 
