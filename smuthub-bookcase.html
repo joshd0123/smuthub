@@ -25,6 +25,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script defer src="auth.js"></script>
+<script src="bookcase-catalog.js"></script>
 <link rel="stylesheet" href="/companion.css">
 <script defer src="/companion.js"></script>
 <style>
@@ -114,7 +115,7 @@
 
   .shelfrow{position:relative;padding-top:6px}
   /* elegant engraved gold label — no chunky plaque */
-  .plate{position:relative;z-index:3;display:inline-flex;align-items:baseline;gap:8px;margin:0 0 2px 4px;
+  .plate{position:relative;z-index:3;display:flex;width:calc(100% - 8px);align-items:baseline;gap:8px;margin:0 0 2px 4px;
     font-family:'Fraunces';font-weight:600;font-size:.96rem;letter-spacing:.03em;color:var(--plate);
     text-shadow:0 1px 3px rgba(0,0,0,.75)}
   .plate .ct{font-family:'Hanken Grotesk';font-weight:800;font-size:.7rem;color:var(--accent);opacity:.85}
@@ -123,10 +124,12 @@
   .row::before{content:"";position:absolute;left:0;right:0;top:-2px;height:30px;pointer-events:none;z-index:2;
     background:linear-gradient(rgba(0,0,0,.5),transparent)}
   .books{position:relative;z-index:2;display:flex;gap:7px;align-items:flex-end;justify-content:flex-start;
-    overflow-x:auto;padding:18px 4px 0;min-height:172px;scrollbar-width:none}
+    overflow-x:auto;padding:18px 26px 0 4px;min-height:172px;scrollbar-width:none;scroll-snap-type:x proximity;overscroll-behavior-x:contain}
   .books::-webkit-scrollbar{display:none}
   .book{flex:0 0 auto;cursor:grab;transition:transform .2s ease;position:relative;
-    touch-action:manipulation;filter:drop-shadow(0 9px 9px rgba(0,0,0,.5))}
+    touch-action:manipulation;scroll-snap-align:start;filter:drop-shadow(0 9px 9px rgba(0,0,0,.5))}
+  .shelfrow.has-overflow .row::after{content:"";position:absolute;z-index:5;right:-1px;top:10px;bottom:0;width:34px;pointer-events:none;background:linear-gradient(90deg,transparent,var(--wood-dk))}
+  .swipecue{margin-left:auto;font-family:'Hanken Grotesk';font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);opacity:.88}
   .book.face{width:clamp(72px,18vw,92px)}
   .book.spine{width:clamp(32px,7.5vw,42px)}
   .book::after{content:"";position:absolute;left:8%;right:8%;bottom:-5px;height:8px;border-radius:50%;
@@ -229,63 +232,165 @@
   .mm-item:hover{background:var(--ink-2)}
   .mm-item.cancel{color:var(--muted)}
 
-  /* ── SHELF VIEW (zoomed) ── */
-  .shelfview{position:fixed;inset:0;z-index:100;display:none;overflow:hidden;background:#06080f}
+  /* ── IMMERSIVE SHELF WORLD ── */
+  .shelfview{position:fixed;inset:0;z-index:100;display:none;overflow:hidden;background:#06080f;color:var(--cream)}
   .shelfview.open{display:block}
-  .sv-backdrop{position:absolute;inset:0;z-index:0}
-  .sv-backdrop::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 40%,transparent 50%,rgba(0,0,0,.6))}
-  .sv-props{position:absolute;inset:0;z-index:1}
-  .sv-light{position:absolute;inset:0;z-index:2;pointer-events:none}
-  .sv-top{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:16px}
-  .sv-back,.sv-customize{background:rgba(12,7,8,.55);backdrop-filter:blur(8px);border:1px solid var(--line);color:var(--cream);font-family:inherit;font-weight:700;border-radius:99px;cursor:pointer}
-  .sv-back{width:40px;height:40px;font-size:1.1rem}
-  .sv-label{font-family:'Fraunces';font-weight:600;font-size:1.1rem;text-shadow:0 2px 12px rgba(0,0,0,.8)}
-  .sv-shelf{position:absolute;left:0;right:0;bottom:18%;z-index:3;padding:0 18px;max-width:760px;margin:0 auto}
-  .sv-shelf .books{justify-content:center;min-height:150px;overflow:visible}
-  .sv-shelf .plank{max-width:680px;margin:0 auto}
-  .sv-customize{position:absolute;right:16px;bottom:20px;z-index:6;padding:.75em 1.15em;font-size:.85rem}
-  .sv-dots{position:absolute;left:0;right:0;bottom:10px;z-index:6;display:flex;gap:7px;justify-content:center}
-  .sv-dots span{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3)}
-  .sv-dots span.on{background:var(--accent);box-shadow:0 0 8px var(--accent)}
-  /* backdrops (stubbed art, themable) */
-  .bd-plain{background:var(--room)}
-  .bd-velvet{background:repeating-linear-gradient(58deg,#2a0c1c,#2a0c1c 14px,#371026 14px,#371026 28px);box-shadow:inset 0 0 200px rgba(0,0,0,.6)}
-  .bd-library{background:linear-gradient(#241810,#0a0705);box-shadow:inset 0 -60px 120px rgba(255,171,64,.12)}
-  .bd-vines{background:radial-gradient(80% 60% at 50% 100%,rgba(60,120,80,.4),transparent 60%),linear-gradient(#0c1a14,#04080a)}
-  .bd-window{background:radial-gradient(50% 44% at 50% 26%,rgba(150,180,255,.34),transparent 62%),#0a0b12}
-  .bd-night{background:radial-gradient(circle at 28% 16%,#1f2a4a,#05070d 70%)}
-  /* lighting moods */
-  .light-none{background:none}
-  .light-candlelit{background:radial-gradient(55% 42% at 50% 84%,rgba(255,170,80,.45),transparent 72%)}
-  .light-moonlit{background:radial-gradient(60% 55% at 50% 8%,rgba(120,160,255,.32),transparent 72%)}
-  .light-golden{background:linear-gradient(0deg,rgba(255,180,90,.3),rgba(255,120,90,.12))}
-  .light-stormy{background:radial-gradient(85% 60% at 50% 0%,rgba(120,130,160,.36),transparent 70%)}
-  /* props */
-  .prop{position:absolute;transform:translate(-50%,-50%) scale(var(--s,1));font-size:2.6rem;cursor:grab;user-select:none;touch-action:none;filter:drop-shadow(0 8px 10px rgba(0,0,0,.6))}
-  .prop.sel{outline:2px dashed var(--accent);outline-offset:8px;border-radius:10px}
-  .propbar{position:absolute;top:68px;left:50%;transform:translateX(-50%);z-index:6;display:none;gap:6px;background:rgba(12,7,8,.7);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:99px;padding:5px}
-  .propbar.show{display:flex}
-  .propbar button{background:none;border:0;color:var(--cream);font-family:inherit;font-weight:800;font-size:.95rem;width:34px;height:30px;border-radius:99px;cursor:pointer}
-  .propbar button:hover{background:var(--ink-2)}
-  /* customize drawer */
-  .sv-drawer{position:absolute;left:0;right:0;bottom:0;z-index:7;background:#120c0e;border-top:1px solid var(--line);
-    border-radius:18px 18px 0 0;transform:translateY(100%);transition:transform .25s ease;max-height:62%;overflow:auto;padding:14px 16px 24px;max-width:620px;margin:0 auto}
+  .sv-backdrop{position:absolute;inset:0;z-index:0;background:center/cover no-repeat}
+  .sv-backdrop.world-moonlit{background-image:url('themes/moonlit-reading-room/room-v1.jpg')}
+  .sv-backdrop.world-boudoir{background:
+    radial-gradient(55% 38% at 50% 28%,rgba(255,185,115,.22),transparent 68%),
+    repeating-linear-gradient(88deg,#280b1b 0 28px,#3b1028 28px 58px)}
+  .sv-backdrop.world-academia{background:
+    radial-gradient(55% 44% at 50% 10%,rgba(210,170,105,.22),transparent 65%),
+    linear-gradient(#21170f,#070605)}
+  .sv-backdrop::after{content:"";position:absolute;inset:0;background:
+    radial-gradient(85% 70% at 50% 46%,transparent 34%,rgba(3,5,10,.74) 100%),
+    linear-gradient(180deg,rgba(4,4,8,.14),rgba(4,4,8,.58))}
+  .sv-light{position:absolute;inset:0;z-index:1;pointer-events:none;transition:background .45s,opacity .45s}
+  .sv-light.light-candlelit{background:radial-gradient(55% 42% at 50% 82%,rgba(255,155,68,.42),transparent 70%)}
+  .sv-light.light-moonlit{background:radial-gradient(60% 58% at 50% 5%,rgba(110,155,255,.24),transparent 74%)}
+  .sv-light.light-dawn{background:linear-gradient(0deg,rgba(255,166,95,.34),rgba(255,100,130,.08))}
+  .sv-top{position:absolute;top:0;left:0;right:0;z-index:8;display:flex;align-items:center;justify-content:space-between;padding:14px;gap:10px}
+  .sv-back,.sv-shopbtn{background:rgba(9,7,10,.58);backdrop-filter:blur(12px);border:1px solid rgba(244,232,227,.18);color:var(--cream);font-family:inherit;font-weight:700;border-radius:99px;cursor:pointer}
+  .sv-back{width:42px;height:42px;font-size:1.1rem}
+  .sv-shopbtn{padding:.7em 1em}
+  .sv-label{text-align:center;font-family:'Fraunces';font-weight:600;font-size:1.08rem;text-shadow:0 2px 12px #000}
+  .sv-label small{display:block;font-family:'Hanken Grotesk';font-size:.66rem;text-transform:uppercase;letter-spacing:.13em;color:var(--amber)}
+  .sv-world{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;justify-content:flex-end;padding:84px 16px 62px}
+  .world-message{position:absolute;top:84px;left:50%;transform:translateX(-50%);max-width:420px;width:calc(100% - 40px);
+    padding:8px 12px;text-align:center;border-radius:99px;background:rgba(8,7,10,.46);backdrop-filter:blur(8px);
+    color:rgba(244,232,227,.82);font-size:.78rem;transition:opacity .2s}
+  .world-stage{position:relative;width:100%;max-width:760px;height:min(64vh,520px);margin:0 auto}
+  .world-clock,.world-fairies,.world-candle{border:0;color:#fff;cursor:pointer;background-color:transparent;background-position:center;background-repeat:no-repeat;background-size:contain;
+    transition:transform .7s cubic-bezier(.2,.8,.2,1),filter .5s ease,opacity .4s ease}
+  .world-clock:focus-visible,.world-fairies:focus-visible,.world-candle:focus-visible{outline:2px solid var(--amber);outline-offset:-10px}
+  .world-clock{position:absolute;z-index:5;left:-2%;bottom:20px;width:150px;height:330px;
+    background-image:url('themes/moonlit-reading-room/addons/clock-v3.png');
+    filter:drop-shadow(0 20px 24px rgba(0,0,0,.62))}
+  .world-clock:hover{transform:translateY(-4px) scale(1.025);filter:drop-shadow(0 24px 28px rgba(0,0,0,.72)) brightness(1.08)}
+  .clock-hands{display:none}
+  .clock-time{position:absolute;left:50%;bottom:17px;transform:translateX(-50%);padding:.35em .7em;border:1px solid rgba(231,197,128,.24);border-radius:99px;
+    background:rgba(4,7,13,.68);backdrop-filter:blur(7px);font-size:.62rem;letter-spacing:.08em;white-space:nowrap;color:#e8c778;box-shadow:0 8px 20px rgba(0,0,0,.38)}
+  .world-fairies{position:absolute;z-index:5;right:-2%;bottom:72px;width:220px;height:190px;
+    background-image:url('themes/moonlit-reading-room/addons/fairies-v3.png');
+    filter:drop-shadow(0 0 15px rgba(255,205,110,.18))}
+  .world-fairies:hover{transform:translate(-4px,-5px) scale(1.025);filter:drop-shadow(0 0 22px rgba(255,205,110,.32)) brightness(1.08)}
+  .fairy{display:none}
+  .fairy-label{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);padding:.38em .7em;border:1px solid rgba(231,197,128,.2);border-radius:99px;
+    background:rgba(4,7,13,.64);backdrop-filter:blur(7px);font-family:inherit;font-weight:700;font-size:.66rem;white-space:nowrap;color:rgba(244,232,227,.86)}
+  .sv-shelf{position:absolute;left:50%;bottom:48px;transform:translateX(-50%);z-index:4;width:min(74%,620px)}
+  .sv-shelf .books{justify-content:center;min-height:190px;overflow:visible;padding-right:4px;scroll-snap-type:none}
+  .sv-shelf.page-next .books{animation:shelfPageNext .34s cubic-bezier(.2,.8,.2,1)}
+  .sv-shelf.page-prev .books{animation:shelfPagePrev .34s cubic-bezier(.2,.8,.2,1)}
+  .sv-shelf .book.face{width:104px}.sv-shelf .book.spine{width:44px}
+  .sv-shelf .book.spine .spineinner{height:164px}.sv-shelf .book.spine .stitle{max-height:126px}
+  .sv-shelf .plank{height:15px;box-shadow:0 14px 22px rgba(0,0,0,.6)}
+  .shelf-turn{position:absolute;z-index:8;bottom:112px;width:36px;height:64px;border:1px solid rgba(225,185,107,.32);border-radius:18px 18px 7px 7px;
+    background:linear-gradient(90deg,#17100c,#704724,#1a100b);color:#f2d28c;font-family:'Fraunces';font-size:1.65rem;cursor:pointer;
+    box-shadow:0 12px 24px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.12);transition:transform .18s,opacity .18s}
+  .shelf-turn:hover:not(:disabled){transform:translateY(-3px) scale(1.04)}
+  .shelf-turn:disabled{opacity:.22;cursor:default}
+  .shelf-turn.prev{left:max(4px,calc(50% - 355px))}.shelf-turn.next{right:max(4px,calc(50% - 355px))}
+  .shelf-range{position:absolute;left:50%;top:calc(100% + 11px);transform:translateX(-50%);z-index:8;border:1px solid rgba(225,185,107,.28);border-radius:99px;
+    padding:.42em .8em;background:rgba(6,7,12,.72);backdrop-filter:blur(8px);color:#e7c57f;font-family:inherit;font-weight:800;font-size:.66rem;white-space:nowrap;cursor:pointer}
+  .shelf-range:hover{border-color:#e7c57f;background:rgba(24,17,14,.86)}
+  .world-candle{position:absolute;z-index:5;left:14%;bottom:28px;width:105px;height:190px;
+    background-image:url('themes/moonlit-reading-room/addons/candle-v4.png');
+    filter:drop-shadow(0 0 20px rgba(255,163,64,.28))}
+  .world-candle:hover{transform:translateY(-3px) scale(1.035);filter:drop-shadow(0 0 28px rgba(255,163,64,.46)) brightness(1.08)}
+  .world-candle .wax,.world-candle .flame{display:none}
+  .world-memory{position:absolute;left:50%;bottom:255px;transform:translateX(-50%) translateY(10px);width:min(86%,430px);z-index:6;
+    padding:16px 18px;border:1px solid rgba(244,232,227,.2);border-radius:16px;background:rgba(10,8,12,.76);backdrop-filter:blur(12px);
+    text-align:center;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s}
+  .world-memory.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .world-memory small{display:block;color:var(--amber);font-weight:800;text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px}
+  .world-memory strong{font-family:'Fraunces';font-weight:500}
+  .shelfview.fairies-awake .world-fairies{transform:translate(-46px,-30px) scale(1.08);filter:drop-shadow(0 0 30px rgba(255,205,110,.48)) brightness(1.17)}
+  .shelfview.candle-dim .world-candle{opacity:.23;filter:saturate(.35) brightness(.55)}
+  .shelfview.time-dawn .world-clock{filter:drop-shadow(0 18px 28px rgba(0,0,0,.55)) brightness(1.2) sepia(.12)}
+  .shelfview.time-dawn .sv-light{background:linear-gradient(0deg,rgba(255,166,95,.38),rgba(255,110,145,.1))}
+  .sv-dots{position:absolute;left:0;right:0;bottom:16px;z-index:7;display:flex;gap:7px;justify-content:center}
+  .sv-dots button{width:9px;height:9px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;box-shadow:0 0 0 5px transparent}
+  .sv-dots button.on{background:var(--accent);box-shadow:0 0 8px var(--accent)}
+  .sv-dots button:focus-visible{outline:2px solid #fff;outline-offset:4px}
+  .sv-library{position:absolute;inset:0 0 0 auto;z-index:14;width:min(100%,480px);padding:18px;background:rgba(12,9,12,.96);backdrop-filter:blur(20px);
+    border-left:1px solid var(--line);box-shadow:-28px 0 70px rgba(0,0,0,.5);transform:translateX(105%);transition:transform .28s ease;display:flex;flex-direction:column}
+  .sv-library.open{transform:translateX(0)}
+  .collection-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+  .collection-head h3{font-family:'Fraunces';font-weight:600;font-size:1.35rem}
+  .collection-head p{color:var(--muted);font-size:.8rem;margin-top:2px}
+  .collection-close{margin-left:auto;flex:0 0 auto;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--cream);font-size:1.2rem;cursor:pointer}
+  .collection-search{width:100%;border:1px solid var(--line);border-radius:12px;background:var(--ink-2);color:var(--cream);font:inherit;padding:.78em .9em;margin-bottom:12px;outline:none}
+  .collection-search:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,171,64,.1)}
+  .collection-list{min-height:0;overflow:auto;display:grid;gap:7px;padding-right:4px}
+  .collection-book{width:100%;display:grid;grid-template-columns:54px 1fr auto;gap:11px;align-items:center;text-align:left;border:1px solid var(--line);border-radius:13px;
+    background:var(--ink-2);color:var(--cream);padding:10px;cursor:pointer;content-visibility:auto;contain-intrinsic-size:68px}
+  .collection-book:hover{border-color:rgba(255,171,64,.48);background:#211419}
+  .collection-spine{height:48px;border-radius:3px;background:linear-gradient(90deg,rgba(0,0,0,.45),transparent 28%,rgba(255,255,255,.08)),var(--spine);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+  .collection-copy{min-width:0}.collection-copy strong,.collection-copy small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .collection-copy strong{font-family:'Fraunces';font-weight:600}.collection-copy small{color:var(--muted);font-size:.76rem;margin-top:2px}
+  .collection-page{font-size:.66rem;font-weight:800;color:var(--amber);white-space:nowrap}
+  .collection-empty{padding:34px 16px;text-align:center;color:var(--muted)}
+  .sv-drawer{position:absolute;left:0;right:0;bottom:0;z-index:12;background:#120c0e;border-top:1px solid var(--line);
+    border-radius:22px 22px 0 0;transform:translateY(100%);transition:transform .28s ease;max-height:78%;overflow:auto;
+    padding:18px 18px 30px;max-width:720px;margin:0 auto;box-shadow:0 -28px 60px rgba(0,0,0,.48)}
   .sv-drawer.open{transform:translateY(0)}
-  .premnote{background:linear-gradient(100deg,rgba(255,61,118,.12),rgba(255,171,64,.12));border:1px solid rgba(255,171,64,.3);color:var(--amber);font-size:.78rem;font-weight:700;text-align:center;padding:7px;border-radius:10px;margin-bottom:12px}
-  .tabs{display:flex;gap:6px;margin-bottom:12px}
-  .tabs button{flex:1;background:var(--ink-2);border:1px solid var(--line);color:var(--muted);font-family:inherit;font-weight:700;font-size:.82rem;padding:.55em;border-radius:10px;cursor:pointer}
+  .store-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+  .store-head h3{font-family:'Fraunces';font-weight:600;font-size:1.3rem}
+  .store-head p{color:var(--muted);font-size:.82rem}
+  .store-close{background:none;border:1px solid var(--line);color:var(--cream);width:36px;height:36px;border-radius:50%;cursor:pointer}
+  .tabs{display:flex;gap:6px;margin-bottom:14px}
+  .tabs button{flex:1;background:var(--ink-2);border:1px solid var(--line);color:var(--muted);font-family:inherit;font-weight:700;font-size:.82rem;padding:.62em;border-radius:10px;cursor:pointer}
   .tabs button.on{background:var(--grad);color:#1a0c10;border-color:transparent}
-  .optgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .opt{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer;font-size:.78rem;font-weight:700;position:relative}
-  .opt:hover{border-color:var(--rose)}
-  .opt.on{border-color:var(--cream)}
-  .opt .sw{height:42px;border-radius:8px;margin-bottom:6px}
-  .opt .gly{font-size:1.6rem}
-  .opt .prem{position:absolute;top:4px;right:5px;font-size:.6rem;color:var(--amber)}
-  .closebar{display:flex;justify-content:center;margin-top:8px}
+  .product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .product-card{position:relative;display:flex;flex-direction:column;min-height:184px;padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--ink-2)}
+  .product-card.previewing{border-color:var(--amber);box-shadow:0 0 0 1px rgba(255,171,64,.22)}
+  .product-badge{align-self:flex-start;padding:.2em .55em;border-radius:99px;background:rgba(255,171,64,.12);color:var(--amber);font-size:.62rem;font-weight:800;letter-spacing:.08em}
+  .product-card h4{font-family:'Fraunces';font-weight:600;font-size:1.05rem;margin:8px 0 3px}
+  .product-card p{color:var(--muted);font-size:.78rem;line-height:1.35;margin-bottom:12px}
+  .product-actions{display:flex;align-items:center;gap:7px;margin-top:auto}
+  .product-price{font-weight:800;margin-right:auto}
+  .mini-btn{font-family:inherit;font-weight:800;font-size:.72rem;padding:.52em .72em;border-radius:99px;cursor:pointer}
+  .mini-btn.preview{background:none;border:1px solid var(--line);color:var(--cream)}
+  .mini-btn.buy{background:var(--grad);border:0;color:#1a0c10}
+  .release-list{display:grid;gap:8px}
+  .release-card{display:grid;grid-template-columns:94px 1fr auto;gap:12px;align-items:center;padding:12px;border-bottom:1px solid var(--line)}
+  .release-date{color:var(--amber);font-size:.7rem;font-weight:800;text-transform:uppercase}
+  .release-card h4{font-family:'Fraunces';font-weight:600;font-size:.98rem}
+  .release-card p{color:var(--muted);font-size:.76rem}
+  .release-price{font-weight:800;font-size:.82rem}
+  @media(prefers-reduced-motion:reduce){.world-clock,.world-fairies,.world-candle{transition:none}.sv-shelf.page-next .books,.sv-shelf.page-prev .books{animation:none}}
+  @keyframes shelfPageNext{from{opacity:.15;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+  @keyframes shelfPagePrev{from{opacity:.15;transform:translateX(-24px)}to{opacity:1;transform:translateX(0)}}
+  @media(max-width:620px){
+    .sv-world{padding-left:10px;padding-right:10px}
+    .world-stage{height:min(68vh,560px)}
+    .world-clock{left:-7px;bottom:0;width:120px;height:270px}
+    .clock-time{bottom:9px;font-size:.54rem}
+    .world-fairies{right:-7px;bottom:72px;width:150px;height:130px}
+    .fairy-label{bottom:2px;font-size:.58rem}
+    .world-candle{left:18%;bottom:30px;width:78px;height:150px}
+    .sv-shelf{width:74%}.sv-shelf .book.face{width:82px}.sv-shelf .book.spine{width:34px}
+    .sv-shelf .book.spine .spineinner{height:138px}.sv-shelf .book.spine .stitle{max-height:104px}
+    .shelf-turn{bottom:112px;width:30px;height:52px;font-size:1.35rem}
+    .shelf-turn.prev{left:max(3px,calc(13% - 35px))}.shelf-turn.next{right:max(3px,calc(13% - 35px))}
+    .shelf-range{top:calc(100% + 9px);font-size:.59rem}
+    .product-grid{grid-template-columns:1fr}
+    .release-card{grid-template-columns:80px 1fr}.release-price{grid-column:2}
+  }
 
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink-2);border:1px solid var(--rose);color:var(--cream);padding:.7em 1.2em;border-radius:99px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:130}
   .toast.show{opacity:1}
+  .gate-card{position:relative;isolation:isolate;overflow:hidden;max-width:760px;margin:42px auto 0;border:1px solid rgba(213,179,106,.38);border-radius:28px;padding:clamp(28px,5vw,58px);box-shadow:0 28px 80px rgba(0,0,0,.42);background:#111}
+  .gate-card::before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(4,7,14,.96) 8%,rgba(4,7,14,.76) 52%,rgba(4,7,14,.38)),url("themes/moonlit-reading-room/room-v1.jpg") center 28%/cover}
+  .gate-card::after{content:"";position:absolute;inset:0;z-index:-1;box-shadow:inset 0 0 90px rgba(0,0,0,.55);pointer-events:none}
+  .gate-eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:#d5b36a;margin-bottom:14px}
+  .gate-card h2{max-width:520px;font-family:Georgia,serif;font-size:clamp(2rem,6vw,3.8rem);line-height:.98;margin:0 0 16px;color:#fff7e7}
+  .gate-card p{max-width:520px;color:#d8d8df;line-height:1.65;margin:0 0 24px}
+  .gate-actions{display:flex;flex-wrap:wrap;gap:12px}
+  .gate-actions button{border:0;border-radius:999px;padding:13px 20px;font-weight:800;cursor:pointer}
+  .gate-actions .primary{background:#d5b36a;color:#171009}
+  .gate-actions .secondary{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.24);backdrop-filter:blur(8px)}
 
   /* grain overlay across everything for richness */
   body::after{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.04;background:var(--grain)}
@@ -362,6 +467,22 @@
 <script>
   // Shared auth via config.js + auth.js — this page just listens.
   const SHELVES=[['reading','Currently Reading'],['want','Want to Read'],['read','Read'],['dnf','Did Not Finish']];
+  const DEMO_SHELF=[
+    {book_key:'demo-1',title:'A Court at Midnight',author:'M. Vale',status:'want',cover_url:''},
+    {book_key:'demo-2',title:'The Thorn Queen',author:'R. Ash',status:'reading',cover_url:''},
+    {book_key:'demo-3',title:'Bound to the Dragon',author:'C. Night',status:'reading',cover_url:''},
+    {book_key:'demo-4',title:'The Wicked Bargain',author:'S. Raven',status:'read',cover_url:''},
+    {book_key:'demo-5',title:'Velvet & Vengeance',author:'I. Rose',status:'reading',cover_url:''},
+    {book_key:'demo-6',title:'A Kiss of Ruin',author:'L. Thorne',status:'reading',cover_url:''},
+    {book_key:'demo-7',title:'The Wolf’s Devotion',author:'E. Wren',status:'reading',cover_url:''},
+    {book_key:'demo-8',title:'Moonbound',author:'A. Vesper',status:'reading',cover_url:''},
+    {book_key:'demo-9',title:'A Kingdom Undone',author:'N. Black',status:'reading',cover_url:''},
+    {book_key:'demo-10',title:'Serpent & Saint',author:'J. Wilde',status:'reading',cover_url:''},
+    {book_key:'demo-11',title:'The Raven’s Oath',author:'D. Winter',status:'reading',cover_url:''},
+    {book_key:'demo-12',title:'Ashes of Desire',author:'P. Storm',status:'reading',cover_url:''},
+    {book_key:'demo-13',title:'Claimed by Night',author:'K. Fable',status:'reading',cover_url:''},
+    {book_key:'demo-14',title:'The Last Enchantment',author:'T. Vale',status:'reading',cover_url:''}
+  ];
   const THEMES=[
     {id:'walnut',  name:'Walnut',           color:'#7a4e2a', premium:false},
     {id:'noir',    name:'Noir',             color:'#3a3a44', premium:false},
@@ -394,7 +515,10 @@
 
   let sb=null, user=null, shelf=[], spiceMap={}, theme='walnut', isPremium=false;
   let custom={};
-  let dnfOpen=false, shelfIndex=0, selectedProp=null, drawerTab='backdrop';
+  let ownedProducts=new Set(['world_moonlit_reading_room']);
+  let dnfOpen=false, shelfIndex=0, selectedProp=null, drawerTab='worlds', previewWorld=null;
+  let shelfPages={reading:0,want:0,read:0,dnf:0}, pageDirection=0, collectionOpen=false, collectionQuery='';
+  let worldState={dawn:false,fairies:false,candleDim:false,memory:false};
 
   const $=id=>document.getElementById(id);
   const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -424,23 +548,37 @@
   }
 
   async function loadAll(){
-    const [r1,r2,r3]=await Promise.all([
+    const [r1,r2,r3,r4]=await Promise.all([
       sb.from('shelf').select('*'),
       sb.from('book_tags').select('book_key,spice'),
-      sb.from('shelf_customization').select('*')
+      sb.from('shelf_customization').select('*'),
+      sb.from('user_bookcase_entitlements').select('product_key')
     ]);
     if(r1.error) throw r1.error;
     shelf=(r1.data||[]).sort(shelfCmp); spiceMap={};
     if(!r2.error) (r2.data||[]).forEach(t=>{ if(t.spice) spiceMap[t.book_key]=t.spice; });
     custom={};
-    if(!r3.error) (r3.data||[]).forEach(c=>{ custom[c.shelf_status]={backdrop_key:c.backdrop_key,lighting_key:c.lighting_key,props:Array.isArray(c.props)?c.props:[]}; });
+    if(!r3.error) (r3.data||[]).forEach(c=>{ custom[c.shelf_status]={world_key:c.world_key||'moonlit',backdrop_key:c.backdrop_key,lighting_key:c.lighting_key,props:Array.isArray(c.props)?c.props:[]}; });
+    ownedProducts=new Set(['world_moonlit_reading_room']);
+    if(!r4.error) (r4.data||[]).forEach(e=>ownedProducts.add(e.product_key));
   }
 
   function renderGate(){
-    $('stage').innerHTML='<div style="background:var(--ink-2);border:1px solid var(--line);border-radius:18px;padding:30px;text-align:center;max-width:420px">'
-      +'<h2 style="font-family:Fraunces;font-weight:600;font-size:1.4rem">Log in to open your bookshelf 📚</h2>'
-      +'<p style="color:var(--muted);margin:6px 0 16px">Your shelves, ratings, themes and decorations live here — just for you.</p>'
-      +'<button class="btn" style="padding:.8em 1.6em" onclick="SH.openAuth()">Log in / Sign up</button></div>';
+    $('stage').innerHTML='<section class="gate-card">'
+      +'<div class="gate-eyebrow">A living bookcase</div>'
+      +'<h2>Step inside your next reading world.</h2>'
+      +'<p>Books are only the beginning. Enter the Moonlit Reading Room, wake its objects, meet its visitors, and imagine the shelf you will make your own.</p>'
+      +'<div class="gate-actions"><button class="primary" onclick="enterDemoWorld()">Preview the shelf world</button>'
+      +'<button class="secondary" onclick="SH.openAuth()">Log in to build yours</button></div></section>';
+  }
+
+  function enterDemoWorld(){
+    shelfIndex=0;
+    previewWorld='moonlit';
+    collectionOpen=false; collectionQuery='';
+    worldState={dawn:false,fairies:false,candleDim:false,memory:false};
+    renderShelfView();
+    $('shelfview').classList.add('open');
   }
 
   function shelfCmp(a,b){
@@ -478,7 +616,7 @@
   function renderRoom(){
     const ordered=[...shelf].sort(shelfCmp);
     const total=shelf.length;
-    $('sub').textContent = total ? (total+' book'+(total>1?'s':'')+' on your shelves — tap a book, double-tap a shelf to zoom') : "Empty shelves… for now. Go find some trouble.";
+    $('sub').textContent = total ? (total+' book'+(total>1?'s':'')+' on your shelves — tap a shelf label to enter its world') : "Empty shelves… for now. Go find some trouble.";
     const visible=SHELVES.filter(([st])=>st!=='dnf');
     const dnfItems=ordered.filter(b=>b.status==='dnf');
     $('stage').innerHTML = '<div>'
@@ -486,12 +624,14 @@
       + visible.map(([st,label])=>{
           const items=ordered.filter(b=>b.status===st);
           const inner = items.length ? items.map((b,i)=>bookHTML(b,i===0)).join('') : ghostHTML;
-          return '<div class="shelfrow"><div class="plate">'+label+' <span class="ct">'+items.length+'</span></div>'
-            + '<div class="row"><div class="books" data-status="'+st+'">'+inner+'</div></div><div class="plank"></div></div>';
+          const overflow=items.length>7;
+          return '<div class="shelfrow'+(overflow?' has-overflow':'')+'"><div class="plate">'+label+' <span class="ct">'+items.length+'</span>'
+            +(overflow?'<span class="swipecue">Swipe or enter ↔</span>':'')+'</div>'
+            + '<div class="row"><div class="books" data-status="'+st+'" aria-label="'+esc(label)+', '+items.length+' books">'+inner+'</div></div><div class="plank"></div></div>';
         }).join('')
       + '</div></div>'
       + dnfStripHTML(dnfItems)
-      + (total?'<p class="hint">✋ Drag to reorder · single-tap a book for details · double-tap a shelf to decorate</p>':'')
+      + (total?'<p class="hint">✋ Drag books to reorder · tap a shelf label or ledge to enter its world</p>':'')
       + '</div>';
     attachRoom();
   }
@@ -517,8 +657,7 @@
     });
     document.querySelectorAll('#stage .plank, #stage .plate').forEach(pl=>{
       const st=pl.closest('.shelfrow') ? pl.closest('.shelfrow').querySelector('.books').dataset.status : null;
-      let last=0;
-      pl.addEventListener('click', ()=>{ const now=Date.now(); if(now-last<300){ if(st) enterShelf(st); last=0; } else last=now; });
+      pl.addEventListener('click', ()=>{ if(st) enterShelf(st); });
     });
   }
 
@@ -652,132 +791,302 @@
   }
   function closeUpsell(){ $('upsell').classList.remove('open'); }
 
-  // ── SHELF VIEW (zoomed) ──
+  // ── IMMERSIVE SHELF WORLD ──
   function enterShelf(status){
     shelfIndex=Math.max(0, SHELVES.findIndex(([s])=>s===status));
-    selectedProp=null; renderShelfView();
+    previewWorld=null;
+    collectionOpen=false; collectionQuery='';
+    worldState={dawn:false,fairies:false,candleDim:false,memory:false};
+    renderShelfView();
     $('shelfview').classList.add('open');
   }
-  function exitShelf(){ $('shelfview').classList.remove('open'); }
+  function exitShelf(){ collectionOpen=false; $('shelfview').classList.remove('open'); }
+  function activeWorld(status){
+    const saved=(custom[status]&&custom[status].world_key)||'moonlit';
+    return previewWorld||saved;
+  }
+  function worldTitle(key){
+    return ({moonlit:'The Moonlit Reading Room',boudoir:'Candlelit Boudoir',academia:'The Rainbound Archive'})[key]||'Your Reading World';
+  }
+  function worldMessage(text){
+    const el=$('worldMessage'); if(el) el.textContent=text;
+  }
+  function syncWorldClasses(){
+    const sv=$('shelfview');
+    sv.classList.toggle('fairies-awake',worldState.fairies);
+    sv.classList.toggle('candle-dim',worldState.candleDim);
+    sv.classList.toggle('time-dawn',worldState.dawn);
+  }
+
+  let lastRenderedPageSize=null, shelfResizeTimer=null;
+  const shelfPageSize=()=>window.matchMedia('(max-width:620px)').matches?6:10;
+  function shelfItems(status){
+    return [...(user?shelf:DEMO_SHELF)].sort(shelfCmp).filter(b=>b.status===status);
+  }
+  function shelfPageInfo(status){
+    const items=shelfItems(status), size=shelfPageSize(), pageCount=Math.max(1,Math.ceil(items.length/size));
+    const page=Math.min(pageCount-1,Math.max(0,shelfPages[status]||0));
+    shelfPages[status]=page;
+    const start=page*size, end=Math.min(items.length,start+size);
+    return {items,size,page,pageCount,start,end,pageItems:items.slice(start,end)};
+  }
+  function collectionListHTML(status,items,size){
+    const q=collectionQuery.trim().toLowerCase();
+    const found=items.map((book,index)=>({book,index})).filter(({book})=>
+      !q||String(book.title||'').toLowerCase().includes(q)||String(book.author||'').toLowerCase().includes(q)
+    );
+    if(!found.length) return '<div class="collection-empty">'+(q?'No books match that search.':'This shelf is waiting for its first book.')+'</div>';
+    return found.map(({book,index})=>{
+      const color=SPINES[hash(book.book_key)%SPINES.length], page=Math.floor(index/size)+1;
+      return '<button class="collection-book" data-collection-index="'+index+'">'
+        +'<span class="collection-spine" style="--spine:'+color+'"></span>'
+        +'<span class="collection-copy"><strong>'+esc(book.title||'Untitled')+'</strong><small>'+esc(book.author||labelOf(status))+'</small></span>'
+        +'<span class="collection-page">Shelf '+page+'</span></button>';
+    }).join('');
+  }
+  function collectionDrawerHTML(status,label,items,size){
+    return '<aside class="sv-library'+(collectionOpen?' open':'')+'" id="svLibrary" aria-label="'+esc(label)+' collection">'
+      +'<div class="collection-head"><div><h3>'+esc(label)+' collection</h3><p>'+items.length+' book'+(items.length===1?'':'s')+' · choose one to reveal its shelf section</p></div>'
+      +'<button class="collection-close" id="collectionClose" aria-label="Close collection">×</button></div>'
+      +'<input class="collection-search" id="collectionSearch" type="search" placeholder="Search this shelf" value="'+esc(collectionQuery)+'" aria-label="Search this shelf">'
+      +'<div class="collection-list" id="collectionList">'+collectionListHTML(status,items,size)+'</div></aside>';
+  }
 
   function renderShelfView(){
     const [status,label]=SHELVES[shelfIndex];
-    const c=custom[status]||{};
-    const items=[...shelf].sort(shelfCmp).filter(b=>b.status===status);
-    const props=(c.props||[]).map((p,i)=>propHTML(p,i)).join('');
+    const world=activeWorld(status);
+    const info=shelfPageInfo(status);
+    const books=info.pageItems.length?info.pageItems.map((b,i)=>bookHTML(b,i===0)).join(''):ghostHTML;
+    const range=info.items.length?(info.start+1)+'–'+info.end+' of '+info.items.length:'Empty shelf';
+    const pageClass=pageDirection>0?' page-next':(pageDirection<0?' page-prev':'');
     $('shelfview').innerHTML =
-      '<div class="sv-backdrop bd-'+(c.backdrop_key||'plain')+'"></div>'
-      + '<div class="sv-props" id="svprops">'+props+'</div>'
-      + '<div class="sv-light light-'+(c.lighting_key||'none')+'"></div>'
-      + '<div class="propbar" id="propbar"><button data-p="smaller">－</button><button data-p="bigger">＋</button><button data-p="remove">🗑️</button></div>'
-      + '<div class="sv-top"><button class="sv-back" id="svback">←</button><div class="sv-label">'+label+'</div><div style="width:40px"></div></div>'
-      + '<div class="sv-shelf"><div class="books">'+(items.length?items.map((b,i)=>bookHTML(b,i===0)).join(''):ghostHTML)+'</div><div class="plank"></div></div>'
-      + '<button class="sv-customize" id="svcustomize">🎨 Customize</button>'
-      + '<div class="sv-dots">'+SHELVES.map((s,i)=>'<span class="'+(i===shelfIndex?'on':'')+'"></span>').join('')+'</div>'
-      + '<div class="sv-drawer" id="svdrawer"></div>';
+      '<div class="sv-backdrop world-'+world+'"></div>'
+      + '<div class="sv-light '+(worldState.dawn?'light-dawn':(world==='boudoir'?'light-candlelit':'light-moonlit'))+'"></div>'
+      + '<div class="sv-top"><button class="sv-back" id="svback" aria-label="Back to bookcase">←</button>'
+      + '<div class="sv-label"><small>'+esc(label)+'</small>'+esc(worldTitle(world))+'</div>'
+      + '<button class="sv-shopbtn" id="svshop">✨ Shop &amp; decorate</button></div>'
+      + '<div class="sv-world"><div class="world-message" id="worldMessage">The shelf is listening. Touch something and let the room answer.</div>'
+      + '<div class="world-stage">'
+      + '<button class="world-clock" id="worldClock" aria-label="Wind the clock"><span class="clock-hands"></span><span class="clock-time">'+(worldState.dawn?'6:02 AM':'11:47 PM')+'</span></button>'
+      + '<button class="world-fairies" id="worldFairies" aria-label="Call the fairies"><span class="fairy"></span><span class="fairy"></span><span class="fairy"></span><span class="fairy-label">'+(worldState.fairies?'Settle fairies':'Call fairies')+'</span></button>'
+      + '<button class="world-candle" id="worldCandle" aria-label="'+(worldState.candleDim?'Relight':'Dim')+' the candle"><span class="flame"></span><span class="wax"></span></button>'
+      + '<button class="shelf-turn prev" id="shelfPrev" aria-label="Previous shelf section" '+(info.page===0?'disabled':'')+'>‹</button>'
+      + '<div class="sv-shelf'+pageClass+'">'
+      + '<div class="books" data-status="'+status+'">'+books+'</div><div class="plank"></div>'
+      + '<button class="shelf-range" id="shelfRange" aria-label="View all '+info.items.length+' books">'+range+' · View all</button></div>'
+      + '<button class="shelf-turn next" id="shelfNext" aria-label="Next shelf section" '+(info.page>=info.pageCount-1?'disabled':'')+'>›</button>'
+      + '<div class="world-memory'+(worldState.memory?' show':'')+'" id="worldMemory"><small>Reading memory</small><strong>The scene that made you stay up until 2 AM.</strong></div>'
+      + '</div></div>'
+      + '<div class="sv-dots">'+SHELVES.map((s,i)=>'<button data-shelf-index="'+i+'" class="'+(i===shelfIndex?'on':'')+'" aria-label="Open '+esc(s[1])+'" title="'+esc(s[1])+'"></button>').join('')+'</div>'
+      + '<div class="sv-drawer" id="svdrawer"></div>'
+      + collectionDrawerHTML(status,label,info.items,info.size);
     attachShelfView(status);
-  }
-  function propHTML(p,i){
-    const def=PROP_DEFS.find(x=>x.key===p.key);
-    return '<span class="prop'+(i===selectedProp?' sel':'')+'" data-i="'+i+'" style="left:'+((p.x==null?.5:p.x)*100)+'%;top:'+((p.y==null?.5:p.y)*100)+'%;--s:'+(p.scale||1)+'">'+(def?def.gly:'❔')+'</span>';
+    syncWorldClasses();
+    lastRenderedPageSize=info.size;
+    pageDirection=0;
   }
 
   function attachShelfView(status){
     $('svback').onclick=exitShelf;
-    $('svcustomize').onclick=()=>openDrawer(status);
-    document.querySelectorAll('#shelfview .book').forEach(el=>{ el.addEventListener('click',()=>openBook(el.dataset.key)); });
-    document.querySelectorAll('#svprops .prop').forEach(el=>attachProp(el, status));
-    const bar=$('propbar');
-    bar.querySelectorAll('button').forEach(btn=>btn.onclick=()=>propAction(btn.dataset.p, status));
-    if(selectedProp!=null) bar.classList.add('show'); else bar.classList.remove('show');
-  }
-
-  function attachProp(el, status){
-    const layer=$('svprops');
-    let moved=false, startX=0, startY=0;
-    el.addEventListener('pointerdown', (e)=>{
-      e.preventDefault(); moved=false; startX=e.clientX; startY=e.clientY;
-      el.setPointerCapture(e.pointerId);
-      const onMove=(ev)=>{
-        if(Math.abs(ev.clientX-startX)>4||Math.abs(ev.clientY-startY)>4) moved=true;
-        const r=layer.getBoundingClientRect();
-        const x=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width));
-        const y=Math.min(1,Math.max(0,(ev.clientY-r.top)/r.height));
-        el.style.left=(x*100)+'%'; el.style.top=(y*100)+'%'; el._x=x; el._y=y;
-      };
-      const onUp=()=>{
-        el.removeEventListener('pointermove',onMove); el.removeEventListener('pointerup',onUp);
-        const i=+el.dataset.i; const arr=(custom[status]||{}).props||[];
-        if(moved && arr[i]){ arr[i].x=el._x; arr[i].y=el._y; saveCustom(status); }
-        else { selectedProp = (selectedProp===i? null : i); renderShelfView(); }
-      };
-      el.addEventListener('pointermove',onMove); el.addEventListener('pointerup',onUp);
+    $('svshop').onclick=()=>openWorldStore(status);
+    $('shelfPrev').onclick=()=>changeShelfPage(status,-1);
+    $('shelfNext').onclick=()=>changeShelfPage(status,1);
+    $('shelfRange').onclick=()=>openCollection(status);
+    $('collectionClose').onclick=closeCollection;
+    $('collectionSearch').oninput=e=>{ collectionQuery=e.target.value; renderCollectionList(status); };
+    document.querySelectorAll('#shelfview [data-collection-index]').forEach(el=>el.onclick=()=>focusCollectionBook(status,Number(el.dataset.collectionIndex)));
+    document.querySelectorAll('#shelfview [data-shelf-index]').forEach(el=>el.onclick=()=>switchShelfTo(Number(el.dataset.shelfIndex)));
+    $('worldClock').onclick=()=>{
+      worldState.dawn=!worldState.dawn; syncWorldClasses();
+      $('worldClock').querySelector('.clock-time').textContent=worldState.dawn?'6:02 AM':'11:47 PM';
+      worldMessage(worldState.dawn?'Dawn enters the window and warms every book spine.':'The clock returns the room to midnight.');
+    };
+    $('worldFairies').onclick=()=>{
+      worldState.fairies=!worldState.fairies; syncWorldClasses();
+      $('worldFairies').querySelector('.fairy-label').textContent=worldState.fairies?'Settle fairies':'Call fairies';
+      worldMessage(worldState.fairies?'The fairies scatter starlight and leave a hidden bookmark.':'The fairies settle back into the room.');
+    };
+    $('worldCandle').onclick=()=>{
+      worldState.candleDim=!worldState.candleDim; syncWorldClasses();
+      worldMessage(worldState.candleDim?'The candle dims. Moonlight takes over the shelf.':'Warm candlelight returns.');
+    };
+    document.querySelectorAll('#shelfview .book').forEach(el=>{
+      el.addEventListener('click',()=>{
+        if(el.classList.contains('face')){
+          worldState.memory=!worldState.memory;
+          $('worldMemory').classList.toggle('show',worldState.memory);
+          worldMessage(worldState.memory?'This shelf remembers where the story found you.':'The memory folds back into the cover.');
+        } else openBook(el.dataset.key);
+      });
     });
   }
-  function propAction(act, status){
-    const arr=(custom[status]||{}).props||[]; if(selectedProp==null||!arr[selectedProp]) return;
-    if(act==='remove'){ arr.splice(selectedProp,1); selectedProp=null; }
-    else { const p=arr[selectedProp]; p.scale=Math.min(2.4,Math.max(.5,(p.scale||1)+(act==='bigger'?.2:-.2))); }
-    saveCustom(status); renderShelfView();
+
+  function changeShelfPage(status,dir){
+    const info=shelfPageInfo(status), next=Math.min(info.pageCount-1,Math.max(0,info.page+dir));
+    if(next===info.page) return false;
+    shelfPages[status]=next; pageDirection=dir; collectionOpen=false;
+    renderShelfView();
+    const updated=shelfPageInfo(status);
+    worldMessage('Shelf section '+(updated.page+1)+' of '+updated.pageCount+'.');
+    return true;
+  }
+  function openCollection(status){
+    collectionOpen=true;
+    const drawer=$('svdrawer'); if(drawer) drawer.classList.remove('open');
+    $('svLibrary').classList.add('open');
+    renderCollectionList(status);
+    setTimeout(()=>{ const input=$('collectionSearch'); if(input) input.focus(); },0);
+  }
+  function closeCollection(){ collectionOpen=false; const el=$('svLibrary'); if(el) el.classList.remove('open'); }
+  function renderCollectionList(status){
+    const list=$('collectionList'); if(!list) return;
+    const info=shelfPageInfo(status);
+    list.innerHTML=collectionListHTML(status,info.items,info.size);
+    list.querySelectorAll('[data-collection-index]').forEach(el=>el.onclick=()=>focusCollectionBook(status,Number(el.dataset.collectionIndex)));
+  }
+  function focusCollectionBook(status,index){
+    const info=shelfPageInfo(status), next=Math.floor(index/info.size);
+    pageDirection=next===info.page?0:(next>info.page?1:-1); shelfPages[status]=next; collectionOpen=false;
+    const book=info.items[index];
+    renderShelfView();
+    worldMessage(book?'Showing '+book.title+'.':'Showing that shelf section.');
   }
 
-  // ── CUSTOMIZE DRAWER ──
-  function openDrawer(status){ drawerTab='backdrop'; renderDrawer(status); $('svdrawer').classList.add('open'); }
-  function renderDrawer(status){
-    const c=custom[status]||{};
-    let body='';
-    if(drawerTab==='backdrop'){
-      body='<div class="optgrid">'+BACKDROPS.map(b=>
-        '<div class="opt '+((c.backdrop_key||'plain')===b.key?'on':'')+'" data-bd="'+b.key+'"><div class="sw bd-'+b.key+'"></div>'+b.name+(b.premium?'<span class="prem">✨</span>':'')+'</div>'
-      ).join('')+'</div>';
-    } else if(drawerTab==='lighting'){
-      body='<div class="optgrid">'+LIGHTS.map(l=>
-        '<div class="opt '+((c.lighting_key||'none')===l.key?'on':'')+'" data-light="'+l.key+'"><div class="sw light-'+l.key+'" style="background-color:#0c0708"></div>'+l.name+'</div>'
-      ).join('')+'</div>';
-    } else {
-      body='<div class="optgrid">'+PROP_DEFS.map(p=>
-        '<div class="opt" data-prop="'+p.key+'"><div class="gly">'+p.gly+'</div>'+p.key+'</div>'
-      ).join('')+'</div><p style="color:var(--muted);font-size:.78rem;margin-top:10px;text-align:center">Tap to add · drag on the shelf to place · tap a prop to resize/remove</p>';
-    }
-    $('svdrawer').innerHTML =
-      '<div class="premnote">✨ Premium decoration — free to preview during beta</div>'
-      + '<div class="tabs"><button data-tab="backdrop" class="'+(drawerTab==='backdrop'?'on':'')+'">Backdrop</button>'
-      + '<button data-tab="props" class="'+(drawerTab==='props'?'on':'')+'">Props</button>'
-      + '<button data-tab="lighting" class="'+(drawerTab==='lighting'?'on':'')+'">Lighting</button></div>'
-      + body
-      + '<div class="closebar"><button class="ghostbtn" id="drawerClose" style="max-width:160px">Done</button></div>';
-    $('svdrawer').querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{ drawerTab=b.dataset.tab; renderDrawer(status); });
-    $('drawerClose').onclick=()=>$('svdrawer').classList.remove('open');
-    $('svdrawer').querySelectorAll('[data-bd]').forEach(o=>o.onclick=()=>{ ensure(status).backdrop_key=o.dataset.bd; saveCustom(status); renderShelfView(); openDrawer(status); });
-    $('svdrawer').querySelectorAll('[data-light]').forEach(o=>o.onclick=()=>{ ensure(status).lighting_key=o.dataset.light; saveCustom(status); renderShelfView(); openDrawer(status); });
-    $('svdrawer').querySelectorAll('[data-prop]').forEach(o=>o.onclick=()=>{ ensure(status).props.push({key:o.dataset.prop,x:.5,y:.55,scale:1,rotation:0}); saveCustom(status); renderShelfView(); openDrawer(status); });
+  // ── SHOP, OWNERSHIP + RELEASES ──
+  const catalog=()=>window.SMUTHUB_BOOKCASE_CATALOG||{currency:'CAD',products:[],releases:[]};
+  const money=cents=>cents===0?'Free':new Intl.NumberFormat('en-CA',{style:'currency',currency:catalog().currency}).format(cents/100);
+  const owns=key=>isPremium||ownedProducts.has(key);
+  function openWorldStore(status){
+    drawerTab='worlds'; collectionOpen=false;
+    const library=$('svLibrary'); if(library) library.classList.remove('open');
+    renderWorldStore(status);
+    $('svdrawer').classList.add('open');
   }
-  function ensure(status){ if(!custom[status]) custom[status]={backdrop_key:null,lighting_key:null,props:[]}; if(!custom[status].props) custom[status].props=[]; return custom[status]; }
+  function productCard(p,status){
+    const owned=owns(p.key), previewing=!!(p.worldKey&&previewWorld===p.worldKey);
+    return '<article class="product-card'+(previewing?' previewing':'')+'">'
+      +'<span class="product-badge">'+esc(p.badge||p.type)+'</span>'
+      +'<h4>'+esc(p.name)+'</h4><p>'+esc(p.description)+'</p>'
+      +'<div class="product-actions"><span class="product-price">'+money(p.priceCents)+'</span>'
+      +(p.worldKey?'<button class="mini-btn preview" data-preview="'+esc(p.key)+'">'+(previewing?'Previewing':'Preview')+'</button>':'')
+      +'<button class="mini-btn buy" data-buy="'+esc(p.key)+'">'+(owned?'Use':'Buy')+'</button></div></article>';
+  }
+  function releaseCard(r){
+    return '<article class="release-card"><div class="release-date">'+esc(r.release)+'</div><div><h4>'+esc(r.name)+'</h4><p>'+esc(r.description)+'</p></div><div class="release-price">'+money(r.targetPriceCents)+'</div></article>';
+  }
+  function renderWorldStore(status){
+    const all=catalog().products||[];
+    const products=drawerTab==='worlds'?all.filter(p=>p.type==='world'||p.type==='bundle'):all.filter(p=>p.type==='interaction'||p.type==='prop');
+    const body=drawerTab==='releases'
+      ?'<div class="release-list">'+(catalog().releases||[]).map(releaseCard).join('')+'</div>'
+      :'<div class="product-grid">'+products.map(p=>productCard(p,status)).join('')+'</div>';
+    $('svdrawer').innerHTML =
+      '<div class="store-head"><div><h3>Make this shelf yours</h3><p>Preview everything here. Purchases follow your account across devices.</p></div><button class="store-close" id="storeClose" aria-label="Close store">×</button></div>'
+      +'<div class="tabs"><button data-storetab="worlds" class="'+(drawerTab==='worlds'?'on':'')+'">Worlds</button>'
+      +'<button data-storetab="interactions" class="'+(drawerTab==='interactions'?'on':'')+'">Interactions</button>'
+      +'<button data-storetab="releases" class="'+(drawerTab==='releases'?'on':'')+'">Coming soon</button></div>'+body;
+    $('storeClose').onclick=()=>{$('svdrawer').classList.remove('open');};
+    $('svdrawer').querySelectorAll('[data-storetab]').forEach(b=>b.onclick=()=>{drawerTab=b.dataset.storetab;renderWorldStore(status);});
+    $('svdrawer').querySelectorAll('[data-preview]').forEach(b=>b.onclick=()=>previewProduct(b.dataset.preview,status));
+    $('svdrawer').querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>buyOrUseProduct(b.dataset.buy,status));
+  }
+  function findProduct(key){ return (catalog().products||[]).find(p=>p.key===key); }
+  function previewProduct(key,status){
+    const p=findProduct(key); if(!p) return;
+    if(p.worldKey) previewWorld=p.worldKey;
+    renderShelfView(); openWorldStore(status);
+    worldMessage('Previewing '+p.name+' in your shelf.');
+  }
+  function buyOrUseProduct(key,status){
+    const p=findProduct(key); if(!p) return;
+    if(!user){
+      toast('Log in to save worlds and purchases to your bookcase.');
+      SH.openAuth();
+      return;
+    }
+    if(owns(key)){
+      if(p.worldKey){
+        previewWorld=null; ensure(status).world_key=p.worldKey; saveCustom(status);
+        renderShelfView(); openWorldStore(status); toast(p.name+' applied ✨');
+      } else {
+        toast(p.name+' is ready in this world ✨');
+      }
+      return;
+    }
+    if(p.checkoutUrl){ window.location.href=p.checkoutUrl; return; }
+    toast('Checkout is ready for its Stripe price ID — no live charge was started.');
+  }
+  function ensure(status){
+    if(!custom[status]) custom[status]={world_key:'moonlit',backdrop_key:null,lighting_key:null,props:[]};
+    if(!custom[status].props) custom[status].props=[];
+    return custom[status];
+  }
 
   async function saveCustom(status){
     const c=custom[status]||{};
     const { error } = await sb.from('shelf_customization').upsert(
-      { user_id:user.id, shelf_status:status, backdrop_key:c.backdrop_key||null, lighting_key:c.lighting_key||null, props:c.props||[], updated_at:new Date().toISOString() },
+      { user_id:user.id, shelf_status:status, world_key:c.world_key||'moonlit', backdrop_key:c.backdrop_key||null, lighting_key:c.lighting_key||null, props:c.props||[], updated_at:new Date().toISOString() },
       { onConflict:'user_id,shelf_status' }
     );
-    if(error){ console.error('customization save', error); toast(/relation|exist|column|shelf_customization/i.test(error.message) ? "Run smuthub-bookshelf-schema.sql in Supabase to save decorations" : "Couldn't save: "+error.message); }
+    if(error){ console.error('customization save', error); toast(/world_key|relation|exist|column|shelf_customization/i.test(error.message) ? "Run smuthub-bookcase-store-schema.sql to save immersive worlds" : "Couldn't save: "+error.message); }
   }
 
   (function(){
-    const sv=$('shelfview'); let tsx=null, tsy=null;
-    sv.addEventListener('touchstart', e=>{ tsx=e.touches[0].clientX; tsy=e.touches[0].clientY; }, {passive:true});
+    const sv=$('shelfview'); let tsx=null, tsy=null, swipeBlocked=false;
+    sv.addEventListener('touchstart', e=>{
+      tsx=e.touches[0].clientX; tsy=e.touches[0].clientY;
+      swipeBlocked=!!e.target.closest('button,.book,input,.sv-drawer,.sv-library');
+    }, {passive:true});
     sv.addEventListener('touchend', e=>{
       if(tsx==null) return; const dx=e.changedTouches[0].clientX-tsx, dy=e.changedTouches[0].clientY-tsy; tsx=null;
-      if(Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)){ const d=$('svdrawer'); if(!d||!d.classList.contains('open')) switchShelf(dx<0?1:-1); }
+      if(swipeBlocked) return;
+      if(Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)){
+        const d=$('svdrawer'), library=$('svLibrary');
+        if((!d||!d.classList.contains('open'))&&(!library||!library.classList.contains('open'))){
+          const status=SHELVES[shelfIndex][0], info=shelfPageInfo(status);
+          if(info.pageCount>1) changeShelfPage(status,dx<0?1:-1); else switchShelf(dx<0?1:-1);
+        }
+      }
     });
     document.addEventListener('keydown', e=>{
       if(!sv.classList.contains('open')) return;
-      if(e.key==='Escape') exitShelf();
-      else if(e.key==='ArrowRight') switchShelf(1);
-      else if(e.key==='ArrowLeft') switchShelf(-1);
+      if(e.key==='Escape'){
+        const library=$('svLibrary'), drawer=$('svdrawer');
+        if(library&&library.classList.contains('open')) closeCollection();
+        else if(drawer&&drawer.classList.contains('open')) drawer.classList.remove('open');
+        else exitShelf();
+        return;
+      }
+      if(e.target&&/input|textarea|select/i.test(e.target.tagName)) return;
+      if(e.key==='ArrowRight'||e.key==='ArrowLeft'){
+        const library=$('svLibrary'), drawer=$('svdrawer');
+        if((library&&library.classList.contains('open'))||(drawer&&drawer.classList.contains('open'))) return;
+        const dir=e.key==='ArrowRight'?1:-1, status=SHELVES[shelfIndex][0], info=shelfPageInfo(status);
+        if(info.pageCount>1) changeShelfPage(status,dir); else switchShelf(dir);
+      }
     });
   })();
-  function switchShelf(dir){ shelfIndex=Math.min(SHELVES.length-1, Math.max(0, shelfIndex+dir)); selectedProp=null; renderShelfView(); }
+  function switchShelf(dir){
+    switchShelfTo(Math.min(SHELVES.length-1,Math.max(0,shelfIndex+dir)));
+  }
+  function switchShelfTo(index){
+    shelfIndex=Math.min(SHELVES.length-1,Math.max(0,index));
+    collectionOpen=false; collectionQuery=''; pageDirection=0;
+    previewWorld=null; worldState={dawn:false,fairies:false,candleDim:false,memory:false};
+    renderShelfView();
+  }
+  window.addEventListener('resize',()=>{
+    clearTimeout(shelfResizeTimer);
+    shelfResizeTimer=setTimeout(()=>{
+      if(!$('shelfview').classList.contains('open')) return;
+      const nextSize=shelfPageSize();
+      if(lastRenderedPageSize&&nextSize!==lastRenderedPageSize){
+        const status=SHELVES[shelfIndex][0], firstIndex=(shelfPages[status]||0)*lastRenderedPageSize;
+        shelfPages[status]=Math.floor(firstIndex/nextSize);
+        renderShelfView();
+      }
+    },120);
+  });
 </script>
 </body>
 </html>

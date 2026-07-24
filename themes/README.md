@@ -1,5 +1,21 @@
 # Bookshelf theme art — drop-in backdrops (no designer needed)
 
+## Generated v1 world
+
+The first immersive world is now included at:
+
+`themes/moonlit-reading-room/room-v1.jpg`
+
+It is used directly by the Moonlit Reading Room in the zoomed shelf view. The
+older theme-art switch below still controls the full-bookcase backdrop system
+and does not need to be enabled for this new world.
+
+Its interactive add-ons use optimized transparent artwork at:
+
+- `themes/moonlit-reading-room/addons/clock-v3.png`
+- `themes/moonlit-reading-room/addons/candle-v4.png`
+- `themes/moonlit-reading-room/addons/fairies-v3.png`
+
 The bookcase, shelves, books, brass plates and lighting are all drawn in code.
 What turns it from "nice UI" into a **wallpaper-worthy scene** is one background
 image per theme: the *room* the bookcase stands in. The code is already wired
