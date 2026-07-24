@@ -82,16 +82,12 @@
   h1{font-family:'Fraunces';font-weight:600;font-size:clamp(2.8rem,7vw,5.4rem);line-height:1.02;letter-spacing:-.02em;max-width:14ch;margin:0 auto}
   h1 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
   .sub{max-width:46ch;margin:26px auto 0;color:var(--muted);font-size:1.12rem}
-  .search{margin:38px auto 0;max-width:560px;display:flex;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:7px 7px 7px 22px;box-shadow:var(--shadow)}
-  .search input{flex:1;min-width:0;background:none;border:0;color:var(--cream);font-family:inherit;font-size:1rem;outline:none;text-overflow:ellipsis}
-  .search input::placeholder{color:#7d5d5b}
-  .search button{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:0 26px;border-radius:99px;cursor:pointer;font-size:.95rem;transition:transform .15s;flex:0 0 auto;white-space:nowrap}
-  .search button:hover{transform:scale(1.04)}
-  @media(max-width:600px){
-    .search{margin-top:26px;padding:6px 6px 6px 16px}
-    .search input{font-size:.92rem}
-    .search button{padding:0 18px;font-size:.9rem}
-  }
+  .hero-cta{margin:36px auto 0;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .hero-btn{display:inline-flex;align-items:center;font-weight:800;font-size:.98rem;padding:14px 28px;border-radius:99px;cursor:pointer;transition:transform .15s;text-decoration:none}
+  .hero-btn:hover{transform:scale(1.04)}
+  .hero-btn.primary{background:var(--grad);color:#1a0c10;box-shadow:var(--shadow)}
+  .hero-btn.ghost{background:var(--panel);border:1px solid var(--line);color:var(--cream)}
+  @media(max-width:560px){.hero-btn{padding:12px 22px;font-size:.92rem}}
   .hero-tags{margin-top:18px;color:#7d5d5b;font-size:.85rem}
   .hero-tags span{color:var(--muted)}
 
@@ -118,6 +114,22 @@
   .trope .emoji{font-size:1.5rem}
   .trope .name{font-family:'Fraunces';font-size:1.18rem;font-weight:500;line-height:1.15}
   .trope .count{color:var(--muted);font-size:.8rem;margin-top:4px}
+
+  /* ---------- GLOSSARY HIGHLIGHT (the content we're writing) ---------- */
+  .decode{background:var(--ink-2);border:1px solid var(--line);border-radius:24px;padding:34px 34px 30px;position:relative;overflow:hidden}
+  .decode::before{content:"";position:absolute;left:-40px;top:-40px;width:180px;height:180px;background:var(--grad);filter:blur(60px);opacity:.14;pointer-events:none}
+  .decode .kicker{display:inline-block;font-size:.74rem;letter-spacing:.24em;text-transform:uppercase;color:var(--amber);margin-bottom:12px}
+  .decode h2{font-family:'Fraunces';font-weight:500;font-size:clamp(1.5rem,3vw,2.1rem);letter-spacing:-.01em;max-width:22ch}
+  .decode p{color:var(--muted);margin-top:10px;max-width:52ch;font-size:1.02rem}
+  .decode p b{color:var(--cream);font-weight:700}
+  .decode-cats{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
+  .decode-cat{display:inline-flex;align-items:baseline;gap:7px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:8px 15px;text-decoration:none;color:var(--cream);font-size:.9rem;font-weight:600;transition:transform .15s,border-color .15s}
+  .decode-cat:hover{transform:translateY(-2px);border-color:var(--rose)}
+  .decode-cat b{color:var(--amber);font-weight:800}
+  .decode-foot{margin-top:24px}
+  .decode-foot a{display:inline-flex;align-items:center;font-weight:800;font-size:.95rem;color:#1a0c10;background:var(--grad);padding:12px 24px;border-radius:99px;text-decoration:none;transition:transform .15s}
+  .decode-foot a:hover{transform:scale(1.04)}
+  @media(max-width:560px){.decode{padding:26px 22px}}
 
   /* ---------- TRENDING (book cards) ---------- */
   .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
@@ -206,9 +218,9 @@
     <span class="eyebrow fu d1">✨ Launching soon · Romantasy · Spice · Yearning</span>
     <h1 class="fu d2">The hub for <em>spicy</em> fantasy reads you can't put down.</h1>
     <p class="sub fu d3">Browse by trope, sort by heat, and find your next fictional situationship. Dragons optional. Pining mandatory.</p>
-    <div class="search fu d4">
-      <input type="text" id="heroSearch" placeholder="Search by trope, vibe, or title…">
-      <button type="button" onclick="document.getElementById('shelf').scrollIntoView({behavior:'smooth'})">Find heat</button>
+    <div class="hero-cta fu d4">
+      <a class="hero-btn primary" href="/books/">Browse the shelves →</a>
+      <a class="hero-btn ghost" href="/guides/">Explore romantasy</a>
     </div>
     <p class="hero-tags fu d5">🚧 <span>We're still stocking the shelves —</span> drop your email below to get first access. 💌</p>
   </section>
@@ -222,6 +234,25 @@
          at the bottom of this page. Markup is filled by JS — empty placeholder
          here so this section never shows fake data. -->
     <div class="tropes" id="tropesGrid"></div>
+  </section>
+
+  <!-- The written content we're building. The glossary is live today; as more
+       editorial pages ship, add cards to .decode-cats or a sibling block here. -->
+  <section id="decode" class="wrap">
+    <div class="decode">
+      <span class="kicker">Romantasy, decoded</span>
+      <h2>Every trope, kink and content warning — in plain English.</h2>
+      <p>We're writing the glossary the genre never had: <b>356 terms</b> across <b>19 categories</b>, from “touch her and you die” to closed-door heat levels. Know what you're getting into before page one.</p>
+      <div class="decode-cats">
+        <a class="decode-cat" href="/glossary/trope/">Tropes <b>74</b></a>
+        <a class="decode-cat" href="/glossary/warning/">Content warnings <b>46</b></a>
+        <a class="decode-cat" href="/glossary/culture/">Reader culture <b>34</b></a>
+        <a class="decode-cat" href="/glossary/li-archetype/">Love interests <b>32</b></a>
+        <a class="decode-cat" href="/glossary/worldbuilding/">Worldbuilding <b>23</b></a>
+        <a class="decode-cat" href="/glossary/kink/">Kinks <b>14</b></a>
+      </div>
+      <div class="decode-foot"><a href="/glossary/">Explore the full glossary →</a></div>
+    </div>
   </section>
 
   <!-- Hidden by default; the script reveals it only if there are live featured

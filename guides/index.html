@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Romantasy Guides | smutHub</title>
+<meta name="description" content="Plain-English guides to romantasy: how to read by trope, decode spice levels, pick your next series, and navigate the genre without spoilers. Coming soon from smutHub.">
+<!-- Placeholder hub. Thin for now, so kept out of the index until the first
+     guides ship. Remove this robots tag (and add real pages + JSON-LD) when
+     content lands, then submit the URLs in Search Console. -->
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://smuthub.ca/guides/">
+<meta name="theme-color" content="#0c0708">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="smutHub">
+<meta property="og:title" content="Romantasy Guides | smutHub">
+<meta property="og:description" content="Plain-English guides to romantasy: read by trope, decode spice, pick your next series. Coming soon from smutHub.">
+<meta property="og:url" content="https://smuthub.ca/guides/">
+<meta property="og:image" content="https://smuthub.ca/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Romantasy Guides | smutHub">
+<meta name="twitter:description" content="Plain-English guides to romantasy: read by trope, decode spice, pick your next series. Coming soon from smutHub.">
+<meta name="twitter:image" content="https://smuthub.ca/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<script defer src="/auth.js"></script>
+<style>
+  :root{--ink:#0c0708;--ink-2:#150e10;--panel:#1c1316;--line:#2a1d22;--cream:#f4e8e3;--muted:#b69089;--rose:#ff3d76;--amber:#ffab40;--grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(800px 500px at 10% -5%,rgba(255,61,118,.12),transparent 60%)}
+  a{color:inherit}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap}
+  .navlinks{display:flex;gap:18px}
+  .navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none;transition:color .2s}
+  .navlinks a.on,.navlinks a:hover{color:var(--cream)}
+  @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
+
+  .crumb{padding:20px 0 0;color:var(--muted);font-size:.86rem}
+  .crumb a{color:var(--muted);text-decoration:none}.crumb a:hover{color:var(--cream)}
+
+  .ghead{padding:44px 0 8px;text-align:center;position:relative}
+  .ghead .eyebrow{display:inline-block;font-size:.74rem;letter-spacing:.24em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+  .ghead h1{font-family:'Fraunces';font-weight:500;font-size:clamp(2rem,5vw,3.2rem);letter-spacing:-.02em;line-height:1.02}
+  .ghead h1 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .ghead p{max-width:56ch;margin:18px auto 0;color:var(--muted);font-size:1.08rem}
+
+  .planned{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:44px 0 10px}
+  @media(max-width:820px){.planned{grid-template-columns:1fr}}
+  .gcard{border:1px solid var(--line);background:var(--ink-2);border-radius:18px;padding:24px 22px;position:relative;overflow:hidden}
+  .gcard::after{content:"";position:absolute;right:-30px;top:-30px;width:90px;height:90px;background:var(--grad);filter:blur(34px);opacity:.16}
+  .gcard .tag{display:inline-block;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:.32em .8em;margin-bottom:14px}
+  .gcard h2{font-family:'Fraunces';font-weight:500;font-size:1.32rem;line-height:1.18}
+  .gcard p{color:var(--muted);font-size:.96rem;margin-top:8px}
+
+  .meanwhile{margin:40px 0 70px;text-align:center;border:1px solid var(--line);background:var(--ink-2);border-radius:24px;padding:40px 28px}
+  .meanwhile h2{font-family:'Fraunces';font-weight:500;font-size:1.5rem}
+  .meanwhile p{color:var(--muted);margin:10px auto 0;max-width:48ch}
+  .mbtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+  .mbtn{display:inline-flex;align-items:center;font-weight:800;font-size:.95rem;padding:13px 26px;border-radius:99px;text-decoration:none;transition:transform .15s}
+  .mbtn:hover{transform:scale(1.04)}
+  .mbtn.primary{background:var(--grad);color:#1a0c10}
+  .mbtn.ghost{background:var(--panel);border:1px solid var(--line);color:var(--cream)}
+
+  footer{border-top:1px solid var(--line);margin-top:20px}
+  .ft{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:26px 0;color:var(--muted);font-size:.88rem}
+  .ft a{color:var(--muted);text-decoration:none}.ft a:hover{color:var(--cream)}
+</style>
+</head><body>
+
+<header>
+  <div class="nav wrap">
+    <a href="/" class="logo">smut<span class="box">Hub</span></a>
+    <nav class="navlinks">
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/books/">Browse Books</a>
+      <a href="/search">Add a Book</a>
+      <a href="/smuthub-bookcase.html">My Bookshelf</a>
+      <a href="/glossary/">Glossary</a>
+      <a href="/stores.html">Find a Store</a>
+    </nav>
+    <div class="authbox" id="authbox"></div>
+  </div>
+</header>
+
+<nav class="crumb wrap"><a href="/">Home</a> / <span>Guides</span></nav>
+
+<main class="wrap">
+  <section class="ghead">
+    <span class="eyebrow">Romantasy, decoded</span>
+    <h1>Guides for finding your <em>next obsession</em>.</h1>
+    <p>Plain-English walkthroughs of the genre — how to read by trope, what the spice levels actually mean, and how to pick a series without wandering into spoilers. We're writing them now.</p>
+  </section>
+
+  <!-- Planned pieces. As each ships, swap a card for a real <a> to its URL and
+       give it its own indexable page + Article/HowTo JSON-LD. -->
+  <section class="planned" aria-label="Guides in progress">
+    <article class="gcard">
+      <span class="tag">In progress</span>
+      <h2>How to read by trope</h2>
+      <p>Enemies-to-lovers, fated mates, touch-her-and-you-die — what each promises, and the books that do it best.</p>
+    </article>
+    <article class="gcard">
+      <span class="tag">In progress</span>
+      <h2>The spice levels, explained</h2>
+      <p>From closed-door to inferno: what each chili actually means on the page, so there are no surprises.</p>
+    </article>
+    <article class="gcard">
+      <span class="tag">In progress</span>
+      <h2>Where to start in romantasy</h2>
+      <p>New to the genre? A no-spoiler map of the gateways, the heavy hitters, and what to read next.</p>
+    </article>
+  </section>
+
+  <section class="meanwhile">
+    <h2>While we write, start here</h2>
+    <p>The glossary is live today — 356 terms across 19 categories, every one linked to real books you can shelf.</p>
+    <div class="mbtns">
+      <a class="mbtn primary" href="/glossary/">Explore the glossary →</a>
+      <a class="mbtn ghost" href="/books/">Browse all books</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap ft">
+    <span>© 2026 smutHub · Romantasy, decoded.</span>
+    <span><a href="/books/">All Books</a> · <a href="/glossary/">Glossary</a> · <a href="/sitemap.html">Sitemap</a></span>
+  </div>
+</footer>
+
+</body></html>
