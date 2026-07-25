@@ -175,21 +175,28 @@ ${page.jsonld ? `<script type="application/ld+json">${JSON.stringify(page.jsonld
 ${page.extraCSS || ''}
 </head>`;
 
-const SHARED_HEADER = `
+// One nav for every generated page. `active` lights the current section the
+// same way Dashboard/Glossary light on their own pages. Keep the link set in
+// sync with the hand-maintained pages (index/dashboard/search/bookcase/stores).
+function sharedHeader(active){
+  const link = (href, label, key) => `<a href="${href}"${active === key ? ' class="on"' : ''}>${label}</a>`;
+  return `
 <header>
   <div class="nav wrap">
     <a href="/" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
-      <a href="/dashboard.html">Dashboard</a>
-      <a href="/books/">Browse Books</a>
-      <a href="/search">Add a Book</a>
-      <a href="/smuthub-bookcase.html">My Bookshelf</a>
-      <a href="/glossary/">Glossary</a>
+      ${link('/dashboard.html', 'Dashboard', 'dashboard')}
+      ${link('/books/', 'Browse Books', 'books')}
+      ${link('/search', 'Add a Book', 'add')}
+      ${link('/smuthub-bookcase.html', 'My Bookshelf', 'shelf')}
+      ${link('/glossary/', 'Glossary', 'glossary')}
+      ${link('/stores.html', 'Find a Store', 'stores')}
     </nav>
     <div class="authbox" id="authbox"></div>
   </div>
 </header>
 `;
+}
 
 const SHARED_FOOTER = `
 <footer>
@@ -938,7 +945,7 @@ function renderBookPage(book){
   ];
 
   const body = `<body>
-${SHARED_HEADER}
+${sharedHeader('books')}
 <div class="wrap">
   <nav class="crumb"><a href="/">Home</a> / <a href="/books/">All books</a> / <span>${esc(book.title)}</span></nav>
 
@@ -1642,7 +1649,7 @@ function renderBookIndex(allBooks){
   });
 
   const body = `<body>
-${SHARED_HEADER}
+${sharedHeader('books')}
 
 <div class="wrap ihead">
   <nav class="crumb" style="padding:18px 0 0;color:var(--muted);font-size:.85rem"><a href="/" style="color:var(--muted);text-decoration:none">Home</a> / <span>All books</span></nav>
