@@ -2,4 +2,26 @@
 # (Browsers/edge may still store a copy, but must check it's current before using it.)
 /*
   Cache-Control: no-cache
+
+  # ── Security headers ───────────────────────────────────────────────
+  # Don't let browsers guess content types (MIME sniffing).
   X-Content-Type-Options: nosniff
+  # Force HTTPS for a year, including subdomains (covers., analytics.).
+  # (Add "; preload" and submit to hstspreload.org once you're confident.)
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  # Only send the origin (not full path) when navigating cross-site.
+  Referrer-Policy: strict-origin-when-cross-origin
+  # Belt-and-suspenders clickjacking protection (CSP frame-ancestors is the modern one).
+  X-Frame-Options: SAMEORIGIN
+  # Turn off powerful features we don't use; geolocation is allowed for the
+  # Find-a-Store map (same-origin only).
+  Permissions-Policy: geolocation=(self), camera=(), microphone=(), payment=(), usb=(), browsing-topics=()
+
+  # ── Content Security Policy — REPORT-ONLY for now ──────────────────
+  # This does NOT block anything yet; it only logs violations to the browser
+  # console so we can confirm every legit resource is allow-listed before we
+  # enforce it. To enforce: rename this header to "Content-Security-Policy"
+  # (drop "-Report-Only"). 'unsafe-inline' is required because the pages use
+  # inline <script>/<style> and inline event handlers; the rest is a tight
+  # allow-list of the hosts the site actually talks to.
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://analytics.smuthub.ca https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://kufpvbmwrtcciamdomhp.supabase.co wss://kufpvbmwrtcciamdomhp.supabase.co https://analytics.smuthub.ca https://static.cloudflareinsights.com https://www.googleapis.com https://openlibrary.org https://covers.openlibrary.org; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
