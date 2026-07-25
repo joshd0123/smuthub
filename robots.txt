@@ -1,15 +1,14 @@
 # ════════════════════════════════════════════════════════════════════
-#  ⚠️  PRE-LAUNCH — CRAWLING IS DISABLED ON PURPOSE
+#  ⚠️  EARLY LIVE RELEASE — CRAWLING IS DISABLED ON PURPOSE
 #
-#  smutHub is not live yet. The build is publicly reachable at
-#  smuthub.joshd0123.workers.dev, but every page's canonical points at
-#  https://smuthub.ca/ — still a parked GoDaddy page.
+#  smutHub is live for invited/early users, but search discovery is not being
+#  opened yet. Keep the global block below until the public indexing launch is
+#  explicitly approved.
 #
-#  Left crawlable, Google would either index the workers.dev copy as a
-#  duplicate of the real site, or follow those canonicals, find nothing,
-#  and learn that smuthub.ca is a dead address — right before launch.
+#  Left crawlable, search engines could index an early release before launch
+#  QA, canonical-host checks, and the public sitemap rollout are complete.
 #
-#  ►►► ON LAUNCH DAY: delete the Disallow line below, then uncomment the
+#  ►►► ON INDEXING LAUNCH DAY: delete the Disallow line below, then uncomment the
 #      block underneath. See LAUNCH.md step 4.
 #      Skipping this leaves the live site invisible to search engines,
 #      and nothing on the site will look broken — so it is easy to miss.
