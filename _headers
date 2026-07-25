@@ -1,27 +1,20 @@
+# Cloudflare _headers: a BLANK LINE ends a rule block, so every header for a
+# path must sit in one unbroken group (comments are fine, blank lines are not).
 # Always revalidate with the edge so deploys show up immediately.
-# (Browsers/edge may still store a copy, but must check it's current before using it.)
 /*
   Cache-Control: no-cache
-
-  # ── Security headers ───────────────────────────────────────────────
   # Don't let browsers guess content types (MIME sniffing).
   X-Content-Type-Options: nosniff
   # Force HTTPS for a year, including subdomains (covers., analytics.).
-  # (Add "; preload" and submit to hstspreload.org once you're confident.)
+  # Add "; preload" and submit to hstspreload.org once you're confident.
   Strict-Transport-Security: max-age=31536000; includeSubDomains
-  # Only send the origin (not full path) when navigating cross-site.
+  # Only send the origin (not the full path) when navigating cross-site.
   Referrer-Policy: strict-origin-when-cross-origin
-  # Belt-and-suspenders clickjacking protection (CSP frame-ancestors is the modern one).
+  # Clickjacking protection (CSP frame-ancestors below is the modern equivalent).
   X-Frame-Options: SAMEORIGIN
-  # Turn off powerful features we don't use; geolocation is allowed for the
-  # Find-a-Store map (same-origin only).
+  # Turn off powerful features we don't use; geolocation stays on (same-origin) for the store map.
   Permissions-Policy: geolocation=(self), camera=(), microphone=(), payment=(), usb=(), browsing-topics=()
-
-  # ── Content Security Policy — REPORT-ONLY for now ──────────────────
-  # This does NOT block anything yet; it only logs violations to the browser
-  # console so we can confirm every legit resource is allow-listed before we
-  # enforce it. To enforce: rename this header to "Content-Security-Policy"
-  # (drop "-Report-Only"). 'unsafe-inline' is required because the pages use
-  # inline <script>/<style> and inline event handlers; the rest is a tight
-  # allow-list of the hosts the site actually talks to.
+  # Content Security Policy — REPORT-ONLY: logs violations to the console, blocks nothing.
+  # To enforce, rename this header to "Content-Security-Policy". 'unsafe-inline' is
+  # required by the inline scripts/styles/handlers; the rest is a tight host allow-list.
   Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://analytics.smuthub.ca https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://kufpvbmwrtcciamdomhp.supabase.co wss://kufpvbmwrtcciamdomhp.supabase.co https://analytics.smuthub.ca https://static.cloudflareinsights.com https://www.googleapis.com https://openlibrary.org https://covers.openlibrary.org; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
