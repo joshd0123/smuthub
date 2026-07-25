@@ -6,6 +6,13 @@
   const localPreview=['localhost','127.0.0.1','[::1]'].includes(location.hostname)
     && new URLSearchParams(location.search).has('companion-preview');
 
+  // TEMP (2026-07): Companion is hidden sitewide — running the live AI
+  // experience is too expensive right now. All the code, surfaces and the
+  // header nav entry stay in place; flip COMPANION_HIDDEN to false to bring
+  // it back. Local preview (?companion-preview on localhost) still works so
+  // development isn't blocked.
+  const COMPANION_HIDDEN=true;
+
   const C=window.SHCompanion={
     allowed:false,user:null,profile:null,busy:false,
     personas:{
@@ -64,6 +71,10 @@
     async boot(user){
       this.user=user||null;this.allowed=false;this.profile=null;
       document.querySelectorAll('[data-companion-beta]').forEach(el=>el.hidden=true);
+      if(COMPANION_HIDDEN&&!localPreview){
+        window.dispatchEvent(new CustomEvent('sh-companion-ready',{detail:{allowed:false,user:user||null,hidden:true}}));
+        return;
+      }
       if(!user&&!localPreview){
         window.dispatchEvent(new CustomEvent('sh-companion-ready',{detail:{allowed:false,user:null}}));
         return;

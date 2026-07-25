@@ -148,11 +148,24 @@
   /* ── PLACEHOLDER ROOMS ── */
   .rooms{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
   @media(max-width:760px){.rooms{grid-template-columns:repeat(2,1fr)}}
-  .room{background:var(--ink-2);border:1px dashed var(--line);border-radius:10px;padding:12px;text-align:center}
-  .room .ico{font-size:1.1rem;margin-bottom:4px}
+  .room{position:relative;background:var(--ink-2);border:1px dashed var(--line);border-radius:10px;padding:16px 12px 12px;text-align:center}
+  .room .ico{font-size:1.15rem;margin-bottom:4px}
   .room .nm{font-weight:700;font-size:.84rem}
   .room .sb{color:var(--muted);font-size:.7rem;margin-top:2px}
   .room .gem{color:var(--amber)}
+  /* Free vs. locked markers. The gem 💎 marks a feature that returns behind
+     billing later — no prices shown now, just where to come back. Locked cards
+     are still fully visible (a preview of what's coming). */
+  .room .rtag{position:absolute;top:7px;right:8px;font-size:.54rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:.16em .5em;border-radius:99px;line-height:1.4}
+  .room .rtag.free{color:#9fe6b4;border:1px solid rgba(122,220,150,.38)}
+  .room .rtag.soon{color:var(--amber);border:1px solid rgba(255,171,64,.4)}
+  .room.locked{opacity:.9}
+  .room.locked .ico{filter:saturate(.65)}
+  .room.more{border-style:solid;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted)}
+  .room.more .ico{color:var(--amber)}
+  .roomsnote{margin:12px 2px 0;color:var(--muted);font-size:.74rem}
+  .roomsnote a{color:var(--amber);text-decoration:none;font-weight:700}
+  .roomsnote a:hover{text-decoration:underline}
 
   /* ── FEEDBACK ── */
   .feedback{margin:22px 0 0;padding:18px 20px;background:linear-gradient(100deg,rgba(255,61,118,.08),rgba(255,171,64,.08));border:1px solid rgba(255,171,64,.25);border-radius:14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
@@ -253,11 +266,16 @@
       <div><h2>🏛️ More rooms coming to the Hub <span class="note">construction in progress · drag a plant in if you want</span></h2></div>
     </div>
     <div class="rooms">
-      <div class="room"><div class="ico">🐉</div><div class="nm">Trope of the Week</div><div class="sb">themed mini-lists</div></div>
-      <div class="room"><div class="ico">🎯</div><div class="nm">For You</div><div class="sb">your daily rec</div></div>
-      <div class="room"><div class="ico">💬</div><div class="nm">Community Pulse</div><div class="sb">polls &amp; hot takes</div></div>
-      <div class="room"><div class="ico">📸</div><div class="nm">Scan to Add</div><div class="sb">camera → shelf <span class="gem">💎</span></div></div>
+      <div class="room"><span class="rtag free">Free</span><div class="ico">🎯</div><div class="nm">For You</div><div class="sb">your daily rec</div></div>
+      <div class="room"><span class="rtag free">Free</span><div class="ico">💬</div><div class="nm">Community Pulse</div><div class="sb">polls &amp; hot takes</div></div>
+      <div class="room locked"><span class="rtag soon" title="Returns behind billing later">💎</span><div class="ico">🐉</div><div class="nm">Trope of the Week</div><div class="sb">themed mini-lists</div></div>
+      <div class="room locked"><span class="rtag soon" title="Returns behind billing later">💎</span><div class="ico">🧩</div><div class="nm">Quizzes &amp; Games</div><div class="sb">test your trope IQ</div></div>
+      <div class="room locked"><span class="rtag soon" title="Returns behind billing later">💎</span><div class="ico">✍️</div><div class="nm">Annotation</div><div class="sb">notes as you read</div></div>
+      <div class="room locked"><span class="rtag soon" title="Returns behind billing later">💎</span><div class="ico">🔄</div><div class="nm">Import / Export</div><div class="sb">bring your shelf in &amp; out</div></div>
+      <div class="room locked"><span class="rtag soon" title="Returns behind billing later">💎</span><div class="ico">✦</div><div class="nm">Companion</div><div class="sb">your AI reading buddy</div></div>
+      <div class="room locked"><span class="rtag soon" title="Returns behind billing later">💎</span><div class="ico">📸</div><div class="nm">Scan to Add</div><div class="sb">camera → shelf</div></div>
     </div>
+    <p class="roomsnote">💎 = premium features we'll unlock once billing opens. More rooms on the way — <a href="#" id="roomsFb">tell us what to build next →</a></p>
   </section>
 
   <!-- FEEDBACK -->
@@ -402,6 +420,7 @@
 
   // ── feedback gate (members only — handled by the shared auth layer) ──
   $('fbBtn').onclick = ()=>{ if (window.SH && SH.openFeedback) SH.openFeedback(); };
+  { const rfb = $('roomsFb'); if (rfb) rfb.onclick = (e)=>{ e.preventDefault(); if (window.SH && SH.openFeedback) SH.openFeedback(); }; }
 
   // ── auth wiring ───────────────────────────────────────
   window.addEventListener('sh-auth', async (e)=>{
