@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy | smutHub</title>
+<meta name="description" content="How smutHub handles your data: we store only your account email and your bookshelf, use cookieless analytics, and never sell your information.">
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://smuthub.ca/privacy.html">
+<meta name="theme-color" content="#0c0708">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<script defer src="/auth.js"></script>
+<style>
+  :root{--ink:#0c0708;--ink-2:#150e10;--panel:#1c1316;--line:#2a1d22;--cream:#f4e8e3;--muted:#b69089;--rose:#ff3d76;--amber:#ffab40;--grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.6}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(800px 500px at 10% -5%,rgba(255,61,118,.12),transparent 60%)}
+  a{color:inherit}
+  .wrap{max-width:820px;margin:0 auto;padding:0 22px}
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap;max-width:1100px;margin:0 auto;padding:0 22px}
+  .navlinks{display:flex;gap:18px}
+  .navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none;transition:color .2s}
+  .navlinks a.on,.navlinks a:hover{color:var(--cream)}
+  @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
+  .crumb{padding:22px 0 0;color:var(--muted);font-size:.86rem}
+  .crumb a{color:var(--muted);text-decoration:none}.crumb a:hover{color:var(--cream)}
+  .legal{padding:26px 0 70px}
+  .legal h1{font-family:'Fraunces';font-weight:600;font-size:clamp(2rem,5vw,2.8rem);letter-spacing:-.02em;line-height:1.05}
+  .legal .updated{color:var(--muted);font-size:.85rem;margin-top:10px}
+  .legal .lead{font-size:1.08rem;margin-top:20px}
+  .legal h2{font-family:'Fraunces';font-weight:500;font-size:1.4rem;margin:36px 0 10px;letter-spacing:-.01em}
+  .legal p{color:#d8c4bd;margin-top:12px}
+  .legal ul{margin:12px 0 0 20px;color:#d8c4bd}
+  .legal li{margin-top:8px}
+  .legal a{color:var(--amber);text-decoration:none}.legal a:hover{text-decoration:underline}
+  .legal strong{color:var(--cream)}
+  .callout{margin-top:20px;padding:16px 18px;border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:10px;background:var(--ink-2);color:#d8c4bd;font-size:.95rem}
+  footer{border-top:1px solid var(--line);margin-top:20px}
+  .ft{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:26px 0;color:var(--muted);font-size:.88rem}
+  .ft a{color:var(--muted);text-decoration:none}.ft a:hover{color:var(--cream)}
+</style>
+</head><body>
+
+<header>
+  <div class="nav">
+    <a href="/" class="logo">smut<span class="box">Hub</span></a>
+    <nav class="navlinks">
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/books/">Browse Books</a>
+      <a href="/search">Add a Book</a>
+      <a href="/smuthub-bookcase.html">My Bookshelf</a>
+      <a href="/glossary/">Glossary</a>
+      <a href="/stores.html">Find a Store</a>
+    </nav>
+  </div>
+</header>
+
+<nav class="crumb wrap"><a href="/">Home</a> / <span>Privacy Policy</span></nav>
+
+<main class="wrap legal">
+  <h1>Privacy Policy</h1>
+  <p class="updated">Last updated: July 25, 2026</p>
+
+  <p class="lead">smutHub is built to collect as little about you as possible. If you never sign in, we store <strong>nothing</strong> that identifies you. If you do sign in, the only personal data we hold is your <strong>email address</strong> and the <strong>bookshelf you build</strong>. We never sell your data, and there are no advertising trackers on this site.</p>
+
+  <div class="callout">The short version: sign in with Google → we keep your email + your shelf. That's it. Ask us any time and we'll delete it.</div>
+
+  <h2>Who we are</h2>
+  <p>smutHub ("we", "us") is a romantasy book-discovery site operated from Canada. For any privacy question, contact us at <a href="/contact.html">our contact page</a>.</p>
+
+  <h2>What we collect</h2>
+  <ul>
+    <li><strong>If you just browse:</strong> nothing that identifies you. No account, no cookies that track you across sites.</li>
+    <li><strong>If you sign in (Google only):</strong> your email address and a user ID, provided by Google when you choose to sign in. We do <strong>not</strong> receive or store your Google password.</li>
+    <li><strong>Your bookshelf:</strong> the books you save, their status (want to read, reading, read, DNF), your spice ratings, and any shelf/display customizations you set.</li>
+    <li><strong>Feedback:</strong> if you send feedback, we store the message and which page you sent it from.</li>
+    <li><strong>Analytics:</strong> we use a self-hosted, <strong>cookieless</strong> analytics tool (Umami) that records aggregate page views and referrers. It does not use cookies, does not fingerprint you, and does not build a profile of you across sites.</li>
+  </ul>
+
+  <h2>What we do NOT collect</h2>
+  <ul>
+    <li>No passwords (Google handles sign-in).</li>
+    <li>No marketing or newsletter email list — we removed the waitlist.</li>
+    <li>No advertising or cross-site tracking cookies.</li>
+    <li>No payment card details. If paid features launch later, payments will be handled by a dedicated payment processor and this policy will be updated first.</li>
+  </ul>
+
+  <h2>Why we use it</h2>
+  <ul>
+    <li>To sign you in and keep your bookshelf in sync across your devices.</li>
+    <li>To respond to feedback you send us.</li>
+    <li>To understand, in aggregate, which pages are useful so we can improve the site.</li>
+  </ul>
+
+  <h2>Who processes your data</h2>
+  <p>We use a small number of service providers to run the site:</p>
+  <ul>
+    <li><strong>Supabase</strong> — database and authentication (stores your account email and shelf).</li>
+    <li><strong>Google</strong> — sign-in (OAuth). Google's own <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">privacy policy</a> applies to your Google account.</li>
+    <li><strong>Cloudflare</strong> — hosting, content delivery, and book-cover storage.</li>
+    <li><strong>Umami</strong> — self-hosted, cookieless analytics (data stays on our own infrastructure).</li>
+  </ul>
+
+  <h2>How long we keep it</h2>
+  <p>We keep your account email and shelf for as long as your account exists. Delete your account (or email us) and we remove your personal data. Aggregate, non-identifying analytics may be retained.</p>
+
+  <h2>Your rights</h2>
+  <p>You can ask us to <strong>access</strong>, <strong>correct</strong>, or <strong>delete</strong> your personal data at any time. As a Canadian operator we follow <strong>PIPEDA</strong>; if you're in the EU/UK or California, we honour equivalent rights (access, deletion, and objection) regardless of where you live. To make a request, use <a href="/contact.html">our contact page</a>.</p>
+
+  <h2>Children</h2>
+  <p>smutHub features romance and "romantasy" titles with mature themes and is intended for an adult audience. It is not directed at children, and we do not knowingly collect data from anyone under the age of majority in their region.</p>
+
+  <h2>Changes</h2>
+  <p>If we change what we collect, we'll update this page and its "last updated" date before the change takes effect.</p>
+</main>
+
+<footer>
+  <div class="wrap ft">
+    <span>© 2026 smutHub · Romantasy, decoded.</span>
+    <span><a href="/about.html">About</a> · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/contact.html">Contact</a></span>
+  </div>
+</footer>
+
+</body></html>

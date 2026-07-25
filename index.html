@@ -222,7 +222,7 @@
       <a class="hero-btn primary" href="/books/">Browse the shelves →</a>
       <a class="hero-btn ghost" href="/guides/">Explore romantasy</a>
     </div>
-    <p class="hero-tags fu d5">🚧 <span>We're still stocking the shelves —</span> drop your email below to get first access. 💌</p>
+    <p class="hero-tags fu d5">🌶️ <span>289 books and counting —</span> sign in with Google to start your shelf. 💌</p>
   </section>
 
   <section id="tropes" class="wrap">
@@ -284,53 +284,22 @@
 
   <section id="shelf" class="wrap">
     <div class="cta">
-      <h2>Be first through the door.</h2>
-      <p>We're building the hub for romantasy readers — shelves, spice ratings, the whole thing. Join the list and you'll be the first in (and get founding-member perks).</p>
-      <div class="join" id="signup">
-        <input id="emailInput" type="email" placeholder="your@email.com" autocomplete="email">
-        <button type="button" id="joinBtn" onclick="joinHub()">Join the Hub</button>
+      <h2>Your shelf is waiting.</h2>
+      <p>Browse by trope, sort by heat, and build a bookshelf that follows you across devices. Sign in with Google — the only thing we store is your email and your shelf.</p>
+      <div class="hero-cta" style="justify-content:center">
+        <a class="hero-btn primary" href="/books/">Browse the books →</a>
+        <button type="button" class="hero-btn ghost" id="ctaSignIn">Sign in with Google</button>
       </div>
-      <p id="signupMsg" style="margin-top:14px;color:var(--amber);font-weight:600;min-height:1.2em;position:relative"></p>
     </div>
   </section>
 </main>
 
 <script>
-  // ── EMAIL SIGNUP ──────────────────────────────────────────────
-  // To actually RECEIVE emails: get a free access key at https://web3forms.com
-  // (they email it to you), then paste it between the quotes below.
-  const WEB3FORMS_KEY = (window.SMUTHUB_CONFIG||{}).WEB3FORMS_KEY || "";
-
-  async function joinHub(){
-    const input = document.getElementById('emailInput');
-    const msg = document.getElementById('signupMsg');
-    const email = input.value.trim();
-    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
-      msg.style.color = '#ff7a8f';
-      msg.textContent = "Hmm, that email looks a little fictional. Try again? 👀";
-      return;
-    }
-    document.getElementById('joinBtn').textContent = "Joining…";
-    try{
-      if(WEB3FORMS_KEY && WEB3FORMS_KEY !== "YOUR_WEB3FORMS_KEY"){
-        await fetch("https://api.web3forms.com/submit",{
-          method:"POST",
-          headers:{"Content-Type":"application/json"},
-          body: JSON.stringify({ access_key: WEB3FORMS_KEY, email, subject: "New SmutHub waitlist signup" })
-        });
-      }
-      msg.style.color = 'var(--amber)';
-      msg.textContent = "You're on the list 💌 Welcome to the Hub.";
-      input.value = "";
-      document.getElementById('joinBtn').textContent = "You're in ✓";
-      if(window.SH) SH.track('waitlist-signup');   // top pre-launch conversion metric
-    }catch(e){
-      msg.style.color = '#ff7a8f';
-      msg.textContent = "Something glitched — try again in a sec.";
-      document.getElementById('joinBtn').textContent = "Join the Hub";
-    }
+  // ── Homepage CTA sign-in (Google, via auth.js) ───────────────────────────
+  {
+    const ctaSignIn = document.getElementById('ctaSignIn');
+    if(ctaSignIn) ctaSignIn.onclick = ()=>{ if(window.SH && SH.openAuth) SH.openAuth(); };
   }
-  document.getElementById('emailInput').addEventListener('keydown', e=>{ if(e.key==='Enter') joinHub(); });
 
   // ── Dynamic homepage content from the live catalog ───────────────────────
   // Curated 8 trope cards (consistent over time regardless of which books are
@@ -466,11 +435,11 @@
       </div>
       <div>
         <h4>The Hub</h4>
-        <a href="#">My Shelf</a><a href="#">Spice Meter</a><a href="#">Newsletter</a><a href="#">Community</a>
+        <a href="/smuthub-bookcase.html">My Shelf</a><a href="/#meter">Spice Meter</a><a href="/guides/">Guides</a><a href="/stores.html">Find a Store</a>
       </div>
       <div>
         <h4>Boring Bits</h4>
-        <a href="#">About</a><a href="#">Contact</a><a href="#">Terms</a><a href="#">Privacy</a><a href="sitemap.html">Sitemap</a>
+        <a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/terms.html">Terms</a><a href="/privacy.html">Privacy</a><a href="/sitemap.html">Sitemap</a>
       </div>
       <div>
         <h4>Account</h4>

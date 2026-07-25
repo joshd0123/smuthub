@@ -202,7 +202,7 @@ const SHARED_FOOTER = `
 <footer>
   <div class="wrap ft">
     <span>© ${new Date().getFullYear()} smutHub · Romantasy, decoded.</span>
-    <span><a href="/books/">All Books</a> · <a href="/glossary/">Glossary</a> · <a href="/sitemap.html">Sitemap</a></span>
+    <span><a href="/books/">All Books</a> · <a href="/glossary/">Glossary</a> · <a href="/about.html">About</a> · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/sitemap.html">Sitemap</a></span>
   </div>
 </footer>
 </body></html>
