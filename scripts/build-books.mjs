@@ -242,13 +242,16 @@ const ASK_CSS = `
   .af-core h1{margin:20px 0 10px;font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.1rem,5.2vw,4.8rem);line-height:.92;letter-spacing:-.025em}
   .af-byline{margin:0;color:var(--muted);font-size:1.05rem}
   .af-byline a{color:var(--cream);font-weight:700}
-  .af-pulse{margin:16px 0 14px;padding:11px 0;display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .af-pulse{margin:16px 0 0;padding:11px 0;display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
   .af-pulse b{font-family:'Fraunces',serif;font-weight:600;font-size:1.6rem}
   .af-pulse small{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em}
-  .af-actions{display:flex;flex-wrap:wrap;gap:8px}
+  /* Consistent breathing room above the action row whether or not the rating
+     pulse is present (books without a rating used to sit tight to the byline). */
+  .af-actions{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px}
   .af-actions button,.af-actions select{font-family:inherit;font-weight:800;font-size:.8rem;padding:.7em 1em;border-radius:10px;cursor:pointer;border:1px solid var(--line);background:var(--ink-2);color:var(--cream)}
   .af-actions .af-primary{background:var(--grad);color:#1a0c10;border-color:transparent}
   .af-actions .af-primary.on{background:var(--panel);color:var(--cream);border-color:var(--rose)}
+  .af-actions button.on{border-color:var(--rose);color:var(--cream)}
   .af-facts{margin:24px 0 0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
   @media(max-width:720px){.af-facts{grid-column:1/-1;grid-template-columns:repeat(2,1fr)}}
   .af-facts>div{padding:15px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
@@ -257,19 +260,22 @@ const ASK_CSS = `
 
   /* ── column 3: the Ask First jump menu ── */
   .af-ask{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-  .af-ask-head{padding:20px 22px;background:var(--ink-2);border-bottom:1px solid var(--line)}
-  .af-ask-head>span{color:var(--amber);font-size:.62rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
-  .af-ask-head h2{margin:11px 0 0;font-family:'Fraunces',serif;font-weight:600;font-size:1.95rem;line-height:1.05;letter-spacing:-.02em}
+  .af-ask-head{padding:26px 24px;background:var(--ink-2);border-bottom:1px solid var(--line)}
+  .af-ask-head>span{color:var(--amber);font-size:.66rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+  .af-ask-head h2{margin:13px 0 0;font-family:'Fraunces',serif;font-weight:600;font-size:2.5rem;line-height:1.02;letter-spacing:-.025em}
   .af-ask-head h2 em{font-style:italic;font-weight:400;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
-  .af-ask nav a{min-height:60px;padding:13px 20px;display:grid;grid-template-columns:22px 1fr auto;align-items:center;gap:9px;text-decoration:none;color:var(--cream);border-bottom:1px solid var(--line);transition:background .16s,padding .16s}
+  /* Each row: number + a stacked question / answer. The question stays on ONE
+     line (answer drops beneath it) so long questions like "What's the
+     commitment?" never wrap, and the taller rows give the panel real presence. */
+  .af-ask nav a{min-height:76px;padding:16px 22px;display:grid;grid-template-columns:30px 1fr;align-items:center;gap:12px;text-decoration:none;color:var(--cream);border-bottom:1px solid var(--line);transition:background .16s,padding .16s}
   .af-ask nav a:last-child{border-bottom:0}
-  .af-ask nav a:hover,.af-ask nav a:focus-visible{padding-left:21px;background:var(--ink-2);outline:none}
-  .af-ask nav a>span{color:var(--muted);font-size:.66rem;font-variant-numeric:tabular-nums}
-  .af-ask nav a>b{font-family:'Fraunces',serif;font-weight:500;font-size:1.12rem;line-height:1.15}
-  /* The right-hand summary must stay strongly bold and legible on mobile —
-     this was the specific documented feedback on the prototype. */
-  .af-ask nav a>em{font-style:normal;font-weight:800;font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;color:var(--amber);text-align:right}
-  @media(max-width:720px){.af-ask nav a>em{font-size:.72rem}}
+  .af-ask nav a:hover,.af-ask nav a:focus-visible{padding-left:24px;background:var(--ink-2);outline:none}
+  .af-ask nav a .af-qn{color:var(--muted);font-size:.7rem;font-weight:800;font-variant-numeric:tabular-nums;align-self:start;padding-top:.35em}
+  .af-ask nav a .af-qa{display:flex;flex-direction:column;gap:4px;min-width:0}
+  .af-ask nav a .af-qa b{font-family:'Fraunces',serif;font-weight:500;font-size:1.28rem;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* The answer summary stays strongly bold and legible — specific documented
+     feedback on the prototype. Now sits under its question, left-aligned. */
+  .af-ask nav a .af-qa em{font-style:normal;font-weight:800;font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;color:var(--amber)}
 
   /* ── answer stack ── */
   .af-answers{padding:8px 0 10px}
@@ -277,9 +283,9 @@ const ASK_CSS = `
   @media(max-width:720px){.af-sec{grid-template-columns:30px 1fr;padding:24px 0}}
   .af-num{color:var(--rose);font-size:.72rem;font-weight:800;font-variant-numeric:tabular-nums;padding-top:.5em}
   .af-label{margin:0 0 10px;color:var(--muted);font-size:.7rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
-  .af-sec h2{margin:0;font-family:'Fraunces',serif;font-weight:400;font-size:clamp(1.35rem,2.9vw,2.1rem);line-height:1.14;letter-spacing:-.02em;max-width:34ch}
-  .af-sec p{max-width:70ch;color:var(--muted);line-height:1.62;margin-top:12px}
-  .af-tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:7px;max-width:900px}
+  .af-sec h2{margin:0;font-family:'Fraunces',serif;font-weight:400;font-size:clamp(1.35rem,2.9vw,2.1rem);line-height:1.14;letter-spacing:-.02em;max-width:44ch}
+  .af-sec p{max-width:82ch;color:var(--muted);line-height:1.62;margin-top:12px}
+  .af-tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:7px}
   .af-tags a,.af-tags span{padding:7px 10px;border:1px solid var(--line);border-radius:99px;color:var(--cream);text-decoration:none;font-size:.76rem}
   .af-tags a:hover{border-color:var(--rose)}
   .af-tags.is-warn span,.af-tags.is-warn a{color:#ffb3a7;border-color:rgba(255,122,77,.4)}
@@ -293,13 +299,14 @@ const ASK_CSS = `
   .af-gauge{display:flex;gap:5px}
   .af-gauge i{width:30px;height:7px;border-radius:2px;background:#4f4448;display:block}
   .af-gauge i.on{background:var(--grad)}
-  .af-blurb{max-width:80ch;margin-top:16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .af-blurb{margin-top:16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .af-blurb .af-blurb-body{max-width:82ch}
   .af-blurb summary{padding:14px 0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;list-style:none;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
   .af-blurb summary::-webkit-details-marker{display:none}
   .af-blurb summary span{color:var(--amber);font-size:1.1rem;line-height:.7;transition:transform .2s}
   .af-blurb[open] summary span{transform:rotate(45deg)}
   .af-blurb .af-blurb-body{padding-bottom:18px}
-  .af-commit{max-width:900px;margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .af-commit{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   @media(max-width:720px){.af-commit{grid-template-columns:1fr}.af-commit>div{border-right:0!important;border-bottom:1px solid var(--line)}}
   .af-commit>div{padding:16px;border-right:1px solid var(--line)}
   .af-commit>div:last-child{border-right:0}
@@ -769,7 +776,11 @@ function afFit(b, tags){
     ? `Yes — if ${forYou.slice(0, 2).join(', and ')}.`
     : 'Depends on what you want from it.';
   const body = skip.length ? `Skip it if ${skip.slice(0, 2).join(', or ')}.` : '';
-  return { headline, body };
+  // Short teaser for the jump menu — a real verdict beats the old, content-free
+  // "quick fit check" label, and it mirrors the headline the reader lands on.
+  const chip = forYou.length ? (skip.length ? 'yes, with caveats' : 'likely yes')
+    : 'depends';
+  return { headline, body, chip };
 }
 
 // The next book in reading order — the design requires "next book is obvious".
@@ -911,19 +922,20 @@ function renderBookPage(book){
         .sort((a, c) => (Number(a.series_number) || 99) - (Number(c.series_number) || 99))
     : [];
 
-  // Jump menu — a row is only offered when the section it points at will exist.
+  // Jump menu — the SAME six questions on every book, in a fixed order, so the
+  // panel reads identically page to page. When a field is missing the row still
+  // renders (its answer section below says "not recorded"); an absent question
+  // reads as "unknown", the opposite signal to the one we want.
+  const doorWord = book.door ? (DOOR[book.door] || book.door).split(' ')[0].toLowerCase() : '';
   const askRows = [
-    shortAns || book.blurb ? ['#af-plot', "What's it about?", '30-sec answer'] : null,
-    hasSpice || book.door ? ['#af-spice', 'How spicy is it?', hasSpice ? `${spiceLvl} / 5${book.door ? ` · ${esc((DOOR[book.door] || book.door).split(' ')[0].toLowerCase())}` : ''}` : 'the details'] : null,
-    tropeTags.length ? ['#af-tropes', 'Which tropes?', `${tropeTags.length} tagged`] : null,
-    // "Any hard nos?" is ALWAYS offered — a reader who avoids content warnings
-    // needs to see the question answered even when the answer is "none recorded",
-    // not have it silently absent (which reads as "unknown", the opposite signal).
+    ['#af-plot', "What's it about?", (shortAns || book.blurb) ? '30-sec answer' : 'not recorded'],
+    ['#af-spice', 'How spicy is it?', hasSpice ? `${spiceLvl} / 5${doorWord ? ` · ${doorWord}` : ''}` : (doorWord || 'not recorded')],
+    ['#af-tropes', 'Which tropes?', tropeTags.length ? `${tropeTags.length} tagged` : 'none tagged'],
     ['#af-warnings', 'Any hard nos?', warnTags.length ? `${warnTags.length} warning${warnTags.length === 1 ? '' : 's'}` : triggers ? 'read first' : 'none recorded'],
-    ['#af-fit', 'Is it for me?', 'quick fit check'],
-    (book.page_count || book.series_number || book.ending) ? ['#af-commitment', "What's the commitment?",
-      [book.page_count ? `${book.page_count} pp` : '', book.series_number ? `book ${book.series_number}` : ''].filter(Boolean).join(' · ') || 'the details'] : null,
-  ].filter(Boolean);
+    ['#af-fit', 'Is it for me?', fit.chip],
+    ['#af-commitment', "What's the commitment?",
+      [book.page_count ? `${book.page_count} pp` : '', book.series_number ? `book ${book.series_number}` : (book.standalone ? 'standalone' : '')].filter(Boolean).join(' · ') || 'not recorded'],
+  ];
 
   const body = `<body>
 ${SHARED_HEADER}
@@ -981,44 +993,48 @@ ${SHARED_HEADER}
     <aside class="af-ask" aria-labelledby="af-ask-h">
       <div class="af-ask-head">
         <span>The fastest way in</span>
-        <h2 id="af-ask-h">What do you <em>actually</em> want to know?</h2>
+        <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        ${askRows.map(([href, q, sum], i) => `<a href="${href}"><span>${String(i + 1).padStart(2, '0')}</span><b>${esc(q)}</b><em>${esc(sum)}</em></a>`).join('')}
+        ${askRows.map(([href, q, sum], i) => `<a href="${href}"><span class="af-qn">${String(i + 1).padStart(2, '0')}</span><span class="af-qa"><b>${esc(q)}</b><em>${esc(sum)}</em></span></a>`).join('')}
       </nav>
     </aside>
   </section>
 
   <!-- ── The answers, in the order the menu promises ── -->
   <div class="af-answers" id="af-answers">
-    ${shortAns || book.blurb ? afSection({
+    ${afSection({
       id: 'af-plot', num: '01', label: "What's it about?",
       headline: esc(shortAns || book.title),
       body: book.blurb ? `<details class="af-blurb">
         <summary>Read the full blurb <span>+</span></summary>
         <div class="af-blurb-body">${renderBlurbBody(book.blurb, tags).html}</div>
-      </details>` : '',
-    }) : ''}
+      </details>` : `<p class="af-empty-note">No description recorded yet.</p>`,
+    })}
 
-    ${hasSpice || book.door || book.spice_frequency ? afSection({
+    ${afSection({
       id: 'af-spice', num: '02', label: 'How spicy is it?',
       headline: hasSpice
         ? esc(`${spiceLvl} / 5${book.door ? ` — ${(DOOR[book.door] || book.door).toLowerCase()}` : ''}.`)
-        : esc(DOOR[book.door] || humanize(book.door || '')),
-      body: `<div class="af-spice">
+        : book.door ? esc(DOOR[book.door] || humanize(book.door || '')) : 'Not recorded yet.',
+      body: (hasSpice || book.door || book.spice_frequency) ? `<div class="af-spice">
         ${hasSpice ? `<span class="af-gauge" aria-label="Spice level ${spiceLvl} of 5">${[1,2,3,4,5].map(n => `<i class="${n <= spiceLvl ? 'on' : ''}"></i>`).join('')}</span>` : '<span></span>'}
         ${book.door ? `<span><b>Door</b>${esc(DOOR[book.door] || humanize(book.door))}</span>` : '<span></span>'}
         ${book.spice_frequency ? `<span><b>Frequency</b>${esc(FREQ[book.spice_frequency] || humanize(book.spice_frequency))}</span>` : '<span></span>'}
-      </div>${book.spice_notes ? `<p>${esc(book.spice_notes)}</p>` : ''}`,
-    }) : ''}
+      </div>${book.spice_notes ? `<p>${esc(book.spice_notes)}</p>` : ''}`
+        : `<p class="af-empty-note">No spice rating recorded yet — check back as the catalog fills in.</p>`,
+    })}
 
-    ${tropeTags.length ? afSection({
+    ${afSection({
       id: 'af-tropes', num: '03', label: 'Which tropes?',
-      headline: esc(tropeTags.slice(0, 3).map(t => t.label).join(', ') + (tropeTags.length > 3 ? ', and more.' : '.')),
-      body: `<div class="af-tags">${tropeTags.slice(0, 8).map(t => t.href
+      headline: tropeTags.length
+        ? esc(tropeTags.slice(0, 3).map(t => t.label).join(', ') + (tropeTags.length > 3 ? ', and more.' : '.'))
+        : 'No tropes tagged yet.',
+      body: tropeTags.length ? `<div class="af-tags">${tropeTags.slice(0, 8).map(t => t.href
           ? `<a href="${escAttr(t.href)}">${esc(t.label)}</a>` : `<span>${esc(t.label)}</span>`).join('')}</div>
-        ${tropeTags.length > 8 ? `<button type="button" class="af-seeall" data-drawer="tropes">See all ${tropeTags.length} tropes <span>→</span></button>` : ''}`,
-    }) : ''}
+        ${tropeTags.length > 8 ? `<button type="button" class="af-seeall" data-drawer="tropes">See all ${tropeTags.length} tropes <span>→</span></button>` : ''}`
+        : `<p class="af-empty-note">Nobody has tagged this book's tropes yet.</p>`,
+    })}
 
     ${afSection({
       id: 'af-warnings', num: '04', label: 'Any hard nos?',
@@ -1038,20 +1054,21 @@ ${SHARED_HEADER}
       body: fit.body ? `<p>${esc(fit.body)}</p>` : '',
     })}
 
-    ${book.page_count || book.series_number || book.ending ? afSection({
+    ${afSection({
       id: 'af-commitment', num: '06', label: "What's the commitment?",
-      headline: esc([
+      headline: (book.page_count || book.series_number || book.ending || book.standalone) ? esc([
         book.page_count ? `${book.page_count} pages` : '',
         book.series_number ? `book ${book.series_number} of the series` : (book.standalone ? 'a standalone' : ''),
-      ].filter(Boolean).join(', ') + '.'),
-      body: `<div class="af-commit">
+      ].filter(Boolean).join(', ') + '.') : 'Not recorded yet.',
+      body: (book.page_count || book.series_number || book.ending || book.standalone) ? `<div class="af-commit">
           ${book.page_count ? `<div><span>Book length</span><b>${esc(book.page_count)} pages</b>${book.audiobook ? '<small>Audiobook available</small>' : ''}</div>` : ''}
           ${book.series_number ? `<div><span>Series position</span><b>Book ${esc(book.series_number)}</b>${nextInSeries(fullSeries, book) ? `<small>Next: ${esc(nextInSeries(fullSeries, book).title)}</small>` : ''}</div>`
             : (book.standalone ? `<div><span>Series position</span><b>Standalone</b><small>Reads on its own</small></div>` : '')}
           ${book.ending ? `<div><span>Ending</span><b>${esc(ENDING[book.ending] || humanize(book.ending))}</b><small>${book.cliffhanger ? 'Ends on a cliffhanger' : 'No cliffhanger'}</small></div>` : ''}
         </div>
-        ${detailsHTML(book) ? `<details class="af-more"><summary>Every recorded detail +</summary>${detailsHTML(book)}</details>` : ''}`,
-    }) : ''}
+        ${detailsHTML(book) ? `<details class="af-more"><summary>Every recorded detail +</summary>${detailsHTML(book)}</details>` : ''}`
+        : `<p class="af-empty-note">Length and series details aren't recorded yet.</p>`,
+    })}
 
     ${afDiscovery({
       id: 'af-series', eyebrow: 'Keep reading', heading: 'Books in the series',
@@ -1158,11 +1175,20 @@ ${SHARED_HEADER}
     var dockShare = document.getElementById('afDockShare');
     var dockNote = document.getElementById('afDockNote');
     function paintAsk(){
+      // Two independent toggles: each button reflects ONLY its own status, so
+      // "read" never lights up both. Other statuses (reading/dnf) live in the
+      // sidebar dropdown; these two are the common one-tap actions.
       if (afWant){
-        afWant.textContent = current ? ('✓ ' + (LABEL[current] || 'Shelved')) : '＋ Want to read';
-        afWant.classList.toggle('on', !!current);
-        afWant.setAttribute('aria-pressed', current ? 'true' : 'false');
-        if (afRead) afRead.textContent = current === 'read' ? '✓ Read' : 'Mark as read';
+        var isWant = current === 'want';
+        afWant.textContent = isWant ? '✓ Want to read' : '＋ Want to read';
+        afWant.classList.toggle('on', isWant);
+        afWant.setAttribute('aria-pressed', isWant ? 'true' : 'false');
+      }
+      if (afRead){
+        var isRead = current === 'read';
+        afRead.textContent = isRead ? '✓ Read' : 'Mark as read';
+        afRead.classList.toggle('on', isRead);
+        afRead.setAttribute('aria-pressed', isRead ? 'true' : 'false');
       }
       if (dockWant){
         dockWant.textContent = current ? ('✓ ' + (LABEL[current] || 'Shelved')) : '＋ Want to read';
@@ -1185,12 +1211,16 @@ ${SHARED_HEADER}
       if (current){ remove(); dockToast('Removed from shelf'); }
       else { shelve('want'); dockToast('Added to your shelf 📚'); }
     }
-    if (afWant) afWant.addEventListener('click', toggleWant);
+    // Each hero button toggles its OWN status: clicking the active one clears it,
+    // clicking an inactive one sets that status (switching from any other).
+    function toggleStatus(st, addedMsg){
+      if (!user){ note.innerHTML = '<a href="/dashboard.html">Log in</a> to build your shelf'; dockToast('<a href="/dashboard.html">Log in</a> to build your shelf'); return; }
+      if (current === st){ remove(); dockToast('Removed from shelf'); }
+      else { shelve(st); dockToast(addedMsg); }
+    }
+    if (afWant) afWant.addEventListener('click', function(){ toggleStatus('want', 'Added to your shelf 📚'); });
     if (dockWant) dockWant.addEventListener('click', toggleWant);
-    if (afRead) afRead.addEventListener('click', function(){
-      if (!user){ note.innerHTML = '<a href="/dashboard.html">Log in</a> to build your shelf'; return; }
-      shelve('read');
-    });
+    if (afRead) afRead.addEventListener('click', function(){ toggleStatus('read', 'Marked as read ✓'); });
     async function doShare(){
       var url = location.href, title = BOOK.title;
       try {
