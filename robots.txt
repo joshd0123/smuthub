@@ -1,9 +1,30 @@
+# ════════════════════════════════════════════════════════════════════
+#  ⚠️  PRE-LAUNCH — CRAWLING IS DISABLED ON PURPOSE
+#
+#  smutHub is not live yet. The build is publicly reachable at
+#  smuthub.joshd0123.workers.dev, but every page's canonical points at
+#  https://smuthub.ca/ — still a parked GoDaddy page.
+#
+#  Left crawlable, Google would either index the workers.dev copy as a
+#  duplicate of the real site, or follow those canonicals, find nothing,
+#  and learn that smuthub.ca is a dead address — right before launch.
+#
+#  ►►► ON LAUNCH DAY: delete the Disallow line below, then uncomment the
+#      block underneath. See LAUNCH.md step 4.
+#      Skipping this leaves the live site invisible to search engines,
+#      and nothing on the site will look broken — so it is easy to miss.
+# ════════════════════════════════════════════════════════════════════
+
+User-agent: *
+Disallow: /
+
+# ── Restore at launch (and delete the two lines above) ───────────────
 # smutHub — public crawler rules
 # Allow all bots into the public surface; keep admin tooling out of the index.
-User-agent: *
-Allow: /
-Disallow: /admin.html
-Disallow: /catalog-admin.html
-
+# User-agent: *
+# Allow: /
+# Disallow: /admin.html
+# Disallow: /catalog-admin.html
+#
 # Sitemap (canonical XML index Google + Bing want)
-Sitemap: https://smuthub.ca/sitemap.xml
+# Sitemap: https://smuthub.ca/sitemap.xml
