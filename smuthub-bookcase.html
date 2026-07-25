@@ -542,7 +542,7 @@
 <div class="sheetbase" id="themesheetbg">
   <div class="bottomsheet">
     <div class="sheet-heading"><div><h3>The Library Atelier</h3>
-    <p class="note">Finishes change the whole cabinet. Small details start at 99¢, so readers can make it personal without buying a complete shelf world.</p></div>
+    <p class="note">Finishes change the whole cabinet, and small details let readers make it personal. Preview anything — 💎 finishes unlock when billing opens.</p></div>
     <button class="sheet-close" onclick="closeThemeSheet()" aria-label="Close Library Atelier">×</button></div>
     <div class="themegrid" id="themegrid"></div>
     <h4 class="atelier-title">Small details, instant personality</h4>
@@ -554,7 +554,7 @@
   <div class="modalcard">
     <div class="em">✨</div>
     <h3 id="upsellTitle">Preview this library finish</h3>
-    <p id="upsellBody">This prototype treats cabinet styles as small one-time purchases. Preview it now; checkout is not connected and no charge will be started.</p>
+    <p id="upsellBody">Preview any style now. 💎 premium finishes unlock when billing opens — nothing is charged today.</p>
     <div class="row">
       <button class="ghostbtn" onclick="closeUpsell()">Maybe later</button>
       <button class="btn" id="upsellGo">Preview finish ✨</button>
@@ -915,14 +915,14 @@
     $('themegrid').innerHTML = THEMES.map(t=>
       '<div class="themecard '+(t.id===theme?'on':'')+'" data-t="'+t.id+'" data-prem="'+(t.premium?1:0)+'">'
       + '<span class="dot" style="background:'+t.color+'"></span>'
-      + '<div><div class="tn">'+t.name+'</div><div class="tdesc">'+t.desc+'</div><div class="lock">'+t.price+'</div></div></div>'
+      + '<div><div class="tn">'+t.name+'</div><div class="tdesc">'+t.desc+'</div><div class="lock">'+(t.premium?'💎 Premium':'Included')+'</div></div></div>'
     ).join('');
     $('detailgrid').innerHTML=LIBRARY_DETAILS.map(d=>'<button class="detailcard '+(libraryDetail===d.key?'on':'')+'" data-library-detail="'+d.key+'">'
-      +'<span>'+d.icon+'</span><strong>'+d.name+'</strong><small>'+d.price+' · Preview</small></button>').join('');
+      +'<span>'+d.icon+'</span><strong>'+d.name+'</strong><small>💎 Preview</small></button>').join('');
     document.querySelectorAll('#themegrid .themecard').forEach(c=>c.onclick=()=>{
       const id=c.dataset.t, prem=c.dataset.prem==='1';
       const item=THEMES.find(t=>t.id===id);
-      if(prem && !isPremium){ showUpsell((item?item.name:'This finish')+' · '+(item?item.price:'Premium'), ()=>{ setTheme(id); closeThemeSheet(); }); return; }
+      if(prem && !isPremium){ showUpsell((item?item.name:'This finish')+' · Premium', ()=>{ setTheme(id); closeThemeSheet(); }); return; }
       setTheme(id); closeThemeSheet();
     });
     document.querySelectorAll('#detailgrid [data-library-detail]').forEach(c=>c.onclick=()=>{
@@ -1119,12 +1119,12 @@
     return '<article class="product-card'+(previewing?' previewing':'')+'">'
       +'<span class="product-badge">'+esc(p.badge||p.type)+'</span>'
       +'<h4>'+esc(p.name)+'</h4><p>'+esc(p.description)+'</p>'
-      +'<div class="product-actions"><span class="product-price">'+money(p.priceCents)+'</span>'
+      +'<div class="product-actions"><span class="product-price">'+(owned?'Owned':'💎 Premium')+'</span>'
       +(p.worldKey?'<button class="mini-btn preview" data-preview="'+esc(p.key)+'">'+(previewing?'Previewing':'Preview')+'</button>':'')
-      +'<button class="mini-btn buy" data-buy="'+esc(p.key)+'">'+(owned?'Use':'Buy')+'</button></div></article>';
+      +'<button class="mini-btn buy" data-buy="'+esc(p.key)+'">'+(owned?'Use':'Soon')+'</button></div></article>';
   }
   function releaseCard(r){
-    return '<article class="release-card"><div class="release-date">'+esc(r.release)+'</div><div><h4>'+esc(r.name)+'</h4><p>'+esc(r.description)+'</p></div><div class="release-price">'+money(r.targetPriceCents)+'</div></article>';
+    return '<article class="release-card"><div class="release-date">'+esc(r.release)+'</div><div><h4>'+esc(r.name)+'</h4><p>'+esc(r.description)+'</p></div><div class="release-price">💎</div></article>';
   }
   function renderWorldStore(status){
     const all=catalog().products||[];
@@ -1133,7 +1133,7 @@
       ?'<div class="release-list">'+(catalog().releases||[]).map(releaseCard).join('')+'</div>'
       :'<div class="product-grid">'+products.map(p=>productCard(p,status)).join('')+'</div>';
     $('svdrawer').innerHTML =
-      '<div class="store-head"><div><h3>Make this shelf yours</h3><p>Preview everything here. Purchases follow your account across devices.</p></div><button class="store-close" id="storeClose" aria-label="Close store">×</button></div>'
+      '<div class="store-head"><div><h3>Make this shelf yours</h3><p>Preview everything here. 💎 finishes unlock when billing opens — more rooms on the way.</p></div><button class="store-close" id="storeClose" aria-label="Close store">×</button></div>'
       +'<div class="tabs"><button data-storetab="worlds" class="'+(drawerTab==='worlds'?'on':'')+'">Worlds</button>'
       +'<button data-storetab="interactions" class="'+(drawerTab==='interactions'?'on':'')+'">Interactions</button>'
       +'<button data-storetab="releases" class="'+(drawerTab==='releases'?'on':'')+'">Coming soon</button></div>'+body;
@@ -1165,8 +1165,9 @@
       }
       return;
     }
-    if(p.checkoutUrl){ window.location.href=p.checkoutUrl; return; }
-    toast('Checkout is ready for its Stripe price ID — no live charge was started.');
+    // Billing is intentionally not open yet — no prices shown, no checkout.
+    // Everything stays previewable; premium unlocks when billing launches.
+    toast('Locked for now — this unlocks when billing opens ✨');
   }
   function ensure(status){
     if(!custom[status]) custom[status]={world_key:'moonlit',backdrop_key:null,lighting_key:null,props:[]};
