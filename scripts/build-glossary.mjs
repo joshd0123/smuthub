@@ -534,6 +534,7 @@ ${renderRail(catKey(tag.category))}
     <p class="defn">${esc(tag.description)}</p>
     ${tag.also_known_as && tag.also_known_as.length ? `<p class="aka"><b>Also known as:</b> ${tag.also_known_as.map(esc).join(' · ')}</p>` : ''}
     ${tag.is_filterable && tagHasBooks(tag.category + ':' + tag.slug) ? `<a class="cta" href="/books/?tag=${encodeURIComponent(tag.category + ':' + tag.slug)}">Find books with this ${esc(cat.label.replace(/s$/,'').toLowerCase())} →</a>` : ''}
+    ${tagKey === 'mechanics:spice' ? '<a class="cta" href="/guides/spice-levels/">Explore all five spice levels →</a>' : ''}
   </section>
 
   ${tag.why_it_works ? `<section class="detail">

@@ -21,3 +21,9 @@
 # rule because a splat needs a trailing segment to match.
 /book/*  /books/:splat  301
 /book    /books         301
+
+# The spice guide now lives inside the public guides content hub. Keep all
+# legacy forms working permanently so bookmarks and search signals transfer.
+/spice/   /guides/spice-levels/  301
+/spice    /guides/spice-levels/  301
+/spice/*  /guides/spice-levels/:splat  301
