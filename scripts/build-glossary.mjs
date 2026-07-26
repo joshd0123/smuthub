@@ -280,8 +280,8 @@ const SHARED_HEADER = `
           <a href="/glossary/warning/">Content Warnings</a>
         </div>
       </details>
-      <a href="/smuthub-bookcase.html">My Bookshelf</a>
-      <a href="/stores.html">Find a Store</a>
+      <a href="/smuthub-bookcase">My Bookshelf</a>
+      <a href="/stores">Find a Store</a>
       <a href="/search">Add a Book</a>
     </nav>
     <div class="authbox" id="authbox"></div>

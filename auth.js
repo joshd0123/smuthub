@@ -134,8 +134,8 @@
     const active = {
       books: path.startsWith('/books/'),
       guides: path.startsWith('/guides/') || path.startsWith('/glossary/'),
-      shelf: path === '/smuthub-bookcase.html',
-      stores: path === '/stores.html',
+      shelf: path === '/smuthub-bookcase' || path === '/smuthub-bookcase.html',
+      stores: path === '/stores' || path === '/stores.html',
       add: path === '/search' || path === '/search.html' || path === '/smuthub-app.html'
     };
     const on = key => active[key] ? ' class="on"' : '';
@@ -152,8 +152,8 @@
           <a href="/glossary/warning/"><b>Content Warnings</b><small>Check before chapter one</small></a>
         </div>
       </details>
-      <a href="/smuthub-bookcase.html"${on('shelf')}>My Bookshelf</a>
-      <a href="/stores.html"${on('stores')}>Find a Store</a>
+      <a href="/smuthub-bookcase"${on('shelf')}>My Bookshelf</a>
+      <a href="/stores"${on('stores')}>Find a Store</a>
       <a href="/search"${on('add')}>Add a Book</a>`;
 
     const guides = nav.querySelector('.sh-guides');
@@ -175,7 +175,7 @@
           <button id="shUserBtn" class="sh-avatar" title="${esc(name)}" aria-label="Account menu" aria-haspopup="menu" aria-expanded="false">${esc(initial)}</button>
           <div id="shMenu" class="sh-account-menu" role="menu" style="display:none;position:absolute;right:0;top:125%;z-index:95;background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:14px;min-width:220px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.5)">
             <div style="padding:.7em 1.1em;border-bottom:1px solid var(--line,#2a1d22);color:#b69089;font-size:.78rem">Signed in as<br><b style="color:var(--amber,#ffab40);font-size:.92rem">${esc(name)}</b></div>
-            <a class="sh-menu-link" role="menuitem" href="/dashboard.html">📊 Dashboard</a>
+            <a class="sh-menu-link" role="menuitem" href="/dashboard">📊 Dashboard</a>
             <button type="button" class="shMenuItem" role="menuitem" data-act="username">✏️ Set username</button>
             <button type="button" class="shMenuItem" role="menuitem" data-act="logout">👋 Log out</button>
           </div>

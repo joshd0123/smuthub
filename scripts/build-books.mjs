@@ -195,8 +195,8 @@ function sharedHeader(active){
           <a href="/glossary/warning/">Content Warnings</a>
         </div>
       </details>
-      ${link('/smuthub-bookcase.html', 'My Bookshelf', 'shelf')}
-      ${link('/stores.html', 'Find a Store', 'stores')}
+      ${link('/smuthub-bookcase', 'My Bookshelf', 'shelf')}
+      ${link('/stores', 'Find a Store', 'stores')}
       ${link('/search', 'Add a Book', 'add')}
     </nav>
     <div class="authbox" id="authbox"></div>
