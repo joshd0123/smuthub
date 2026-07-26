@@ -1702,6 +1702,23 @@ ${groupsHTML}
       return (' ' + card.getAttribute('data-tags') + ' ').indexOf(' ' + key + ' ') >= 0;
     }
 
+    // Mirror the active filters into the address bar so the current view is
+    // shareable and CTAs can deep-link to it (?trope=…&mood=…&spice=…&q=…).
+    // replaceState, not pushState — filtering shouldn't spam the back button.
+    // Slugs are written bare (no "trope:"/"mood:" prefix) for tidy URLs; the
+    // loader below normalises both shapes back onto the dropdowns.
+    function syncURL(){
+      var p = new URLSearchParams();
+      var term = q.value.trim();
+      if (term) p.set('q', term);
+      if (fTrope.value) p.set('trope', fTrope.value.replace(/^trope:/, ''));
+      if (fMood.value)  p.set('mood',  fMood.value.replace(/^mood:/, ''));
+      if (fSpice.value) p.set('spice', fSpice.value);
+      if (deepTag)      p.set('tag',   deepTag);
+      var qs = p.toString();
+      history.replaceState(null, '', location.pathname + (qs ? '?' + qs : ''));
+    }
+
     function apply(){
       var term = q.value.trim().toLowerCase();
       var spice = parseInt(fSpice.value, 10) || 0;
@@ -1722,6 +1739,7 @@ ${groupsHTML}
       meter.textContent = shown + ' book' + (shown === 1 ? '' : 's') + (filtered ? ' matching' : '') + ' · A–Z by title';
       none.style.display = shown ? 'none' : '';
       clear.style.display = filtered ? '' : 'none';
+      syncURL();
     }
 
     function paintChip(){
