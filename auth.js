@@ -143,7 +143,7 @@
     nav.innerHTML = `
       <a href="/books/"${on('books')}>Browse Books</a>
       <details class="sh-guides${active.guides ? ' on' : ''}">
-        <summary>Guides <span aria-hidden="true">⌄</span></summary>
+        <summary>Guides <svg class="sh-guides-chevron" aria-hidden="true" focusable="false" viewBox="0 0 12 8"><path d="M1 1.25 6 6.25 11 1.25"/></svg></summary>
         <div class="sh-guides-menu">
           <a href="/guides/"><b>All Guides</b><small>Start with the full library</small></a>
           <a href="/guides/spice-levels/"><b>Spice Levels</b><small>Choose your heat with no surprises</small></a>
@@ -202,7 +202,7 @@
         mi.onclick = ()=> mi.dataset.act==='logout' ? logout() : setUsername();
       });
     } else {
-      box.innerHTML = `<button onclick="SH.openAuth()" style="background:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:.55em 1.1em;border-radius:99px;cursor:pointer;font-size:.85rem">Log in / Sign up</button>`;
+      box.innerHTML = `<button class="sh-login-button" onclick="SH.openAuth()" style="background:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:.55em 1.1em;border-radius:99px;cursor:pointer;font-size:.85rem"><span class="sh-login-full">Log in / Sign up</span><span class="sh-login-short">Join free</span></button>`;
     }
   }
 
@@ -360,10 +360,13 @@
         font-family:inherit;font-size:.92rem;font-weight:500;text-decoration:none;white-space:nowrap;cursor:pointer;transition:color .2s}
       header .navlinks>a:hover,header .navlinks>a.on,header .sh-guides>summary:hover,header .sh-guides.on>summary{color:var(--cream,#f4e8e3)}
       header .sh-guides{position:relative}
-      header .sh-guides>summary{gap:5px;list-style:none}
+      header .sh-guides>summary{gap:7px;list-style:none}
       header .sh-guides>summary::-webkit-details-marker{display:none}
-      header .sh-guides>summary span{color:var(--amber,#ffab40);font-size:.78rem;transition:transform .16s}
-      header .sh-guides[open]>summary span{transform:rotate(180deg)}
+      header .sh-guides-chevron{width:10px;height:7px;overflow:visible;fill:none;stroke:var(--amber,#ffab40);stroke-width:1.7;
+        stroke-linecap:round;stroke-linejoin:round;opacity:0;transform:translateY(-1px);transition:opacity .16s,transform .16s}
+      header .sh-guides>summary:hover .sh-guides-chevron,header .sh-guides>summary:focus-visible .sh-guides-chevron,
+      header .sh-guides[open] .sh-guides-chevron{opacity:1}
+      header .sh-guides[open] .sh-guides-chevron{transform:translateY(1px) rotate(180deg)}
       header .sh-guides-menu{position:absolute;top:calc(100% + 9px);left:50%;z-index:100;width:290px;padding:8px;
         transform:translateX(-50%);background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:16px;
         box-shadow:0 22px 50px rgba(0,0,0,.55)}
@@ -375,14 +378,18 @@
         background:none;border:0;color:#f4e8e3;font-family:inherit;font-size:.88rem;font-weight:600;padding:.75em 1.1em;
         cursor:pointer;text-decoration:none}
       .sh-account-menu .sh-menu-link:hover,.sh-account-menu .shMenuItem:hover{background:#1c1316}
+      .sh-login-short{display:none}
       .sh-hamburger{display:none;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;
         background:none;border:1px solid var(--line,#2a1d22);color:var(--cream,#f4e8e3);font-size:1.3rem;line-height:1;cursor:pointer;flex:0 0 auto}
       @media(max-width:880px){
-        header .nav{flex-wrap:nowrap;height:auto;min-height:60px;gap:10px;
-          padding-top:calc(12px + env(safe-area-inset-top,0px));padding-bottom:10px}
-        header .logo{font-size:1.85rem;margin-right:auto}
+        header .nav{flex-wrap:nowrap;height:auto;min-height:54px;gap:8px;
+          padding-top:calc(8px + env(safe-area-inset-top,0px));padding-bottom:8px}
+        header .logo{font-size:1.45rem;margin-right:auto}
+        header .sh-hamburger{width:38px;height:38px;border-radius:11px;font-size:1.15rem}
         header .sh-hamburger{display:inline-flex}
-        header #authbox button:not(.sh-avatar){font-size:.8rem;padding:.5em .9em}
+        header #authbox button:not(.sh-avatar){font-size:.78rem;padding:.52em .85em;white-space:nowrap}
+        header .sh-login-full{display:none}
+        header .sh-login-short{display:inline}
         header .navlinks{position:absolute;top:calc(100% - 1px);right:10px;left:10px;flex-direction:column;gap:2px;
           width:auto;background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:16px;padding:8px;
           display:none;box-shadow:0 22px 50px rgba(0,0,0,.55)}
@@ -391,6 +398,7 @@
         header .navlinks>a.on,header .navlinks>a:hover,header .sh-guides.on>summary,header .sh-guides>summary:hover{background:rgba(255,171,64,.12);color:var(--cream,#f4e8e3)}
         header .sh-guides{width:100%}
         header .sh-guides>summary{justify-content:space-between}
+        header .sh-guides-chevron{width:11px;height:8px;opacity:.8}
         header .sh-guides-menu{position:static;width:auto;margin:2px 8px 8px;padding:4px;transform:none;border:0;border-radius:10px;
           background:rgba(12,7,8,.45);box-shadow:none}
         header .sh-guides-menu a{padding:9px 12px}
