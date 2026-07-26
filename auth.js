@@ -123,6 +123,46 @@
     return (SH.profile && SH.profile.username) ? SH.profile.username : (SH.user ? SH.user.email : '');
   }
 
+  // ── shared primary navigation ───────────────────────────────────────────
+  // Every public page carries a lightweight static fallback, but this is the
+  // single source of truth for the rendered navigation. New links belong here
+  // once—not across hundreds of generated book and glossary pages.
+  function renderSharedNavigation(){
+    const nav = document.querySelector('header .navlinks');
+    if(!nav) return;
+    const path = location.pathname.replace(/\/index\.html$/, '/');
+    const active = {
+      books: path.startsWith('/books/'),
+      guides: path.startsWith('/guides/') || path.startsWith('/glossary/'),
+      shelf: path === '/smuthub-bookcase.html',
+      stores: path === '/stores.html',
+      add: path === '/search' || path === '/search.html' || path === '/smuthub-app.html'
+    };
+    const on = key => active[key] ? ' class="on"' : '';
+    nav.setAttribute('aria-label', 'Primary navigation');
+    nav.innerHTML = `
+      <a href="/books/"${on('books')}>Browse Books</a>
+      <details class="sh-guides${active.guides ? ' on' : ''}">
+        <summary>Guides <span aria-hidden="true">⌄</span></summary>
+        <div class="sh-guides-menu">
+          <a href="/guides/"><b>All Guides</b><small>Start with the full library</small></a>
+          <a href="/guides/spice-levels/"><b>Spice Levels</b><small>Choose your heat with no surprises</small></a>
+          <a href="/glossary/"><b>Glossary</b><small>Decode 356 romantasy terms</small></a>
+          <a href="/glossary/trope/"><b>Tropes</b><small>Browse the story dynamics you love</small></a>
+          <a href="/glossary/warning/"><b>Content Warnings</b><small>Check before chapter one</small></a>
+        </div>
+      </details>
+      <a href="/smuthub-bookcase.html"${on('shelf')}>My Bookshelf</a>
+      <a href="/stores.html"${on('stores')}>Find a Store</a>
+      <a href="/search"${on('add')}>Add a Book</a>`;
+
+    const guides = nav.querySelector('.sh-guides');
+    if(guides){
+      document.addEventListener('click', e => { if(guides.open && !guides.contains(e.target)) guides.open = false; });
+      document.addEventListener('keydown', e => { if(e.key === 'Escape' && guides.open){ guides.open = false; guides.querySelector('summary').focus(); } });
+    }
+  }
+
   // ── header widget ──
   function renderAuthbox(){
     const box = document.getElementById('authbox');
@@ -132,24 +172,29 @@
       const initial = ((name||'?').trim().charAt(0) || '?').toUpperCase();
       box.innerHTML = `
         <div style="position:relative">
-          <button id="shUserBtn" class="sh-avatar" title="${esc(name)}" aria-label="Account menu">${esc(initial)}</button>
-          <div id="shMenu" style="display:none;position:absolute;right:0;top:125%;z-index:95;background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:14px;min-width:200px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.5)">
+          <button id="shUserBtn" class="sh-avatar" title="${esc(name)}" aria-label="Account menu" aria-haspopup="menu" aria-expanded="false">${esc(initial)}</button>
+          <div id="shMenu" class="sh-account-menu" role="menu" style="display:none;position:absolute;right:0;top:125%;z-index:95;background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:14px;min-width:220px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.5)">
             <div style="padding:.7em 1.1em;border-bottom:1px solid var(--line,#2a1d22);color:#b69089;font-size:.78rem">Signed in as<br><b style="color:var(--amber,#ffab40);font-size:.92rem">${esc(name)}</b></div>
-            <button class="shMenuItem" data-act="username">✏️ Set username</button>
-            <button class="shMenuItem" data-act="logout">👋 Log out</button>
+            <a class="sh-menu-link" role="menuitem" href="/dashboard.html">📊 Dashboard</a>
+            <button type="button" class="shMenuItem" role="menuitem" data-act="username">✏️ Set username</button>
+            <button type="button" class="shMenuItem" role="menuitem" data-act="logout">👋 Log out</button>
           </div>
         </div>`;
       const btn = document.getElementById('shUserBtn'), menu = document.getElementById('shMenu');
+      const setMenuOpen = open => {
+        menu.style.display = open ? 'block' : 'none';
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      };
       btn.onclick = (e)=>{
         e.stopPropagation();
         const opening = menu.style.display==='none';
         // close any other open header menu first (e.g. the mobile nav drawer)
         if(opening) window.dispatchEvent(new CustomEvent('sh-menu-open',{detail:{id:'shMenu'}}));
-        menu.style.display = opening ? 'block' : 'none';
-        if(opening) document.addEventListener('click', ()=>{ menu.style.display='none'; }, { once:true });
+        setMenuOpen(opening);
+        if(opening) document.addEventListener('click', ()=>setMenuOpen(false), { once:true });
       };
       // listen for another menu opening → close this one
-      window.addEventListener('sh-menu-open', (ev)=>{ if(ev.detail && ev.detail.id!=='shMenu') menu.style.display='none'; });
+      window.addEventListener('sh-menu-open', (ev)=>{ if(ev.detail && ev.detail.id!=='shMenu') setMenuOpen(false); });
       menu.querySelectorAll('.shMenuItem').forEach(mi=>{
         mi.style.cssText = 'display:block;width:100%;text-align:left;background:none;border:0;color:#f4e8e3;font-family:inherit;font-size:.88rem;font-weight:600;padding:.75em 1.1em;cursor:pointer';
         mi.onmouseenter = ()=> mi.style.background='#1c1316';
@@ -310,20 +355,45 @@
       .sh-avatar{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;
         background:var(--grad,linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40));color:#1a0c10;font-weight:800;font-size:1rem;
         border:0;cursor:pointer;font-family:inherit;flex:0 0 auto}
+      header .navlinks{align-items:center}
+      header .navlinks>a,header .sh-guides>summary{display:flex;align-items:center;min-height:42px;color:var(--muted,#b69089);
+        font-family:inherit;font-size:.92rem;font-weight:500;text-decoration:none;white-space:nowrap;cursor:pointer;transition:color .2s}
+      header .navlinks>a:hover,header .navlinks>a.on,header .sh-guides>summary:hover,header .sh-guides.on>summary{color:var(--cream,#f4e8e3)}
+      header .sh-guides{position:relative}
+      header .sh-guides>summary{gap:5px;list-style:none}
+      header .sh-guides>summary::-webkit-details-marker{display:none}
+      header .sh-guides>summary span{color:var(--amber,#ffab40);font-size:.78rem;transition:transform .16s}
+      header .sh-guides[open]>summary span{transform:rotate(180deg)}
+      header .sh-guides-menu{position:absolute;top:calc(100% + 9px);left:50%;z-index:100;width:290px;padding:8px;
+        transform:translateX(-50%);background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:16px;
+        box-shadow:0 22px 50px rgba(0,0,0,.55)}
+      header .sh-guides-menu a{display:block;padding:10px 12px;border-radius:10px;color:var(--cream,#f4e8e3);text-decoration:none}
+      header .sh-guides-menu a:hover{background:rgba(255,171,64,.1)}
+      header .sh-guides-menu b{display:block;font-size:.9rem;line-height:1.2}
+      header .sh-guides-menu small{display:block;margin-top:3px;color:var(--muted,#b69089);font-size:.76rem;font-weight:400;line-height:1.25}
+      .sh-account-menu .sh-menu-link,.sh-account-menu .shMenuItem{display:block;width:100%;box-sizing:border-box;text-align:left;
+        background:none;border:0;color:#f4e8e3;font-family:inherit;font-size:.88rem;font-weight:600;padding:.75em 1.1em;
+        cursor:pointer;text-decoration:none}
+      .sh-account-menu .sh-menu-link:hover,.sh-account-menu .shMenuItem:hover{background:#1c1316}
       .sh-hamburger{display:none;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;
         background:none;border:1px solid var(--line,#2a1d22);color:var(--cream,#f4e8e3);font-size:1.3rem;line-height:1;cursor:pointer;flex:0 0 auto}
-      @media(max-width:680px){
+      @media(max-width:880px){
         header .nav{flex-wrap:nowrap;height:auto;min-height:60px;gap:10px;
           padding-top:calc(12px + env(safe-area-inset-top,0px));padding-bottom:10px}
         header .logo{font-size:1.85rem;margin-right:auto}
         header .sh-hamburger{display:inline-flex}
         header #authbox button:not(.sh-avatar){font-size:.8rem;padding:.5em .9em}
         header .navlinks{position:absolute;top:calc(100% - 1px);right:10px;left:10px;flex-direction:column;gap:2px;
-          background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:16px;padding:8px;
+          width:auto;background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:16px;padding:8px;
           display:none;box-shadow:0 22px 50px rgba(0,0,0,.55)}
         header .navlinks.sh-open{display:flex}
-        header .navlinks a{padding:.85em 1em;border-radius:10px;font-size:1.05rem}
-        header .navlinks a.on,header .navlinks a:hover{background:rgba(255,171,64,.12);color:var(--cream,#f4e8e3)}
+        header .navlinks>a,header .sh-guides>summary{min-height:0;padding:.85em 1em;border-radius:10px;font-size:1.05rem}
+        header .navlinks>a.on,header .navlinks>a:hover,header .sh-guides.on>summary,header .sh-guides>summary:hover{background:rgba(255,171,64,.12);color:var(--cream,#f4e8e3)}
+        header .sh-guides{width:100%}
+        header .sh-guides>summary{justify-content:space-between}
+        header .sh-guides-menu{position:static;width:auto;margin:2px 8px 8px;padding:4px;transform:none;border:0;border-radius:10px;
+          background:rgba(12,7,8,.45);box-shadow:none}
+        header .sh-guides-menu a{padding:9px 12px}
       }`;
     document.head.appendChild(st);
   }
@@ -361,7 +431,7 @@
     window.addEventListener('scroll', onScroll, {passive:true});
     onScroll();
   }
-  function initShUI(){ injectHeaderCSS(); enhanceHeader(); mountUmami(); mountBackToTop(); /* mountFeedbackButton(); ← disabled */ }
+  function initShUI(){ injectHeaderCSS(); renderSharedNavigation(); enhanceHeader(); mountUmami(); mountBackToTop(); /* mountFeedbackButton(); ← disabled */ }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', initShUI);
   else initShUI();
 })();

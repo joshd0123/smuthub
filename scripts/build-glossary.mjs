@@ -268,13 +268,21 @@ const SHARED_HEADER = `
 <header>
   <div class="nav wrap">
     <a href="/" class="logo">smut<span class="box">Hub</span></a>
-    <nav class="navlinks">
-      <a href="/dashboard.html">Dashboard</a>
+    <nav class="navlinks" aria-label="Primary navigation">
       <a href="/books/">Browse Books</a>
-      <a href="/search">Add a Book</a>
+      <details class="sh-guides on">
+        <summary>Guides</summary>
+        <div>
+          <a href="/guides/">All Guides</a>
+          <a href="/guides/spice-levels/">Spice Levels</a>
+          <a href="/glossary/">Glossary</a>
+          <a href="/glossary/trope/">Tropes</a>
+          <a href="/glossary/warning/">Content Warnings</a>
+        </div>
+      </details>
       <a href="/smuthub-bookcase.html">My Bookshelf</a>
-      <a href="/glossary/" class="on">Glossary</a>
       <a href="/stores.html">Find a Store</a>
+      <a href="/search">Add a Book</a>
     </nav>
     <div class="authbox" id="authbox"></div>
   </div>

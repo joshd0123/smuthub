@@ -175,22 +175,29 @@ ${page.jsonld ? `<script type="application/ld+json">${JSON.stringify(page.jsonld
 ${page.extraCSS || ''}
 </head>`;
 
-// One nav for every generated page. `active` lights the current section the
-// same way Dashboard/Glossary light on their own pages. Keep the link set in
-// sync with the hand-maintained pages (index/dashboard/search/bookcase/stores).
+// Static fallback for generated pages. auth.js replaces this from its shared
+// navigation source at runtime, so future nav edits happen in one place.
 function sharedHeader(active){
   const link = (href, label, key) => `<a href="${href}"${active === key ? ' class="on"' : ''}>${label}</a>`;
   return `
 <header>
   <div class="nav wrap">
     <a href="/" class="logo">smut<span class="box">Hub</span></a>
-    <nav class="navlinks">
-      ${link('/dashboard.html', 'Dashboard', 'dashboard')}
+    <nav class="navlinks" aria-label="Primary navigation">
       ${link('/books/', 'Browse Books', 'books')}
-      ${link('/search', 'Add a Book', 'add')}
+      <details class="sh-guides">
+        <summary>Guides</summary>
+        <div>
+          <a href="/guides/">All Guides</a>
+          <a href="/guides/spice-levels/">Spice Levels</a>
+          <a href="/glossary/">Glossary</a>
+          <a href="/glossary/trope/">Tropes</a>
+          <a href="/glossary/warning/">Content Warnings</a>
+        </div>
+      </details>
       ${link('/smuthub-bookcase.html', 'My Bookshelf', 'shelf')}
-      ${link('/glossary/', 'Glossary', 'glossary')}
       ${link('/stores.html', 'Find a Store', 'stores')}
+      ${link('/search', 'Add a Book', 'add')}
     </nav>
     <div class="authbox" id="authbox"></div>
   </div>
