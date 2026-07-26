@@ -15,6 +15,12 @@
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>https://smuthub.ca/spice/</loc>
+    <lastmod>2026-07-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
   <!-- /search is deliberately excluded — it's a noindex tool, not content. -->
   <url>
     <loc>https://smuthub.ca/dashboard.html</loc>
