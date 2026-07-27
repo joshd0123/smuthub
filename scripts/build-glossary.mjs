@@ -94,7 +94,10 @@ try {
 }
 
 const tags = allTags.filter(t => (t.has_page !== false) && t.description);
-const tier3Tags = allTags.filter(t => !((t.has_page !== false) && t.description));
+// Category pages are public glossary pages, so never render catalog-only tags
+// that do not have a definition. Defined tags intentionally marked has_page=false
+// can still appear as non-clickable tier-3 cards.
+const tier3Tags = allTags.filter(t => (t.has_page === false) && t.description);
 console.log(`◇ Building ${tags.length} term pages + ${tier3Tags.length} tier-3 cards (no own URL)`);
 
 // Which "category:slug" keys does at least one LIVE book actually carry? The
@@ -335,11 +338,8 @@ const SHARED_HEADER = `
 // Page-eligible (Tier 1+2 only — what appears on the main /glossary/ index).
 const byCatPage = {};
 for (const t of tags){ const k = catKey(t.category); (byCatPage[k] = byCatPage[k] || []).push(t); }
-// All visible (page + tier-3) — used only for category-page totals + which categories
-// to render category landings for.
-const byCatAll = {};
-for (const t of allTags){ const k = catKey(t.category); (byCatAll[k] = byCatAll[k] || []).push(t); }
-// Tier-3 (no page) tags, grouped by category for inline rendering on category landings.
+// Defined tier-3 (no page) tags, grouped by category for inline rendering on
+// category landings. Undefined catalog tags stay out of the public glossary.
 const tier3ByCat = {};
 for (const t of tier3Tags){ const k = catKey(t.category); (tier3ByCat[k] = tier3ByCat[k] || []).push(t); }
 
@@ -792,7 +792,7 @@ ${renderRail(null)}
 ${RAIL_SCRIPT}
 ${SHARED_FOOTER}`;
 
-  return head + body;
+  return head + body.replace(/^[ \t]+$/gm, '');
 }
 
 // ══════════════════════════════════════════════════════════════════════════
@@ -852,7 +852,7 @@ ${renderRail(catSlug)}
 </div>
 ${RAIL_SCRIPT}
 ${SHARED_FOOTER}`;
-  return head + body;
+  return head + body.replace(/^[ \t]+$/gm, '');
 }
 
 // ══════════════════════════════════════════════════════════════════════════
