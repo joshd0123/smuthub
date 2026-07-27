@@ -143,7 +143,7 @@
     nav.innerHTML = `
       <a href="/books/"${on('books')}>Browse Books</a>
       <details class="sh-guides${active.guides ? ' on' : ''}">
-        <summary>Guides <svg class="sh-guides-chevron" aria-hidden="true" focusable="false" viewBox="0 0 12 8"><path d="M1 1.25 6 6.25 11 1.25"/></svg></summary>
+        <summary><span class="sh-guides-label">Guides</span><svg class="sh-guides-chevron" aria-hidden="true" focusable="false" viewBox="0 0 12 8"><path d="M1 1.25 6 6.25 11 1.25"/></svg></summary>
         <div class="sh-guides-menu">
           <a href="/guides/"><b>All Guides</b><small>Start with the full library</small></a>
           <a href="/guides/spice-levels/"><b>Spice Levels</b><small>Choose your heat with no surprises</small></a>
@@ -158,6 +158,17 @@
 
     const guides = nav.querySelector('.sh-guides');
     if(guides){
+      let hoverCloseTimer;
+      guides.addEventListener('mouseenter', () => {
+        if(window.innerWidth <= 880) return;
+        clearTimeout(hoverCloseTimer);
+        guides.open = true;
+      });
+      guides.addEventListener('mouseleave', () => {
+        if(window.innerWidth <= 880) return;
+        clearTimeout(hoverCloseTimer);
+        hoverCloseTimer = setTimeout(() => { guides.open = false; }, 140);
+      });
       document.addEventListener('click', e => { if(guides.open && !guides.contains(e.target)) guides.open = false; });
       document.addEventListener('keydown', e => { if(e.key === 'Escape' && guides.open){ guides.open = false; guides.querySelector('summary').focus(); } });
     }
@@ -360,13 +371,14 @@
         font-family:inherit;font-size:.92rem;font-weight:500;text-decoration:none;white-space:nowrap;cursor:pointer;transition:color .2s}
       header .navlinks>a.on,header .sh-guides.on>summary{color:var(--cream,#f4e8e3)}
       header .sh-guides{position:relative}
-      header .sh-guides>summary{gap:7px;list-style:none}
+      header .sh-guides>summary{position:relative;padding-right:17px;list-style:none}
       header .sh-guides>summary::-webkit-details-marker{display:none}
-      header .sh-guides-chevron{width:10px;height:7px;overflow:visible;fill:none;stroke:var(--amber,#ffab40);stroke-width:1.7;
-        stroke-linecap:round;stroke-linejoin:round;opacity:0;transform:translateY(-1px);transition:opacity .16s,transform .16s}
+      header .sh-guides-chevron{position:absolute;right:1px;top:50%;width:10px;height:7px;margin-top:-3.5px;overflow:visible;
+        fill:none;stroke:var(--amber,#ffab40);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+        opacity:.65;transition:opacity .16s,transform .16s}
       header .sh-guides>summary:focus-visible .sh-guides-chevron,
       header .sh-guides[open] .sh-guides-chevron{opacity:1}
-      header .sh-guides[open] .sh-guides-chevron{transform:translateY(1px) rotate(180deg)}
+      header .sh-guides[open] .sh-guides-chevron{transform:rotate(180deg)}
       header .sh-guides-menu{position:absolute;top:calc(100% + 9px);left:50%;z-index:100;width:290px;padding:8px;
         transform:translateX(-50%);background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:16px;
         box-shadow:0 22px 50px rgba(0,0,0,.55)}
@@ -378,7 +390,7 @@
         cursor:pointer;text-decoration:none}
       .sh-account-menu .sh-menu-link:hover,.sh-account-menu .shMenuItem:hover{background:#1c1316}
       .sh-login-short{display:none}
-      @media(hover:hover) and (pointer:fine){
+      @media(min-width:881px){
         header .navlinks>a:hover,header .sh-guides>summary:hover{color:var(--cream,#f4e8e3)}
         header .sh-guides>summary:hover .sh-guides-chevron{opacity:1}
         header .sh-guides-menu a:hover{background:rgba(255,171,64,.1)}
@@ -403,8 +415,9 @@
         header .navlinks>a{justify-content:center}
         header .navlinks>a.on,header .sh-guides.on>summary,header .sh-guides[open]>summary{background:rgba(255,171,64,.08);color:var(--cream,#f4e8e3)}
         header .sh-guides{width:100%}
-        header .sh-guides>summary{justify-content:center;gap:8px}
-        header .sh-guides-chevron{width:11px;height:8px;opacity:.8}
+        header .sh-guides>summary{justify-content:center;padding-right:.85em}
+        header .sh-guides-label{display:block;text-align:center}
+        header .sh-guides-chevron{right:12px;width:11px;height:8px;margin-top:-4px;opacity:.75}
         header .sh-guides-menu{position:static;width:auto;margin:1px 8px 5px;padding:3px;transform:none;border:0;border-radius:10px;
           background:rgba(12,7,8,.45);box-shadow:none}
         header .sh-guides-menu a{padding:7px 10px}
