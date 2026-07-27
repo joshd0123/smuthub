@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Bookshelf — SmutHub</title>
 <meta name="description" content="Your personal romantasy bookshelf — a themed wooden bookcase organized by want-to-read, currently reading, and read. Drag-and-drop reorder, custom themes, every spicy read in one place.">
-<link rel="canonical" href="https://smuthub.ca/smuthub-bookcase.html">
+<link rel="canonical" href="https://smuthub.ca/bookshelf/">
 <meta name="theme-color" content="#0c0708">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="smutHub">
 <meta property="og:title" content="My Bookshelf — SmutHub">
 <meta property="og:description" content="Your personal romantasy bookshelf — themed wooden bookcase, drag-and-drop reorder, every spicy read in one place.">
-<meta property="og:url" content="https://smuthub.ca/smuthub-bookcase.html">
+<meta property="og:url" content="https://smuthub.ca/bookshelf/">
 <meta property="og:image" content="https://smuthub.ca/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="My Bookshelf — SmutHub">
@@ -515,7 +515,7 @@
       <a href="dashboard.html">Dashboard</a>
       <a href="/books/">Browse Books</a>
       <a href="/search">Add a Book</a>
-      <a href="smuthub-bookcase.html" class="on">My Bookshelf</a>
+      <a href="/bookshelf/" class="on">My Bookshelf</a>
       <a href="/glossary/">Glossary</a>
       <a href="stores.html">Find a Store</a>
     </nav>
@@ -1181,7 +1181,7 @@
       { user_id:user.id, shelf_status:status, world_key:c.world_key||'moonlit', backdrop_key:c.backdrop_key||null, lighting_key:c.lighting_key||null, props:c.props||[], updated_at:new Date().toISOString() },
       { onConflict:'user_id,shelf_status' }
     );
-    if(error){ console.error('customization save', error); toast(/world_key|relation|exist|column|shelf_customization/i.test(error.message) ? "Run smuthub-bookcase-store-schema.sql to save immersive worlds" : "Couldn't save: "+error.message); }
+    if(error){ console.error('customization save', error); toast(/world_key|relation|exist|column|shelf_customization/i.test(error.message) ? "Run bookshelf-store-schema.sql to save immersive worlds" : "Couldn't save: "+error.message); }
   }
 
   (function(){

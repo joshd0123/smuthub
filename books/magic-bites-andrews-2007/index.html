@@ -345,7 +345,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
           <a href="/glossary/warning/">Content Warnings</a>
         </div>
       </details>
-      <a href="/smuthub-bookcase">My Bookshelf</a>
+      <a href="/bookshelf">My Bookshelf</a>
       <a href="/stores">Find a Store</a>
       <a href="/search">Add a Book</a>
     </nav>
@@ -479,7 +479,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       <div class="bm"><span>🌶️</span><h3>The City of Brass</h3><p>S. A. Chakraborty</p></div>
     </a><a class="af-bcard" href="/books/throne-of-glass-maas/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/throne-of-glass-maas.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/throne-of-glass-maas.jpg" alt="Throne of Glass book cover" loading="lazy"></div>
-      <div class="bm"><span>🌶️</span><h3>Throne of Glass</h3><p>Sarah J. Maas</p></div>
+      <div class="bm"><span>🌶️🌶️</span><h3>Throne of Glass</h3><p>Sarah J. Maas</p></div>
     </a><a class="af-bcard" href="/books/a-marvellous-light-marske-2021/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/a-marvellous-light-marske-2021.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/a-marvellous-light-marske-2021.jpg" alt="A Marvellous Light book cover" loading="lazy"></div>
       <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>A Marvellous Light</h3><p>Freya Marske</p></div>
@@ -837,7 +837,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         if (p === '/search' || p === '/search.html') return 'search';
         if (p.indexOf('/dashboard') === 0) return 'dashboard';
         if (p.indexOf('/glossary/') === 0) return 'glossary';
-        if (p.indexOf('/smuthub-bookcase') === 0) return 'bookshelf';
+        if (p.indexOf('/bookshelf') === 0) return 'bookshelf';
         if (p === '/' || p.indexOf('/index.html') === 0) return 'home';
         return 'internal';
       } catch(_) { return 'direct'; }

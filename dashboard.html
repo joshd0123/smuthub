@@ -196,7 +196,7 @@
       <a href="dashboard.html" class="on">Dashboard</a>
       <a href="/books/">Browse Books</a>
       <a href="/search">Add a Book</a>
-      <a href="smuthub-bookcase.html">My Bookshelf</a>
+      <a href="/bookshelf/">My Bookshelf</a>
       <a href="/glossary/">Glossary</a>
       <a href="stores.html">Find a Store</a>
     </nav>
@@ -243,7 +243,7 @@
   <section>
     <div class="sechead">
       <div><h2>📖 Your reading <span class="note">pick up where you left off</span></h2></div>
-      <a href="smuthub-bookcase.html">My bookshelf →</a>
+      <a href="/bookshelf/">My bookshelf →</a>
     </div>
     <div class="row6" id="reading"></div>
   </section>
@@ -495,7 +495,7 @@
   }
   function openBook(key){
     if (!user){ if (window.SH) SH.openAuth(); return; }
-    location.href = 'smuthub-bookcase.html'; // detail sheet lives there for now
+    location.href = '/bookshelf/'; // detail sheet lives there for now
   }
   function goAddNext(){
     if (!user){ if (window.SH) SH.openAuth(); return; }

@@ -345,7 +345,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
           <a href="/glossary/warning/">Content Warnings</a>
         </div>
       </details>
-      <a href="/smuthub-bookcase">My Bookshelf</a>
+      <a href="/bookshelf">My Bookshelf</a>
       <a href="/stores">Find a Store</a>
       <a href="/search">Add a Book</a>
     </nav>
@@ -494,7 +494,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>Fourth Wing</h3><p>Rebecca Yarros</p></div>
     </a><a class="af-bcard" href="/books/house-of-earth-and-blood-maas/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/house-of-earth-and-blood-maas.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/house-of-earth-and-blood-maas.jpg" alt="House of Earth and Blood book cover" loading="lazy"></div>
-      <div class="bm"><span>🌶️🌶️🌶️</span><h3>House of Earth and Blood</h3><p>Sarah J. Maas</p></div>
+      <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>House of Earth and Blood</h3><p>Sarah J. Maas</p></div>
     </a><a class="af-bcard" href="/books/a-court-of-thorns-and-roses-maas/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/a-court-of-thorns-and-roses-maas.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/a-court-of-thorns-and-roses-maas.jpg" alt="A Court of Thorns and Roses book cover" loading="lazy"></div>
       <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>A Court of Thorns and Roses</h3><p>Sarah J. Maas</p></div>
@@ -852,7 +852,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         if (p === '/search' || p === '/search.html') return 'search';
         if (p.indexOf('/dashboard') === 0) return 'dashboard';
         if (p.indexOf('/glossary/') === 0) return 'glossary';
-        if (p.indexOf('/smuthub-bookcase') === 0) return 'bookshelf';
+        if (p.indexOf('/bookshelf') === 0) return 'bookshelf';
         if (p === '/' || p.indexOf('/index.html') === 0) return 'home';
         return 'internal';
       } catch(_) { return 'direct'; }

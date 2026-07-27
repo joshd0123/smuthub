@@ -345,7 +345,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
           <a href="/glossary/warning/">Content Warnings</a>
         </div>
       </details>
-      <a href="/smuthub-bookcase">My Bookshelf</a>
+      <a href="/bookshelf">My Bookshelf</a>
       <a href="/stores">Find a Store</a>
       <a href="/search">Add a Book</a>
     </nav>
@@ -400,7 +400,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       </div>
 
       <dl class="af-facts" aria-label="Quick book facts">
-        <div><dt>Length</dt><dd>412 pages</dd></div><div><dt>Series</dt><dd>Book 5</dd><small>Blood and Ash</small></div><div><dt>POV</dt><dd>First person</dd><small>Single POV</small></div><div><dt>Pairing</dt><dd>M/F</dd><small>Central romance</small></div>
+        <div><dt>Length</dt><dd>412 pages</dd></div><div><dt>Series</dt><dd>Book 5</dd><small>Blood and Ash</small></div><div><dt>POV</dt><dd>First person</dd><small>Single POV</small></div><div><dt>Pairing</dt><dd>M/F</dd><small>Central romance</small></div><div><dt>Ending</dt><dd>HFN</dd><small>No cliffhanger</small></div>
       </dl>
     </div>
 
@@ -449,7 +449,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
     <section class="af-sec" id="af-fit">
     <span class="af-num">05</span>
-    <div><p class="af-label">Is it for me?</p><h2>Yes — if you want the heat high.</h2></div>
+    <div><p class="af-label">Is it for me?</p><h2>Yes — if you want the heat high, and hopeful-for-now is enough.</h2></div>
   </section>
 
     <section class="af-sec" id="af-commitment">
@@ -457,12 +457,12 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     <div><p class="af-label">What&#39;s the commitment?</p><h2>412 pages, book 5 of the series.</h2><div class="af-commit">
           <div><span>Book length</span><b>412 pages</b></div>
           <div><span>Series position</span><b>Book 5</b></div>
-          
+          <div><span>Ending</span><b>Happy For Now (HFN)</b><small>No cliffhanger</small></div>
         </div>
         <details class="af-more"><summary>Every recorded detail +</summary><section class="blk">
     <h2>The details</h2>
     <div class="dgrid">
-      <div class="drow"><span class="dk">Series</span><span class="dv">Blood and Ash · Book 5</span></div><div class="drow"><span class="dk">POV</span><span class="dv">First person · single</span></div><div class="drow"><span class="dk">Length</span><span class="dv">412 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">High Fantasy</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div>
+      <div class="drow"><span class="dk">Series</span><span class="dv">Blood and Ash · Book 5</span></div><div class="drow"><span class="dk">POV</span><span class="dv">First person · single</span></div><div class="drow"><span class="dk">Length</span><span class="dv">412 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">High Fantasy</span></div><div class="drow"><span class="dk">Ending</span><span class="dv">Happy For Now (HFN)</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div>
     </div>
   </section></details></div>
   </section>
@@ -873,7 +873,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         if (p === '/search' || p === '/search.html') return 'search';
         if (p.indexOf('/dashboard') === 0) return 'dashboard';
         if (p.indexOf('/glossary/') === 0) return 'glossary';
-        if (p.indexOf('/smuthub-bookcase') === 0) return 'bookshelf';
+        if (p.indexOf('/bookshelf') === 0) return 'bookshelf';
         if (p === '/' || p.indexOf('/index.html') === 0) return 'home';
         return 'internal';
       } catch(_) { return 'direct'; }

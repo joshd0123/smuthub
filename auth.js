@@ -134,7 +134,7 @@
     const active = {
       books: path.startsWith('/books/'),
       guides: path.startsWith('/guides/') || path.startsWith('/glossary/'),
-      shelf: path === '/smuthub-bookcase' || path === '/smuthub-bookcase.html',
+      shelf: path === '/bookshelf' || path === '/bookshelf/',
       stores: path === '/stores' || path === '/stores.html',
       add: path === '/search' || path === '/search.html' || path === '/smuthub-app.html'
     };
@@ -152,7 +152,7 @@
           <a href="/glossary/warning/"><b>Content Warnings</b><small>Check before chapter one</small></a>
         </div>
       </details>
-      <a href="/smuthub-bookcase"${on('shelf')}>My Bookshelf</a>
+      <a href="/bookshelf"${on('shelf')}>My Bookshelf</a>
       <a href="/stores"${on('stores')}>Find a Store</a>
       <a href="/search"${on('add')}>Add a Book</a>`;
 

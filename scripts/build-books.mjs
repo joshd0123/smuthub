@@ -195,7 +195,7 @@ function sharedHeader(active){
           <a href="/glossary/warning/">Content Warnings</a>
         </div>
       </details>
-      ${link('/smuthub-bookcase', 'My Bookshelf', 'shelf')}
+      ${link('/bookshelf', 'My Bookshelf', 'shelf')}
       ${link('/stores', 'Find a Store', 'stores')}
       ${link('/search', 'Add a Book', 'add')}
     </nav>
@@ -1455,7 +1455,7 @@ ${sharedHeader('books')}
         if (p === '/search' || p === '/search.html') return 'search';
         if (p.indexOf('/dashboard') === 0) return 'dashboard';
         if (p.indexOf('/glossary/') === 0) return 'glossary';
-        if (p.indexOf('/smuthub-bookcase') === 0) return 'bookshelf';
+        if (p.indexOf('/bookshelf') === 0) return 'bookshelf';
         if (p === '/' || p.indexOf('/index.html') === 0) return 'home';
         return 'internal';
       } catch(_) { return 'direct'; }

@@ -27,3 +27,7 @@
 /spice/   /guides/spice-levels/  301
 /spice    /guides/spice-levels/  301
 /spice/*  /guides/spice-levels/:splat  301
+
+# Bookcase page renamed to /bookshelf/ (2026-07)
+/smuthub-bookcase.html  /bookshelf/  301
+/smuthub-bookcase  /bookshelf/  301

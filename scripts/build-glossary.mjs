@@ -334,7 +334,7 @@ const SHARED_HEADER = `
           <a href="/glossary/warning/">Content Warnings</a>
         </div>
       </details>
-      <a href="/smuthub-bookcase">My Bookshelf</a>
+      <a href="/bookshelf">My Bookshelf</a>
       <a href="/stores">Find a Store</a>
       <a href="/search">Add a Book</a>
     </nav>

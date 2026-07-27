@@ -345,7 +345,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
           <a href="/glossary/warning/">Content Warnings</a>
         </div>
       </details>
-      <a href="/smuthub-bookcase">My Bookshelf</a>
+      <a href="/bookshelf">My Bookshelf</a>
       <a href="/stores">Find a Store</a>
       <a href="/search">Add a Book</a>
     </nav>
@@ -410,7 +410,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>4 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>6 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>none recorded</em></span></a><a href="#af-fit"><span class="af-qn">05</span><span class="af-qa"><b>Is it for me?</b><em>likely yes</em></span></a><a href="#af-commitment"><span class="af-qn">06</span><span class="af-qa"><b>What&#39;s the commitment?</b><em>417 pp · book 1</em></span></a>
+        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>3 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>6 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>none recorded</em></span></a><a href="#af-fit"><span class="af-qn">05</span><span class="af-qa"><b>Is it for me?</b><em>likely yes</em></span></a><a href="#af-commitment"><span class="af-qn">06</span><span class="af-qa"><b>What&#39;s the commitment?</b><em>417 pp · book 1</em></span></a>
       </nav>
     </aside>
   </section>
@@ -427,8 +427,8 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
     <section class="af-sec" id="af-spice">
     <span class="af-num">02</span>
-    <div><p class="af-label">How spicy is it?</p><h2>4 / 5 — on-page (open door).</h2><div class="af-spice">
-        <span class="af-gauge" aria-label="Spice level 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span>
+    <div><p class="af-label">How spicy is it?</p><h2>3 / 5 — on-page (open door).</h2><div class="af-spice">
+        <span class="af-gauge" aria-label="Spice level 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
         <span><b>Door</b>On-page (open door)</span>
         <span><b>Frequency</b>Frequent</span>
       </div></div>
@@ -449,7 +449,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
     <section class="af-sec" id="af-fit">
     <span class="af-num">05</span>
-    <div><p class="af-label">Is it for me?</p><h2>Yes — if you want the heat high, and you need the happy ending guaranteed.</h2></div>
+    <div><p class="af-label">Is it for me?</p><h2>Yes — if you want real heat without it taking over, and you need the happy ending guaranteed.</h2></div>
   </section>
 
     <section class="af-sec" id="af-commitment">
@@ -837,7 +837,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         if (p === '/search' || p === '/search.html') return 'search';
         if (p.indexOf('/dashboard') === 0) return 'dashboard';
         if (p.indexOf('/glossary/') === 0) return 'glossary';
-        if (p.indexOf('/smuthub-bookcase') === 0) return 'bookshelf';
+        if (p.indexOf('/bookshelf') === 0) return 'bookshelf';
         if (p === '/' || p.indexOf('/index.html') === 0) return 'home';
         return 'internal';
       } catch(_) { return 'direct'; }

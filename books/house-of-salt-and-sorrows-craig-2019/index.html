@@ -345,7 +345,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
           <a href="/glossary/warning/">Content Warnings</a>
         </div>
       </details>
-      <a href="/smuthub-bookcase">My Bookshelf</a>
+      <a href="/bookshelf">My Bookshelf</a>
       <a href="/stores">Find a Store</a>
       <a href="/search">Add a Book</a>
     </nav>
@@ -479,7 +479,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       <div class="bm"><span>🌶️🌶️</span><h3>Mexican Gothic</h3><p>Silvia Moreno-Garcia</p></div>
     </a><a class="af-bcard" href="/books/belladonna-grace/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/belladonna-grace.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/belladonna-grace.jpg" alt="Belladonna book cover" loading="lazy"></div>
-      <div class="bm"><span>🌶️🌶️</span><h3>Belladonna</h3><p>Adalyn Grace</p></div>
+      <div class="bm"><span>🌶️</span><h3>Belladonna</h3><p>Adalyn Grace</p></div>
     </a><a class="af-bcard" href="/books/book-of-night-black-2022/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/book-of-night-black-2022.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/book-of-night-black-2022.jpg" alt="Book of Night book cover" loading="lazy"></div>
       <div class="bm"><span>🌶️🌶️🌶️</span><h3>Book of Night</h3><p>Holly Black</p></div>
@@ -837,7 +837,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         if (p === '/search' || p === '/search.html') return 'search';
         if (p.indexOf('/dashboard') === 0) return 'dashboard';
         if (p.indexOf('/glossary/') === 0) return 'glossary';
-        if (p.indexOf('/smuthub-bookcase') === 0) return 'bookshelf';
+        if (p.indexOf('/bookshelf') === 0) return 'bookshelf';
         if (p === '/' || p.indexOf('/index.html') === 0) return 'home';
         return 'internal';
       } catch(_) { return 'direct'; }
