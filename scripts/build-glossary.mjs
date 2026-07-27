@@ -31,6 +31,10 @@ const ROOT = path.resolve(__dirname, '..');
 const GLOSSARY_DIR = path.join(ROOT, 'glossary');
 const SITE = 'https://smuthub.ca';
 const SITE_NAME = 'smutHub';
+const capitalizeInitial = value => {
+  const text = String(value || '');
+  return /^[a-z]/.test(text) ? text[0].toUpperCase() + text.slice(1) : text;
+};
 
 // ── Read Supabase creds from the static config.js (anon key — public) ──────
 const cfgRaw = await fs.readFile(path.join(ROOT, 'config.js'), 'utf-8');
@@ -85,13 +89,18 @@ try {
     }
   }
 
-  allTags.sort((a, b) =>
-    a.category.localeCompare(b.category) || a.label.localeCompare(b.label)
-  );
   console.log(`  · merged ${glossarySync.length} reviewed Notion terms (${added} not yet in Supabase)`);
 } catch (e) {
   if (e && e.code !== 'ENOENT') throw e;
 }
+
+// Term names are headings throughout the glossary. Normalize the initial
+// character once so the main index, category cards, term pages, metadata, and
+// structured data always use the same display label.
+for (const tag of allTags) tag.label = capitalizeInitial(tag.label);
+allTags.sort((a, b) =>
+  a.category.localeCompare(b.category) || a.label.localeCompare(b.label)
+);
 
 const tags = allTags.filter(t => (t.has_page !== false) && t.description);
 // Category pages are public glossary pages, so never render catalog-only tags
