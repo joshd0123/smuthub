@@ -63,6 +63,8 @@
   .chilis{font-size:1.5rem;letter-spacing:.1em;cursor:pointer;user-select:none}
   .chilis span{filter:grayscale(1);opacity:.3;cursor:pointer}.chilis span.on{filter:none;opacity:1}
   .coverprev{width:90px;height:120px;border-radius:8px;background:var(--panel) center/cover no-repeat;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:#5b4040;font-size:1.5rem}
+  .spineprev{width:42px;height:120px;border-radius:5px;background:var(--panel) center/cover no-repeat;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:#5b4040;font-size:1rem;writing-mode:vertical-rl}
+  .assetprev{display:flex;flex-direction:column;gap:5px;align-items:center}.assetprev small{font-size:.66rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
   .tagcat{margin-bottom:14px}
   .tagcat h4{font-size:.82rem;color:var(--amber);font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
   .chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -147,9 +149,13 @@
         </div>
         <div class="grid2" style="margin-top:12px;align-items:end">
           <div class="field" style="grid-column:1/-1"><label for="f_cover_url">Cover URL (Supabase Storage or any host)</label><input id="f_cover_url"></div>
+          <div class="field" style="grid-column:1/-1"><label for="f_spine_url">Official spine artwork URL (publisher/author asset)</label><input id="f_spine_url" placeholder="Leave empty to use the cover-derived spine"></div>
+          <div class="field"><label for="f_spine_position">Spine focal point (0 left – 100 right)</label><input id="f_spine_position" type="number" min="0" max="100" value="50"></div>
+          <div class="field"><label for="f_spine_source">Artwork source</label><select id="f_spine_source"><option value="official">Official / publisher</option><option value="author">Author supplied</option><option value="licensed">Licensed</option><option value="community">Community supplied</option></select></div>
         </div>
         <div class="toolbar">
-          <div class="coverprev" id="coverPrev">▭</div>
+          <div class="assetprev"><div class="coverprev" id="coverPrev">▭</div><small>Cover</small></div>
+          <div class="assetprev"><div class="spineprev" id="spinePrev">Spine</div><small>Bookcase spine</small></div>
           <button class="ghostbtn" id="fetchBtn" type="button">⤓ Fetch facts from Google Books</button>
           <span class="muted" id="fetchMsg"></span>
         </div>
@@ -264,7 +270,10 @@
     (data||[]).forEach(t=>{ if(!tagsByCat[t.category]) tagsByCat[t.category]=[]; tagsByCat[t.category].push({slug:t.slug,label:t.label||t.slug}); });
   }
   async function loadList(){
-    const { data, error } = await sb.from('books').select('slug,title,author,cover_url,year,spice_level,status').order('updated_at',{ascending:false});
+    let { data, error } = await sb.from('books').select('slug,title,author,cover_url,spine_url,year,spice_level,status').order('updated_at',{ascending:false});
+    if(error&&/spine_url/i.test(error.message||'')){
+      ({data,error}=await sb.from('books').select('slug,title,author,cover_url,year,spice_level,status').order('updated_at',{ascending:false}));
+    }
     if(error){ $('bookList').innerHTML='<p class="bad">'+esc(error.message)+(/exist|schema/i.test(error.message)?' — run migrations/2026-06-16-catalog-normalized.sql first.':'')+'</p>'; return; }
     allBooks=data||[]; renderList();
   }
@@ -277,7 +286,7 @@
         <div class="cv" ${b.cover_url?`style="background-image:url('${esc(b.cover_url)}')"`:''}>${b.cover_url?'':'📖'}</div>
         <div class="info">
           <div class="t">${esc(b.title||'(untitled)')}</div>
-          <div class="a">${esc(b.author||'Unknown')}${b.year?' · '+b.year:''}${b.spice_level!=null?' · '+'🌶️'.repeat(b.spice_level):''}</div>
+          <div class="a">${esc(b.author||'Unknown')}${b.year?' · '+b.year:''}${b.spice_level!=null?' · '+'🌶️'.repeat(b.spice_level):''}${b.spine_url?' · ◆ spine':''}</div>
           <span class="badge b-${esc(b.status||'draft')}">${esc(b.status||'draft')}</span>
         </div>
       </div>`).join('') || '<p class="muted">No books match. Add one with “＋ New book”.</p>';
@@ -300,13 +309,16 @@
     $('deleteBtn').style.display = book ? '' : 'none';
     // scalars
     TEXT_F.forEach(f=>{ const el=$('f_'+f); if(el) el.value = (book && book[f]!=null) ? book[f] : (f==='status'?'draft':(f==='language'?'':'')); });
+    $('f_spine_url').value=(book&&book.spine_url)||'';
+    $('f_spine_position').value=(book&&book.spine_position!=null)?book.spine_position:50;
+    $('f_spine_source').value=(book&&book.spine_source)||'official';
     if(!book){ $('f_status').value='draft'; }
     NUM_F.forEach(f=>{ if(f==='spice_level') return; const el=$('f_'+f); if(el) el.value = (book && book[f]!=null) ? book[f] : ''; });
     BOOL_F.forEach(f=>{ const el=$('f_'+f); if(el) el.checked = !!(book && book[f]); });
     spiceLevel = (book && book.spice_level!=null) ? book.spice_level : null; renderChilis();
     $('f_heat_type').value = (book && Array.isArray(book.heat_type)) ? book.heat_type.join('; ') : '';
     $('f_comp_titles').value = (book && Array.isArray(book.comp_titles)) ? book.comp_titles.join('; ') : '';
-    updateCoverPrev();
+    updateCoverPrev(); updateSpinePrev();
     // tags: derive checked slugs per category from tag_ids ("cat:slug")
     const checked={}; TAG_CATS.forEach(c=>checked[c]=new Set());
     ((book&&book.tag_ids)||[]).forEach(ts=>{ const i=ts.indexOf(':'); if(i>0){ const c=ts.slice(0,i), s=ts.slice(i+1); if(checked[c]) checked[c].add(s); } });
@@ -377,6 +389,14 @@
   // ── cover preview ──
   function updateCoverPrev(){ const u=$('f_cover_url').value.trim(); const p=$('coverPrev'); if(u){ p.style.backgroundImage="url('"+u.replace(/'/g,"%27")+"')"; p.textContent=''; } else { p.style.backgroundImage=''; p.textContent='▭'; } }
   $('f_cover_url').addEventListener('input',updateCoverPrev);
+  function updateSpinePrev(){
+    const u=$('f_spine_url').value.trim()||$('f_cover_url').value.trim(), p=$('spinePrev'), pos=Math.max(0,Math.min(100,+$('f_spine_position').value||50));
+    if(u){ p.style.backgroundImage="linear-gradient(90deg,rgba(0,0,0,.55),transparent 35%,rgba(0,0,0,.45)),url('"+u.replace(/'/g,"%27")+"')";p.style.backgroundPosition='center, '+pos+'% center';p.textContent=''; }
+    else { p.style.backgroundImage='';p.textContent='Spine'; }
+  }
+  $('f_spine_url').addEventListener('input',updateSpinePrev);
+  $('f_spine_position').addEventListener('input',updateSpinePrev);
+  $('f_cover_url').addEventListener('input',updateSpinePrev);
 
   // ── build payload (every field present → full overwrite; '' → null) ──
   function buildPayload(){
@@ -392,15 +412,11 @@
   }
 
   // ── save / delete ──
-  // Server-side rehost: takes whatever cover_url was just saved (Google Books,
-  // Goodreads/Amazon, anywhere) and copies it to R2 so the public cover_url is
-  // always served from covers.smuthub.ca. Idempotent — the function no-ops if
-  // the URL is already on R2 — but we skip the call in that case to avoid the
-  // round-trip. Non-fatal: if the rehost fails (dead source, weird image), the
-  // book still saved with the original URL and you can fix it later.
-  async function rehostIfNeeded(slug, coverUrl){
-    if(!coverUrl) return { ok:true, skipped:'no cover' };
-    if(coverUrl.startsWith('https://covers.smuthub.ca/')) return { ok:true, skipped:'already on R2' };
+  // Server-side rehost: copies cover or approved spine artwork to R2 so public
+  // assets are always served from covers.smuthub.ca. Idempotent and non-fatal.
+  async function rehostIfNeeded(slug, assetUrl, asset){
+    if(!assetUrl) return { ok:true, skipped:'no '+(asset||'cover') };
+    if(assetUrl.startsWith('https://covers.smuthub.ca/')) return { ok:true, skipped:'already on R2' };
     const cfg = window.SMUTHUB_CONFIG||{};
     if(!cfg.SUPABASE_URL) return { ok:false, reason:'no supabase URL configured' };
     let token;
@@ -410,7 +426,7 @@
       const res = await fetch(cfg.SUPABASE_URL.replace(/\/+$/,'') + '/functions/v1/rehost-cover', {
         method:'POST',
         headers:{ 'Authorization':'Bearer '+token, 'Content-Type':'application/json' },
-        body: JSON.stringify({ slug }),
+        body: JSON.stringify({ slug, source_url:assetUrl, asset:asset||'cover' }),
       });
       const body = await res.json().catch(()=>({}));
       if(!res.ok) return { ok:false, reason: body.error || body.reason || ('rehost http '+res.status) };
@@ -423,12 +439,27 @@
     const btn=$('saveBtn'); btn.disabled=true; $('editMsg').textContent='Saving…';
     const { data, error } = await sb.rpc('upsert_book',{ p: buildPayload() });
     if(error){ btn.disabled=false; $('editMsg').innerHTML='<span class="bad">'+esc(error.message)+(/authorized|admin/i.test(error.message)?' — set is_admin=true.':'')+'</span>'; console.error(error); return; }
+    const spineUrl=$('f_spine_url').value.trim()||null;
+    const spinePosition=Math.max(0,Math.min(100,+$('f_spine_position').value||50));
+    const {error:spineError}=await sb.rpc('set_book_spine',{
+      p_slug:data,p_spine_url:spineUrl,p_spine_position:spinePosition,p_spine_source:$('f_spine_source').value
+    });
+    if(spineError){
+      btn.disabled=false;
+      $('editMsg').innerHTML='<span class="bad">Book saved, but spine metadata did not: '+esc(spineError.message)+' — run the book-spines migration.</span>';
+      return;
+    }
     // auto-rehost the cover to R2 before refreshing the view (best-effort)
     const sourceUrl = $('f_cover_url').value.trim();
     if(sourceUrl && !sourceUrl.startsWith('https://covers.smuthub.ca/')){
       $('editMsg').innerHTML='<span class="muted">Saved ★ — rehosting cover to R2…</span>';
-      const r = await rehostIfNeeded(data, sourceUrl);
+      const r = await rehostIfNeeded(data, sourceUrl,'cover');
       if(!r.ok) toast('Cover rehost failed: '+(r.reason||'unknown')+' — book saved with the source URL.');
+    }
+    if(spineUrl&&!spineUrl.startsWith('https://covers.smuthub.ca/')){
+      $('editMsg').innerHTML='<span class="muted">Saved ★ — rehosting spine artwork to R2…</span>';
+      const r=await rehostIfNeeded(data,spineUrl,'spine');
+      if(!r.ok) toast('Spine rehost failed: '+(r.reason||'unknown')+' — book saved with the source URL.');
     }
     btn.disabled=false;
     // Invalidate the public Search page's browse cache so non-admin visitors
@@ -474,7 +505,7 @@
       setIfEmpty('f_blurb', v.description);
       if(!isbn){ const ind=(v.industryIdentifiers||[]).find(x=>/ISBN_13|ISBN_10/.test(x.type)); if(ind) setIfEmpty('f_isbn', ind.identifier); }
       const img=v.imageLinks&&(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail);
-      if(img && !$('f_cover_url').value.trim()){ $('f_cover_url').value=gImg(img); updateCoverPrev(); }
+      if(img && !$('f_cover_url').value.trim()){ $('f_cover_url').value=gImg(img); updateCoverPrev(); updateSpinePrev(); }
       $('fetchMsg').innerHTML='<span class="ok">Filled empty fields from Google ✓ — review, then Save.</span>';
     }catch(err){ $('fetchMsg').innerHTML='<span class="bad">Fetch failed.</span>'; console.error(err); }
   }

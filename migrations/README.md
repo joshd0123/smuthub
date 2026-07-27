@@ -16,6 +16,10 @@ counts the script prints at the end.
 2. `2026-06-16-seed-tags.sql` — *optional.* The same vocabulary seed, standalone,
    for adding new tags later or seeding a fresh database. (Already included in
    step 1, so you don't need it on first run.)
+3. `2026-07-27-book-spines.sql` — adds approved spine artwork, focal-point and
+   rights-source fields plus the admin-only `set_book_spine()` write path. The
+   bookcase automatically falls back to a crop of `cover_url` until a spine is
+   supplied, so the catalog can be upgraded book by book.
 
 Prerequisites already in your project: `smuthub-profiles.sql`,
 `smuthub-catalog.sql`, `smuthub-catalog-fields.sql`. The migration **reads**

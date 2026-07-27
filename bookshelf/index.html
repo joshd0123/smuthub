@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Bookshelf — SmutHub</title>
-<meta name="description" content="Your personal romantasy bookshelf — a themed wooden bookcase organized by want-to-read, currently reading, and read. Drag-and-drop reorder, custom themes, every spicy read in one place.">
+<meta name="description" content="Build a personalized virtual bookshelf for romantasy and romance books. Style your visual TBR, collect bookcase designs, and enter immersive reading rooms.">
 <link rel="canonical" href="https://smuthub.ca/bookshelf/">
 <meta name="theme-color" content="#0c0708">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -23,9 +23,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-<script defer src="auth.js"></script>
-<script src="bookcase-catalog.js"></script>
+<script src="/config.js"></script>
+<script defer src="/auth.js"></script>
+<script src="/bookcase-catalog.js"></script>
 <link rel="stylesheet" href="/companion.css">
 <script defer src="/companion.js"></script>
 <style>
@@ -53,11 +53,11 @@
   /* Optional per-theme background ART. These files don't exist yet; the site
      stays on the CSS gradients above until you (a) drop an image at the path
      and (b) set THEME_ART=true in the script. See /themes/README for prompts. */
-  .theme-walnut  {--room-img:url('themes/walnut/room.jpg')}
-  .theme-noir    {--room-img:url('themes/noir/room.jpg')}
-  .theme-faerie  {--room-img:url('themes/faerie/room.jpg')}
-  .theme-academia{--room-img:url('themes/academia/room.jpg')}
-  .theme-boudoir {--room-img:url('themes/boudoir/room.jpg')}
+  .theme-walnut  {--room-img:url('/themes/walnut/room.jpg')}
+  .theme-noir    {--room-img:url('/themes/noir/room.jpg')}
+  .theme-faerie  {--room-img:url('/themes/faerie/room.jpg')}
+  .theme-academia{--room-img:url('/themes/academia/room.jpg')}
+  .theme-boudoir {--room-img:url('/themes/boudoir/room.jpg')}
   body.art-on .roomwrap{background:var(--room-img) center/cover no-repeat, var(--room)}
   body.art-on .bd-plain{background:var(--room-img) center/cover no-repeat, var(--room)}
 
@@ -70,13 +70,16 @@
   .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
   .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
   header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
-  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap}
+  .nav{position:relative;display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:nowrap}
   .navlinks{display:flex;gap:18px}
   .navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none;transition:color .2s}
   .navlinks a.on,.navlinks a:hover{color:var(--cream)}
-  @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
   .authbox{display:flex;align-items:center;gap:8px}
   .btn{background:var(--grad);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:.55em 1.05em;border-radius:99px;cursor:pointer;font-size:.85rem}
+  @media(max-width:760px){
+    .wrap{padding-left:16px;padding-right:16px}
+    header .navlinks{display:none}
+  }
   .setup{background:rgba(255,171,64,.1);border:1px solid rgba(255,171,64,.4);color:var(--amber);font-size:.85rem;text-align:center;padding:9px;display:none}
   .setup.show{display:block}
 
@@ -94,7 +97,7 @@
   .roomwrap.library-mode{background:#08090d}
   .roomwrap.library-mode::before{inset:-12px;background:
     linear-gradient(180deg,rgba(5,7,13,.45),rgba(5,7,13,.86)),
-    url('themes/moonlit-reading-room/room-v1.jpg') center 42%/cover no-repeat;opacity:.5;filter:saturate(.72) blur(2px);transform:scale(1.025)}
+    url('/themes/moonlit-reading-room/room-v1.jpg') center 42%/cover no-repeat;opacity:.5;filter:saturate(.72) blur(2px);transform:scale(1.025)}
   .roomwrap.library-mode::after{background:
     radial-gradient(60% 36% at 50% 20%,rgba(213,179,106,.14),transparent 70%),
     linear-gradient(180deg,rgba(3,4,8,.05),rgba(3,4,8,.5) 70%,#07070b 100%),
@@ -102,7 +105,7 @@
   .roomwrap.library-mode .roomhead{padding-top:28px}
   .roomwrap.library-mode .roomhead h1{font-size:clamp(1.85rem,5vw,3.2rem);color:#fff6e8}
   .roomwrap.library-mode .roomhead .sub{max-width:620px;margin:6px auto 0;color:rgba(244,232,227,.66)}
-  .library-layout{width:min(100%,980px);display:grid;grid-template-columns:minmax(0,640px) 260px;align-items:start;gap:24px}
+  .library-layout{width:min(100%,1080px);display:grid;grid-template-columns:minmax(0,700px) 290px;align-items:start;gap:26px}
   .library-main{min-width:0}
   .library-stats{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-bottom:14px}
   .library-stat{display:flex;align-items:center;gap:6px;padding:.48em .8em;border:1px solid rgba(225,185,107,.2);border-radius:99px;
@@ -118,15 +121,32 @@
   body[data-library-detail="plaque"] .case-name{background:linear-gradient(180deg,#d8b66b,#7d5423);color:#251509;border-color:#f5dda6}
 
   /* ── THE BOOKCASE (cabinet) ── */
-  .bookcase{position:relative;width:100%;max-width:640px;padding:13px 13px 15px;border-radius:14px;
+  .bookcase{position:relative;width:100%;max-width:690px;padding:13px 13px 15px;border-radius:14px;
     background:var(--wood-tex), linear-gradient(150deg,var(--wood-lt),var(--wood) 32%,var(--wood-dk));background-blend-mode:soft-light,normal;
-    box-shadow:0 38px 78px -30px rgba(0,0,0,.85), inset 0 2px 0 rgba(255,255,255,.12), inset 0 -3px 7px rgba(0,0,0,.4)}
+    box-shadow:0 38px 78px -30px rgba(0,0,0,.85), inset 0 2px 0 rgba(255,255,255,.12), inset 0 -3px 7px rgba(0,0,0,.4);
+    transition:max-width .45s,border-radius .45s,padding .45s,box-shadow .45s}
   .bookcase::before{content:"";position:absolute;left:-4px;right:-4px;top:-7px;height:11px;border-radius:7px 7px 3px 3px;
     background:var(--wood-tex), linear-gradient(var(--wood-lt),var(--wood-dk));background-blend-mode:soft-light,normal;
     box-shadow:0 6px 12px -5px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.16)}
   .bookcase::after{content:"";position:absolute;left:-4px;right:-4px;bottom:-7px;height:11px;border-radius:3px 3px 7px 7px;
     background:var(--wood-tex), linear-gradient(var(--wood),var(--wood-dk));background-blend-mode:soft-light,normal;
     box-shadow:0 12px 18px -7px rgba(0,0,0,.7)}
+  .cabinet-crest{display:none;position:absolute;z-index:-1;left:12%;right:12%;top:-48px;height:58px;
+    background:var(--wood-tex),linear-gradient(145deg,var(--wood-lt),var(--wood-dk));background-blend-mode:soft-light,normal;
+    filter:drop-shadow(0 10px 14px rgba(0,0,0,.5))}
+  body[data-cabinet="moon-arch"] .bookcase{max-width:650px;padding-top:48px;border-radius:110px 110px 18px 18px}
+  body[data-cabinet="moon-arch"] .bookcase::before{left:16%;right:16%;top:11px;height:15px;border-radius:50%}
+  body[data-cabinet="moon-arch"] .interior{border-radius:82px 82px 9px 9px;padding-top:23px}
+  body[data-cabinet="moon-arch"] .case-name{border-radius:99px;margin-bottom:-16px}
+  body[data-cabinet="gothic-tower"] .library-main{max-width:590px;justify-self:center;width:100%}
+  body[data-cabinet="gothic-tower"] .bookcase{max-width:560px;margin:43px auto 0;border-radius:8px;padding-left:20px;padding-right:20px}
+  body[data-cabinet="gothic-tower"] .cabinet-crest{display:block;clip-path:polygon(0 100%,13% 44%,26% 68%,50% 0,74% 68%,87% 44%,100% 100%)}
+  body[data-cabinet="gothic-tower"] .case-name{margin-bottom:-43px}
+  body[data-cabinet="floating-gallery"] .bookcase{max-width:700px;padding:0;background:transparent;box-shadow:none}
+  body[data-cabinet="floating-gallery"] .bookcase::before,body[data-cabinet="floating-gallery"] .bookcase::after{display:none}
+  body[data-cabinet="floating-gallery"] .interior{padding:0 4px 8px;background:transparent;box-shadow:none;overflow:visible}
+  body[data-cabinet="floating-gallery"] .shelfrow{margin:0 0 18px;padding:10px 14px 0;border-radius:12px;background:linear-gradient(180deg,rgba(15,11,12,.7),rgba(7,6,7,.28));border:1px solid rgba(225,185,107,.12)}
+  body[data-cabinet="floating-gallery"] .plank{height:15px;margin-left:-18px;margin-right:-18px}
   /* recessed interior — reads as dark wood, not a black void */
   .interior{position:relative;border-radius:7px;padding:6px 14px 12px;overflow:hidden;
     background:
@@ -157,7 +177,7 @@
   .shelfrow.has-overflow .row::after{content:"";position:absolute;z-index:5;right:-1px;top:10px;bottom:0;width:34px;pointer-events:none;background:linear-gradient(90deg,transparent,var(--wood-dk))}
   .swipecue{margin-left:auto;font-family:'Hanken Grotesk';font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);opacity:.88}
   .book.face{width:clamp(72px,18vw,92px)}
-  .book.spine{width:clamp(32px,7.5vw,42px)}
+  .book.spine{width:var(--book-w,42px)}
   .book::after{content:"";position:absolute;left:8%;right:8%;bottom:-5px;height:8px;border-radius:50%;
     background:radial-gradient(ellipse at center,rgba(0,0,0,.5),transparent 72%)}
   .book:hover{transform:translateY(-12px);z-index:4}
@@ -171,15 +191,20 @@
     background:linear-gradient(160deg,#3a0d2a,#7a1238);border-left:3px solid rgba(0,0,0,.5)}
   .book .sp{position:absolute;top:5px;right:5px;font-size:.58rem;background:rgba(8,4,5,.82);color:#fff;padding:.1em .35em;border-radius:4px;z-index:3}
   .book .grave{position:absolute;top:5px;left:5px;font-size:.7rem;z-index:3}
-  /* generated spine (no spine art exists in the book APIs) */
-  .book.spine .spineinner{width:100%;height:138px;border-radius:2px 3px 3px 2px;position:relative;overflow:hidden;
+  /* True-spine-ready: use spine_url when present, otherwise crop the real cover art. */
+  .book.spine .spineinner{width:100%;height:var(--book-h,138px);border-radius:2px 3px 3px 2px;position:relative;overflow:hidden;
     display:flex;align-items:center;justify-content:center;padding:10px 2px;
-    background:linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,0) 22%,rgba(0,0,0,0) 78%,rgba(0,0,0,.32)),var(--wood-tex),var(--spine,#4a1d30);
-    background-blend-mode:normal,soft-light,normal;border-left:2px solid rgba(0,0,0,.55);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+    background-image:
+      linear-gradient(90deg,rgba(0,0,0,.66),rgba(0,0,0,.06) 24%,rgba(0,0,0,.06) 70%,rgba(0,0,0,.5)),
+      linear-gradient(180deg,rgba(8,5,7,.16),rgba(8,5,7,.38)),
+      var(--spine-art,linear-gradient(var(--spine,#4a1d30),var(--spine,#4a1d30))),
+      linear-gradient(var(--spine,#4a1d30),var(--spine,#4a1d30));
+    background-size:auto,auto,cover,auto;background-position:center,center,var(--spine-pos,50%) center,center;background-repeat:no-repeat;
+    background-blend-mode:normal,normal,normal,normal;border-left:2px solid rgba(0,0,0,.55);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
   .book.spine .spineinner::before,.book.spine .spineinner::after{content:"";position:absolute;left:4px;right:4px;height:4px;background:var(--accent);opacity:.4;border-radius:1px}
   .book.spine .spineinner::before{top:11px}.book.spine .spineinner::after{bottom:11px}
-  .book.spine .stitle{writing-mode:vertical-rl;font-family:'Fraunces';font-weight:600;font-size:.64rem;letter-spacing:.02em;
-    color:rgba(244,232,210,.92);white-space:nowrap;overflow:hidden;max-height:104px;text-shadow:0 1px 2px rgba(0,0,0,.7)}
+  .book.spine .stitle{position:relative;z-index:2;writing-mode:vertical-rl;font-family:'Fraunces';font-weight:600;font-size:.64rem;letter-spacing:.02em;
+    color:#fff4de;white-space:nowrap;overflow:hidden;max-height:104px;padding:5px 3px;border-radius:3px;background:rgba(9,6,8,.42);text-shadow:0 1px 4px #000;backdrop-filter:blur(1px)}
   .book.spine .sp{top:3px;right:3px;font-size:.5rem;padding:.04em .2em}
   .book.spine .grave{top:3px;left:3px;font-size:.62rem}
   /* slim refined shelf ledge */
@@ -189,16 +214,13 @@
   .ghost{flex:0 0 auto;width:clamp(72px,18vw,92px);height:128px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
     border:2px dashed rgba(255,255,255,.16);border-radius:1px 4px 4px 1px;color:var(--accent);font-weight:700;font-size:.78rem;cursor:pointer;opacity:.75}
   .ghost:hover{border-color:var(--accent);background:rgba(255,255,255,.04);opacity:1}
-  .tbr-stack{position:relative;flex:0 0 66px;height:126px;align-self:flex-end;margin-right:3px;cursor:pointer;filter:drop-shadow(0 9px 9px rgba(0,0,0,.5));scroll-snap-align:start}
-  .tbr-stack .mini-book{position:absolute;left:4px;width:58px;height:17px;border-radius:2px 5px 5px 2px;border-left:3px solid rgba(0,0,0,.34);
-    background:linear-gradient(90deg,rgba(0,0,0,.35),transparent 24%,rgba(255,255,255,.12)),var(--c);box-shadow:0 3px 5px rgba(0,0,0,.42)}
-  .tbr-stack .mini-book:nth-child(1){bottom:0;transform:rotate(-2deg)}
-  .tbr-stack .mini-book:nth-child(2){bottom:17px;left:1px;transform:rotate(2deg)}
-  .tbr-stack .mini-book:nth-child(3){bottom:34px;transform:rotate(-1deg)}
-  .tbr-stack .mini-book:nth-child(4){bottom:51px;left:0;transform:rotate(1.5deg)}
-  .tbr-stack .tbr-copy{position:absolute;left:1px;right:1px;bottom:76px;text-align:center;color:#f0d18b;font-family:'Fraunces';font-weight:600;font-size:.78rem;line-height:1}
-  .tbr-stack .tbr-copy strong{display:block;font-family:'Hanken Grotesk';font-size:1.4rem;line-height:1;color:#fff3dc}
-  .tbr-stack::after{content:"Enter TBR";position:absolute;left:2px;right:2px;bottom:-16px;text-align:center;color:rgba(244,232,227,.5);font-size:.52rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+  .tbr-stack{position:relative;flex:0 0 132px;height:138px;align-self:flex-end;margin:0 4px 0 0;border:0;background:url('/themes/bookcase/tbr-stack-v2.png') center bottom/180px auto no-repeat;
+    cursor:pointer;filter:drop-shadow(0 10px 11px rgba(0,0,0,.58));scroll-snap-align:start;transition:transform .22s,filter .22s}
+  .tbr-stack .tbr-copy{position:absolute;right:0;top:0;display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(255,224,158,.7);border-radius:50%;
+    background:radial-gradient(circle at 32% 25%,#e2c477,#76501f 72%);box-shadow:0 7px 14px rgba(0,0,0,.45),inset 0 1px rgba(255,255,255,.45);
+    color:#211408;font:700 .58rem 'Fraunces';line-height:.85;text-transform:uppercase}
+  .tbr-stack .tbr-copy strong{display:block;font:800 1rem 'Hanken Grotesk';line-height:.8}
+  .tbr-stack::after{content:"Open TBR";position:absolute;left:9px;right:9px;bottom:-14px;text-align:center;color:rgba(244,232,227,.52);font-size:.5rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
   .tbr-stack:hover{transform:translateY(-7px)}
 
   .library-rail{display:grid;gap:12px;padding-top:50px}
@@ -208,6 +230,9 @@
   .rail-card h3{font-family:'Fraunces';font-weight:600;font-size:1.2rem;line-height:1.1;margin:6px 0}
   .rail-card p{color:rgba(244,232,227,.58);font-size:.76rem;line-height:1.45}
   .rail-btn{width:100%;margin-top:13px;border:1px solid rgba(225,185,107,.35);border-radius:99px;padding:.7em;background:linear-gradient(100deg,#d9b76c,#9d692f);color:#1b1008;font:800 .73rem 'Hanken Grotesk';cursor:pointer}
+  .rail-card.world-card::before{background:radial-gradient(80% 70% at 100% 0%,rgba(98,135,224,.16),transparent 70%)}
+  .rail-card.tbr-card::before{background:radial-gradient(80% 70% at 100% 0%,rgba(126,54,86,.2),transparent 70%)}
+  .rail-card .rail-link{display:inline-flex;margin-top:10px;color:#e7c77e;font-size:.7rem;font-weight:800;cursor:pointer;background:none;border:0;padding:0}
 
   /* DNF drawer below the cabinet */
   .dnfwrap{width:100%;max-width:560px;margin:14px auto 0}
@@ -240,6 +265,16 @@
   .themecard .lock{font-size:.66rem;color:var(--amber);font-weight:800;letter-spacing:.04em}
   .themecard .tdesc{color:var(--muted);font-size:.66rem;line-height:1.25;margin-top:2px}
   .atelier-title{margin:20px 0 4px;font-family:'Fraunces';font-size:1rem}
+  .cabinetgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .cabinetcard{position:relative;min-height:112px;border:1px solid var(--line);border-radius:13px;padding:11px;background:var(--ink-2);cursor:pointer;color:var(--cream);text-align:left}
+  .cabinetcard:hover,.cabinetcard.on{border-color:var(--amber);box-shadow:0 0 0 1px rgba(255,171,64,.16)}
+  .cabinet-shape{display:block;height:38px;margin-bottom:8px;border:2px solid var(--cab,#9a6840);border-bottom-width:5px;background:rgba(255,255,255,.025)}
+  .cabinet-shape.arch{border-radius:25px 25px 3px 3px}.cabinet-shape.gothic{clip-path:polygon(0 100%,0 28%,20% 28%,50% 0,80% 28%,100% 28%,100% 100%)}
+  .cabinet-shape.floating{border-left:0;border-right:0;border-top:0;background:repeating-linear-gradient(180deg,transparent 0 10px,var(--cab,#9a6840) 10px 13px)}
+  .cabinetcard strong,.cabinetcard small{display:block}.cabinetcard strong{font-size:.75rem}.cabinetcard small{color:var(--muted);font-size:.61rem;margin-top:2px}
+  .cabinetcard .cab-price{color:var(--amber);font-weight:800}
+  .trial-mark{display:inline-flex!important;align-items:center;gap:4px;color:var(--amber)!important;font-weight:800!important}
+  .trial-mark.active{color:#88d8af!important}
   .detailgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
   .detailcard{border:1px solid var(--line);border-radius:13px;padding:11px;background:var(--ink-2);cursor:pointer;color:var(--cream);text-align:left}
   .detailcard:hover,.detailcard.on{border-color:var(--amber)}
@@ -308,7 +343,7 @@
   .shelfview{position:fixed;inset:0;z-index:100;display:none;overflow:hidden;background:#06080f;color:var(--cream)}
   .shelfview.open{display:block}
   .sv-backdrop{position:absolute;inset:0;z-index:0;background:center/cover no-repeat}
-  .sv-backdrop.world-moonlit{background-image:url('themes/moonlit-reading-room/room-v1.jpg')}
+  .sv-backdrop.world-moonlit{background-image:url('/themes/moonlit-reading-room/room-v1.jpg')}
   .sv-backdrop.world-boudoir{background:
     radial-gradient(55% 38% at 50% 28%,rgba(255,185,115,.22),transparent 68%),
     repeating-linear-gradient(88deg,#280b1b 0 28px,#3b1028 28px 58px)}
@@ -337,14 +372,14 @@
     transition:transform .7s cubic-bezier(.2,.8,.2,1),filter .5s ease,opacity .4s ease}
   .world-clock:focus-visible,.world-fairies:focus-visible,.world-candle:focus-visible{outline:2px solid var(--amber);outline-offset:-10px}
   .world-clock{position:absolute;z-index:5;left:-2%;bottom:20px;width:150px;height:330px;
-    background-image:url('themes/moonlit-reading-room/addons/clock-v3.png');
+    background-image:url('/themes/moonlit-reading-room/addons/clock-v3.png');
     filter:drop-shadow(0 20px 24px rgba(0,0,0,.62))}
   .world-clock:hover{transform:translateY(-4px) scale(1.025);filter:drop-shadow(0 24px 28px rgba(0,0,0,.72)) brightness(1.08)}
   .clock-hands{display:none}
   .clock-time{position:absolute;left:50%;bottom:17px;transform:translateX(-50%);padding:.35em .7em;border:1px solid rgba(231,197,128,.24);border-radius:99px;
     background:rgba(4,7,13,.68);backdrop-filter:blur(7px);font-size:.62rem;letter-spacing:.08em;white-space:nowrap;color:#e8c778;box-shadow:0 8px 20px rgba(0,0,0,.38)}
   .world-fairies{position:absolute;z-index:5;right:-2%;bottom:72px;width:220px;height:190px;
-    background-image:url('themes/moonlit-reading-room/addons/fairies-v3.png');
+    background-image:url('/themes/moonlit-reading-room/addons/fairies-v3.png');
     filter:drop-shadow(0 0 15px rgba(255,205,110,.18))}
   .world-fairies:hover{transform:translate(-4px,-5px) scale(1.025);filter:drop-shadow(0 0 22px rgba(255,205,110,.32)) brightness(1.08)}
   .fairy{display:none}
@@ -367,7 +402,7 @@
     padding:.42em .8em;background:rgba(6,7,12,.72);backdrop-filter:blur(8px);color:#e7c57f;font-family:inherit;font-weight:800;font-size:.66rem;white-space:nowrap;cursor:pointer}
   .shelf-range:hover{border-color:#e7c57f;background:rgba(24,17,14,.86)}
   .world-candle{position:absolute;z-index:5;left:14%;bottom:28px;width:105px;height:190px;
-    background-image:url('themes/moonlit-reading-room/addons/candle-v4.png');
+    background-image:url('/themes/moonlit-reading-room/addons/candle-v4.png');
     filter:drop-shadow(0 0 20px rgba(255,163,64,.28))}
   .world-candle:hover{transform:translateY(-3px) scale(1.035);filter:drop-shadow(0 0 28px rgba(255,163,64,.46)) brightness(1.08)}
   .world-candle .wax,.world-candle .flame{display:none}
@@ -450,6 +485,7 @@
     .product-grid{grid-template-columns:1fr}
     .release-card{grid-template-columns:80px 1fr}.release-price{grid-column:2}
     .themegrid{grid-template-columns:repeat(2,1fr)}
+    .cabinetgrid{grid-template-columns:repeat(2,1fr)}
     .detailgrid{grid-template-columns:repeat(2,1fr)}
     .openbook{width:96vw}
     .book-spread{grid-template-columns:40% 60%;min-height:430px}
@@ -470,7 +506,7 @@
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink-2);border:1px solid var(--rose);color:var(--cream);padding:.7em 1.2em;border-radius:99px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:130}
   .toast.show{opacity:1}
   .gate-card{position:relative;isolation:isolate;overflow:hidden;max-width:760px;margin:42px auto 0;border:1px solid rgba(213,179,106,.38);border-radius:28px;padding:clamp(28px,5vw,58px);box-shadow:0 28px 80px rgba(0,0,0,.42);background:#111}
-  .gate-card::before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(4,7,14,.96) 8%,rgba(4,7,14,.76) 52%,rgba(4,7,14,.38)),url("themes/moonlit-reading-room/room-v1.jpg") center 28%/cover}
+  .gate-card::before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(4,7,14,.96) 8%,rgba(4,7,14,.76) 52%,rgba(4,7,14,.38)),url("/themes/moonlit-reading-room/room-v1.jpg") center 28%/cover}
   .gate-card::after{content:"";position:absolute;inset:0;z-index:-1;box-shadow:inset 0 0 90px rgba(0,0,0,.55);pointer-events:none}
   .gate-eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:#d5b36a;margin-bottom:14px}
   .gate-card h2{max-width:520px;font-family:Georgia,serif;font-size:clamp(2rem,6vw,3.8rem);line-height:.98;margin:0 0 16px;color:#fff7e7}
@@ -485,9 +521,9 @@
 
   /* responsive: roomier on tablet/desktop */
   @media(min-width:760px){
-    .bookcase{max-width:640px;padding:16px 16px 18px}
+    .bookcase{max-width:690px;padding:16px 16px 18px}
     .book.face,.ghost{width:clamp(84px,9vw,100px)}
-    .book.spine{width:clamp(36px,4.5vw,48px)}
+    .book.spine{width:var(--book-w,44px)}
     .books{gap:9px;min-height:172px}
     .stage{padding:30px 16px 140px}
   }
@@ -500,24 +536,26 @@
     .library-rail{grid-template-columns:1fr}
     .library-stats{gap:5px}.library-stat{font-size:.62rem}
     .case-name{font-size:.61rem}
-    .tbr-stack{flex-basis:56px;transform:scale(.86);transform-origin:bottom center;margin-right:-4px}
-    .tbr-stack:hover{transform:scale(.86) translateY(-7px)}
+    .tbr-stack{flex-basis:100px;height:128px;margin-right:-2px;background-size:145px auto}
+    .tbr-stack .tbr-copy{width:36px;height:36px}
+    body[data-cabinet="moon-arch"] .bookcase{padding-top:36px;border-radius:72px 72px 14px 14px}
+    body[data-cabinet="moon-arch"] .interior{border-radius:54px 54px 8px 8px}
   }
-  @media(min-width:1100px){ .bookcase{max-width:650px} }
+  @media(min-width:1100px){ .bookcase{max-width:700px} }
 </style>
 </head>
 <body class="theme-walnut">
 
 <header>
   <div class="nav wrap">
-    <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
-    <nav class="navlinks">
-      <a href="dashboard.html">Dashboard</a>
+    <a href="/" class="logo">smut<span class="box">Hub</span></a>
+    <nav class="navlinks" id="navlinks">
+      <a href="/dashboard.html">Dashboard</a>
       <a href="/books/">Browse Books</a>
       <a href="/search">Add a Book</a>
       <a href="/bookshelf/" class="on">My Bookshelf</a>
       <a href="/glossary/">Glossary</a>
-      <a href="stores.html">Find a Store</a>
+      <a href="/stores.html">Find a Store</a>
     </nav>
     <div class="authbox" id="authbox"></div>
   </div>
@@ -542,10 +580,13 @@
 <div class="sheetbase" id="themesheetbg">
   <div class="bottomsheet">
     <div class="sheet-heading"><div><h3>The Library Atelier</h3>
-    <p class="note">Finishes change the whole cabinet, and small details let readers make it personal. Preview anything — 💎 finishes unlock when billing opens.</p></div>
+    <p class="note">Choose the architecture first, then make it yours with finishes and collected details. Diamond pieces can be tried in your library free for 24 hours.</p></div>
     <button class="sheet-close" onclick="closeThemeSheet()" aria-label="Close Library Atelier">×</button></div>
+    <h4 class="atelier-title" style="margin-top:2px">Choose your bookcase</h4>
+    <div class="cabinetgrid" id="cabinetgrid"></div>
+    <h4 class="atelier-title">Choose the finish</h4>
     <div class="themegrid" id="themegrid"></div>
-    <h4 class="atelier-title">Small details, instant personality</h4>
+    <h4 class="atelier-title">Collected details</h4>
     <div class="detailgrid" id="detailgrid"></div>
   </div>
 </div>
@@ -553,11 +594,11 @@
 <div class="modalbg" id="upsell">
   <div class="modalcard">
     <div class="em">✨</div>
-    <h3 id="upsellTitle">Preview this library finish</h3>
-    <p id="upsellBody">Preview any style now. 💎 premium finishes unlock when billing opens — nothing is charged today.</p>
+    <h3 id="upsellTitle">Try this collector piece</h3>
+    <p id="upsellBody">Live with it in your library for 24 hours. No payment details and no automatic charge.</p>
     <div class="row">
       <button class="ghostbtn" onclick="closeUpsell()">Maybe later</button>
-      <button class="btn" id="upsellGo">Preview finish ✨</button>
+      <button class="btn" id="upsellGo">Start 24-hour trial ◆</button>
     </div>
   </div>
 </div>
@@ -571,13 +612,13 @@
   // Shared auth via config.js + auth.js — this page just listens.
   const SHELVES=[['reading','Currently Reading'],['want','Want to Read'],['read','Read'],['dnf','Did Not Finish']];
   const DEMO_SHELF=[
-    {book_key:'demo-1',title:'A Court at Midnight',author:'M. Vale',status:'want',cover_url:''},
-    {book_key:'demo-2',title:'The Thorn Queen',author:'R. Ash',status:'reading',cover_url:''},
-    {book_key:'demo-3',title:'Bound to the Dragon',author:'C. Night',status:'reading',cover_url:''},
-    {book_key:'demo-4',title:'The Wicked Bargain',author:'S. Raven',status:'read',cover_url:''},
-    {book_key:'demo-5',title:'Velvet & Vengeance',author:'I. Rose',status:'want',cover_url:''},
-    {book_key:'demo-6',title:'A Kiss of Ruin',author:'L. Thorne',status:'want',cover_url:''},
-    {book_key:'demo-7',title:'The Wolf’s Devotion',author:'E. Wren',status:'reading',cover_url:''},
+    {book_key:'demo-1',title:'Quicksilver',author:'Callie Hart',status:'want',cover_url:'https://covers.smuthub.ca/quicksilver-hart.jpg'},
+    {book_key:'demo-2',title:'The Ascended',author:'Ellie Lennox',status:'reading',cover_url:'https://covers.smuthub.ca/the-ascended-lennox-2025.jpg'},
+    {book_key:'demo-3',title:'Fourth Wing',author:'Rebecca Yarros',status:'reading',cover_url:'https://covers.smuthub.ca/fourth-wing-yarros.jpg'},
+    {book_key:'demo-4',title:'The Cruel Prince',author:'Holly Black',status:'read',cover_url:'https://covers.smuthub.ca/the-cruel-prince-black.jpg'},
+    {book_key:'demo-5',title:'One Dark Window',author:'Rachel Gillig',status:'want',cover_url:'https://covers.smuthub.ca/one-dark-window-gillig.jpg'},
+    {book_key:'demo-6',title:'Heartless Hunter',author:'Kristen Ciccarelli',status:'want',cover_url:'https://covers.smuthub.ca/heartless-hunter-ciccarelli.jpg'},
+    {book_key:'demo-7',title:'Divine Rivals',author:'Rebecca Ross',status:'reading',cover_url:'https://covers.smuthub.ca/divine-rivals-ross.jpg'},
     {book_key:'demo-8',title:'Moonbound',author:'A. Vesper',status:'want',cover_url:''},
     {book_key:'demo-9',title:'A Kingdom Undone',author:'N. Black',status:'read',cover_url:''},
     {book_key:'demo-10',title:'Serpent & Saint',author:'J. Wilde',status:'reading',cover_url:''},
@@ -587,17 +628,23 @@
     {book_key:'demo-14',title:'The Last Enchantment',author:'T. Vale',status:'reading',cover_url:''}
   ];
   const THEMES=[
-    {id:'walnut',  name:'Heirloom Walnut',  color:'#7a4e2a', premium:false,price:'Included',desc:'Warm, classic and quietly dramatic.'},
-    {id:'noir',    name:'Midnight Lacquer', color:'#3a3a44', premium:false,price:'Included',desc:'A clean black cabinet for every world.'},
-    {id:'boudoir', name:'Rosewood Velvet',  color:'#7e3656', premium:true, price:'$2.99',desc:'Deep berry wood with golden warmth.'},
-    {id:'faerie',  name:'Enchanted Ash',    color:'#3a6a4e', premium:true, price:'$2.99',desc:'Forest green grain and fae-gold labels.'},
-    {id:'academia',name:'Rainbound Oak',     color:'#7a4a32', premium:true, price:'$3.99',desc:'Dark academia, tobacco oak and brass.'},
+    {id:'walnut',  name:'Heirloom Walnut',  color:'#7a4e2a', premium:false,desc:'Warm, classic and quietly dramatic.'},
+    {id:'noir',    name:'Midnight Lacquer', color:'#3a3a44', premium:false,desc:'A clean black cabinet for every world.'},
+    {id:'boudoir', name:'Rosewood Velvet',  color:'#7e3656', premium:true,desc:'Deep berry wood with golden warmth.'},
+    {id:'faerie',  name:'Enchanted Ash',    color:'#3a6a4e', premium:true,desc:'Forest green grain and fae-gold labels.'},
+    {id:'academia',name:'Rainbound Oak',     color:'#7a4a32', premium:true,desc:'Dark academia, tobacco oak and brass.'},
   ];
   const LIBRARY_DETAILS=[
-    {key:'plaque',icon:'✒',name:'Ex Libris Plaque',price:'$0.99'},
-    {key:'gilded',icon:'❧',name:'Gilded Vine Trim',price:'$1.99'},
-    {key:'rain',icon:'☂',name:'Rainy Ambience',price:'$2.99'},
-    {key:'collector',icon:'♛',name:'Collector Cabinet',price:'$7.99'}
+    {key:'plaque',icon:'✒',name:'Ex Libris Plaque',premium:false},
+    {key:'gilded',icon:'❧',name:'Gilded Vine Trim',premium:true},
+    {key:'rain',icon:'☂',name:'Rainy Ambience',premium:true},
+    {key:'collector',icon:'♛',name:'Collector Cabinet',premium:true}
+  ];
+  const CABINET_STYLES=[
+    {key:'grand-heirloom',name:'Grand Heirloom',shape:'classic',premium:false,desc:'Wide, stately and timeless.'},
+    {key:'moon-arch',name:'Moon Arch',shape:'arch',premium:true,desc:'A soft arched collector’s cabinet.'},
+    {key:'gothic-tower',name:'Gothic Tower',shape:'gothic',premium:true,desc:'Tall, pointed and deliciously dramatic.'},
+    {key:'floating-gallery',name:'Floating Gallery',shape:'floating',premium:true,desc:'Open shelves that let the covers lead.'}
   ];
   const BACKDROPS=[
     {key:'plain',  name:'Plain',   premium:false},
@@ -622,8 +669,10 @@
   // Until then the page uses the CSS gradients (no missing-image requests).
   const THEME_ART=false;
 
+  const REVIEW_MODE=new URLSearchParams(location.search).get('prototype')==='bookcase-v2';
+  const TRIAL_KEY='sh_bookcase_trials_v1', TRIAL_MS=24*60*60*1000;
   let sb=null, user=null, shelf=[], spiceMap={}, theme='walnut', isPremium=false, readerName='Your';
-  let libraryDetail='';
+  let libraryDetail='', cabinetStyle=REVIEW_MODE?'moon-arch':'grand-heirloom';
   let custom={};
   let ownedProducts=new Set(['world_moonlit_reading_room']);
   let dnfOpen=false, shelfIndex=0, selectedProp=null, drawerTab='worlds', previewWorld=null;
@@ -639,12 +688,25 @@
   window.addEventListener('sh-auth', async (e)=>{
     sb = window.SH ? window.SH.sb : null; user = e.detail.user;
     if(window.SH && !window.SH.configured) $('setup').classList.add('show');
+    if(REVIEW_MODE){
+      user={id:'review-reader',email:'novarin@smuthub.ca'};
+      readerName='Novarin';
+      shelf=DEMO_SHELF.map((b,i)=>({...b,sort_order:i,created_at:new Date(Date.now()-i*86400000).toISOString()}));
+      spiceMap={'demo-1':4,'demo-2':5,'demo-4':5,'demo-7':3};
+      setTheme('faerie',true);
+      document.body.dataset.cabinet=cabinetStyle;
+      renderRoom(); buildThemeSheet(); $('themepill').classList.add('show');
+      return;
+    }
     if(!user){ renderGate(); $('themepill').classList.remove('show'); return; }
     isPremium = !!(e.detail.profile && e.detail.profile.is_premium);
     const profile=e.detail.profile||{};
     const rawName=profile.display_name||profile.username||(user.email||'').split('@')[0];
     readerName=rawName ? rawName.charAt(0).toUpperCase()+rawName.slice(1) : 'Your';
-    if(e.detail.profile && e.detail.profile.theme) setTheme(e.detail.profile.theme, true);
+    if(e.detail.profile && e.detail.profile.theme){
+      const savedTheme=THEMES.find(t=>t.id===e.detail.profile.theme);
+      setTheme(savedTheme&&hasAccess('theme:'+savedTheme.id,savedTheme.premium)?savedTheme.id:'walnut', true);
+    }
     try{
       await loadAll(); renderRoom(); buildThemeSheet(); $('themepill').classList.add('show');
     }catch(err){
@@ -669,6 +731,18 @@
     ]);
     if(r1.error) throw r1.error;
     shelf=(r1.data||[]).sort(shelfCmp); spiceMap={};
+    // Official spine art is catalog-owned. Enrich matching shelf snapshots
+    // without requiring users to remove and re-add books after an asset lands.
+    const catalogKeys=shelf.map(b=>b.book_key).filter(k=>k&&k.indexOf('gb:')!==0&&k.indexOf('/')<0&&k.indexOf('demo-')!==0);
+    if(catalogKeys.length){
+      const {data:spines,error:spineError}=await sb.from('books').select('slug,spine_url,spine_position,spine_source').in('slug',[...new Set(catalogKeys)]);
+      if(!spineError){
+        const spineBySlug=new Map((spines||[]).map(b=>[b.slug,b]));
+        shelf=shelf.map(b=>Object.assign({},b,spineBySlug.get(b.book_key)||{}));
+      } else if(!/spine_/i.test(spineError.message||'')){
+        console.warn('spine enrichment failed',spineError);
+      }
+    }
     if(!r2.error) (r2.data||[]).forEach(t=>{ if(t.spice) spiceMap[t.book_key]=t.spice; });
     custom={};
     if(!r3.error) (r3.data||[]).forEach(c=>{ custom[c.shelf_status]={world_key:c.world_key||'moonlit',backdrop_key:c.backdrop_key,lighting_key:c.lighting_key,props:Array.isArray(c.props)?c.props:[]}; });
@@ -710,7 +784,7 @@
   const SPINES=['#5a1730','#3a1a4e','#143a2e','#1c2c52','#5a2410','#6e2c46','#27304a','#3e2317'];
   const H=138; // uniform book height
 
-  // face=true → cover turned out; otherwise a generated spine
+  // face=true → cover turned out; otherwise a true spine asset or cover-derived spine
   function bookHTML(b, face){
     const sp=spiceMap[b.book_key]||0, dnf=b.status==='dnf';
     const badges=(dnf?'<span class="grave">🪦</span>':'')+(sp?'<span class="sp">'+sp+'🌶️</span>':'');
@@ -721,16 +795,17 @@
         : '<div class="ph" style="height:'+H+'px">'+esc(b.title)+'</div>';
       return '<div class="book face'+(dnf?' dnf':'')+'" draggable="true" data-key="'+esc(b.book_key)+'">'+cov+badges+'</div>';
     }
-    const color=SPINES[hash(b.book_key)%SPINES.length];
-    return '<div class="book spine'+(dnf?' dnf':'')+'" draggable="true" data-key="'+esc(b.book_key)+'">'
-      + '<div class="spineinner" style="--spine:'+color+'"><span class="stitle">'+esc(b.title||'Untitled')+'</span></div>'
+    const bookHash=hash(b.book_key), color=SPINES[bookHash%SPINES.length], spineArt=b.spine_url||coverSrc(b);
+    const spinePosition=b.spine_url?(Number.isFinite(+b.spine_position)?+b.spine_position:50):(20+(bookHash%61));
+    const spineStyle='--spine:'+color+';--book-w:'+(34+(bookHash%15))+'px;--book-h:'+(132+((bookHash>>3)%15))+'px;--spine-pos:'+Math.max(0,Math.min(100,spinePosition))+'%;'
+      +(spineArt?'--spine-art:url(&quot;'+esc(spineArt)+'&quot;);':'');
+    return '<div class="book spine'+(dnf?' dnf':'')+'" draggable="true" data-key="'+esc(b.book_key)+'" style="--book-w:'+(34+(bookHash%15))+'px">'
+      + '<div class="spineinner" style="'+spineStyle+'"><span class="stitle">'+esc(b.title||'Untitled')+'</span></div>'
       + badges + '</div>';
   }
   const ghostHTML='<a class="ghost" href="/search"><span style="font-size:1.4rem">＋</span>Add</a>';
   function tbrStackHTML(count){
     return '<button class="tbr-stack" type="button" data-open-tbr aria-label="Enter your TBR shelf, '+count+' books">'
-      +'<span class="mini-book" style="--c:#48172f"></span><span class="mini-book" style="--c:#18384a"></span>'
-      +'<span class="mini-book" style="--c:#60431d"></span><span class="mini-book" style="--c:#294636"></span>'
       +'<span class="tbr-copy"><strong>'+count+'</strong>TBR</span></button>';
   }
 
@@ -747,7 +822,7 @@
       + '<div class="library-stats"><span class="library-stat"><strong>'+counts.reading+'</strong> reading now</span>'
       + '<span class="library-stat"><strong>'+counts.want+'</strong> waiting in TBR</span><span class="library-stat"><strong>'+counts.read+'</strong> finished</span></div>'
       + '<div class="case-name">'+esc(readerName)+' Library · Ex Libris</div>'
-      + '<div class="bookcase"><span class="case-flourish"></span><div class="interior">'
+      + '<div class="bookcase"><span class="cabinet-crest"></span><span class="case-flourish"></span><div class="interior">'
       + visible.map(([st,label])=>{
           const items=ordered.filter(b=>b.status===st);
           const inner = (st==='want'&&items.length?tbrStackHTML(items.length):'')+(items.length ? items.map((b,i)=>bookHTML(b,i===0)).join('') : ghostHTML);
@@ -763,8 +838,14 @@
       + (total?'<p class="hint">✋ Drag books to reorder · tap a shelf label or ledge to enter its world</p>':'')
       + '</div><aside class="library-rail">'
       + '<section class="rail-card"><div class="rail-kicker">The Library Atelier</div><h3>The bookcase is collectible, too.</h3>'
-      + '<p>Change the cabinet finish, add a personalized plaque, gild the trim, or bring weather into the room—without replacing the shelf worlds inside it.</p>'
+      + '<p>Choose a wide heirloom cabinet, a moon arch, a gothic tower, or open gallery shelves. Then layer in finishes, plaques, gilded trim, and atmosphere.</p>'
       + '<button class="rail-btn" id="openAtelier">Style this library</button></section>'
+      + '<section class="rail-card world-card"><div class="rail-kicker">Immersive shelf worlds</div><h3>Every shelf opens somewhere else.</h3>'
+      + '<p>Your currently reading, visual TBR, finished, and DNF shelves each become an interactive romantasy reading room with their own mood and collectibles.</p>'
+      + '<button class="rail-link" id="openReadingWorld">Enter the reading world →</button></section>'
+      + '<section class="rail-card tbr-card"><div class="rail-kicker">Your visual TBR</div><h3>Make anticipation part of the ritual.</h3>'
+      + '<p>A beautiful to-be-read shelf should make choosing the next romance or fantasy book feel as satisfying as finishing one.</p>'
+      + '<button class="rail-link" id="openTbrWorld">Open your TBR →</button></section>'
       + '</aside></div>';
     attachRoom();
   }
@@ -780,6 +861,8 @@
     attachDnD();
     const dt=$('dnftoggle'); if(dt) dt.onclick=()=>{ dnfOpen=!dnfOpen; renderRoom(); };
     const atelier=$('openAtelier'); if(atelier) atelier.onclick=()=>{ buildThemeSheet(); $('themesheetbg').classList.add('open'); };
+    const readingWorld=$('openReadingWorld'); if(readingWorld) readingWorld.onclick=()=>enterShelf('reading');
+    const tbrWorld=$('openTbrWorld'); if(tbrWorld) tbrWorld.onclick=()=>enterShelf('want');
     document.querySelectorAll('[data-open-tbr]').forEach(el=>el.onclick=()=>enterShelf('want'));
     document.querySelectorAll('#stage .book').forEach(el=>{
       const key=el.dataset.key; let lp=null;
@@ -838,6 +921,7 @@
     return changed;
   }
   async function persistOrder(changed){
+    if(REVIEW_MODE){ toast("Prototype order updated ✨"); return; }
     if(!sb||!user) return;
     for(const row of changed){
       const { error } = await sb.from('shelf').update({ sort_order: row.sort_order, status: row.status }).eq('book_key', row.book_key);
@@ -879,19 +963,19 @@
   async function setStatus(key,status){
     const row=shelf.find(b=>b.book_key===key); if(row) row.status=status;
     closeSheet(); refreshViews();
-    if(sb&&user) await sb.from('shelf').update({status}).eq('book_key',key);
+    if(!REVIEW_MODE&&sb&&user) await sb.from('shelf').update({status}).eq('book_key',key);
     toast("Moved to "+labelOf(status));
   }
   async function removeBook(key){
     shelf=shelf.filter(b=>b.book_key!==key); closeSheet(); refreshViews();
-    if(sb&&user) await sb.from('shelf').delete().eq('book_key',key);
+    if(!REVIEW_MODE&&sb&&user) await sb.from('shelf').delete().eq('book_key',key);
     toast("Removed from your bookshelf");
   }
   async function rate(e,key){
     const span=e.target.closest('span[data-n]'); if(!span) return;
     const n=+span.dataset.n; spiceMap[key]=n;
     document.querySelectorAll('#srate span').forEach(s=>s.classList.toggle('on',+s.dataset.n<=n));
-    if(sb&&user) await sb.from('book_tags').upsert({book_key:key,spice:n},{onConflict:'user_id,book_key'});
+    if(!REVIEW_MODE&&sb&&user) await sb.from('book_tags').upsert({book_key:key,spice:n},{onConflict:'user_id,book_key'});
     toast("Saved "+"🌶️".repeat(n));
   }
   function recommend(key){
@@ -910,32 +994,83 @@
     m.querySelectorAll('.mm-item').forEach(it=>it.onclick=()=>{ const mv=it.dataset.move; m.classList.remove('open'); if(mv) setStatus(key,mv); });
   }
 
-  // ── THEME SHEET + GATING (visual-only locks) ──
+  // ── THEME SHEET + 24-HOUR COLLECTOR TRIALS ──
+  function readTrials(){
+    try{
+      const parsed=JSON.parse(localStorage.getItem(TRIAL_KEY)||'{}'), now=Date.now(), active={};
+      Object.keys(parsed).forEach(k=>{ if(+parsed[k]>now) active[k]=+parsed[k]; });
+      if(Object.keys(active).length!==Object.keys(parsed).length) localStorage.setItem(TRIAL_KEY,JSON.stringify(active));
+      return active;
+    }catch(_){ return {}; }
+  }
+  function trialExpiry(productKey){ return readTrials()[productKey]||0; }
+  function hasAccess(productKey,premium){ return !premium||isPremium||trialExpiry(productKey)>Date.now(); }
+  function trialLabel(productKey,premium){
+    if(!premium) return 'In your collection';
+    if(isPremium) return '◆ Collected';
+    const left=trialExpiry(productKey)-Date.now();
+    if(left>0) return '◆ Trial · '+Math.max(1,Math.ceil(left/3600000))+'h left';
+    return '◆ Try free for 24 hours';
+  }
+  function beginTrial(productKey,name,onStart){
+    const trials=readTrials();
+    trials[productKey]=Date.now()+TRIAL_MS;
+    try{ localStorage.setItem(TRIAL_KEY,JSON.stringify(trials)); }catch(_){}
+    if(onStart) onStart();
+    buildThemeSheet();
+    toast(name+' is yours to try for 24 hours ◆');
+  }
+  function requestCollectorPiece(productKey,name,onStart){
+    if(hasAccess(productKey,true)){ onStart(); return; }
+    showUpsell(name,()=>beginTrial(productKey,name,onStart));
+  }
+  function applyCabinetStyle(key){
+    cabinetStyle=key;
+    document.body.dataset.cabinet=key;
+    document.querySelectorAll('#cabinetgrid .cabinetcard').forEach(c=>c.classList.toggle('on',c.dataset.cabinet===key));
+    const item=CABINET_STYLES.find(c=>c.key===key);
+    toast('Styled with '+(item?item.name:'bookcase')+' ✨');
+  }
+  function setCabinetStyle(key){
+    const item=CABINET_STYLES.find(c=>c.key===key); if(!item) return;
+    const apply=()=>applyCabinetStyle(key);
+    if(item.premium) requestCollectorPiece('cabinet:'+key,item.name,apply); else apply();
+  }
   function buildThemeSheet(){
+    $('cabinetgrid').innerHTML=CABINET_STYLES.map(c=>
+      '<button class="cabinetcard '+(cabinetStyle===c.key?'on':'')+'" data-cabinet="'+c.key+'">'
+      +'<span class="cabinet-shape '+c.shape+'" style="--cab:'+THEMES.find(t=>t.id===theme).color+'"></span>'
+      +'<strong>'+c.name+'</strong><small>'+c.desc+'</small><small class="cab-price trial-mark '+(trialExpiry('cabinet:'+c.key)>Date.now()?'active':'')+'">'+trialLabel('cabinet:'+c.key,c.premium)+'</small></button>'
+    ).join('');
     $('themegrid').innerHTML = THEMES.map(t=>
       '<div class="themecard '+(t.id===theme?'on':'')+'" data-t="'+t.id+'" data-prem="'+(t.premium?1:0)+'">'
       + '<span class="dot" style="background:'+t.color+'"></span>'
-      + '<div><div class="tn">'+t.name+'</div><div class="tdesc">'+t.desc+'</div><div class="lock">'+(t.premium?'💎 Premium':'Included')+'</div></div></div>'
+      + '<div><div class="tn">'+t.name+'</div><div class="tdesc">'+t.desc+'</div><div class="lock trial-mark '+(trialExpiry('theme:'+t.id)>Date.now()?'active':'')+'">'+trialLabel('theme:'+t.id,t.premium)+'</div></div></div>'
     ).join('');
     $('detailgrid').innerHTML=LIBRARY_DETAILS.map(d=>'<button class="detailcard '+(libraryDetail===d.key?'on':'')+'" data-library-detail="'+d.key+'">'
-      +'<span>'+d.icon+'</span><strong>'+d.name+'</strong><small>💎 Preview</small></button>').join('');
+      +'<span>'+d.icon+'</span><strong>'+d.name+'</strong><small class="trial-mark '+(trialExpiry('detail:'+d.key)>Date.now()?'active':'')+'">'+trialLabel('detail:'+d.key,d.premium)+'</small></button>').join('');
+    document.querySelectorAll('#cabinetgrid [data-cabinet]').forEach(c=>c.onclick=()=>setCabinetStyle(c.dataset.cabinet));
     document.querySelectorAll('#themegrid .themecard').forEach(c=>c.onclick=()=>{
       const id=c.dataset.t, prem=c.dataset.prem==='1';
       const item=THEMES.find(t=>t.id===id);
-      if(prem && !isPremium){ showUpsell((item?item.name:'This finish')+' · Premium', ()=>{ setTheme(id); closeThemeSheet(); }); return; }
-      setTheme(id); closeThemeSheet();
+      const apply=()=>{ setTheme(id); closeThemeSheet(); };
+      if(prem){ requestCollectorPiece('theme:'+id,item?item.name:'This finish',apply); return; }
+      apply();
     });
     document.querySelectorAll('#detailgrid [data-library-detail]').forEach(c=>c.onclick=()=>{
-      libraryDetail=c.dataset.libraryDetail;
-      if(libraryDetail==='collector'){
-        setTheme('academia',true);
-        document.body.dataset.libraryDetail='gilded';
-      } else {
-        document.body.dataset.libraryDetail=libraryDetail;
-      }
-      document.querySelectorAll('#detailgrid .detailcard').forEach(x=>x.classList.toggle('on',x===c));
-      const item=LIBRARY_DETAILS.find(d=>d.key===libraryDetail);
-      toast('Previewing '+(item?item.name:'library detail')+' ✨');
+      const key=c.dataset.libraryDetail, item=LIBRARY_DETAILS.find(d=>d.key===key);
+      const apply=()=>{
+        libraryDetail=key;
+        if(libraryDetail==='collector'){
+          setTheme('academia',true);
+          document.body.dataset.libraryDetail='gilded';
+        } else {
+          document.body.dataset.libraryDetail=libraryDetail;
+        }
+        document.querySelectorAll('#detailgrid .detailcard').forEach(x=>x.classList.toggle('on',x===c));
+        toast('Added '+(item?item.name:'library detail')+' ✨');
+      };
+      if(item&&item.premium) requestCollectorPiece('detail:'+key,item.name,apply); else apply();
     });
   }
   $('themepill').onclick=()=>{ buildThemeSheet(); $('themesheetbg').classList.add('open'); };
@@ -1176,6 +1311,7 @@
   }
 
   async function saveCustom(status){
+    if(REVIEW_MODE){ toast("Prototype world applied ✨"); return; }
     const c=custom[status]||{};
     const { error } = await sb.from('shelf_customization').upsert(
       { user_id:user.id, shelf_status:status, world_key:c.world_key||'moonlit', backdrop_key:c.backdrop_key||null, lighting_key:c.lighting_key||null, props:c.props||[], updated_at:new Date().toISOString() },
