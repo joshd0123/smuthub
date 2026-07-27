@@ -113,13 +113,21 @@
 <header>
   <div class="nav wrap">
     <a href="/" class="logo">smut<span class="box">Hub</span></a>
-    <nav class="navlinks">
-      <a href="/dashboard.html">Dashboard</a>
+    <nav class="navlinks" aria-label="Primary navigation">
       <a href="/books/">Browse Books</a>
+      <details class="sh-guides on">
+        <summary>Guides</summary>
+        <div>
+          <a href="/guides/">All Guides</a>
+          <a href="/guides/spice-levels/">Spice Levels</a>
+          <a href="/glossary/" class="on">Glossary</a>
+          <a href="/glossary/trope/">Tropes</a>
+          <a href="/glossary/warning/">Content Warnings</a>
+        </div>
+      </details>
+      <a href="/smuthub-bookcase">My Bookshelf</a>
+      <a href="/stores">Find a Store</a>
       <a href="/search">Add a Book</a>
-      <a href="/smuthub-bookcase.html">My Bookshelf</a>
-      <a href="/glossary/" class="on" >Glossary</a>
-      <a href="/stores.html">Find a Store</a>
     </nav>
     <div class="authbox" id="authbox"></div>
   </div>
@@ -131,9 +139,9 @@
     </div>
     <div class="sh-rail-panel" id="shRailPanel">
       <h3>Browse glossary</h3>
-      <a href="/glossary/"><span class="lbl">📖 All terms</span><span class="ct">356</span></a>
+      <a href="/glossary/"><span class="lbl">📖 All terms</span><span class="ct">562</span></a>
       <hr>
-      <a href="/glossary/trope/" class="active"><span class="lbl">⚔️ Tropes</span><span class="ct">74</span></a><a href="/glossary/mood/"><span class="lbl">🌗 Moods</span><span class="ct">2</span></a><a href="/glossary/vibe/"><span class="lbl">✨ Vibes</span><span class="ct">1</span></a><a href="/glossary/subgenre/"><span class="lbl">📚 Subgenres</span><span class="ct">19</span></a><a href="/glossary/worldbuilding/"><span class="lbl">🗺️ Worldbuilding</span><span class="ct">23</span></a><a href="/glossary/setting/"><span class="lbl">🏰 Settings</span><span class="ct">12</span></a><a href="/glossary/time-period/"><span class="lbl">🕰️ Time Periods</span><span class="ct">11</span></a><a href="/glossary/sport/"><span class="lbl">🏅 Sports</span><span class="ct">7</span></a><a href="/glossary/mechanics/"><span class="lbl">🌶️ Spice &amp; Door</span><span class="ct">13</span></a><a href="/glossary/format/"><span class="lbl">📖 Format</span><span class="ct">6</span></a><a href="/glossary/pov/"><span class="lbl">👁️ POV</span><span class="ct">5</span></a><a href="/glossary/culture/"><span class="lbl">💬 Reader Culture</span><span class="ct">34</span></a><a href="/glossary/omegaverse/"><span class="lbl">🐺 Omegaverse</span><span class="ct">9</span></a><a href="/glossary/kink/"><span class="lbl">🔥 Kinks</span><span class="ct">14</span></a><a href="/glossary/mc-archetype/"><span class="lbl">👤 MC Archetypes</span><span class="ct">24</span></a><a href="/glossary/li-archetype/"><span class="lbl">💖 LI Archetypes</span><span class="ct">32</span></a><a href="/glossary/representation/"><span class="lbl">🌈 Representation</span><span class="ct">24</span></a><a href="/glossary/warning/"><span class="lbl">⚠️ Content Warnings</span><span class="ct">46</span></a>
+      <a href="/glossary/trope/" class="active"><span class="lbl">⚔️ Tropes</span><span class="ct">156</span></a><a href="/glossary/mood/"><span class="lbl">🌗 Moods</span><span class="ct">39</span></a><a href="/glossary/vibe/"><span class="lbl">✨ Vibes</span><span class="ct">2</span></a><a href="/glossary/subgenre/"><span class="lbl">📚 Subgenres</span><span class="ct">28</span></a><a href="/glossary/worldbuilding/"><span class="lbl">🗺️ Worldbuilding</span><span class="ct">29</span></a><a href="/glossary/setting/"><span class="lbl">🏰 Settings</span><span class="ct">13</span></a><a href="/glossary/time-period/"><span class="lbl">🕰️ Time Periods</span><span class="ct">11</span></a><a href="/glossary/sport/"><span class="lbl">🏅 Sports</span><span class="ct">8</span></a><a href="/glossary/mechanics/"><span class="lbl">🌶️ Spice &amp; Door</span><span class="ct">14</span></a><a href="/glossary/format/"><span class="lbl">📖 Format</span><span class="ct">13</span></a><a href="/glossary/pov/"><span class="lbl">👁️ POV</span><span class="ct">5</span></a><a href="/glossary/culture/"><span class="lbl">💬 Reader Culture</span><span class="ct">44</span></a><a href="/glossary/omegaverse/"><span class="lbl">🐺 Omegaverse</span><span class="ct">9</span></a><a href="/glossary/kink/"><span class="lbl">🔥 Kinks</span><span class="ct">26</span></a><a href="/glossary/mc-archetype/"><span class="lbl">👤 MC Archetypes</span><span class="ct">48</span></a><a href="/glossary/li-archetype/"><span class="lbl">💖 LI Archetypes</span><span class="ct">42</span></a><a href="/glossary/representation/"><span class="lbl">🌈 Representation</span><span class="ct">26</span></a><a href="/glossary/warning/"><span class="lbl">⚠️ Content Warnings</span><span class="ct">49</span></a>
     </div>
   </aside>
 
@@ -145,25 +153,26 @@
     <h1>Found Family</h1>
     <p class="tagline">The family that picks you back.</p>
     <p class="defn">Characters form deep family-like bonds outside of blood — chosen, fought for, protected.</p>
-    
+
     <a class="cta" href="/books/?tag=trope%3Afound-family">Find books with this trope →</a>
+
   </section>
 
-  
 
-  
+
+
 
   <section class="detail" id="books">
     <h2>Books featuring this trope</h2>
-    <div class="grid" id="bookGrid"><a class="card" href="/books/a-court-of-frost-and-starlight-maas-2018/"><div class="cover"><img src="https://covers.smuthub.ca/a-court-of-frost-and-starlight-maas-2018.jpg" alt="A Court of Frost and Starlight book cover" loading="lazy"></div><div class="meta"><div class="t">A Court of Frost and Starlight</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/books/a-court-of-mist-and-fury-maas/"><div class="cover"><img src="https://covers.smuthub.ca/a-court-of-mist-and-fury-maas.png" alt="A Court of Mist and Fury book cover" loading="lazy"></div><div class="meta"><div class="t">A Court of Mist and Fury</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/books/a-court-of-silver-flames-maas-2021/"><div class="cover"><img src="https://covers.smuthub.ca/a-court-of-silver-flames-maas-2021.png" alt="A Court of Silver Flames book cover" loading="lazy"></div><div class="meta"><div class="t">A Court of Silver Flames</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/books/a-day-of-fallen-night-shannon-2023/"><div class="cover"><img src="https://covers.smuthub.ca/a-day-of-fallen-night-shannon-2023.jpg" alt="A Day of Fallen Night book cover" loading="lazy"></div><div class="meta"><div class="t">A Day of Fallen Night</div><div class="a">Samantha Shannon</div></div></a><a class="card" href="/books/a-deadly-education-novik-2020/"><div class="cover"><img src="https://covers.smuthub.ca/a-deadly-education-novik-2020.jpg" alt="A Deadly Education book cover" loading="lazy"></div><div class="meta"><div class="t">A Deadly Education</div><div class="a">Naomi Novik</div></div></a><a class="card" href="/books/a-power-unbound-marske-2023/"><div class="cover"><img src="https://covers.smuthub.ca/a-power-unbound-marske-2023.jpg" alt="A Power Unbound book cover" loading="lazy"></div><div class="meta"><div class="t">A Power Unbound</div><div class="a">Freya Marske</div></div></a><a class="card" href="/books/a-sky-beyond-the-storm-tahir-2020/"><div class="cover"><img src="https://covers.smuthub.ca/a-sky-beyond-the-storm-tahir-2020.jpg" alt="A Sky Beyond the Storm book cover" loading="lazy"></div><div class="meta"><div class="t">A Sky Beyond the Storm</div><div class="a">Sabaa Tahir</div></div></a><a class="card" href="/books/ashwalker-gaither-2026/"><div class="cover"><img src="https://covers.smuthub.ca/ashwalker-gaither-2026.jpg" alt="Ashwalker book cover" loading="lazy"></div><div class="meta"><div class="t">Ashwalker</div><div class="a">S.M Gaither</div></div></a><a class="card" href="/books/assassin-s-apprentice-hobb-1995/"><div class="cover"><img src="https://covers.smuthub.ca/assassin-s-apprentice-hobb-1995.jpg" alt="Assassin&#39;s Apprentice book cover" loading="lazy"></div><div class="meta"><div class="t">Assassin&#39;s Apprentice</div><div class="a">Robin Hobb</div></div></a><a class="card" href="/books/assistant-to-the-villain-maehrer/"><div class="cover"><img src="https://covers.smuthub.ca/assistant-to-the-villain-maehrer.jpg" alt="Assistant to the Villain book cover" loading="lazy"></div><div class="meta"><div class="t">Assistant to the Villain</div><div class="a">Hannah Nicole Maehrer</div></div></a><a class="card" href="/books/blood-honey-mahurin-2020/"><div class="cover"></div><div class="meta"><div class="t">Blood &amp; Honey</div><div class="a">Shelby Mahurin</div></div></a><a class="card" href="/books/bloodmarked-deonn-2022/"><div class="cover"><img src="https://covers.smuthub.ca/bloodmarked-deonn-2022.png" alt="Bloodmarked book cover" loading="lazy"></div><div class="meta"><div class="t">Bloodmarked</div><div class="a">Tracy Deonn</div></div></a></div>
+    <div class="grid" id="bookGrid"><a class="card" href="/books/a-court-of-frost-and-starlight-maas-2018/"><div class="cover"><img src="https://covers.smuthub.ca/a-court-of-frost-and-starlight-maas-2018.jpg" alt="A Court of Frost and Starlight book cover" loading="lazy"></div><div class="meta"><div class="t">A Court of Frost and Starlight</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/books/a-court-of-mist-and-fury-maas/"><div class="cover"><img src="https://covers.smuthub.ca/a-court-of-mist-and-fury-maas.png" alt="A Court of Mist and Fury book cover" loading="lazy"></div><div class="meta"><div class="t">A Court of Mist and Fury</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/books/a-court-of-silver-flames-maas-2021/"><div class="cover"><img src="https://covers.smuthub.ca/a-court-of-silver-flames-maas-2021.png" alt="A Court of Silver Flames book cover" loading="lazy"></div><div class="meta"><div class="t">A Court of Silver Flames</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/books/a-day-of-fallen-night-shannon-2023/"><div class="cover"><img src="https://covers.smuthub.ca/a-day-of-fallen-night-shannon-2023.jpg" alt="A Day of Fallen Night book cover" loading="lazy"></div><div class="meta"><div class="t">A Day of Fallen Night</div><div class="a">Samantha Shannon</div></div></a><a class="card" href="/books/a-deadly-education-novik-2020/"><div class="cover"><img src="https://covers.smuthub.ca/a-deadly-education-novik-2020.jpg" alt="A Deadly Education book cover" loading="lazy"></div><div class="meta"><div class="t">A Deadly Education</div><div class="a">Naomi Novik</div></div></a><a class="card" href="/books/a-power-unbound-marske-2023/"><div class="cover"><img src="https://covers.smuthub.ca/a-power-unbound-marske-2023.jpg" alt="A Power Unbound book cover" loading="lazy"></div><div class="meta"><div class="t">A Power Unbound</div><div class="a">Freya Marske</div></div></a><a class="card" href="/books/a-sky-beyond-the-storm-tahir-2020/"><div class="cover"><img src="https://covers.smuthub.ca/a-sky-beyond-the-storm-tahir-2020.jpg" alt="A Sky Beyond the Storm book cover" loading="lazy"></div><div class="meta"><div class="t">A Sky Beyond the Storm</div><div class="a">Sabaa Tahir</div></div></a><a class="card" href="/books/ashwalker-gaither-2026/"><div class="cover"><img src="https://covers.smuthub.ca/ashwalker-gaither-2026.jpg" alt="Ashwalker book cover" loading="lazy"></div><div class="meta"><div class="t">Ashwalker</div><div class="a">S.M Gaither</div></div></a><a class="card" href="/books/assassin-s-apprentice-hobb-1995/"><div class="cover"><img src="https://covers.smuthub.ca/assassin-s-apprentice-hobb-1995.jpg" alt="Assassin&#39;s Apprentice book cover" loading="lazy"></div><div class="meta"><div class="t">Assassin&#39;s Apprentice</div><div class="a">Robin Hobb</div></div></a><a class="card" href="/books/assistant-to-the-villain-maehrer/"><div class="cover"><img src="https://covers.smuthub.ca/assistant-to-the-villain-maehrer.jpg" alt="Assistant to the Villain book cover" loading="lazy"></div><div class="meta"><div class="t">Assistant to the Villain</div><div class="a">Hannah Nicole Maehrer</div></div></a><a class="card" href="/books/blood-honey-mahurin-2020/"><div class="cover"><img src="https://covers.smuthub.ca/blood-honey-mahurin-2020.jpg" alt="Blood &amp; Honey book cover" loading="lazy"></div><div class="meta"><div class="t">Blood &amp; Honey</div><div class="a">Shelby Mahurin</div></div></a><a class="card" href="/books/bloodmarked-deonn-2022/"><div class="cover"><img src="https://covers.smuthub.ca/bloodmarked-deonn-2022.jpg" alt="Bloodmarked book cover" loading="lazy"></div><div class="meta"><div class="t">Bloodmarked</div><div class="a">Tracy Deonn</div></div></a></div>
   </section>
 
-  
+
 
   <section class="detail">
     <h2>Related terms</h2>
     <div class="relgrid">
-      <a class="reltag" href="/glossary/trope/abduction/"><span class="c">Trope</span>Abduction</a><a class="reltag" href="/glossary/trope/age-gap/"><span class="c">Trope</span>Age Gap</a><a class="reltag" href="/glossary/trope/arranged-marriage/"><span class="c">Trope</span>Arranged Marriage</a><a class="reltag" href="/glossary/trope/best-friends-brother/"><span class="c">Trope</span>Best Friend&#39;s Brother</a><a class="reltag" href="/glossary/trope/best-friends-parent/"><span class="c">Trope</span>Best Friend&#39;s Parent</a><a class="reltag" href="/glossary/trope/betrayal/"><span class="c">Trope</span>Betrayal</a>
+      <a class="reltag" href="/glossary/trope/abduction/"><span class="c">Trope</span>Abduction</a><a class="reltag" href="/glossary/trope/academy-romance/"><span class="c">Trope</span>academy romance</a><a class="reltag" href="/glossary/trope/age-gap/"><span class="c">Trope</span>Age Gap</a><a class="reltag" href="/glossary/trope/angel/"><span class="c">Trope</span>Angel</a><a class="reltag" href="/glossary/trope/arranged-forced-marriage/"><span class="c">Trope</span>Arranged Forced Marriage</a><a class="reltag" href="/glossary/trope/arranged-marriage/"><span class="c">Trope</span>Arranged Marriage</a>
     </div>
   </section>
 </div>

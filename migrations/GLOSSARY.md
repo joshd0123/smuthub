@@ -11,6 +11,7 @@ under the entry forever.
 tags table         ← extended with: description, voice_tagline, beginner_blurb,
                      why_it_works, origin_note, also_known_as[], examples[],
                      related_tag_ids[], is_filterable, glossary_visible
+reviewed overlay   ← data/glossary-notion-sync.json (merged by category + slug)
        │
        ▼
 scripts/build-glossary.mjs
@@ -70,14 +71,32 @@ node scripts/build-glossary.mjs
 ```
 
 It reads the anon Supabase key from `config.js` (no secrets needed — tags
-table is public-read), fetches every term where `description IS NOT NULL`
-and `glossary_visible = true`, and writes:
+table is public-read), merges the versioned reviewed glossary overlay, then
+builds every term where `description IS NOT NULL` and
+`glossary_visible = true`. It writes:
 
 - `glossary/index.html`
 - `glossary/<category>/index.html` × ~14 categories
 - `glossary/<category>/<slug>/index.html` × ~50 terms
 - Updates `sitemap.xml` (replaces the block between `<!-- GLOSSARY-AUTO-START -->`
   and `<!-- GLOSSARY-AUTO-END -->` markers; first run inserts them)
+
+The overlay keeps reviewed definitions deterministic in deploys even when the
+matching Supabase migration has not been applied yet. Existing database fields
+such as IDs, editorial notes, and relations are retained during the merge.
+
+### Finalized Notion glossary sync
+
+The reviewed 559-row Beginner Romantasy Glossary is versioned in two forms:
+
+- `data/glossary-notion-sync.json` — canonical build input; 557 unique terms
+  after two shorthand aliases resolve to their canonical records.
+- `migrations/2026-07-26-glossary-notion-sync.sql` — idempotent database sync
+  for the same terms.
+
+Run the SQL migration in the linked Supabase project's SQL editor when database
+credentials are available. The public static glossary does not need to wait for
+that step: the build overlay publishes the complete reviewed set immediately.
 
 Then:
 ```sh

@@ -113,13 +113,21 @@
 <header>
   <div class="nav wrap">
     <a href="/" class="logo">smut<span class="box">Hub</span></a>
-    <nav class="navlinks">
-      <a href="/dashboard.html">Dashboard</a>
+    <nav class="navlinks" aria-label="Primary navigation">
       <a href="/books/">Browse Books</a>
+      <details class="sh-guides on">
+        <summary>Guides</summary>
+        <div>
+          <a href="/guides/">All Guides</a>
+          <a href="/guides/spice-levels/">Spice Levels</a>
+          <a href="/glossary/" class="on">Glossary</a>
+          <a href="/glossary/trope/">Tropes</a>
+          <a href="/glossary/warning/">Content Warnings</a>
+        </div>
+      </details>
+      <a href="/smuthub-bookcase">My Bookshelf</a>
+      <a href="/stores">Find a Store</a>
       <a href="/search">Add a Book</a>
-      <a href="/smuthub-bookcase.html">My Bookshelf</a>
-      <a href="/glossary/" class="on" >Glossary</a>
-      <a href="/stores.html">Find a Store</a>
     </nav>
     <div class="authbox" id="authbox"></div>
   </div>
@@ -131,9 +139,9 @@
     </div>
     <div class="sh-rail-panel" id="shRailPanel">
       <h3>Browse glossary</h3>
-      <a href="/glossary/"><span class="lbl">📖 All terms</span><span class="ct">356</span></a>
+      <a href="/glossary/"><span class="lbl">📖 All terms</span><span class="ct">562</span></a>
       <hr>
-      <a href="/glossary/trope/"><span class="lbl">⚔️ Tropes</span><span class="ct">74</span></a><a href="/glossary/mood/"><span class="lbl">🌗 Moods</span><span class="ct">2</span></a><a href="/glossary/vibe/"><span class="lbl">✨ Vibes</span><span class="ct">1</span></a><a href="/glossary/subgenre/"><span class="lbl">📚 Subgenres</span><span class="ct">19</span></a><a href="/glossary/worldbuilding/"><span class="lbl">🗺️ Worldbuilding</span><span class="ct">23</span></a><a href="/glossary/setting/"><span class="lbl">🏰 Settings</span><span class="ct">12</span></a><a href="/glossary/time-period/"><span class="lbl">🕰️ Time Periods</span><span class="ct">11</span></a><a href="/glossary/sport/"><span class="lbl">🏅 Sports</span><span class="ct">7</span></a><a href="/glossary/mechanics/"><span class="lbl">🌶️ Spice &amp; Door</span><span class="ct">13</span></a><a href="/glossary/format/"><span class="lbl">📖 Format</span><span class="ct">6</span></a><a href="/glossary/pov/"><span class="lbl">👁️ POV</span><span class="ct">5</span></a><a href="/glossary/culture/" class="active"><span class="lbl">💬 Reader Culture</span><span class="ct">34</span></a><a href="/glossary/omegaverse/"><span class="lbl">🐺 Omegaverse</span><span class="ct">9</span></a><a href="/glossary/kink/"><span class="lbl">🔥 Kinks</span><span class="ct">14</span></a><a href="/glossary/mc-archetype/"><span class="lbl">👤 MC Archetypes</span><span class="ct">24</span></a><a href="/glossary/li-archetype/"><span class="lbl">💖 LI Archetypes</span><span class="ct">32</span></a><a href="/glossary/representation/"><span class="lbl">🌈 Representation</span><span class="ct">24</span></a><a href="/glossary/warning/"><span class="lbl">⚠️ Content Warnings</span><span class="ct">46</span></a>
+      <a href="/glossary/trope/"><span class="lbl">⚔️ Tropes</span><span class="ct">156</span></a><a href="/glossary/mood/"><span class="lbl">🌗 Moods</span><span class="ct">39</span></a><a href="/glossary/vibe/"><span class="lbl">✨ Vibes</span><span class="ct">2</span></a><a href="/glossary/subgenre/"><span class="lbl">📚 Subgenres</span><span class="ct">28</span></a><a href="/glossary/worldbuilding/"><span class="lbl">🗺️ Worldbuilding</span><span class="ct">29</span></a><a href="/glossary/setting/"><span class="lbl">🏰 Settings</span><span class="ct">13</span></a><a href="/glossary/time-period/"><span class="lbl">🕰️ Time Periods</span><span class="ct">11</span></a><a href="/glossary/sport/"><span class="lbl">🏅 Sports</span><span class="ct">8</span></a><a href="/glossary/mechanics/"><span class="lbl">🌶️ Spice &amp; Door</span><span class="ct">14</span></a><a href="/glossary/format/"><span class="lbl">📖 Format</span><span class="ct">13</span></a><a href="/glossary/pov/"><span class="lbl">👁️ POV</span><span class="ct">5</span></a><a href="/glossary/culture/" class="active"><span class="lbl">💬 Reader Culture</span><span class="ct">44</span></a><a href="/glossary/omegaverse/"><span class="lbl">🐺 Omegaverse</span><span class="ct">9</span></a><a href="/glossary/kink/"><span class="lbl">🔥 Kinks</span><span class="ct">26</span></a><a href="/glossary/mc-archetype/"><span class="lbl">👤 MC Archetypes</span><span class="ct">48</span></a><a href="/glossary/li-archetype/"><span class="lbl">💖 LI Archetypes</span><span class="ct">42</span></a><a href="/glossary/representation/"><span class="lbl">🌈 Representation</span><span class="ct">26</span></a><a href="/glossary/warning/"><span class="lbl">⚠️ Content Warnings</span><span class="ct">49</span></a>
     </div>
   </aside>
 
@@ -146,24 +154,25 @@
     <p class="tagline">Jack to your Rose, but happier.</p>
     <p class="defn">One True Pairing — the couple you&#39;re ride-or-die for in a book, series, or fandom.</p>
     <p class="aka"><b>Also known as:</b> one true pairing</p>
-    
+
+
   </section>
 
-  
 
-  
+
+
 
   <section class="detail" id="books">
     <h2>Books featuring this reader culture</h2>
     <div class="grid" id="bookGrid"><p class="empty">No books shelved here yet — check back as the catalog grows.</p></div>
   </section>
 
-  
+
 
   <section class="detail">
     <h2>Related terms</h2>
     <div class="relgrid">
-      <a class="reltag" href="/glossary/culture/arc/"><span class="c">Reader Culture</span>ARC</a><a class="reltag" href="/glossary/culture/book-boyfriend/"><span class="c">Reader Culture</span>Book Boyfriend</a><a class="reltag" href="/glossary/culture/book-hangover/"><span class="c">Reader Culture</span>Book Hangover</a><a class="reltag" href="/glossary/culture/booktok/"><span class="c">Reader Culture</span>BookTok</a><a class="reltag" href="/glossary/culture/christmas/"><span class="c">Reader Culture</span>Christmas / Holiday</a><a class="reltag" href="/glossary/culture/cliffhanger/"><span class="c">Reader Culture</span>Cliffhanger</a>
+      <a class="reltag" href="/glossary/culture/ao3/"><span class="c">Reader Culture</span>AO3</a><a class="reltag" href="/glossary/culture/arc/"><span class="c">Reader Culture</span>ARC</a><a class="reltag" href="/glossary/culture/book-boyfriend/"><span class="c">Reader Culture</span>Book Boyfriend</a><a class="reltag" href="/glossary/culture/book-hangover/"><span class="c">Reader Culture</span>Book Hangover</a><a class="reltag" href="/glossary/culture/booktok/"><span class="c">Reader Culture</span>BookTok</a><a class="reltag" href="/glossary/culture/christmas/"><span class="c">Reader Culture</span>Christmas / Holiday</a>
     </div>
   </section>
 </div>

@@ -51,6 +51,48 @@ async function pgGet(url){
 //             but appears as a card on the category landing (no link)
 const tagsURL = `${SUPABASE_URL.replace(/\/+$/,'')}/rest/v1/tags?select=*&glossary_visible=eq.true&order=category,label`;
 const allTags = await pgGet(tagsURL);
+
+// Reviewed glossary content can be published before the matching database
+// migration is applied. Merge the versioned overlay by category+slug so local
+// builds remain complete and deterministic, while retaining database-only
+// fields (IDs, relations, editorial notes) for records that already exist.
+const glossarySyncPath = path.join(ROOT, 'data', 'glossary-notion-sync.json');
+try {
+  const glossarySync = JSON.parse(await fs.readFile(glossarySyncPath, 'utf-8'));
+  const tagByKey = new Map(allTags.map(t => [`${t.category}:${t.slug}`, t]));
+  let added = 0;
+
+  for (const syncedTag of glossarySync) {
+    const key = `${syncedTag.category}:${syncedTag.slug}`;
+    const existing = tagByKey.get(key);
+    if (existing) {
+      Object.assign(existing, syncedTag);
+    } else {
+      const localTag = {
+        id: `local:${key}`,
+        voice_tagline: null,
+        beginner_blurb: null,
+        why_it_works: null,
+        origin_note: null,
+        also_known_as: [],
+        examples: [],
+        related_tag_ids: [],
+        ...syncedTag,
+      };
+      allTags.push(localTag);
+      tagByKey.set(key, localTag);
+      added++;
+    }
+  }
+
+  allTags.sort((a, b) =>
+    a.category.localeCompare(b.category) || a.label.localeCompare(b.label)
+  );
+  console.log(`  · merged ${glossarySync.length} reviewed Notion terms (${added} not yet in Supabase)`);
+} catch (e) {
+  if (e && e.code !== 'ENOENT') throw e;
+}
+
 const tags = allTags.filter(t => (t.has_page !== false) && t.description);
 const tier3Tags = allTags.filter(t => !((t.has_page !== false) && t.description));
 console.log(`◇ Building ${tags.length} term pages + ${tier3Tags.length} tier-3 cards (no own URL)`);
@@ -614,7 +656,7 @@ ${renderRail(catKey(tag.category))}
 ${RAIL_SCRIPT}
 ${SHARED_FOOTER}`;
 
-  return head + body;
+  return head + body.replace(/^[ \t]+$/gm, '');
 }
 
 // ══════════════════════════════════════════════════════════════════════════
