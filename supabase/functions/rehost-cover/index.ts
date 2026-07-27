@@ -4,8 +4,8 @@
 //  Admin-gated. Fetches a book's external cover image SERVER-SIDE (browsers
 //  can't — Google/Amazon image hosts don't send CORS headers, so the bytes
 //  can't be read client-side), stores it on Cloudflare R2 via the S3 API, and
-//  points books.cover_url at the branded covers.smuthub.ca URL — preserving
-//  the original in books.cover_source_url for audit.
+//  points books.cover_url (or books.spine_url) at the branded
+//  covers.smuthub.ca URL — preserving the original source for audit.
 //
 //  This is the ONE server-side piece: it powers the one-time migration now
 //  (scripts/migrate-covers.mjs calls it in batch mode) and can later power a
@@ -16,6 +16,8 @@
 //                                                    current cover_url as source)
 //    { "slug": "...", "source_url": "https://…" }   rehost one book from an
 //                                                    explicit source URL
+//    { "slug": "...", "asset": "spine" }             rehost approved spine art
+//                                                    as <slug>-spine.<ext>
 //    { "all": true, "limit": 25 }                   rehost a batch of not-yet-
 //                                                    migrated books; returns
 //                                                    `remaining` so the caller
@@ -65,13 +67,22 @@ const extFor = (ct: string) =>
   : ct === "image/avif" ? "avif"
   : "jpg";
 
-type Book = { slug: string; cover_url: string | null; cover_source_url: string | null };
+type Book = {
+  slug: string;
+  cover_url: string | null;
+  cover_source_url: string | null;
+  spine_url?: string | null;
+  spine_source_url?: string | null;
+};
+type AssetKind = "cover" | "spine";
 
 interface Deps { admin: ReturnType<typeof createClient>; aws: AwsClient; }
 
-async function rehostOne(d: Deps, book: Book, sourceOverride?: string) {
+async function rehostOne(d: Deps, book: Book, sourceOverride?: string, asset: AssetKind = "cover") {
   const slug = book.slug;
-  const src = (sourceOverride || book.cover_url || "").trim();
+  const sourceField = asset === "spine" ? "spine_source_url" : "cover_source_url";
+  const urlField = asset === "spine" ? "spine_url" : "cover_url";
+  const src = (sourceOverride || book[urlField] || "").trim();
   if (!src) return { slug, ok: false, reason: "no source url" };
   if (src.startsWith(COVERS_BASE_URL)) return { slug, ok: true, skipped: "already on R2" };
 
@@ -95,7 +106,7 @@ async function rehostOne(d: Deps, book: Book, sourceOverride?: string) {
   if (bytes.byteLength > MAX_BYTES) return { slug, ok: false, reason: `too large (${bytes.byteLength}b > 5MB)` };
 
   // 2. upload to R2 (S3 API, SigV4-signed by aws4fetch)
-  const key = `${slug}.${extFor(ct)}`;
+  const key = `${slug}${asset === "spine" ? "-spine" : ""}.${extFor(ct)}`;
   const endpoint = `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${R2_BUCKET}/${encodeURIComponent(key)}`;
   let put: Response;
   try {
@@ -114,12 +125,12 @@ async function rehostOne(d: Deps, book: Book, sourceOverride?: string) {
 
   // 3. point the DB at the branded URL; keep the original for audit (once)
   const newUrl = `${COVERS_BASE_URL}/${key}`;
-  const update: Record<string, string> = { cover_url: newUrl };
-  if (!book.cover_source_url) update.cover_source_url = src;
+  const update: Record<string, string> = { [urlField]: newUrl };
+  if (!book[sourceField]) update[sourceField] = src;
   const { error } = await d.admin.from("books").update(update).eq("slug", slug);
   if (error) return { slug, ok: false, reason: `db update failed: ${error.message}` };
 
-  return { slug, ok: true, cover_url: newUrl, bytes: bytes.byteLength };
+  return { slug, ok: true, asset, [urlField]: newUrl, url: newUrl, bytes: bytes.byteLength };
 }
 
 Deno.serve(async (req: Request) => {
@@ -184,14 +195,15 @@ Deno.serve(async (req: Request) => {
 
   // ── single-book mode ──
   if (body.slug) {
+    const asset: AssetKind = body.asset === "spine" ? "spine" : "cover";
     const { data: book, error } = await admin
       .from("books")
-      .select("slug,cover_url,cover_source_url")
+      .select("slug,cover_url,cover_source_url,spine_url,spine_source_url")
       .eq("slug", String(body.slug))
       .maybeSingle();
     if (error) return json(500, { error: `book query failed: ${error.message}` });
     if (!book) return json(404, { error: `book not found: ${body.slug}` });
-    const r = await rehostOne(deps, book as Book, body.source_url ? String(body.source_url) : undefined);
+    const r = await rehostOne(deps, book as Book, body.source_url ? String(body.source_url) : undefined, asset);
     return json(r.ok ? 200 : 422, r);
   }
 
