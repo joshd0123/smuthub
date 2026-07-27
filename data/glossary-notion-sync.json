@@ -1,0 +1,4458 @@
+[
+  {
+    "category": "culture",
+    "slug": "ao3",
+    "label": "AO3",
+    "description": "Archive of Our Own",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "arc",
+    "label": "ARC",
+    "description": "Advance Reader Copy — a free pre-publication copy given to reviewers, BookTokers, and bookstagrammers in exchange for an honest review.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "book-boyfriend",
+    "label": "Book Boyfriend",
+    "description": "A fictional hero you're emotionally attached to.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "book-hangover",
+    "label": "Book Hangover",
+    "description": "The inability to start a new book because you're still emotionally compromised by the last one.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "booktok",
+    "label": "BookTok",
+    "description": "The romance and romantasy corner of TikTok — primary recommendation engine and discovery surface for the genre since \\~2020.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "christmas",
+    "label": "Christmas / Holiday",
+    "description": "Set during or centered around Christmas — seasonal romance, cocoa, snowed-in adjacency.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "cliffhanger",
+    "label": "Cliffhanger",
+    "description": "The story ends with major unresolved events. Use to set expectations — many readers want to know before they start.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "content-warnings-cw",
+    "label": "content warnings (cw)",
+    "description": "alerts about potentially triggering content. usually at the front of the book or in the blurb. Use these.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "dnf",
+    "label": "DNF",
+    "description": "Did Not Finish — a book you stopped reading. No judgment; not every book is for every reader.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "ff",
+    "label": "FF",
+    "description": "A female / female pairing.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "fmc",
+    "label": "FMC",
+    "description": "Female Main Character — the heroine.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "frontlist",
+    "label": "frontlist",
+    "description": "a publishers new releases. The fresh & new stuff",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "good-girl",
+    "label": "Good Girl",
+    "description": "Praise used in intimate contexts. The two-word phrase doing the most heavy lifting in modern romance.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "grey-sweatpants",
+    "label": "Grey Sweatpants",
+    "description": "A piece of clothing with disproportionate cultural significance in romance reader spaces.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "hea",
+    "label": "HEA",
+    "description": "Happily Ever After — the couple ends up together and committed. The genre's baseline promise.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "hfn",
+    "label": "HFN",
+    "description": "Happily For Now — the couple is together and happy, but the future isn't fully defined. Still a positive ending.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "hopeful-ending",
+    "label": "Hopeful Ending",
+    "description": "An ending that leaves characters in a positive or optimistic position — not strictly HEA, but readers can breathe.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "hr",
+    "label": "hr",
+    "description": "historical romance",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "indie-author",
+    "label": "Indie Author",
+    "description": "Self-published authors — increasingly the engine of romance's output and innovation, especially in romantasy and dark romance.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "kindle-unlimited",
+    "label": "Kindle Unlimited (KU)",
+    "description": "Amazon's ebook subscription service. Many indie romance authors are KU-exclusive, which is why a lot of the genre lives there.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "li",
+    "label": "LI",
+    "description": "Love Interest — the romantic counterpart to the main character.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "mce",
+    "label": "Main Character Energy",
+    "description": "When a character commands their own story — presence, agency, the protagonism reader-immersion runs on.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "mc-romance",
+    "label": "MC romance",
+    "description": "motorcycle club romance. bikers, leather, loyalty",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "mf",
+    "label": "MF",
+    "description": "A male / female pairing.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "mfm",
+    "label": "MFM",
+    "description": "A pairing of two men and one woman where the men are involved with the woman but NOT each other.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "mm",
+    "label": "MM",
+    "description": "A male / male pairing.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "mmc",
+    "label": "MMC",
+    "description": "Male Main Character — the hero, often the love interest in MF romance.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "mmf",
+    "label": "MMF",
+    "description": "A pairing of two men and one woman that INCLUDES male/male contact between the men.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "na-new-adult",
+    "label": "NA (new adult)",
+    "description": "romance featuring characters typically 18-25. between YA and adult",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "no-3rd-act-breakup",
+    "label": "No Third-Act Break-up",
+    "description": "The main couple does not separate before the ending. Reader request for tropes that DON'T appear — increasingly common ask.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "ofy",
+    "label": "OFY",
+    "description": "Obsessed For You — extreme devotion from a love interest. Distinct from creepy by being mutual and (mostly) wanted.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "otp",
+    "label": "OTP",
+    "description": "One True Pairing — the couple you're ride-or-die for in a book, series, or fandom.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "ott",
+    "label": "OTT",
+    "description": "Over the Top — used affectionately for heroes who are theatrical in their devotion: grand gestures, possessiveness, obsession (consensual).",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "ott-over-the-top",
+    "label": "ott (over the top)",
+    "description": "heroes are extra about their love interest. dramatic gestures, possessiveness, obsession (consensual). not subtle. very fun",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "paranormal-romance-pnr",
+    "label": "paranormal romance (pnr)",
+    "description": "romance with supernatural elemnts: vampires, shifters, witches, faes, etc.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "red-flag-parade",
+    "label": "Red Flag Parade",
+    "description": "A character who is nothing but red flags. Often said affectionately.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "snort-laugh",
+    "label": "Snort-Laugh",
+    "description": "The unflattering laugh a book surprises out of you. Sign of high quality. Frequently happens in public.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "tbr",
+    "label": "TBR",
+    "description": "To Be Read — your reading list. Never shrinks. Only grows.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "trope",
+    "label": "Trope",
+    "description": "A recurring story element or device. NOT a cliché — tropes are the whole reason we're here.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "uf-urban-fantasy",
+    "label": "uf (urban fantasy)",
+    "description": "Fantasy set in a contemporary, usually urban, setting. Magic in the modern world.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "wc",
+    "label": "Why Choose",
+    "description": "A polyamorous trope where the protagonist doesn't pick — they get all the love interests.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "wip",
+    "label": "WIP",
+    "description": "Work in Progress — a book the author is currently writing.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "ya-young-adult",
+    "label": "ya (young adult)",
+    "description": "romance for teens. cleaner content, protagonists under 18",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "culture",
+    "slug": "yearning",
+    "label": "Yearning",
+    "description": "The painful longing between characters who haven't come together (or have, and now can't).",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "format",
+    "slug": "audiobook",
+    "label": "Audiobook",
+    "description": "A recorded performance of a book read by one or more narrators.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "format",
+    "slug": "duet",
+    "label": "Duet",
+    "description": "A story told across two books, often one POV each, or one continuous arc split in two.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "format",
+    "slug": "first-in-series",
+    "label": "First in Series",
+    "description": "The opening book in a connected series, introducing the world, characters, or larger story arc.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "format",
+    "slug": "interconnected-series",
+    "label": "Interconnected Series",
+    "description": "Standalones that share a world or supporting cast but can be read independently. Previous protagonists often cameo.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "format",
+    "slug": "interconnected-standalone",
+    "label": "Interconnected Standalone",
+    "description": "A complete story that can be read alone but shares a world, setting, or recurring characters with other books.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "format",
+    "slug": "long",
+    "label": "long",
+    "description": "books between 400 - 599",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "format",
+    "slug": "medium",
+    "label": "medium",
+    "description": "books between 250 - 399",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "format",
+    "slug": "no-cliffhanger",
+    "label": "No Cliffhanger",
+    "description": "A book that resolves its central arc rather than leaving readers waiting for the next installment.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "format",
+    "slug": "novella",
+    "label": "novella",
+    "description": "books between 1 - 149 pages",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "format",
+    "slug": "series",
+    "label": "Series",
+    "description": "Multiple connected books, either one continuous story or interconnected characters in a shared world.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "format",
+    "slug": "short",
+    "label": "short",
+    "description": "books between 150 - 249",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "format",
+    "slug": "standalone",
+    "label": "Standalone",
+    "description": "A complete story in a single book — no cliffhanger, no required reading after it.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "format",
+    "slug": "trilogy",
+    "label": "Trilogy",
+    "description": "A three-book story arc.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "age-play",
+    "label": "Age Play",
+    "description": "A consensual adult role-play dynamic where participants adopt different ages or caregiving roles. All participants are adults.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "anal-sex",
+    "label": "Anal Sex",
+    "description": "Sexual activity involving anal penetration; its presence may be noted in spice or content information.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "bondage",
+    "label": "Bondage",
+    "description": "Restraint dynamics — physical or implied. A BDSM staple.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "breeding",
+    "label": "Breeding",
+    "description": "Pregnancy or impregnation themes central to the romantic fantasy — common in shifter, omegaverse, and dark romance.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "childfree",
+    "label": "Childfree",
+    "description": "A romance where the central couple does not have or does not want children, often ending without a pregnancy or baby epilogue.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "consensual-non-consent",
+    "label": "Consensual Non-Consent (CNC)",
+    "description": "A consent dynamic where partners agree in advance to scenes that mimic non-consent. Negotiated, scripted, safe-worded.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "creative-anatomy",
+    "label": "Creative Anatomy",
+    "description": "A fantasy or monster-romance tag for non-human bodies or anatomy that differs from ordinary human anatomy.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "daddy-kink",
+    "label": "Daddy Kink",
+    "description": "A consensual dynamic involving nurturing, authority, or caregiver themes between adult partners.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "double-anal",
+    "label": "Double Anal",
+    "description": "A form of double penetration involving two objects, toys, or partners penetrating the anus simultaneously.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "double-penetration",
+    "label": "Double Penetration",
+    "description": "Simultaneous penetration in two places, usually involving three or more participants or toys.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "double-vaginal",
+    "label": "Double Vaginal",
+    "description": "A form of double penetration involving two objects, toys, or partners penetrating the vagina simultaneously.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "exhibitionism",
+    "label": "Exhibitionism",
+    "description": "A character gains excitement from being observed or potentially observed during intimate moments.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "fem-dom",
+    "label": "Fem-Dom",
+    "description": "A relationship dynamic where the female partner is dominant.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "fetish",
+    "label": "Fetish",
+    "description": "A specific object, body part, or scenario plays a central role in attraction or intimacy.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "harem",
+    "label": "Harem",
+    "description": "One character develops romantic relationships with multiple partners simultaneously.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "masc-dom",
+    "label": "Masc-Dom",
+    "description": "A relationship dynamic where the masculine partner is dominant.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "menage",
+    "label": "Ménage",
+    "description": "A romantic relationship involving three people.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "older-mature",
+    "label": "Older / Mature",
+    "description": "A tag indicating one or more central characters are middle-aged or older.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "pegging",
+    "label": "Pegging",
+    "description": "Penetration of a partner with a strap-on, commonly referring to anal penetration.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "poly",
+    "label": "Polyamory",
+    "description": "A consensual romantic relationship involving more than two people — all parties knowing, all consenting.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "possessive",
+    "label": "Possessive",
+    "description": "A character displays strong territorial or protective behavior toward a love interest.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "praise",
+    "label": "Praise",
+    "description": "A dynamic where affirmation and praise are central to intimacy.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "primal-chase",
+    "label": "Primal / Chase Play",
+    "description": "Intimacy incorporating pursuit, hunting, or instinct — predator/prey dynamics.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "role-switching",
+    "label": "Role Switching",
+    "description": "Partners alternate between dominant and submissive roles.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "somnophilia",
+    "label": "Somnophilia",
+    "description": "A negotiated adult kink involving sexual activity while one partner appears asleep or is asleep, requiring explicit advance consent.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "kink",
+    "slug": "spanking",
+    "label": "Spanking",
+    "description": "Impact play involving spanking — punishment, praise, both.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "actor-hero",
+    "label": "Actor Hero",
+    "description": "A hero working in entertainment or film.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "age-old-hero",
+    "label": "Age-Old Hero",
+    "description": "A supernatural character significantly older than their human partner.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "alpha-male",
+    "label": "Alpha Male",
+    "description": "A confident, dominant, assertive male love interest — the leader, the protector, the one who decides.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "bad-boy",
+    "label": "Bad Boy",
+    "description": "A rebellious or rule-breaking hero — tattoos optional, redemption arc mandatory.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "biker",
+    "label": "Biker",
+    "description": "A hero involved in motorcycle culture — leather, brotherhood, loyalty over law.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "bodyguard-hero",
+    "label": "Bodyguard / Protector Hero",
+    "description": "A hero tasked with protecting others.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "ceo",
+    "label": "CEO / Tycoon",
+    "description": "A business leader or corporate executive — power, money, devastating in a suit.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "cowboy",
+    "label": "Cowboy",
+    "description": "A rancher, horseman, or western hero. Quiet competence, calloused hands.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "cruel-hero",
+    "label": "Cruel / Bully Hero",
+    "description": "A hero who initially mistreats or antagonizes the protagonist — the path from cruelty to devotion.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "dominant",
+    "label": "Dominant",
+    "description": "A love interest who takes the lead — in the relationship and the bedroom.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "dominant-mmc",
+    "label": "Dominant MMC",
+    "description": "A male main character who takes a leading or controlling role in the relationship — bedroom, partnership, life.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "emotional-support-shadow-daddy",
+    "label": "Emotional Support Shadow Daddy",
+    "description": "A dark, intimidating hero who is surprisingly caring, emotionally available, and devoted. The shadow daddy who also remembers her favorite tea.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "golden-retriever",
+    "label": "Golden Retriever",
+    "description": "A loyal, warm, openly affectionate love interest — sunshine in human form.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "grumpy-hero",
+    "label": "Grumpy / Cold Hero",
+    "description": "An emotionally reserved, distant hero. Softens only for her.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "high-lord",
+    "label": "High Lord",
+    "description": "A powerful ruler of a magical territory or court, used to being obeyed and undone only by her.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "highlander-hero",
+    "label": "Highlander Hero",
+    "description": "A hero from the Scottish Highlands or inspired setting — kilts, clans, oaths, brogue.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "himbo",
+    "label": "Himbo",
+    "description": "A kind-hearted but not particularly intellectual hero. Sweet, devoted, frequently shirtless.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "immortal-hero",
+    "label": "Immortal Hero",
+    "description": "A romantic lead who has lived for centuries or longer. Waited for her. Specifically.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "immortal",
+    "label": "Immortal Love Interest",
+    "description": "A lover who has lived for centuries — and, conveniently, waited.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "men-in-uniform",
+    "label": "Men in Uniform",
+    "description": "A hero serving in military, police, fire, or similar professions. Discipline, duty, off-duty trouble.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "morally-grey",
+    "label": "Morally Grey",
+    "description": "A hero whose ethics bend — willing to do terrible things, usually for her.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "morally-grey-mmc",
+    "label": "Morally Grey MMC",
+    "description": "A male main character whose actions blur the line between right and wrong — willing to break rules, ethics, kingdoms for her.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "nerdy-hero",
+    "label": "Nerdy Hero",
+    "description": "A hero known for intelligence, academics, or niche obsessions. The quiet kind.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "non-human-hero",
+    "label": "Non-Human Hero",
+    "description": "A hero who is not fully human.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "pirate-hero",
+    "label": "Pirate Hero",
+    "description": "A seafaring outlaw or privateer.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "politician-hero",
+    "label": "Politician Hero",
+    "description": "A hero involved in government or politics.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "possessive-hero",
+    "label": "Possessive Hero",
+    "description": "A hero who is intensely protective and territorial. \"Mine\" is a position, not a guess.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "rich-hero",
+    "label": "Rich Hero",
+    "description": "A wealthy or financially powerful hero.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "rockstar",
+    "label": "Rockstar",
+    "description": "A musician or performer — fame, chaos, the song he wrote about her.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "royal-hero",
+    "label": "Royal Hero",
+    "description": "A king, prince, duke, or noble hero. Crown, duty, one extremely inconvenient feeling.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "sheik",
+    "label": "Sheik",
+    "description": "A hero of Middle Eastern royal or noble status.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "shy-hero",
+    "label": "Shy Hero",
+    "description": "A reserved, awkward, or introverted hero. Pining loud on the inside.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "single-father",
+    "label": "Single Father",
+    "description": "A hero raising children on his own. Stakes raised, heart larger.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "stalker-hero",
+    "label": "Stalker Hero",
+    "description": "A hero who obsessively follows or monitors another character.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "stern-brunch-daddy",
+    "label": "Stern Brunch Daddy",
+    "description": "Older, distinguished, authoritative-but-nurturing. The look that says \"I'll order for the table and fix all your problems.\"",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "sunny-hero",
+    "label": "Sunny / Happy Hero",
+    "description": "An optimistic, upbeat hero. The bright one in a brooding genre.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "sweet-hero",
+    "label": "Sweet / Gentle Hero",
+    "description": "A compassionate, caring hero. Soft on her specifically.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "teacher-hero",
+    "label": "Teacher / Coach Hero",
+    "description": "A hero working as an educator or coach.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "tortured",
+    "label": "Tortured",
+    "description": "A love interest carrying trauma, guilt, or scars that make intimacy a battle worth winning.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "viking-hero",
+    "label": "Viking Hero",
+    "description": "A Norse-inspired warrior or explorer hero — raids, oaths, devotion that lasts a saga.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "warlord",
+    "label": "Warlord",
+    "description": "A military leader or battlefield commander — strategy, scars, the moment he chooses softness.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "li-archetype",
+    "slug": "working-class-hero",
+    "label": "Working-Class Hero",
+    "description": "A hero from a labor or trade profession.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "40s",
+    "label": "40s +",
+    "description": "Female protagonist is forty or older. Can be 100 +",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "alpha-female",
+    "label": "Alpha Female",
+    "description": "A dominant, confident female lead who commands authority and respect — the room turns when she enters.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "royal-heroine",
+    "label": "Aristo / Royal Heroine",
+    "description": "A heroine of noble or royal status.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "aristocrat-aristo",
+    "label": "Aristocrat (Aristo)",
+    "description": "Short for aristocrat: a noble or upper-class character whose status, title, or family shapes the story.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "asexual-heroine",
+    "label": "Asexual Heroine",
+    "description": "A heroine who experiences little or no sexual attraction. Romance built differently.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "athlete",
+    "label": "athlete",
+    "description": "A professional or competitive athlete.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "athlete-heroine",
+    "label": "Athlete Heroine",
+    "description": "A heroine involved in competitive sports.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "bodyguard-heroine",
+    "label": "Bodyguard / Protector Heroine",
+    "description": "A heroine tasked with protecting others.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "cheerful-heroine",
+    "label": "Cheerful / Sunshine Heroine",
+    "description": "An optimistic, upbeat female protagonist. Sunshine to his grump.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "cinnamon-roll",
+    "label": "Cinnamon Roll",
+    "description": "A gentle, sweet, kind-hearted character who is impossible to dislike.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "competent-heroine",
+    "label": "Competent Heroine",
+    "description": "A highly capable protagonist who excels at what she does. Quiet expertise.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "criminal-heroine",
+    "label": "Criminal Heroine",
+    "description": "A heroine engaged in criminal activity.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "curvy-heroine",
+    "label": "Curvy Heroine",
+    "description": "A heroine with a fuller body type.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "dangerous-heroine",
+    "label": "Dangerous Heroine",
+    "description": "A heroine capable of significant violence or destruction. The threat is part of the appeal.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "demisexual-heroine",
+    "label": "Demisexual Heroine",
+    "description": "A heroine who experiences attraction primarily after emotional connection.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "dominant-fmc",
+    "label": "Dominant FMC",
+    "description": "A female main character who takes a leading or controlling role in the relationship.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "early-20s-fmc",
+    "label": "Early 20s FMC",
+    "description": "Female protagonist is in her early twenties.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "famous-heroine",
+    "label": "Famous Heroine",
+    "description": "A heroine with celebrity or public recognition.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "female-rake",
+    "label": "Female Rake",
+    "description": "A confident heroine known for charm, flirtation, or sexual experience — owning her appetite.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "fierce",
+    "label": "Fierce",
+    "description": "A heroine with serious magical, political, or physical power — the threat, not the damsel.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "fighter",
+    "label": "fighter",
+    "description": "A boxer, MMA fighter, or combat athlete.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "gifted-heroine",
+    "label": "Gifted / Super-Heroine",
+    "description": "A heroine with extraordinary abilities or talents — magic, intelligence, combat.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "grumpy-heroine",
+    "label": "Grumpy / Ice Queen",
+    "description": "A reserved or emotionally guarded heroine. Walls up. Softens only for him.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "immortal-heroine",
+    "label": "Immortal Heroine",
+    "description": "A heroine with an exceptionally long lifespan — vampire, fae, goddess, ancient being.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "in-their-30s",
+    "label": "in their 30s",
+    "description": "Female protagonist is in her thirties.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "independent-heroine",
+    "label": "Independent Heroine",
+    "description": "A protagonist who values self-reliance and autonomy. Doesn't need saving — but might let him try.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "non-human-heroine",
+    "label": "Non-Human Heroine",
+    "description": "A heroine who is not fully human — fae, shifter, demon, alien, more.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "plain-heroine",
+    "label": "Plain Heroine",
+    "description": "A heroine not characterized by exceptional beauty.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "poor-heroine",
+    "label": "Poor Heroine",
+    "description": "A heroine from a lower economic background.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "possessive-main-character",
+    "label": "Possessive Main Character",
+    "description": "A main character who is intensely protective or territorial about their love interest.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "powerful-fmc",
+    "label": "Powerful FMC",
+    "description": "A female protagonist with significant magical, political, or physical power. Not the prize — the threat.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "reluctant-hero",
+    "label": "Reluctant Hero",
+    "description": "A protagonist who resists the destiny, power, or role thrust upon her.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "rich-heroine",
+    "label": "Rich Heroine",
+    "description": "A heroine from wealth or privilege.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "sassy-heroine",
+    "label": "Sassy Heroine",
+    "description": "A witty, outspoken heroine with a sharp tongue and zero filter.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "scholar",
+    "label": "Scholar",
+    "description": "A protagonist driven by knowledge, research, or academic obsession.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "single-mother",
+    "label": "Single Mother",
+    "description": "A heroine raising children on her own — added stakes, real life, full heart.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "sleuth-heroine",
+    "label": "Sleuth Heroine",
+    "description": "A heroine who investigates mysteries.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "stalker-heroine",
+    "label": "Stalker Heroine",
+    "description": "A heroine who obsessively follows or monitors another character.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "sweet-heroine",
+    "label": "Sweet / Gentle Heroine",
+    "description": "A kind, compassionate protagonist — pure heart, surprising spine.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "take-charge-heroine",
+    "label": "Take-Charge Heroine",
+    "description": "A heroine who naturally assumes leadership — in love, in war, at the breakfast table.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "tall-heroine",
+    "label": "Tall Heroine",
+    "description": "A heroine notably taller than average.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "teacher-heroine",
+    "label": "Teacher / Coach Heroine",
+    "description": "A heroine working as an educator or coach.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "teenage-fmc",
+    "label": "Teenage FMC",
+    "description": "Female protagonist is a teenager.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "tortured-heroine",
+    "label": "Tortured Heroine",
+    "description": "A heroine carrying significant trauma or emotional pain. Healing is part of the romance.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "virgin-heroine",
+    "label": "Virgin Heroine",
+    "description": "A heroine with little or no prior sexual experience. Often paired with a more experienced LI.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "warrior-heroine",
+    "label": "Warrior Heroine",
+    "description": "A heroine skilled in combat.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "white-collar-heroine",
+    "label": "White-Collar Heroine",
+    "description": "A heroine in a professional career.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mc-archetype",
+    "slug": "working-class-heroine",
+    "label": "Working-Class Heroine",
+    "description": "A heroine from a labor or service profession.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mechanics",
+    "slug": "behind-closed-doors",
+    "label": "Behind Closed Doors",
+    "description": "Intimate scenes occur off-page — the camera cuts away at the bedroom door.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mechanics",
+    "slug": "burn",
+    "label": "Burn",
+    "description": "A descriptor for how fast a romance develops sexually — distinct from \"slow-burn\" the trope. A book can be \"fast-burn\" (immediate heat) or \"slow-burn\" (delayed).",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mechanics",
+    "slug": "closed-door",
+    "label": "Closed Door",
+    "description": "Romance where sex happens but isn't shown — fade-to-black, morning-after framing, imagination filling the gap.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mechanics",
+    "slug": "d-s",
+    "label": "D/s (Dominance / Submission)",
+    "description": "A power-exchange dynamic — bedroom or 24/7 — where one partner takes control and one yields. Consensual is the only kind that counts.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mechanics",
+    "slug": "dynamic",
+    "label": "dynamic",
+    "description": "Relationship power dynamics play a significant role in intimacy.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mechanics",
+    "slug": "explicit-and-plentiful",
+    "label": "Explicit & Plentiful",
+    "description": "Frequent, highly explicit intimate scenes. The spiciest tier.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mechanics",
+    "slug": "explicit-open-door",
+    "label": "Explicit Open Door",
+    "description": "Intimate scenes shown on the page with explicit detail.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mechanics",
+    "slug": "fade-to-black",
+    "label": "Fade to Black",
+    "description": "A scene that cuts away just before or during a sexual encounter — the close-door convention in action.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mechanics",
+    "slug": "glimpses-and-kisses",
+    "label": "Glimpses & Kisses",
+    "description": "Minimal on-page intimacy — hand-holding, embraces, the occasional kiss. Sweetest end of the spice scale.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mechanics",
+    "slug": "high-spice",
+    "label": "High Spice",
+    "description": "Romance with very explicit sexual content — typically 4–5 chilis on smutHub's scale.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mechanics",
+    "slug": "open-door",
+    "label": "Open Door",
+    "description": "Romance where sex scenes are shown explicitly on the page.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mechanics",
+    "slug": "safe-word",
+    "label": "Safe Word",
+    "description": "An agreed-upon word that immediately stops a scene in kink contexts. Non-negotiable infrastructure for consent.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mechanics",
+    "slug": "smut",
+    "label": "Smut",
+    "description": "Affectionate shorthand for explicit sexual content in romance.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mechanics",
+    "slug": "spice",
+    "label": "Spice (Heat Level)",
+    "description": "A reader-shorthand rating for how explicit a book's sexual content is, usually on a 0–5 chili-pepper scale.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "academia",
+    "label": "Academia",
+    "description": "A scholarly setting or atmosphere involving schools, libraries, research, intellectual rivalry, or campus life.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "action-packed",
+    "label": "Action-Packed",
+    "description": "Fast-paced storytelling with frequent fights, chases, danger, or major plot events.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "adventure",
+    "label": "Adventure",
+    "description": "A story built around journeys, discovery, danger, quests, or exploration.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "angels",
+    "label": "Angels",
+    "description": "Features angelic beings.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "angsty",
+    "label": "Angsty",
+    "description": "Emotional turmoil, longing, heartbreak, and internal conflict — the good pain.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "atmospheric",
+    "label": "Atmospheric",
+    "description": "A story whose setting, mood, and sensory detail create a strong, immersive feeling.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "book-club",
+    "label": "Book Club",
+    "description": "A book well suited to group reading and discussion, often because of its themes, twists, or strong opinions.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "cozy",
+    "label": "Cozy",
+    "description": "Warm, comforting storytelling with lower tension, inviting settings, and an emphasis on community or everyday pleasures.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "cruel",
+    "label": "Cruel",
+    "description": "A story featuring intentionally harsh or hurtful behavior, often from a morally dark character or love interest.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "dangerous",
+    "label": "Dangerous",
+    "description": "A high-risk story involving threatening characters, deadly situations, or relationships with real consequences.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "dark",
+    "label": "Dark",
+    "description": "A heavy or unsettling tone involving morally difficult themes, danger, trauma, or violence.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "dark-academia",
+    "label": "Dark Academia",
+    "description": "A moody academic aesthetic involving elite schools, secret societies, obsession, ambition, and often mystery or danger.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "dark-and-twisted",
+    "label": "dark and twisted",
+    "description": "A story featuring morally complex characters, darker themes, and intense conflict.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "dark-fantasy",
+    "label": "Dark Fantasy",
+    "description": "Fantasy with grim, frightening, violent, or morally bleak themes and worldbuilding.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "devastating",
+    "label": "Devastating",
+    "description": "A book engineered to wreck you emotionally.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "dragons",
+    "label": "Dragons",
+    "description": "A story featuring dragons as creatures, rulers, enemies, companions, or bonded partners.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "dreamy",
+    "label": "Dreamy",
+    "description": "Soft, romantic, or surreal storytelling with an enchanting, floaty atmosphere.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "emotional",
+    "label": "Emotional",
+    "description": "Designed to create strong feelings such as joy, grief, heartbreak, longing, or catharsis.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "fantasy-romance",
+    "label": "Fantasy Romance",
+    "description": "A fantasy story where the romance is central to the plot and emotional resolution.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "gods",
+    "label": "Gods",
+    "description": "A story in which gods or divine beings directly influence the characters, magic, or conflict.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "gritty",
+    "label": "Gritty",
+    "description": "Raw, harsh storytelling that emphasizes struggle, violence, flawed characters, or difficult realities.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "hopeful",
+    "label": "Hopeful",
+    "description": "A story that maintains optimism, healing, or the possibility of a better future despite conflict.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "intense",
+    "label": "Intense",
+    "description": "A high-emotion, high-stakes reading experience with strong tension or dramatic conflict.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "lighthearted",
+    "label": "Lighthearted",
+    "description": "A fun, easygoing tone with humor and relatively low emotional heaviness.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "marriage",
+    "label": "Marriage",
+    "description": "A story where an existing, planned, or unexpected marriage is central to the plot.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "melancholic",
+    "label": "Melancholic",
+    "description": "A wistful, sorrowful tone shaped by loss, longing, nostalgia, or quiet sadness.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "mermaids",
+    "label": "Mermaids",
+    "description": "A story featuring mermaids, sirens, or other aquatic people and their underwater or coastal worlds.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "pirates",
+    "label": "Pirates",
+    "description": "A story featuring pirates, privateers, ships, treasure, and seafaring adventure.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "playful",
+    "label": "Playful",
+    "description": "A flirtatious, humorous, or mischievous tone that keeps the story fun.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "shapeshifters",
+    "label": "Shapeshifters",
+    "description": "Characters who can transform between human and animal, monster, or other supernatural forms.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "steamy",
+    "label": "Steamy",
+    "description": "Contains strong sexual tension and on-page intimacy, generally at a higher heat level.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "summer",
+    "label": "Summer",
+    "description": "A story with a summery setting or seasonal feeling, often involving travel, beaches, vacation, or warm-weather romance.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "supernatural",
+    "label": "Supernatural",
+    "description": "Features beings, powers, or events that exist beyond ordinary natural explanation.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "sweet",
+    "label": "Sweet",
+    "description": "A gentle, affectionate romance with low explicit content and an emphasis on emotional connection.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "swoony",
+    "label": "Swoony",
+    "description": "Full of romantic moments designed to make the reader melt, sigh, or fall a little in love too.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "tense",
+    "label": "Tense",
+    "description": "Creates sustained suspense, uncertainty, conflict, or emotional pressure.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "vampires",
+    "label": "Vampires",
+    "description": "Features vampire characters.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "werewolves",
+    "label": "Werewolves",
+    "description": "Features werewolves or shifters.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "mood",
+    "slug": "whimsical",
+    "label": "Whimsical",
+    "description": "Playful, imaginative storytelling with charming, unusual, or fairy-tale-like elements.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "omegaverse",
+    "slug": "alpha",
+    "label": "Alpha",
+    "description": "In omegaverse: the designation that experiences ruts, knots, and often projects dominance. Personality varies — not all alphas are alphaholes.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "omegaverse",
+    "slug": "heat",
+    "label": "Heat",
+    "description": "In omegaverse: a biological cycle where Omegas experience intense drive to mate. Usually requires an Alpha or suppressants to manage. Distinct from \"heat level\" (spice rating).",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "omegaverse",
+    "slug": "knotting",
+    "label": "Knotting",
+    "description": "A canine/wolf-derived mating mechanic in omegaverse and shifter romance where the Alpha \"knots\" during sex, physically bonding the pair.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "omegaverse",
+    "slug": "mpreg",
+    "label": "Mpreg",
+    "description": "Male pregnancy — common in omegaverse where male Omegas can carry young. A whole subgenre with dedicated readers.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "omegaverse",
+    "slug": "omega",
+    "label": "Omega",
+    "description": "In omegaverse: the designation that experiences heats, can be knotted, often bears young regardless of gender. Not inherently submissive — personality varies.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "omegaverse",
+    "slug": "omegaverse",
+    "label": "Omegaverse",
+    "description": "A romance worldbuilding system featuring biological designations — Alphas (rut), Omegas (heat), Betas (neutral) — with knotting, scent-bonding, mate dynamics, and often mpreg. Distinct from basic shifter pack romance though they often overlap.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "omegaverse",
+    "slug": "scent-marking",
+    "label": "Scent Marking",
+    "description": "In shifter and omegaverse romance: leaving your scent on a mate to claim them. Ranges from subtle (a press of the wrist) to primal.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "omegaverse",
+    "slug": "shifting",
+    "label": "Shifting",
+    "description": "The transformation between human and animal forms. Painful or seamless depending on the world. Some can partial-shift (claws, eyes). Often tied to emotion, the moon, or choice.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "omegaverse",
+    "slug": "suppressants",
+    "label": "Suppressants",
+    "description": "In omegaverse: medication that suppresses heats or ruts. Lets characters function \"normally\" but often has plot-relevant side effects or failures.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "pov",
+    "slug": "dual-pov",
+    "label": "Dual POV",
+    "description": "A story alternates between two characters' perspectives — usually the main love interests.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "pov",
+    "slug": "first-person-pov",
+    "label": "First-Person POV",
+    "description": "Narrated as \"I felt,\" \"I knew\" — placing the reader fully inside one character.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "pov",
+    "slug": "pov",
+    "label": "POV (Point of View)",
+    "description": "The character whose perspective the reader experiences. Romantasy is largely written in 1st-person POV; multi-POV is common in epic romantasy.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "pov",
+    "slug": "single-pov",
+    "label": "Single POV",
+    "description": "The story is told from one character's perspective — usually the protagonist.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "pov",
+    "slug": "third-person-pov",
+    "label": "Third-Person POV",
+    "description": "Narrated as \"she did,\" \"he knew\" — a step outside the character with more flexibility to show multiple perspectives.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "african-american",
+    "label": "African-American",
+    "description": "A story featuring an African-American main character — culturally specific representation.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "amish",
+    "label": "Amish",
+    "description": "Features Amish characters, communities, or culture.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "bisexual",
+    "label": "Bisexual",
+    "description": "A main character is bisexual — attracted to more than one gender.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "black-mc",
+    "label": "Black MC",
+    "description": "A story featuring a Black main character — own-voices, representation, identity at the center.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "buddhist",
+    "label": "Buddhist",
+    "description": "Includes Buddhist beliefs, practices, or characters.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "bw-wm",
+    "label": "BW/WM Romance",
+    "description": "A romance between a Black woman and White man — a specific representation niche.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "christian",
+    "label": "Christian Romance",
+    "description": "Includes Christian beliefs, practices, or characters. Often a clean-romance subgenre with explicit values.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "disabilities-scars",
+    "label": "Disabilities & Scars",
+    "description": "Features characters with significant disabilities, visible scars, or disfigurement — desirable, not despite. Representation done right.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "east-asian-mc",
+    "label": "East Asian MC",
+    "description": "A story featuring an East Asian main character — Chinese, Japanese, Korean, and more.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "faith",
+    "label": "Faith",
+    "description": "Religious beliefs play a meaningful role in the story — practice, doubt, devotion.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "gay",
+    "label": "Gay",
+    "description": "A romance between two men — MM romance.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "hindu",
+    "label": "Hindu",
+    "description": "Includes Hindu beliefs, practices, or characters.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "indigenous-mc",
+    "label": "Indigenous MC",
+    "description": "A story featuring an Indigenous main character — own-voices representation matters here.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "jewish",
+    "label": "Jewish Romance",
+    "description": "Includes Jewish beliefs, practices, or characters.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "latinx-mc",
+    "label": "Latinx MC",
+    "description": "A story featuring a Latinx main character.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "lesbian",
+    "label": "Lesbian",
+    "description": "A romance between two women — FF / WLW romance.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "lgbtq",
+    "label": "LGBTQ+",
+    "description": "Stories featuring lesbian, gay, bisexual, transgender, queer, or other LGBTQ+ characters and relationships.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "muslim",
+    "label": "Muslim Romance",
+    "description": "Includes Muslim beliefs, practices, or characters.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "neurodivergent",
+    "label": "Neurodivergent",
+    "description": "A main character is neurodivergent — autistic, ADHD, etc. Often own-voices.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "non-binary",
+    "label": "Non-Binary Romance",
+    "description": "A romance featuring a non-binary lead.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "pagan",
+    "label": "Pagan",
+    "description": "Includes pagan religions, traditions, or practices.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "queer-awakening",
+    "label": "Queer Awakening",
+    "description": "A character discovers, names, or explores their queer identity through the story.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "queer-romance",
+    "label": "Queer Romance",
+    "description": "Features LGBTQ+ romantic relationships — umbrella term.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "south-asian-mc",
+    "label": "South Asian / Desi MC",
+    "description": "A story featuring a South Asian / Desi main character.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "southeast-asian-mc",
+    "label": "Southeast Asian MC",
+    "description": "A story featuring a Southeast Asian main character.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "representation",
+    "slug": "wlw",
+    "label": "wlw",
+    "description": "women loving women",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "setting",
+    "slug": "academy",
+    "label": "Academy",
+    "description": "A school or training ground where romance brews between classes, trials, and rivalries.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "setting",
+    "slug": "alien-planet",
+    "label": "Alien Planet",
+    "description": "Set on a planet inhabited by alien species — foreign culture, biology, customs.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "setting",
+    "slug": "college",
+    "label": "College",
+    "description": "A story set in a college or university — exams, parties, professors who shouldn't.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "setting",
+    "slug": "dragon-academy",
+    "label": "Dragon Academy",
+    "description": "A school or training environment focused on dragons and their riders.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "setting",
+    "slug": "dystopia",
+    "label": "Dystopia",
+    "description": "Set in an oppressive or damaged society, often involving authoritarian control, inequality, or rebellion.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "setting",
+    "slug": "fae-court",
+    "label": "Fae Court",
+    "description": "A magical society ruled by fae nobility — all glamour, bargains, rivalry, and danger.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "setting",
+    "slug": "high-school",
+    "label": "High School",
+    "description": "Set during high school years — coming-of-age, first loves, hallway politics.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "setting",
+    "slug": "human-colony",
+    "label": "Human Colony",
+    "description": "Set within a human settlement on another world — frontier dynamics in space.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "setting",
+    "slug": "small-town",
+    "label": "Small Town",
+    "description": "Set in a close-knit small community — everyone knows everyone, nothing stays secret.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "setting",
+    "slug": "space",
+    "label": "Space",
+    "description": "Primarily set in outer space — vast distances, alien worlds, ship-bound romance.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "setting",
+    "slug": "space-station",
+    "label": "Space Station",
+    "description": "Set aboard a space station — a hub of cultures, politics, secrets.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "setting",
+    "slug": "spaceship",
+    "label": "Spaceship",
+    "description": "A spacecraft is the primary setting — tight quarters, forced proximity, deep space.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "setting",
+    "slug": "workplace",
+    "label": "Workplace / Office",
+    "description": "Set in a professional environment — office romance, coworkers, after-hours.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "sport",
+    "slug": "baseball",
+    "label": "Baseball",
+    "description": "A baseball romance — diamonds, seasons, slow burns paced like the game.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "sport",
+    "slug": "basketball",
+    "label": "Basketball",
+    "description": "A basketball romance — courts, championships, after-game heat.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "sport",
+    "slug": "mma",
+    "label": "Fighting / MMA / Boxing",
+    "description": "A fighting-sports romance — rings, cages, controlled violence and uncontrollable feelings.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "sport",
+    "slug": "football",
+    "label": "Football",
+    "description": "A football romance — players, coaches, locker rooms, the field.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "sport",
+    "slug": "hockey",
+    "label": "Hockey",
+    "description": "A hockey romance — rink, road games, the way they take care of each other.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "sport",
+    "slug": "skating",
+    "label": "Ice / Figure Skating",
+    "description": "A skating romance — ice, partner work, lifts that mean something.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "sport",
+    "slug": "soccer",
+    "label": "Soccer / Football",
+    "description": "A soccer / football romance — pitches, World Cups, devotion as a team sport.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "sport",
+    "slug": "sports",
+    "label": "Sports",
+    "description": "A romance or story set around athletes, teams, training, or competition.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "aliens",
+    "label": "aliens",
+    "description": "Features extraterrestrial characters.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "contemporary-romance",
+    "label": "Contemporary Romance",
+    "description": "Romance set in the present-day real world — no magic, no time travel, just modern people falling in love.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "dark-romance",
+    "label": "Dark Romance",
+    "description": "A romance subgenre that leans into morally compromised characters, dubious or non-consent dynamics, violence, and content that pushes past the comfort zone of mainstream romance.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "demon-romance",
+    "label": "Demon Romance",
+    "description": "A romance featuring a demon or demonic love interest.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "dystopian",
+    "label": "Dystopian Romance",
+    "description": "Romance set in a broken, oppressive, or post-collapse society.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "fantasy",
+    "label": "Fantasy",
+    "description": "A story featuring magical or supernatural elements as central to the world or plot.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "romantic-comedy",
+    "label": "Funny / Romantic Comedy",
+    "description": "Romance with humor as a primary tone — banter, hijinks, situational comedy.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "high-fantasy",
+    "label": "High Fantasy",
+    "description": "Fantasy set in a fully fictional secondary world with extensive worldbuilding, often featuring epic stakes and elaborate magic systems.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "historical-romance",
+    "label": "Historical Romance",
+    "description": "Romance set in the past — Regency, Victorian, medieval, or any historical period.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "horror-romance",
+    "label": "Horror Romance",
+    "description": "Romance with horror elements designed to unsettle as much as seduce.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "new-adult",
+    "label": "new adult",
+    "description": "Focuses on characters transitioning into adulthood.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "orcs",
+    "label": "orcs",
+    "description": "Features orc characters or cultures.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "paranormal",
+    "label": "paranormal",
+    "description": "Features supernatural beings or phenomena.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "paranormal-romance",
+    "label": "Paranormal Romance",
+    "description": "Romance with supernatural elements — vampires, shifters, witches, fae, demons, ghosts.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "pirate-romance",
+    "label": "Pirate Romance",
+    "description": "A romance set among pirates, privateers, or seafaring adventurers.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "romance",
+    "label": "Romance",
+    "description": "A genre centered on the development of a romantic relationship and an emotionally satisfying ending.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "romantasy",
+    "label": "Romantasy",
+    "description": "A genre that blends fantasy and romance — magical worlds and significant worldbuilding with a central love story driving the plot.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "mystery",
+    "label": "Romantic Mystery",
+    "description": "Romance interwoven with a mystery the leads must solve together.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "suspense",
+    "label": "Romantic Suspense",
+    "description": "Romance built around tension, danger, and uncertainty driving the plot.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "science-fantasy",
+    "label": "Science Fantasy",
+    "description": "A blend of science-fiction and fantasy elements, such as advanced technology alongside magic.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "science-fiction",
+    "label": "Science Fiction",
+    "description": "Speculative fiction based on future technology, space, science, aliens, or altered societies.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "sports-romance",
+    "label": "Sports Romance",
+    "description": "Romance set within competitive sports — athletes, coaches, teams, championships.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "steampunk",
+    "label": "Steampunk Romance",
+    "description": "Romance combining fantasy or sci-fi with Victorian-era technology — gears, steam, airships, and corsets.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "urban-fantasy",
+    "label": "Urban Fantasy",
+    "description": "Fantasy set in a contemporary, usually urban setting — magic in the modern world.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "vampire-romance",
+    "label": "Vampire Romance",
+    "description": "A romance with a vampire love interest — bite, bond, eternal devotion.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "western",
+    "label": "Western",
+    "description": "Set in the American West or a western-inspired world, often featuring ranches, frontier towns, or cowboys.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "witch-romance",
+    "label": "Witch Romance",
+    "description": "A romance centered on a witch or magical practitioner.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "subgenre",
+    "slug": "young-adult",
+    "label": "young adult",
+    "description": "Written primarily for teen readers.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "time-period",
+    "slug": "twentieth-century",
+    "label": "20th Century",
+    "description": "Set during the 1900s — Roaring Twenties, World Wars, mid-century, late 1900s.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "time-period",
+    "slug": "american-civil-war",
+    "label": "American Civil War",
+    "description": "Set during or around the American Civil War (1861–1865).",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "time-period",
+    "slug": "ancient",
+    "label": "Ancient Times",
+    "description": "Settings inspired by ancient civilizations — Egypt, Rome, Greece, Mesopotamia.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "time-period",
+    "slug": "contemporary",
+    "label": "Contemporary",
+    "description": "Set in the present day — no magic, no time travel, just modern romance.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "time-period",
+    "slug": "futuristic",
+    "label": "Futuristic",
+    "description": "Set in a future — near-future, sci-fi, post-apocalyptic, or speculative.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "time-period",
+    "slug": "georgian",
+    "label": "Georgian",
+    "description": "Set during the Georgian era (1714–1830) — elegance, scandal, the rise of the rake.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "time-period",
+    "slug": "medieval",
+    "label": "Medieval",
+    "description": "Set during a medieval-inspired era — castles, knights, courts, sword and crown.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "time-period",
+    "slug": "tudor-stuart",
+    "label": "Tudor & Stuart",
+    "description": "Set during the Tudor or Stuart periods of England (1485–1714).",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "time-period",
+    "slug": "victorian",
+    "label": "Victorian",
+    "description": "Set during the Victorian era (1837–1901) — moral codes, repression, secret desires.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "time-period",
+    "slug": "western-frontier",
+    "label": "Western Frontier",
+    "description": "Set during frontier expansion — cowboys, ranches, lawless towns.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "abduction",
+    "label": "Abduction",
+    "description": "A character is taken — often by the love interest, sometimes by an antagonist.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "academy-romance",
+    "label": "academy romance",
+    "description": "Romance developing within a school, academy, or training environment.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "age-gap",
+    "label": "Age Gap",
+    "description": "A significant age difference between the romantic leads — experience meets youth, or vice versa.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "angel",
+    "label": "Angel",
+    "description": "A story featuring an angelic or celestial character, often with divine powers, rules, or forbidden desires.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "arranged-forced-marriage",
+    "label": "Arranged Forced Marriage",
+    "description": "Characters are required or pressured to marry by family, politics, law, or circumstance rather than personal choice.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "arranged-marriage",
+    "label": "Arranged Marriage",
+    "description": "Characters married off by family, court, or contract — love arrives second.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "assassin",
+    "label": "Assassin",
+    "description": "A story featuring a trained killer, often caught between a dangerous mission and an inconvenient attraction.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "bear-shifter",
+    "label": "Bear Shifter",
+    "description": "Characters can shift into bears.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "best-friends-brother",
+    "label": "Best Friend's Brother",
+    "description": "A romance with your best friend's sibling — forbidden, awkward, irresistible.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "best-friends-parent",
+    "label": "Best Friend's Parent",
+    "description": "Romance with a best friend's parent. Forbidden, complicated, the kind of trope readers know exactly why they're here for.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "betrayal",
+    "label": "Betrayal",
+    "description": "A major breach of trust drives the story — secrets revealed, sides switched, love tested.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "billionaire-romance",
+    "label": "Billionaire Romance",
+    "description": "A romance featuring an extremely wealthy and powerful love interest.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "blood-bond",
+    "label": "Blood Bond",
+    "description": "A supernatural connection created or sealed through blood, often linking characters’ magic, emotions, or lives.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "bodyguard",
+    "label": "Bodyguard",
+    "description": "One character is assigned to protect another, creating danger, forced proximity, and usually very unprofessional feelings.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "bonded-pair",
+    "label": "Bonded Pair",
+    "description": "Characters connected through a supernatural or magical bond.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "boss-employee",
+    "label": "Boss / Employee",
+    "description": "A romance between a superior and subordinate — workplace ethics, complicated power, very motivated readers.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "broken-bond",
+    "label": "broken bond",
+    "description": "A magical or emotional connection that has been damaged or severed.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "brothers-best-friend",
+    "label": "Brother's Best Friend",
+    "description": "A romance between a character and their brother’s best friend, often complicated by loyalty, secrecy, or protective siblings.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "bully-romance",
+    "label": "Bully Romance",
+    "description": "A romance where one lead initially intimidates, humiliates, or mistreats the other; content warnings are especially important.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "burn-the-world-for-her",
+    "label": "burn the world for her",
+    "description": "a character would sacrifice everything, including morality, for their partner",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "captive",
+    "label": "Captive",
+    "description": "A story in which a character is held prisoner or prevented from leaving.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "captive-romance",
+    "label": "Captive Romance",
+    "description": "A dark-romance setup involving a captor and captive; consent and power imbalance are central concerns, so check warnings.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "caretaking",
+    "label": "Caretaking",
+    "description": "One character actively looks after another — illness, injury, emotional crisis — and the line between caretaker and lover blurs.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "cheating",
+    "label": "Cheating",
+    "description": "Infidelity occurs within a romantic relationship — sometimes the inciting incident, sometimes the wound.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "chosen-family",
+    "label": "chosen family",
+    "description": "Similar to found family, emphasizing intentionally formed emotional connections.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "chosen-one",
+    "label": "Chosen One",
+    "description": "A character marked by prophecy, magic, or fate for an important role.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "class-difference",
+    "label": "Class Difference",
+    "description": "Significant economic or social class differences exist.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "court",
+    "label": "Court",
+    "description": "A royal or fae social setting shaped by rulers, nobles, alliances, etiquette, and political maneuvering.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "court-intrigue",
+    "label": "Court Intrigue",
+    "description": "Political scheming, shifting alliances, and betrayals inside a royal or fae court.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "court-politics",
+    "label": "court politics",
+    "description": "Political maneuvering, alliances, betrayals, and power struggles among nobility.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "deadly-trials",
+    "label": "Deadly Trials",
+    "description": "Characters must survive lethal tests, competitions, or challenges.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "demon",
+    "label": "Demon",
+    "description": "A story featuring a demonic or infernal character, often dangerous, powerful, and unexpectedly romantic.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "dragon-rider",
+    "label": "Dragon Rider",
+    "description": "A trope where the male love interest is a dragon rider — usually in an academy or military setting, with a soul-bonded dragon and a high-stakes magical war as the backdrop.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "dragon-shifter",
+    "label": "Dragon Shifter",
+    "description": "Characters can shift into dragons.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "enemies-to-lovers",
+    "label": "Enemies to Lovers",
+    "description": "A romance in which the love interests start as antagonists — rivals, opposing sides, mutual loathing — and gradually convert that animosity into desire.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "enemies-with-benefits",
+    "label": "Enemies with Benefits",
+    "description": "Characters who dislike or oppose each other begin a sexual relationship before resolving their emotional conflict.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "enemy-kingdoms",
+    "label": "Enemy Kingdoms",
+    "description": "The leads belong to warring nations, courts, or factions.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "fae",
+    "label": "Fae",
+    "description": "Magical beings associated with fairy lore — tall, often pointed-eared, otherworldly in beauty, frequently organized into magical courts with their own powers and politics.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "fake-dating",
+    "label": "Fake Dating",
+    "description": "Characters pretend to be a couple — for a wedding, a contract, family pressure — and discover the pretense is concealing real feelings.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "fake-engagement",
+    "label": "Fake Engagement",
+    "description": "Characters pretend to be engaged for personal, social, or strategic reasons — until pretend gets too real.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "fallen-angel",
+    "label": "Fallen Angel",
+    "description": "An angelic being cast out from heaven or stripped of divine status — a different kind of grace.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "fate-bound",
+    "label": "fate bound",
+    "description": "Characters are connected through destiny, prophecy, or supernatural forces.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "fated-mates",
+    "label": "Fated Mates",
+    "description": "A trope where two characters are magically, spiritually, or cosmically destined to be together — often with consequences for rejecting the bond.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "fish-out-of-water",
+    "label": "Fish Out of Water",
+    "description": "A character dropped into an unfamiliar world, court, or culture, learning the rules in real time.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "forced-bond",
+    "label": "Forced Bond",
+    "description": "Characters linked together against their will through magic or circumstance.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "forced-proximity",
+    "label": "Forced Proximity",
+    "description": "A trope where characters who would otherwise stay apart are required by circumstance to be together — sharing a cabin, road trip, safehouse, or single room.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "found-family",
+    "label": "Found Family",
+    "description": "Characters form deep family-like bonds outside of blood — chosen, fought for, protected.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "friends-to-lovers",
+    "label": "Friends to Lovers",
+    "description": "A romance that starts in established friendship and transitions into something more.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "friends-with-benefits",
+    "label": "Friends with Benefits",
+    "description": "Sex without commitment between people who like each other — until one of them stops being able to keep it casual.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "good-grovel",
+    "label": "Good Grovel",
+    "description": "A character who caused harm or betrayal makes a meaningful, satisfying effort to earn forgiveness — not a quick \"sorry.\"",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "grumpy",
+    "label": "Grumpy",
+    "description": "An irritable, guarded, or emotionally reserved character—often secretly soft for exactly one person.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "grumpy-sunshine",
+    "label": "Grumpy x Sunshine",
+    "description": "A pairing of one perpetually scowling character and one relentlessly warm one — the grump goes soft only for the sunshine.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "he-falls-first",
+    "label": "He Falls First",
+    "description": "A pacing trope where the male love interest realizes his feelings well before the heroine does.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "he-fell-first",
+    "label": "he fell first",
+    "description": "he caught feelings before she did. Pairs well with wine and a “she fell harder” for max impact",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "height-difference",
+    "label": "Height Difference",
+    "description": "Noticeable height difference between leads.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "heist",
+    "label": "Heist",
+    "description": "A plot centered on planning and executing a theft, usually with a skilled crew, high stakes, and betrayals.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "hidden-identity",
+    "label": "Hidden Identity",
+    "description": "A character conceals their name, status, species, powers, or true allegiance from others.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "historical",
+    "label": "Historical",
+    "description": "Set in a past historical period.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "hurt-comfort",
+    "label": "Hurt / Comfort",
+    "description": "One character experiences pain — physical or emotional — and another provides care and presence.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "insta-love",
+    "label": "Insta Love",
+    "description": "Characters develop romantic feelings almost immediately after meeting.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "jealousy",
+    "label": "Jealousy",
+    "description": "Romantic tension driven by fear of losing someone’s affection or by attention from a perceived rival.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "just-one-bed",
+    "label": "just one bed",
+    "description": "also ‘only one bed’ situation where sharing a bed is necessary by all means. (insert wink face)",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "kidnapping",
+    "label": "Kidnapping",
+    "description": "A character is abducted or held against their will; check content warnings for how the story handles captivity and consent.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "lion-shifter",
+    "label": "Lion Shifter",
+    "description": "Characters can shift into lions.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "lost-heir",
+    "label": "lost heir",
+    "description": "A missing or hidden heir discovers their true identity and claim.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "love-triangle",
+    "label": "Love Triangle",
+    "description": "Romantic conflict involving three people — and only one can win.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "lovers-to-enemies",
+    "label": "Lovers to Enemies",
+    "description": "Former lovers become opponents through betrayal, conflict, politics, or divided loyalties.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "mafia-romance",
+    "label": "Mafia Romance",
+    "description": "Romance set in organized crime — loyalty, danger, blood oaths, complicated love.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "magic",
+    "label": "Magic",
+    "description": "Magical systems play a major role.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "magic-school",
+    "label": "Magic School",
+    "description": "An academy where characters learn to use magic, often featuring training, rivalries, exams, and dangerous secrets.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "marriage-first",
+    "label": "Marriage First",
+    "description": "The characters marry before falling in love, so the relationship develops after the vows.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "marriage-in-trouble",
+    "label": "Marriage in Trouble",
+    "description": "An established couple faces conflict, separation, or lost intimacy and must decide whether to rebuild their relationship.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "marriage-of-convenience",
+    "label": "Marriage of Convenience",
+    "description": "Characters marry for strategy, safety, or politics — and fall in love after the paperwork.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "masquerade",
+    "label": "Masquerade",
+    "description": "A masked ball or concealed-identity event where attraction, mistaken identity, and secrets take center stage.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "mate",
+    "label": "Mate",
+    "description": "a romantic commitment similar to marriage",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "mated-pair",
+    "label": "mated pair",
+    "description": "Characters recognized as destined romantic partners through supernatural means.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "mentor",
+    "label": "Mentor",
+    "description": "A more experienced character trains or guides another; the relationship may remain platonic or develop romantic tension.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "military-academy",
+    "label": "Military Academy",
+    "description": "A story set at a school that trains soldiers, warriors, riders, or commanders under strict and dangerous conditions.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "military-romance",
+    "label": "Military Romance",
+    "description": "Romance involving active military service or veterans — duty, deployment, coming home.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "monster-romance",
+    "label": "Monster Romance",
+    "description": "A romance with a non-human or monstrous love interest.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "monsters",
+    "label": "Monsters",
+    "description": "Stories featuring non-human creatures as central characters, threats, or romantic interests.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "motorcycle-club",
+    "label": "Motorcycle Club",
+    "description": "A romance centered on an organized motorcycle club, often involving loyalty, danger, found family, and club rules.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "multicultural",
+    "label": "Multicultural Romance",
+    "description": "A romance involving characters from different cultural backgrounds — bridging, blending, sometimes clashing.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "mutual-pining",
+    "label": "Mutual Pining",
+    "description": "Both characters are in love with each other but neither has said it — sometimes neither has admitted it to themselves.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "mythology",
+    "label": "Mythology",
+    "description": "A story drawing on gods, legends, heroes, creatures, or belief systems from cultural mythologies.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "necromancer",
+    "label": "Necromancer",
+    "description": "A magic user who communicates with, controls, or raises the dead.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "one-horse",
+    "label": "one horse",
+    "description": "characters are forced to share a single horse or mode of transportation, creating proximity",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "one-night-stand",
+    "label": "One Night Stand",
+    "description": "A sexual encounter intended to happen once—until circumstances, feelings, or fate bring the characters together again.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "only-one-bed",
+    "label": "Only One Bed",
+    "description": "A setup where the characters must share a single sleeping space — by reservation error, snowstorm, hideout, or contrived circumstance.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "opposites-attract",
+    "label": "Opposites Attract",
+    "description": "Characters with contrasting personalities, lifestyles, or values discover they fit together better than expected.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "parents-best-friend",
+    "label": "Parent's Best Friend",
+    "description": "Romance with a parent's close friend — they've known you since you were small. Now they're seeing you differently.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "pining",
+    "label": "Pining",
+    "description": "Longing for someone from a distance, often without knowing whether the feelings are returned.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "pirate",
+    "label": "Pirate",
+    "description": "A story featuring pirates, privateers, sea voyages, treasure, danger, and romance beyond the law.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "political",
+    "label": "Political",
+    "description": "A story where governance, alliances, succession, rebellion, or diplomacy significantly drives the plot.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "political-court-intrigue",
+    "label": "Political Court Intrigue",
+    "description": "Power struggles, schemes, and politics drive the plot.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "political-marriage",
+    "label": "political marriage",
+    "description": "a marriage arranged primarily for power, alliances, or strategic gain",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "pregnancy",
+    "label": "Pregnancy",
+    "description": "A pregnancy plays a central role in the plot or relationship.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "quest-romance",
+    "label": "Quest Romance",
+    "description": "A romance that ignites on a dangerous journey or mission.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "redemption-arc",
+    "label": "Redemption Arc",
+    "description": "A character works to atone for past wrongs and become someone better.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "regency",
+    "label": "Regency",
+    "description": "Set during the Regency era (1811–1820) — Bridgerton territory. Balls, scandal, marriage of convenience.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "rejected-fated-mate",
+    "label": "rejected fated mate",
+    "description": "One character refuses a destined romantic bond.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "rejected-mate",
+    "label": "Rejected Mate",
+    "description": "A fated bond that one partner refuses, at least at first — the rejection itself becomes the wound the story heals.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "rekindled-romance",
+    "label": "Rekindled Romance",
+    "description": "Former partners who find their way back to each other after time apart.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "revenge",
+    "label": "Revenge",
+    "description": "A story driven by a character's pursuit of vengeance.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "reverse-harem-why-choose",
+    "label": "Reverse Harem / Why Choose",
+    "description": "A romance where one central character has multiple love interests and does not have to choose just one; also called why choose.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "reverse-love-triangle",
+    "label": "Reverse Love Triangle",
+    "description": "Multiple characters pursue the same romantic interest — the protagonist as the prize.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "rivals-to-lovers",
+    "label": "Rivals to Lovers",
+    "description": "Characters competing for the same goal gradually turn rivalry and tension into attraction.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "road-trip",
+    "label": "Road Trip",
+    "description": "Romance that develops while characters travel together.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "royal-heroine",
+    "label": "Royal Heroine",
+    "description": "A heroine who is a queen, princess, empress, or other noblewoman whose rank shapes the story.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "royal-romance",
+    "label": "Royal Romance",
+    "description": "Love among kings, queens, princes, and the thrones that complicate them.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "royalty",
+    "label": "Royalty",
+    "description": "A story centered on kings, queens, princes, princesses, succession, court life, or royal duty.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "second-chance",
+    "label": "Second Chance",
+    "description": "Former romantic partners reconnect and attempt to rebuild their relationship.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "secret-baby",
+    "label": "Secret Baby",
+    "description": "A character discovers they have a child they were previously unaware of.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "secret-relationship",
+    "label": "Secret Relationship",
+    "description": "Characters hide their romantic involvement from others — family, court, public.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "secret-royalty",
+    "label": "Secret Royalty",
+    "description": "A character who unknowingly holds a claim to a throne, title, or power.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "shadow-daddy",
+    "label": "Shadow Daddy",
+    "description": "A hero archetype: intimidating, dark, often morally grey, with shadow- or void-based magical abilities; possessive and devoted to his love interest.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "she-falls-first",
+    "label": "She Falls First",
+    "description": "The heroine develops romantic feelings before the other lead does.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "she-fell-harder",
+    "label": "She Fell Harder",
+    "description": "A companion pacing trope: when \"he fell first\" lands, her eventual feelings arrive with more force.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "shifter-romance",
+    "label": "shifter romance",
+    "description": "Paranormal romance featuring characters who shift between human and animal forms. Werewolves/wolves most common, but also bears, big cats, dragons, and basically any animal you can imagine. Often includes pack dynamics, mate bonds, and territorial behavior. May or may not include Omegaverse elements—check the blurb.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "short-stories",
+    "label": "Short Stories",
+    "description": "Brief standalone works, often collected together, that tell complete stories in fewer pages than a novel.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "siblings-best-friend",
+    "label": "Sibling's Best Friend",
+    "description": "A romance with your sibling's close friend — knew them forever, never like this.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "single-parent",
+    "label": "Single Parent",
+    "description": "A romance where one central character is raising a child or children on their own.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "slow-burn",
+    "label": "Slow Burn",
+    "description": "A romance where attraction builds over a long stretch of the book — sometimes the whole book — with delayed physical resolution.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "slow-burn-romance",
+    "label": "slow burn romance",
+    "description": "Attraction develops gradually over a long period before romantic payoff occurs.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "slow-corruption",
+    "label": "Slow Corruption",
+    "description": "A character is gradually tempted, morally changed, or drawn toward darkness over the course of the story.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "snowed-in",
+    "label": "Snowed In",
+    "description": "Characters trapped together by weather — forced proximity with a fireplace.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "soul-bond",
+    "label": "Soul Bond",
+    "description": "A character who is biologically or magically destined to be the partner of another — without the lifelong commitment implication of \"mate.\"",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "soulmates",
+    "label": "Soulmates",
+    "description": "Two characters magically or spiritually bonded — sometimes telepathically, sometimes through ritual, sometimes by birth.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "spicy",
+    "label": "Spicy",
+    "description": "Contains frequent or explicit on-page sexual content.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "stalker",
+    "label": "Stalker",
+    "description": "A character obsessively follows or monitors another; commonly associated with dark romance and strong content warnings.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "step-siblings",
+    "label": "Step-Siblings",
+    "description": "A romance between characters who become siblings through marriage — not blood.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "superheroes",
+    "label": "Superhero Romance",
+    "description": "Romance featuring characters with superpowers or hidden identities.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "survival",
+    "label": "Survival",
+    "description": "Characters must endure dangerous conditions to survive — isolation forges intimacy.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "telepathic-bond",
+    "label": "Telepathic Bond",
+    "description": "A magical connection that allows characters to hear thoughts, share emotions, or communicate mind-to-mind.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "tiger-shifter",
+    "label": "Tiger Shifter",
+    "description": "Characters can shift into tigers.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "time-travel",
+    "label": "Time Travel",
+    "description": "Characters travel through time.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "time-travel-romance",
+    "label": "Time-Travel Romance",
+    "description": "Lovers separated or united across different eras.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "touch-her-and-die",
+    "label": "Touch Her and Die",
+    "description": "A possessive hero archetype where the love interest's extreme protectiveness becomes a threat to anyone who looks sideways at the heroine.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "touch-starved",
+    "label": "Touch Starved",
+    "description": "A character has gone without affection or physical comfort and reacts strongly when safe touch is finally offered.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "tournament",
+    "label": "Tournament",
+    "description": "Competitors face each other in a structured magical or martial contest.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "training-arc",
+    "label": "Training Arc",
+    "description": "A stretch where the protagonist is forged through structured training and earns their power.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "true-mate",
+    "label": "True Mate",
+    "description": "A shifter/paranormal variation of fated mates — the destined partner, often recognized by scent or the shifter's animal side, sometimes distinguished from a \"chosen mate\" picked by logic rather than fate.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "unrequited-love",
+    "label": "Unrequited Love",
+    "description": "One character carries romantic feelings the other doesn't return — at least not yet.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "vampire",
+    "label": "Vampire",
+    "description": "A story featuring a vampire character, often involving immortality, blood, danger, and supernatural desire.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "vengeance",
+    "label": "Vengeance",
+    "description": "Revenge is a major motivation.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "villain-romance",
+    "label": "Villain Romance",
+    "description": "A romance where the love interest is the story's antagonist — or close to it.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "virgin-hero",
+    "label": "Virgin Hero",
+    "description": "A male love interest who hasn't had sex before the events of the book.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "virgin-hero-heroine",
+    "label": "virgin hero/heroine",
+    "description": "A male/female lead with little or no prior sexual experience.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "war",
+    "label": "War",
+    "description": "War or active military conflict drives part of the story.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "war-time-romance",
+    "label": "Wartime Romance",
+    "description": "Love that takes root during active conflict.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "witch",
+    "label": "Witch",
+    "description": "A story featuring a witch or magical practitioner whose powers, coven, or craft shape the plot.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "witches",
+    "label": "Witches",
+    "description": "Features witches or magical practitioners.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "trope",
+    "slug": "workplace-romance",
+    "label": "Workplace Romance",
+    "description": "A romance between colleagues or people connected through work, often complicated by professional boundaries.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "vibe",
+    "slug": "epic",
+    "label": "Epic",
+    "description": "books 600 +",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "vibe",
+    "slug": "gothic",
+    "label": "Gothic",
+    "description": "Morally complex characters, darker themes, and sharp, unsettling conflict.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "ableism",
+    "label": "Ableism",
+    "description": "Depictions of discrimination, prejudice, or harmful attitudes toward disabled individuals.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "abuse",
+    "label": "Abuse",
+    "description": "Physical, emotional, psychological, verbal, or sexual abuse depicted within the story.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "abuse-between-mcs",
+    "label": "Abuse Between Mcs",
+    "description": "Abuse occurs between the main romantic characters. A serious flag many readers want to know about going in.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "alcoholism",
+    "label": "Alcoholism",
+    "description": "Alcohol dependency or addiction is depicted.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "animal-abuse",
+    "label": "Animal Abuse",
+    "description": "Animals are intentionally harmed, neglected, or mistreated on-page.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "animal-death",
+    "label": "Animal Death",
+    "description": "The death of an animal is depicted or discussed.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "birth-control-non-consent",
+    "label": "Birth Control Non-Consent",
+    "description": "One character interferes with, removes, or deceives another regarding birth control.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "body-betrayal",
+    "label": "Body Betrayal",
+    "description": "A character experiences unwanted physical attraction toward someone they dislike or distrust.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "child-death",
+    "label": "Child Death",
+    "description": "The death of a child is depicted or discussed.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "death-grief",
+    "label": "Death Grief",
+    "description": "Significant death, mourning, or bereavement is central to the story.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "drug-abuse",
+    "label": "Drug Abuse",
+    "description": "Misuse or addiction involving drugs is depicted.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "dubious-consent",
+    "label": "Dubious Consent",
+    "description": "Sexual situations where consent is unclear, impaired, pressured, or ethically questionable.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "eating-disorders",
+    "label": "Eating Disorders",
+    "description": "Depictions of disordered eating behaviors or eating disorder recovery.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "fatphobia",
+    "label": "Fatphobia",
+    "description": "Depictions of anti-fat bias, discrimination, or body shaming.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "forced-pregnancy",
+    "label": "Forced Pregnancy",
+    "description": "Pregnancy occurs through coercion, manipulation, magical compulsion, or lack of consent.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "gambling",
+    "label": "Gambling",
+    "description": "Problematic or significant gambling behavior is present.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "graphic-violence",
+    "label": "Graphic Violence",
+    "description": "Violence depicted in explicit detail — gore, torture, brutal combat.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "human-trafficking",
+    "label": "Human Trafficking",
+    "description": "Characters experience or are involved in forced exploitation or trafficking.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "incest",
+    "label": "Incest",
+    "description": "Sexual or romantic relationships between close family members.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "infertility",
+    "label": "Infertility",
+    "description": "Difficulty conceiving or carrying a pregnancy plays a role in the story.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "mental-illness",
+    "label": "Mental Illness",
+    "description": "Characters experience diagnosed or implied mental health conditions — depression, anxiety, psychosis, etc.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "mental-trauma",
+    "label": "Mental Trauma",
+    "description": "Characters experience significant psychological trauma — flashbacks, PTSD, dissociation.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "miscarriage",
+    "label": "Miscarriage",
+    "description": "Pregnancy loss is depicted or discussed.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "misogyny",
+    "label": "Misogyny",
+    "description": "Sexism, discrimination, or prejudice against women appears in the story.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "no-hea",
+    "label": "no hea",
+    "description": "The story does not conclude with a Happily Ever After.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "non-consent-between-mcs",
+    "label": "Non-Consent Between MCs",
+    "description": "Sexual activity occurs between main characters without consent.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "non-traditional-hea",
+    "label": "Non-Traditional HEA",
+    "description": "The story ends positively but the ending differs from a conventional romantic resolution.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "past-abuse",
+    "label": "Past Abuse",
+    "description": "A character has a history of abuse predating the events of the story.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "past-child-abuse",
+    "label": "Past Child Abuse",
+    "description": "References to abuse experienced during childhood — character backstory.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "past-child-neglect",
+    "label": "Past Child Neglect",
+    "description": "References to neglect experienced during childhood — backstory or memory.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "past-child-sexual-abuse",
+    "label": "Past Child Sexual Abuse",
+    "description": "A child has a history of sexual abuse before the story begins.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "past-sexual-abuse",
+    "label": "Past Sexual Abuse",
+    "description": "A character has a history of sexual abuse before the story begins.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "queerphobia",
+    "label": "Queerphobia",
+    "description": "Homophobia, transphobia, or discrimination against LGBTQ+ individuals appears in the story.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "racism",
+    "label": "Racism",
+    "description": "Racial prejudice, discrimination, or racial violence appears in the story.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "rape",
+    "label": "Rape",
+    "description": "Sexual assault or rape is depicted or discussed. Always flag — readers deserve advance notice.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "religious-trauma",
+    "label": "Religious Trauma",
+    "description": "Psychological harm resulting from religious beliefs, institutions, or experiences.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "self-harm",
+    "label": "Self-Harm",
+    "description": "Intentional self-injury is depicted or discussed.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "slavery",
+    "label": "Slavery",
+    "description": "Slavery exists or plays a major role in the story.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "slut-shaming",
+    "label": "Slut Shaming",
+    "description": "Characters are criticized, judged, or humiliated for sexual behavior.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "stalking",
+    "label": "Stalking",
+    "description": "Persistent unwanted surveillance, following, or monitoring of a character.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "substance-abuse",
+    "label": "Substance Abuse",
+    "description": "Problematic use of drugs, alcohol, or other substances.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "suicide",
+    "label": "Suicide",
+    "description": "Suicide attempts, suicide, or suicidal ideation are depicted or discussed.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "terminal-illness",
+    "label": "Terminal Illness",
+    "description": "A character suffers from a life-limiting or incurable illness.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "third-party-abuse",
+    "label": "Third Party Abuse",
+    "description": "Abuse committed by a character outside the primary romantic relationship.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "third-party-sexual-abuse",
+    "label": "Third-Party Sexual Abuse",
+    "description": "Sexual assault committed by someone outside the primary relationship.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "torture-of-mcs",
+    "label": "Torture Of Mcs",
+    "description": "A main character experiences torture.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "torture-of-side-characters",
+    "label": "Torture Of Side Characters",
+    "description": "A secondary character experiences torture.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "trigger-warnings",
+    "label": "trigger warnings",
+    "description": "alerts about potentially triggering content. usually at the front of the book or in the blurb. Use these!",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "warning",
+    "slug": "victim-blaming",
+    "label": "Victim Blaming",
+    "description": "Responsibility for abuse, assault, or harm is placed on the victim rather than the perpetrator.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "affinity",
+    "label": "Affinity",
+    "description": "The specific type of magic a character can wield — elemental, mind-based, or esoteric.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "blood-magic",
+    "label": "Blood Magic",
+    "description": "Magic that requires blood as a source — costly, intimate, often forbidden.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "blood-oath",
+    "label": "Blood Oath",
+    "description": "A promise sealed in blood and enforced by magic.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "cursed-objects",
+    "label": "Cursed Objects",
+    "description": "Magical items carrying dangerous effects — heirlooms, weapons, jewelry with a price.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "dark-magic",
+    "label": "Dark Magic",
+    "description": "Magic tied to death, corruption, sacrifice, or forbidden power.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "demons",
+    "label": "demons",
+    "description": "Features demonic beings.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "dragon-bond",
+    "label": "Dragon Bond",
+    "description": "The magical, telepathic tether between a rider and their dragon.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "dragon-riders",
+    "label": "Dragon Riders",
+    "description": "Humans bonded to dragons — telepathic link, war partner, soul match.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "dungeon-and-quests",
+    "label": "Dungeon & Quests",
+    "description": "Exploration and adventure are central elements.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "elemental-magic",
+    "label": "Elemental Magic",
+    "description": "Magic powered by control of natural elements — fire, water, earth, air.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "fate-bound-souls",
+    "label": "fate-bound souls",
+    "description": "Destiny links characters together.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "gods-goddesses",
+    "label": "Gods & Goddesses",
+    "description": "Divine beings directly influence events — favored mortals, divine bargains, prophecy.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "kingdoms-empires",
+    "label": "Kingdoms & Empires",
+    "description": "Large political powers drive the story — alliances, wars, succession.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "affinity-magic",
+    "label": "Magic System",
+    "description": "The structured set of rules governing how magic works in a world — sources, limits, costs.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "magical-academy",
+    "label": "Magical Academy",
+    "description": "A school dedicated to teaching magic — Fourth Wing, ACOTAR's Night Court training, Hogwarts-adjacent.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "magical-creatures",
+    "label": "Magical Creatures",
+    "description": "Supernatural beings populate the world — dragons, griffins, fae beasts.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "mate-bond",
+    "label": "Mate Bond",
+    "description": "The supernatural tie that marks two people as partners — by scent, fate, or magic.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "monster-hunting",
+    "label": "monster hunting",
+    "description": "Characters regularly fight dangerous creatures.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "necromancy",
+    "label": "Necromancy",
+    "description": "Magic of death, spirits, and resurrection — taboo in most worlds, devastating where allowed.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "parallel-worlds",
+    "label": "Parallel Worlds",
+    "description": "Multiple realities or dimensions exist — what-ifs given form.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "portal-key",
+    "label": "Portal Key",
+    "description": "A magic-infused key that transports the bearer to a chosen place — often single-use, often pricey.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "portals",
+    "label": "Portals",
+    "description": "Characters travel between worlds or realms via doorways, mirrors, or magical thresholds.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "prophecy",
+    "label": "Prophecy",
+    "description": "Future events are foretold and shape the plot — the chosen one, the inevitable, the loophole.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "reincarnation",
+    "label": "Reincarnation",
+    "description": "Characters reborn across lifetimes — lovers finding each other again and again.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "royal-courts",
+    "label": "Royal Courts",
+    "description": "Political systems ruled by nobility — succession, alliances, scheming nobles.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "royal-politics",
+    "label": "royal politics",
+    "description": "conflicts involving rulers, succession, alliances, and governance",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "scry",
+    "label": "Scry",
+    "description": "Divination using crystals, water, blood, or tokens to find people or learn secrets.",
+    "has_page": true,
+    "glossary_visible": true
+  },
+  {
+    "category": "worldbuilding",
+    "slug": "worldbuilding",
+    "label": "Worldbuilding",
+    "description": "The creation of a story’s setting, cultures, history, politics, magic, geography, and rules.",
+    "has_page": true,
+    "glossary_visible": true
+  }
+]

@@ -113,13 +113,21 @@
 <header>
   <div class="nav wrap">
     <a href="/" class="logo">smut<span class="box">Hub</span></a>
-    <nav class="navlinks">
-      <a href="/dashboard.html">Dashboard</a>
+    <nav class="navlinks" aria-label="Primary navigation">
       <a href="/books/">Browse Books</a>
+      <details class="sh-guides on">
+        <summary>Guides</summary>
+        <div>
+          <a href="/guides/">All Guides</a>
+          <a href="/guides/spice-levels/">Spice Levels</a>
+          <a href="/glossary/" class="on">Glossary</a>
+          <a href="/glossary/trope/">Tropes</a>
+          <a href="/glossary/warning/">Content Warnings</a>
+        </div>
+      </details>
+      <a href="/smuthub-bookcase">My Bookshelf</a>
+      <a href="/stores">Find a Store</a>
       <a href="/search">Add a Book</a>
-      <a href="/smuthub-bookcase.html">My Bookshelf</a>
-      <a href="/glossary/" class="on" >Glossary</a>
-      <a href="/stores.html">Find a Store</a>
     </nav>
     <div class="authbox" id="authbox"></div>
   </div>
@@ -131,9 +139,9 @@
     </div>
     <div class="sh-rail-panel" id="shRailPanel">
       <h3>Browse glossary</h3>
-      <a href="/glossary/"><span class="lbl">📖 All terms</span><span class="ct">356</span></a>
+      <a href="/glossary/"><span class="lbl">📖 All terms</span><span class="ct">562</span></a>
       <hr>
-      <a href="/glossary/trope/" class="active"><span class="lbl">⚔️ Tropes</span><span class="ct">74</span></a><a href="/glossary/mood/"><span class="lbl">🌗 Moods</span><span class="ct">2</span></a><a href="/glossary/vibe/"><span class="lbl">✨ Vibes</span><span class="ct">1</span></a><a href="/glossary/subgenre/"><span class="lbl">📚 Subgenres</span><span class="ct">19</span></a><a href="/glossary/worldbuilding/"><span class="lbl">🗺️ Worldbuilding</span><span class="ct">23</span></a><a href="/glossary/setting/"><span class="lbl">🏰 Settings</span><span class="ct">12</span></a><a href="/glossary/time-period/"><span class="lbl">🕰️ Time Periods</span><span class="ct">11</span></a><a href="/glossary/sport/"><span class="lbl">🏅 Sports</span><span class="ct">7</span></a><a href="/glossary/mechanics/"><span class="lbl">🌶️ Spice &amp; Door</span><span class="ct">13</span></a><a href="/glossary/format/"><span class="lbl">📖 Format</span><span class="ct">6</span></a><a href="/glossary/pov/"><span class="lbl">👁️ POV</span><span class="ct">5</span></a><a href="/glossary/culture/"><span class="lbl">💬 Reader Culture</span><span class="ct">34</span></a><a href="/glossary/omegaverse/"><span class="lbl">🐺 Omegaverse</span><span class="ct">9</span></a><a href="/glossary/kink/"><span class="lbl">🔥 Kinks</span><span class="ct">14</span></a><a href="/glossary/mc-archetype/"><span class="lbl">👤 MC Archetypes</span><span class="ct">24</span></a><a href="/glossary/li-archetype/"><span class="lbl">💖 LI Archetypes</span><span class="ct">32</span></a><a href="/glossary/representation/"><span class="lbl">🌈 Representation</span><span class="ct">24</span></a><a href="/glossary/warning/"><span class="lbl">⚠️ Content Warnings</span><span class="ct">46</span></a>
+      <a href="/glossary/trope/" class="active"><span class="lbl">⚔️ Tropes</span><span class="ct">156</span></a><a href="/glossary/mood/"><span class="lbl">🌗 Moods</span><span class="ct">39</span></a><a href="/glossary/vibe/"><span class="lbl">✨ Vibes</span><span class="ct">2</span></a><a href="/glossary/subgenre/"><span class="lbl">📚 Subgenres</span><span class="ct">28</span></a><a href="/glossary/worldbuilding/"><span class="lbl">🗺️ Worldbuilding</span><span class="ct">29</span></a><a href="/glossary/setting/"><span class="lbl">🏰 Settings</span><span class="ct">13</span></a><a href="/glossary/time-period/"><span class="lbl">🕰️ Time Periods</span><span class="ct">11</span></a><a href="/glossary/sport/"><span class="lbl">🏅 Sports</span><span class="ct">8</span></a><a href="/glossary/mechanics/"><span class="lbl">🌶️ Spice &amp; Door</span><span class="ct">14</span></a><a href="/glossary/format/"><span class="lbl">📖 Format</span><span class="ct">13</span></a><a href="/glossary/pov/"><span class="lbl">👁️ POV</span><span class="ct">5</span></a><a href="/glossary/culture/"><span class="lbl">💬 Reader Culture</span><span class="ct">44</span></a><a href="/glossary/omegaverse/"><span class="lbl">🐺 Omegaverse</span><span class="ct">9</span></a><a href="/glossary/kink/"><span class="lbl">🔥 Kinks</span><span class="ct">26</span></a><a href="/glossary/mc-archetype/"><span class="lbl">👤 MC Archetypes</span><span class="ct">48</span></a><a href="/glossary/li-archetype/"><span class="lbl">💖 LI Archetypes</span><span class="ct">42</span></a><a href="/glossary/representation/"><span class="lbl">🌈 Representation</span><span class="ct">26</span></a><a href="/glossary/warning/"><span class="lbl">⚠️ Content Warnings</span><span class="ct">49</span></a>
     </div>
   </aside>
 
@@ -147,23 +155,24 @@
     <p class="defn">Political scheming, shifting alliances, and betrayals inside a royal or fae court.</p>
     <p class="aka"><b>Also known as:</b> court politics · royal politics</p>
     <a class="cta" href="/books/?tag=trope%3Acourt-intrigue">Find books with this trope →</a>
+
   </section>
 
-  
 
-  
+
+
 
   <section class="detail" id="books">
     <h2>Books featuring this trope</h2>
-    <div class="grid" id="bookGrid"><a class="card" href="/books/a-dawn-of-onyx-golden/"><div class="cover"><img src="https://covers.smuthub.ca/a-dawn-of-onyx-golden.jpg" alt="A Dawn of Onyx book cover" loading="lazy"></div><div class="meta"><div class="t">A Dawn of Onyx</div><div class="a">Kate Golden</div></div></a><a class="card" href="/books/a-day-of-fallen-night-shannon-2023/"><div class="cover"><img src="https://covers.smuthub.ca/a-day-of-fallen-night-shannon-2023.jpg" alt="A Day of Fallen Night book cover" loading="lazy"></div><div class="meta"><div class="t">A Day of Fallen Night</div><div class="a">Samantha Shannon</div></div></a><a class="card" href="/books/court-wolff-2022/"><div class="cover"><img src="https://covers.smuthub.ca/court-wolff-2022.jpg" alt="Court book cover" loading="lazy"></div><div class="meta"><div class="t">Court</div><div class="a">Tracy Wolff</div></div></a><a class="card" href="/books/crown-of-midnight-maas-2013/"><div class="cover"><img src="https://covers.smuthub.ca/crown-of-midnight-maas-2013.jpg" alt="Crown of Midnight book cover" loading="lazy"></div><div class="meta"><div class="t">Crown of Midnight</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/books/fated-throne-valenti-2021/"><div class="cover"></div><div class="meta"><div class="t">Fated Throne</div><div class="a">Caroline Peckham, Susanne Valenti</div></div></a><a class="card" href="/books/fourth-wing-yarros/"><div class="cover"><img src="https://covers.smuthub.ca/fourth-wing-yarros.jpg" alt="Fourth Wing book cover" loading="lazy"></div><div class="meta"><div class="t">Fourth Wing</div><div class="a">Rebecca Yarros</div></div></a><a class="card" href="/books/glow-of-the-everflame-cole-2023/"><div class="cover"></div><div class="meta"><div class="t">Glow of the Everflame</div><div class="a">Penn Cole</div></div></a><a class="card" href="/books/kingdom-of-the-cursed-maniscalco-2021/"><div class="cover"><img src="https://covers.smuthub.ca/kingdom-of-the-cursed-maniscalco-2021.jpg" alt="Kingdom of the Cursed book cover" loading="lazy"></div><div class="meta"><div class="t">Kingdom of the Cursed</div><div class="a">Kerri Maniscalco</div></div></a><a class="card" href="/books/kingdom-of-the-feared-maniscalco-2022/"><div class="cover"><img src="https://covers.smuthub.ca/kingdom-of-the-feared-maniscalco-2022.jpg" alt="Kingdom of the Feared book cover" loading="lazy"></div><div class="meta"><div class="t">Kingdom of the Feared</div><div class="a">Kerri Maniscalco</div></div></a><a class="card" href="/books/never-keep-valenti-2024/"><div class="cover"><img src="https://covers.smuthub.ca/never-keep-valenti-2024.jpg" alt="Never Keep book cover" loading="lazy"></div><div class="meta"><div class="t">Never Keep</div><div class="a">Caroline Peckham, Susanne Valenti</div></div></a><a class="card" href="/books/queen-of-shadows-maas-2015/"><div class="cover"><img src="https://covers.smuthub.ca/queen-of-shadows-maas-2015.jpg" alt="Queen of Shadows book cover" loading="lazy"></div><div class="meta"><div class="t">Queen of Shadows</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/books/red-queen-aveyard-2015/"><div class="cover"></div><div class="meta"><div class="t">Red Queen</div><div class="a">Victoria Aveyard</div></div></a></div>
+    <div class="grid" id="bookGrid"><a class="card" href="/books/a-dawn-of-onyx-golden/"><div class="cover"><img src="https://covers.smuthub.ca/a-dawn-of-onyx-golden.jpg" alt="A Dawn of Onyx book cover" loading="lazy"></div><div class="meta"><div class="t">A Dawn of Onyx</div><div class="a">Kate Golden</div></div></a><a class="card" href="/books/a-day-of-fallen-night-shannon-2023/"><div class="cover"><img src="https://covers.smuthub.ca/a-day-of-fallen-night-shannon-2023.jpg" alt="A Day of Fallen Night book cover" loading="lazy"></div><div class="meta"><div class="t">A Day of Fallen Night</div><div class="a">Samantha Shannon</div></div></a><a class="card" href="/books/court-wolff-2022/"><div class="cover"><img src="https://covers.smuthub.ca/court-wolff-2022.jpg" alt="Court book cover" loading="lazy"></div><div class="meta"><div class="t">Court</div><div class="a">Tracy Wolff</div></div></a><a class="card" href="/books/crown-of-midnight-maas-2013/"><div class="cover"><img src="https://covers.smuthub.ca/crown-of-midnight-maas-2013.jpg" alt="Crown of Midnight book cover" loading="lazy"></div><div class="meta"><div class="t">Crown of Midnight</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/books/fated-throne-valenti-2021/"><div class="cover"></div><div class="meta"><div class="t">Fated Throne</div><div class="a">Caroline Peckham, Susanne Valenti</div></div></a><a class="card" href="/books/fourth-wing-yarros/"><div class="cover"><img src="https://covers.smuthub.ca/fourth-wing-yarros.jpg" alt="Fourth Wing book cover" loading="lazy"></div><div class="meta"><div class="t">Fourth Wing</div><div class="a">Rebecca Yarros</div></div></a><a class="card" href="/books/glow-of-the-everflame-cole-2023/"><div class="cover"></div><div class="meta"><div class="t">Glow of the Everflame</div><div class="a">Penn Cole</div></div></a><a class="card" href="/books/kingdom-of-the-cursed-maniscalco-2021/"><div class="cover"><img src="https://covers.smuthub.ca/kingdom-of-the-cursed-maniscalco-2021.jpg" alt="Kingdom of the Cursed book cover" loading="lazy"></div><div class="meta"><div class="t">Kingdom of the Cursed</div><div class="a">Kerri Maniscalco</div></div></a><a class="card" href="/books/kingdom-of-the-feared-maniscalco-2022/"><div class="cover"><img src="https://covers.smuthub.ca/kingdom-of-the-feared-maniscalco-2022.jpg" alt="Kingdom of the Feared book cover" loading="lazy"></div><div class="meta"><div class="t">Kingdom of the Feared</div><div class="a">Kerri Maniscalco</div></div></a><a class="card" href="/books/never-keep-valenti-2024/"><div class="cover"><img src="https://covers.smuthub.ca/never-keep-valenti-2024.jpg" alt="Never Keep book cover" loading="lazy"></div><div class="meta"><div class="t">Never Keep</div><div class="a">Caroline Peckham, Susanne Valenti</div></div></a><a class="card" href="/books/queen-of-shadows-maas-2015/"><div class="cover"><img src="https://covers.smuthub.ca/queen-of-shadows-maas-2015.jpg" alt="Queen of Shadows book cover" loading="lazy"></div><div class="meta"><div class="t">Queen of Shadows</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/books/red-queen-aveyard-2015/"><div class="cover"><img src="https://covers.smuthub.ca/red-queen-aveyard-2015.jpg" alt="Red Queen book cover" loading="lazy"></div><div class="meta"><div class="t">Red Queen</div><div class="a">Victoria Aveyard</div></div></a></div>
   </section>
 
-  
+
 
   <section class="detail">
     <h2>Related terms</h2>
     <div class="relgrid">
-      <a class="reltag" href="/glossary/trope/abduction/"><span class="c">Trope</span>Abduction</a><a class="reltag" href="/glossary/trope/age-gap/"><span class="c">Trope</span>Age Gap</a><a class="reltag" href="/glossary/trope/arranged-marriage/"><span class="c">Trope</span>Arranged Marriage</a><a class="reltag" href="/glossary/trope/best-friends-brother/"><span class="c">Trope</span>Best Friend&#39;s Brother</a><a class="reltag" href="/glossary/trope/best-friends-parent/"><span class="c">Trope</span>Best Friend&#39;s Parent</a><a class="reltag" href="/glossary/trope/betrayal/"><span class="c">Trope</span>Betrayal</a>
+      <a class="reltag" href="/glossary/trope/abduction/"><span class="c">Trope</span>Abduction</a><a class="reltag" href="/glossary/trope/academy-romance/"><span class="c">Trope</span>academy romance</a><a class="reltag" href="/glossary/trope/age-gap/"><span class="c">Trope</span>Age Gap</a><a class="reltag" href="/glossary/trope/angel/"><span class="c">Trope</span>Angel</a><a class="reltag" href="/glossary/trope/arranged-forced-marriage/"><span class="c">Trope</span>Arranged Forced Marriage</a><a class="reltag" href="/glossary/trope/arranged-marriage/"><span class="c">Trope</span>Arranged Marriage</a>
     </div>
   </section>
 </div>

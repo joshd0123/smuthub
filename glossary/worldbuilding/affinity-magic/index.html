@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Magic System (Affinity Magic) — Worldbuilding Guide | smutHub</title>
-<meta name="description" content="The rules governing how power works in a given world — its sources, costs, and limits. A worldbuilding term in the smutHub romantasy glossary.">
+<meta name="description" content="The structured set of rules governing how magic works in a world — sources, limits, costs.">
 <link rel="canonical" href="https://smuthub.ca/glossary/worldbuilding/affinity-magic/">
 <meta name="theme-color" content="#0c0708">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -12,14 +12,14 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="smutHub">
 <meta property="og:title" content="Magic System (Affinity Magic) — Worldbuilding Guide | smutHub">
-<meta property="og:description" content="The rules governing how power works in a given world — its sources, costs, and limits. A worldbuilding term in the smutHub romantasy glossary.">
+<meta property="og:description" content="The structured set of rules governing how magic works in a world — sources, limits, costs.">
 <meta property="og:url" content="https://smuthub.ca/glossary/worldbuilding/affinity-magic/">
 <meta property="og:image" content="https://smuthub.ca/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Magic System (Affinity Magic) — Worldbuilding Guide | smutHub">
-<meta name="twitter:description" content="The rules governing how power works in a given world — its sources, costs, and limits. A worldbuilding term in the smutHub romantasy glossary.">
+<meta name="twitter:description" content="The structured set of rules governing how magic works in a world — sources, limits, costs.">
 <meta name="twitter:image" content="https://smuthub.ca/og-image.jpg">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"DefinedTerm","name":"Magic System","description":"The rules governing how power works in a given world — its sources, costs, and limits.","inDefinedTermSet":{"@type":"DefinedTermSet","name":"smutHub Romantasy Glossary","url":"https://smuthub.ca/glossary/"},"url":"https://smuthub.ca/glossary/worldbuilding/affinity-magic/","alternateName":["magic system"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smuthub.ca/"},{"@type":"ListItem","position":2,"name":"Glossary","item":"https://smuthub.ca/glossary/"},{"@type":"ListItem","position":3,"name":"Worldbuilding","item":"https://smuthub.ca/glossary/worldbuilding/"},{"@type":"ListItem","position":4,"name":"Magic System","item":"https://smuthub.ca/glossary/worldbuilding/affinity-magic/"}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"DefinedTerm","name":"Magic System","description":"The structured set of rules governing how magic works in a world — sources, limits, costs.","inDefinedTermSet":{"@type":"DefinedTermSet","name":"smutHub Romantasy Glossary","url":"https://smuthub.ca/glossary/"},"url":"https://smuthub.ca/glossary/worldbuilding/affinity-magic/","alternateName":["magic system"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smuthub.ca/"},{"@type":"ListItem","position":2,"name":"Glossary","item":"https://smuthub.ca/glossary/"},{"@type":"ListItem","position":3,"name":"Worldbuilding","item":"https://smuthub.ca/glossary/worldbuilding/"},{"@type":"ListItem","position":4,"name":"Magic System","item":"https://smuthub.ca/glossary/worldbuilding/affinity-magic/"}]}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -113,13 +113,21 @@
 <header>
   <div class="nav wrap">
     <a href="/" class="logo">smut<span class="box">Hub</span></a>
-    <nav class="navlinks">
-      <a href="/dashboard.html">Dashboard</a>
+    <nav class="navlinks" aria-label="Primary navigation">
       <a href="/books/">Browse Books</a>
+      <details class="sh-guides on">
+        <summary>Guides</summary>
+        <div>
+          <a href="/guides/">All Guides</a>
+          <a href="/guides/spice-levels/">Spice Levels</a>
+          <a href="/glossary/" class="on">Glossary</a>
+          <a href="/glossary/trope/">Tropes</a>
+          <a href="/glossary/warning/">Content Warnings</a>
+        </div>
+      </details>
+      <a href="/smuthub-bookcase">My Bookshelf</a>
+      <a href="/stores">Find a Store</a>
       <a href="/search">Add a Book</a>
-      <a href="/smuthub-bookcase.html">My Bookshelf</a>
-      <a href="/glossary/" class="on" >Glossary</a>
-      <a href="/stores.html">Find a Store</a>
     </nav>
     <div class="authbox" id="authbox"></div>
   </div>
@@ -131,9 +139,9 @@
     </div>
     <div class="sh-rail-panel" id="shRailPanel">
       <h3>Browse glossary</h3>
-      <a href="/glossary/"><span class="lbl">📖 All terms</span><span class="ct">356</span></a>
+      <a href="/glossary/"><span class="lbl">📖 All terms</span><span class="ct">562</span></a>
       <hr>
-      <a href="/glossary/trope/"><span class="lbl">⚔️ Tropes</span><span class="ct">74</span></a><a href="/glossary/mood/"><span class="lbl">🌗 Moods</span><span class="ct">2</span></a><a href="/glossary/vibe/"><span class="lbl">✨ Vibes</span><span class="ct">1</span></a><a href="/glossary/subgenre/"><span class="lbl">📚 Subgenres</span><span class="ct">19</span></a><a href="/glossary/worldbuilding/" class="active"><span class="lbl">🗺️ Worldbuilding</span><span class="ct">23</span></a><a href="/glossary/setting/"><span class="lbl">🏰 Settings</span><span class="ct">12</span></a><a href="/glossary/time-period/"><span class="lbl">🕰️ Time Periods</span><span class="ct">11</span></a><a href="/glossary/sport/"><span class="lbl">🏅 Sports</span><span class="ct">7</span></a><a href="/glossary/mechanics/"><span class="lbl">🌶️ Spice &amp; Door</span><span class="ct">13</span></a><a href="/glossary/format/"><span class="lbl">📖 Format</span><span class="ct">6</span></a><a href="/glossary/pov/"><span class="lbl">👁️ POV</span><span class="ct">5</span></a><a href="/glossary/culture/"><span class="lbl">💬 Reader Culture</span><span class="ct">34</span></a><a href="/glossary/omegaverse/"><span class="lbl">🐺 Omegaverse</span><span class="ct">9</span></a><a href="/glossary/kink/"><span class="lbl">🔥 Kinks</span><span class="ct">14</span></a><a href="/glossary/mc-archetype/"><span class="lbl">👤 MC Archetypes</span><span class="ct">24</span></a><a href="/glossary/li-archetype/"><span class="lbl">💖 LI Archetypes</span><span class="ct">32</span></a><a href="/glossary/representation/"><span class="lbl">🌈 Representation</span><span class="ct">24</span></a><a href="/glossary/warning/"><span class="lbl">⚠️ Content Warnings</span><span class="ct">46</span></a>
+      <a href="/glossary/trope/"><span class="lbl">⚔️ Tropes</span><span class="ct">156</span></a><a href="/glossary/mood/"><span class="lbl">🌗 Moods</span><span class="ct">39</span></a><a href="/glossary/vibe/"><span class="lbl">✨ Vibes</span><span class="ct">2</span></a><a href="/glossary/subgenre/"><span class="lbl">📚 Subgenres</span><span class="ct">28</span></a><a href="/glossary/worldbuilding/" class="active"><span class="lbl">🗺️ Worldbuilding</span><span class="ct">29</span></a><a href="/glossary/setting/"><span class="lbl">🏰 Settings</span><span class="ct">13</span></a><a href="/glossary/time-period/"><span class="lbl">🕰️ Time Periods</span><span class="ct">11</span></a><a href="/glossary/sport/"><span class="lbl">🏅 Sports</span><span class="ct">8</span></a><a href="/glossary/mechanics/"><span class="lbl">🌶️ Spice &amp; Door</span><span class="ct">14</span></a><a href="/glossary/format/"><span class="lbl">📖 Format</span><span class="ct">13</span></a><a href="/glossary/pov/"><span class="lbl">👁️ POV</span><span class="ct">5</span></a><a href="/glossary/culture/"><span class="lbl">💬 Reader Culture</span><span class="ct">44</span></a><a href="/glossary/omegaverse/"><span class="lbl">🐺 Omegaverse</span><span class="ct">9</span></a><a href="/glossary/kink/"><span class="lbl">🔥 Kinks</span><span class="ct">26</span></a><a href="/glossary/mc-archetype/"><span class="lbl">👤 MC Archetypes</span><span class="ct">48</span></a><a href="/glossary/li-archetype/"><span class="lbl">💖 LI Archetypes</span><span class="ct">42</span></a><a href="/glossary/representation/"><span class="lbl">🌈 Representation</span><span class="ct">26</span></a><a href="/glossary/warning/"><span class="lbl">⚠️ Content Warnings</span><span class="ct">49</span></a>
     </div>
   </aside>
 
@@ -144,26 +152,27 @@
     <span class="badge">🗺️ Worldbuilding</span>
     <h1>Magic System</h1>
     <p class="tagline">Every world has rules. The good ones make you pay.</p>
-    <p class="defn">The rules governing how power works in a given world — its sources, costs, and limits.</p>
+    <p class="defn">The structured set of rules governing how magic works in a world — sources, limits, costs.</p>
     <p class="aka"><b>Also known as:</b> magic system</p>
-    
+
+
   </section>
 
-  
 
-  
+
+
 
   <section class="detail" id="books">
     <h2>Books featuring this worldbuilding</h2>
     <div class="grid" id="bookGrid"><p class="empty">No books shelved here yet — check back as the catalog grows.</p></div>
   </section>
 
-  
+
 
   <section class="detail">
     <h2>Related terms</h2>
     <div class="relgrid">
-      <a class="reltag" href="/glossary/worldbuilding/affinity/"><span class="c">Worldbuilding</span>Affinity</a><a class="reltag" href="/glossary/worldbuilding/blood-magic/"><span class="c">Worldbuilding</span>Blood Magic</a><a class="reltag" href="/glossary/worldbuilding/blood-oath/"><span class="c">Worldbuilding</span>Blood Oath</a><a class="reltag" href="/glossary/worldbuilding/cursed-objects/"><span class="c">Worldbuilding</span>Cursed Objects</a><a class="reltag" href="/glossary/worldbuilding/dark-magic/"><span class="c">Worldbuilding</span>Dark Magic</a><a class="reltag" href="/glossary/worldbuilding/dragon-bond/"><span class="c">Worldbuilding</span>Dragon Bond</a>
+      <a class="reltag" href="/glossary/worldbuilding/affinity/"><span class="c">Worldbuilding</span>Affinity</a><a class="reltag" href="/glossary/worldbuilding/blood-magic/"><span class="c">Worldbuilding</span>Blood Magic</a><a class="reltag" href="/glossary/worldbuilding/blood-oath/"><span class="c">Worldbuilding</span>Blood Oath</a><a class="reltag" href="/glossary/worldbuilding/cursed-objects/"><span class="c">Worldbuilding</span>Cursed Objects</a><a class="reltag" href="/glossary/worldbuilding/dark-magic/"><span class="c">Worldbuilding</span>Dark Magic</a><a class="reltag" href="/glossary/worldbuilding/demons/"><span class="c">Worldbuilding</span>demons</a>
     </div>
   </section>
 </div>

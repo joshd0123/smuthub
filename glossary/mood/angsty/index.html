@@ -113,13 +113,21 @@
 <header>
   <div class="nav wrap">
     <a href="/" class="logo">smut<span class="box">Hub</span></a>
-    <nav class="navlinks">
-      <a href="/dashboard.html">Dashboard</a>
+    <nav class="navlinks" aria-label="Primary navigation">
       <a href="/books/">Browse Books</a>
+      <details class="sh-guides on">
+        <summary>Guides</summary>
+        <div>
+          <a href="/guides/">All Guides</a>
+          <a href="/guides/spice-levels/">Spice Levels</a>
+          <a href="/glossary/" class="on">Glossary</a>
+          <a href="/glossary/trope/">Tropes</a>
+          <a href="/glossary/warning/">Content Warnings</a>
+        </div>
+      </details>
+      <a href="/smuthub-bookcase">My Bookshelf</a>
+      <a href="/stores">Find a Store</a>
       <a href="/search">Add a Book</a>
-      <a href="/smuthub-bookcase.html">My Bookshelf</a>
-      <a href="/glossary/" class="on" >Glossary</a>
-      <a href="/stores.html">Find a Store</a>
     </nav>
     <div class="authbox" id="authbox"></div>
   </div>
@@ -131,9 +139,9 @@
     </div>
     <div class="sh-rail-panel" id="shRailPanel">
       <h3>Browse glossary</h3>
-      <a href="/glossary/"><span class="lbl">📖 All terms</span><span class="ct">356</span></a>
+      <a href="/glossary/"><span class="lbl">📖 All terms</span><span class="ct">562</span></a>
       <hr>
-      <a href="/glossary/trope/"><span class="lbl">⚔️ Tropes</span><span class="ct">74</span></a><a href="/glossary/mood/" class="active"><span class="lbl">🌗 Moods</span><span class="ct">2</span></a><a href="/glossary/vibe/"><span class="lbl">✨ Vibes</span><span class="ct">1</span></a><a href="/glossary/subgenre/"><span class="lbl">📚 Subgenres</span><span class="ct">19</span></a><a href="/glossary/worldbuilding/"><span class="lbl">🗺️ Worldbuilding</span><span class="ct">23</span></a><a href="/glossary/setting/"><span class="lbl">🏰 Settings</span><span class="ct">12</span></a><a href="/glossary/time-period/"><span class="lbl">🕰️ Time Periods</span><span class="ct">11</span></a><a href="/glossary/sport/"><span class="lbl">🏅 Sports</span><span class="ct">7</span></a><a href="/glossary/mechanics/"><span class="lbl">🌶️ Spice &amp; Door</span><span class="ct">13</span></a><a href="/glossary/format/"><span class="lbl">📖 Format</span><span class="ct">6</span></a><a href="/glossary/pov/"><span class="lbl">👁️ POV</span><span class="ct">5</span></a><a href="/glossary/culture/"><span class="lbl">💬 Reader Culture</span><span class="ct">34</span></a><a href="/glossary/omegaverse/"><span class="lbl">🐺 Omegaverse</span><span class="ct">9</span></a><a href="/glossary/kink/"><span class="lbl">🔥 Kinks</span><span class="ct">14</span></a><a href="/glossary/mc-archetype/"><span class="lbl">👤 MC Archetypes</span><span class="ct">24</span></a><a href="/glossary/li-archetype/"><span class="lbl">💖 LI Archetypes</span><span class="ct">32</span></a><a href="/glossary/representation/"><span class="lbl">🌈 Representation</span><span class="ct">24</span></a><a href="/glossary/warning/"><span class="lbl">⚠️ Content Warnings</span><span class="ct">46</span></a>
+      <a href="/glossary/trope/"><span class="lbl">⚔️ Tropes</span><span class="ct">156</span></a><a href="/glossary/mood/" class="active"><span class="lbl">🌗 Moods</span><span class="ct">39</span></a><a href="/glossary/vibe/"><span class="lbl">✨ Vibes</span><span class="ct">2</span></a><a href="/glossary/subgenre/"><span class="lbl">📚 Subgenres</span><span class="ct">28</span></a><a href="/glossary/worldbuilding/"><span class="lbl">🗺️ Worldbuilding</span><span class="ct">29</span></a><a href="/glossary/setting/"><span class="lbl">🏰 Settings</span><span class="ct">13</span></a><a href="/glossary/time-period/"><span class="lbl">🕰️ Time Periods</span><span class="ct">11</span></a><a href="/glossary/sport/"><span class="lbl">🏅 Sports</span><span class="ct">8</span></a><a href="/glossary/mechanics/"><span class="lbl">🌶️ Spice &amp; Door</span><span class="ct">14</span></a><a href="/glossary/format/"><span class="lbl">📖 Format</span><span class="ct">13</span></a><a href="/glossary/pov/"><span class="lbl">👁️ POV</span><span class="ct">5</span></a><a href="/glossary/culture/"><span class="lbl">💬 Reader Culture</span><span class="ct">44</span></a><a href="/glossary/omegaverse/"><span class="lbl">🐺 Omegaverse</span><span class="ct">9</span></a><a href="/glossary/kink/"><span class="lbl">🔥 Kinks</span><span class="ct">26</span></a><a href="/glossary/mc-archetype/"><span class="lbl">👤 MC Archetypes</span><span class="ct">48</span></a><a href="/glossary/li-archetype/"><span class="lbl">💖 LI Archetypes</span><span class="ct">42</span></a><a href="/glossary/representation/"><span class="lbl">🌈 Representation</span><span class="ct">26</span></a><a href="/glossary/warning/"><span class="lbl">⚠️ Content Warnings</span><span class="ct">49</span></a>
     </div>
   </aside>
 
@@ -147,23 +155,24 @@
     <p class="defn">Emotional turmoil, longing, heartbreak, and internal conflict — the good pain.</p>
     <p class="aka"><b>Also known as:</b> angst</p>
     <a class="cta" href="/books/?tag=mood%3Aangsty">Find books with this mood →</a>
+
   </section>
 
-  
 
-  
+
+
 
   <section class="detail" id="books">
     <h2>Books featuring this mood</h2>
     <div class="grid" id="bookGrid"><a class="card" href="/books/a-court-of-thorns-and-roses-maas/"><div class="cover"><img src="https://covers.smuthub.ca/a-court-of-thorns-and-roses-maas.jpg" alt="A Court of Thorns and Roses book cover" loading="lazy"></div><div class="meta"><div class="t">A Court of Thorns and Roses</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/books/a-fire-in-the-flesh-armentrout-2023/"><div class="cover"><img src="https://covers.smuthub.ca/a-fire-in-the-flesh-armentrout-2023.jpg" alt="A Fire in the Flesh book cover" loading="lazy"></div><div class="meta"><div class="t">A Fire in the Flesh</div><div class="a">Jennifer L. Armentrout</div></div></a><a class="card" href="/books/a-court-of-mist-and-fury-maas/"><div class="cover"><img src="https://covers.smuthub.ca/a-court-of-mist-and-fury-maas.png" alt="A Court of Mist and Fury book cover" loading="lazy"></div><div class="meta"><div class="t">A Court of Mist and Fury</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/books/a-court-of-silver-flames-maas-2021/"><div class="cover"><img src="https://covers.smuthub.ca/a-court-of-silver-flames-maas-2021.png" alt="A Court of Silver Flames book cover" loading="lazy"></div><div class="meta"><div class="t">A Court of Silver Flames</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/books/a-court-of-wings-and-ruin-maas-2017/"><div class="cover"><img src="https://covers.smuthub.ca/a-court-of-wings-and-ruin-maas-2017.png" alt="A Court of Wings and Ruin book cover" loading="lazy"></div><div class="meta"><div class="t">A Court of Wings and Ruin</div><div class="a">Sarah J. Maas</div></div></a><a class="card" href="/books/a-discovery-of-witches-harkness-2011/"><div class="cover"><img src="https://covers.smuthub.ca/a-discovery-of-witches-harkness-2011.jpg" alt="A Discovery of Witches book cover" loading="lazy"></div><div class="meta"><div class="t">A Discovery of Witches</div><div class="a">Deborah Harkness</div></div></a><a class="card" href="/books/a-fate-inked-in-blood-jensen-2024/"><div class="cover"><img src="https://covers.smuthub.ca/a-fate-inked-in-blood-jensen-2024.jpg" alt="A Fate Inked in Blood book cover" loading="lazy"></div><div class="meta"><div class="t">A Fate Inked in Blood</div><div class="a">Danielle L. Jensen</div></div></a><a class="card" href="/books/a-light-in-the-flame-armentrout-2022/"><div class="cover"><img src="https://covers.smuthub.ca/a-light-in-the-flame-armentrout-2022.jpg" alt="A Light in the Flame book cover" loading="lazy"></div><div class="meta"><div class="t">A Light in the Flame</div><div class="a">Jennifer L. Armentrout</div></div></a><a class="card" href="/books/a-monsoon-rising-guanzon-2024/"><div class="cover"><img src="https://covers.smuthub.ca/a-monsoon-rising-guanzon-2024.jpg" alt="A Monsoon Rising book cover" loading="lazy"></div><div class="meta"><div class="t">A Monsoon Rising</div><div class="a">Thea Guanzon</div></div></a><a class="card" href="/books/a-power-unbound-marske-2023/"><div class="cover"><img src="https://covers.smuthub.ca/a-power-unbound-marske-2023.jpg" alt="A Power Unbound book cover" loading="lazy"></div><div class="meta"><div class="t">A Power Unbound</div><div class="a">Freya Marske</div></div></a><a class="card" href="/books/a-reaper-at-the-gates-tahir-2018/"><div class="cover"><img src="https://covers.smuthub.ca/a-reaper-at-the-gates-tahir-2018.jpg" alt="A Reaper at the Gates book cover" loading="lazy"></div><div class="meta"><div class="t">A Reaper at the Gates</div><div class="a">Sabaa Tahir</div></div></a><a class="card" href="/books/a-shadow-in-the-ember-armentrout-2021/"><div class="cover"><img src="https://covers.smuthub.ca/a-shadow-in-the-ember-armentrout-2021.jpg" alt="A Shadow in the Ember book cover" loading="lazy"></div><div class="meta"><div class="t">A Shadow in the Ember</div><div class="a">Jennifer L. Armentrout</div></div></a></div>
   </section>
 
-  
+
 
   <section class="detail">
     <h2>Related terms</h2>
     <div class="relgrid">
-      <a class="reltag" href="/glossary/mood/devastating/"><span class="c">Mood</span>Devastating</a>
+      <a class="reltag" href="/glossary/mood/academia/"><span class="c">Mood</span>Academia</a><a class="reltag" href="/glossary/mood/action-packed/"><span class="c">Mood</span>Action-Packed</a><a class="reltag" href="/glossary/mood/adventure/"><span class="c">Mood</span>Adventure</a><a class="reltag" href="/glossary/mood/angels/"><span class="c">Mood</span>Angels</a><a class="reltag" href="/glossary/mood/atmospheric/"><span class="c">Mood</span>Atmospheric</a><a class="reltag" href="/glossary/mood/book-club/"><span class="c">Mood</span>Book Club</a>
     </div>
   </section>
 </div>
