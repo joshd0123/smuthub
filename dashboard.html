@@ -148,7 +148,9 @@
   /* ── PLACEHOLDER ROOMS ── */
   .rooms{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
   @media(max-width:760px){.rooms{grid-template-columns:repeat(2,1fr)}}
-  .room{position:relative;background:var(--ink-2);border:1px dashed var(--line);border-radius:10px;padding:16px 12px 12px;text-align:center}
+  .room{position:relative;display:block;background:var(--ink-2);border:1px dashed var(--line);border-radius:10px;padding:16px 12px 12px;text-align:center;color:inherit;text-decoration:none}
+  .room.live{border-style:solid;border-color:rgba(255,171,64,.42);transition:transform .16s,border-color .16s,background .16s}
+  .room.live:hover{transform:translateY(-2px);border-color:var(--amber);background:rgba(255,171,64,.08)}
   .room .ico{font-size:1.15rem;margin-bottom:4px}
   .room .nm{font-weight:700;font-size:.84rem}
   .room .sb{color:var(--muted);font-size:.7rem;margin-top:2px}
@@ -267,7 +269,7 @@
       <div class="room"><span class="rtag free" title="Free">⭐</span><div class="ico">💬</div><div class="nm">Community Pulse</div><div class="sb">polls &amp; hot takes</div></div>
       <div class="room"><span class="rtag free" title="Free">⭐</span><div class="ico">🐉</div><div class="nm">Trope of the Week</div><div class="sb">themed mini-lists</div></div>
       <div class="room"><span class="rtag free" title="Free">⭐</span><div class="ico">🧩</div><div class="nm">Quizzes &amp; Games</div><div class="sb">test your trope IQ</div></div>
-      <div class="room"><span class="rtag free" title="Free">⭐</span><div class="ico">🔄</div><div class="nm">Import / Export</div><div class="sb">bring your shelf in &amp; out</div></div>
+      <a class="room live" href="/import/"><span class="rtag free" title="Free">⭐</span><div class="ico">↗</div><div class="nm">Import Library</div><div class="sb">Goodreads, StoryGraph, CSV &amp; ISBN</div></a>
       <div class="room locked"><span class="rtag soon" title="Premium — unlocks when billing opens">💎</span><div class="ico">✍️</div><div class="nm">Annotation</div><div class="sb">notes as you read</div></div>
       <div class="room locked"><span class="rtag soon" title="Premium — unlocks when billing opens">💎</span><div class="ico">✦</div><div class="nm">Companion</div><div class="sb">your AI reading buddy</div></div>
       <div class="room locked"><span class="rtag soon" title="Premium — unlocks when billing opens">💎</span><div class="ico">📸</div><div class="nm">Scan to Add</div><div class="sb">camera → shelf</div></div>

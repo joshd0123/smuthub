@@ -187,6 +187,7 @@
           <div id="shMenu" class="sh-account-menu" role="menu" style="display:none;position:absolute;right:0;top:125%;z-index:95;background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:14px;min-width:220px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.5)">
             <div style="padding:.7em 1.1em;border-bottom:1px solid var(--line,#2a1d22);color:#b69089;font-size:.78rem">Signed in as<br><b style="color:var(--amber,#ffab40);font-size:.92rem">${esc(name)}</b></div>
             <a class="sh-menu-link" role="menuitem" href="/dashboard">📊 Dashboard</a>
+            <a class="sh-menu-link" role="menuitem" href="/import/">↗ Import library</a>
             <button type="button" class="shMenuItem" role="menuitem" data-act="username">✏️ Set username</button>
             <button type="button" class="shMenuItem" role="menuitem" data-act="logout">👋 Log out</button>
           </div>

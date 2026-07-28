@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Import your library — SmutHub</title>
+  <meta name="description" content="Bring your Goodreads, StoryGraph, CSV, or ISBN reading list to your SmutHub bookshelf.">
+  <meta name="robots" content="noindex,follow">
+  <link rel="canonical" href="https://smuthub.ca/import/">
+  <meta name="theme-color" content="#0c0708">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="smutHub">
+  <meta property="og:title" content="Import your library — SmutHub">
+  <meta property="og:description" content="Move your reading list to SmutHub in a few easy steps.">
+  <meta property="og:url" content="https://smuthub.ca/import/">
+  <meta property="og:image" content="https://smuthub.ca/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/import/import.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/config.js"></script>
+  <script defer src="/auth.js"></script>
+  <script defer src="/import/import.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to import</a>
+  <header>
+    <div class="wrap nav">
+      <a class="logo" href="/" aria-label="SmutHub home">smut<span class="box">hub</span></a>
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a href="/books/">Browse Books</a>
+        <a href="/guides/">Guides</a>
+        <a class="on" href="/bookshelf">My Bookshelf</a>
+        <a href="/stores">Find a Store</a>
+        <a href="/search">Add a Book</a>
+      </nav>
+      <div id="authbox" class="authbox"></div>
+    </div>
+  </header>
+  <div id="setup" class="setup" role="status">Library import needs the site connection in config.js.</div>
+
+  <main id="main" class="wrap">
+    <div class="utility-row" id="utilityRow" hidden>
+      <button class="quiet back-button" id="backButton" type="button">← Back</button>
+      <ol class="steps" aria-label="Import progress">
+        <li data-step-marker="source"><span>1</span>Choose source</li>
+        <li data-step-marker="upload"><span>2</span>Add books</li>
+        <li data-step-marker="review"><span>3</span>Review</li>
+      </ol>
+      <a class="quiet help-link" href="/contact.html">Need help?</a>
+    </div>
+
+    <section id="bootScreen" class="center-screen" aria-live="polite">
+      <div class="book-loader" aria-hidden="true"><span></span><span></span><span></span></div>
+      <h1>Opening your library…</h1>
+      <p>Checking your bookshelf and the SmutHub catalog.</p>
+    </section>
+
+    <section id="loginScreen" class="gate-card" hidden>
+      <p class="eyebrow">YOUR LIBRARY, YOUR ACCOUNT</p>
+      <h1>Bring every book with you.</h1>
+      <p class="lede">Log in first so we can compare your import with your current bookshelf, catch duplicates, and save everything to the right account.</p>
+      <button class="primary big" id="loginButton" type="button">Log in to start importing <span aria-hidden="true">→</span></button>
+      <p class="fine-print">SmutHub never asks for your Goodreads or StoryGraph password.</p>
+    </section>
+
+    <section id="sourceScreen" class="screen source-screen" hidden>
+      <p class="eyebrow">THE EASY WAY IN</p>
+      <h1>Your books already<br>have a home here.</h1>
+      <p class="lede">Bring your reading list to SmutHub in a few clicks. We’ll match books, map shelves, and flag anything already here.</p>
+      <div class="source-grid">
+        <button class="source-card" type="button" data-source="goodreads">
+          <span class="source-mark goodreads" aria-hidden="true">g</span>
+          <span><strong>Goodreads</strong><small>Books and shelves, with ratings previewed</small></span><span aria-hidden="true">→</span>
+        </button>
+        <button class="source-card" type="button" data-source="storygraph">
+          <span class="source-mark storygraph" aria-hidden="true">sg</span>
+          <span><strong>The StoryGraph</strong><small>Books and status, with ratings previewed</small></span><span aria-hidden="true">→</span>
+        </button>
+        <button class="source-card" type="button" data-source="generic">
+          <span class="source-mark generic" aria-hidden="true">csv</span>
+          <span><strong>CSV spreadsheet</strong><small>LibraryThing, Bookmory, spreadsheets &amp; more</small></span><span aria-hidden="true">→</span>
+        </button>
+        <button class="source-card" type="button" data-source="isbn">
+          <span class="source-mark isbn" aria-hidden="true">#</span>
+          <span><strong>ISBN list</strong><small>Paste ISBN-10 or ISBN-13 codes from anywhere</small></span><span aria-hidden="true">→</span>
+        </button>
+      </div>
+      <aside class="note">
+        <span aria-hidden="true">ⓘ</span>
+        <div><strong>Coming from Amazon or Kindle?</strong> Amazon doesn’t offer a direct bookshelf export. If Kindle is linked to Goodreads, choose Goodreads. Otherwise, paste ISBNs.</div>
+      </aside>
+      <div class="trust-row" aria-label="Import assurances">
+        <span>🔒 Your file stays in this browser</span>
+        <span>✦ Duplicates handled automatically</span>
+        <span>▥ Up to 25,000 CSV rows</span>
+      </div>
+    </section>
+
+    <section id="uploadScreen" class="screen upload-screen" hidden>
+      <p class="eyebrow">STEP 2 OF 3</p>
+      <h1>Let’s get your books.</h1>
+      <p class="lede" id="uploadLede"></p>
+
+      <div id="filePanel">
+        <div class="drop-zone" id="dropZone">
+          <input id="fileInput" type="file" accept=".csv,text/csv,text/plain">
+          <div class="upload-icon" aria-hidden="true">↑</div>
+          <h2>Drop your CSV here</h2>
+          <p>or choose it from your computer</p>
+          <button class="primary" id="chooseFileButton" type="button">Choose file</button>
+          <small>CSV, TSV, or semicolon-delimited text · up to 50 MB</small>
+        </div>
+        <button class="text-button" id="sampleButton" type="button">No export handy? Try a sample library</button>
+        <div class="how-to" id="howTo"></div>
+      </div>
+
+      <div id="isbnPanel" class="isbn-panel" hidden>
+        <label for="isbnText">ISBNs</label>
+        <textarea id="isbnText" placeholder="9781538719107&#10;9780451490803&#10;9780593441282" spellcheck="false"></textarea>
+        <div class="panel-footer">
+          <span id="isbnCount">0 ISBNs entered</span>
+          <button class="primary" id="isbnReviewButton" type="button">Find &amp; review books <span aria-hidden="true">→</span></button>
+        </div>
+        <p class="lookup-note">We’ll look up titles and covers with Google Books before review. Invalid and unfound ISBNs will be reported.</p>
+      </div>
+
+      <div id="uploadError" class="alert error" role="alert" hidden></div>
+      <p class="fine-print">🔒 Your raw file stays in this browser. Only the selected book details are saved to your SmutHub account.</p>
+    </section>
+
+    <section id="reviewScreen" class="screen review-screen" hidden>
+      <div class="review-heading">
+        <div>
+          <p class="eyebrow">STEP 3 OF 3</p>
+          <h1>Choose what comes over.</h1>
+          <p class="lede" id="reviewLede"></p>
+        </div>
+        <button class="primary big import-button" type="button">Import <span class="selected-count">0</span> books <span aria-hidden="true">→</span></button>
+      </div>
+
+      <div class="summary-grid">
+        <div><span aria-hidden="true">▤</span><p><b id="totalCount">0</b>Total found</p></div>
+        <div><span aria-hidden="true">♡</span><p><b id="wantCount">0</b>Want to read</p></div>
+        <div><span aria-hidden="true">⌁</span><p><b id="readingCount">0</b>Reading now</p></div>
+        <div><span aria-hidden="true">✓</span><p><b id="readCount">0</b>Finished</p></div>
+        <div><span aria-hidden="true">◇</span><p><b id="dnfCount">0</b>Did not finish</p></div>
+        <div><span aria-hidden="true">★</span><p><b id="ratingCount">0</b>Ratings previewed</p></div>
+      </div>
+
+      <div class="alert info">
+        <span aria-hidden="true">ⓘ</span>
+        <span>Ratings and review text are shown here to help you verify the export, but aren’t imported yet because the current bookshelf does not have rating or review fields.</span>
+      </div>
+      <div id="reviewWarning" class="alert warning" role="status" hidden></div>
+
+      <div class="table-card">
+        <div class="table-tools">
+          <label class="search-box"><span class="sr-only">Search this import</span><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Search this import"></label>
+          <label class="filter-label"><span class="sr-only">Filter by shelf</span>
+            <select id="statusFilter">
+              <option value="all">All shelves</option>
+              <option value="want">Want to read</option>
+              <option value="reading">Reading now</option>
+              <option value="read">Finished</option>
+              <option value="dnf">Did not finish</option>
+              <option value="duplicate">Already here</option>
+            </select>
+          </label>
+          <button class="quiet compact" id="selectAllButton" type="button">Select available</button>
+          <span><b class="selected-count">0</b> selected</span>
+        </div>
+        <div class="book-table" role="table" aria-label="Books ready to import">
+          <div class="table-row table-head" role="row">
+            <span role="columnheader"><span class="sr-only">Select</span></span>
+            <span role="columnheader">Book</span>
+            <span role="columnheader">Shelf</span>
+            <span role="columnheader">Import notes</span>
+          </div>
+          <div id="bookRows"></div>
+        </div>
+        <div id="emptyRows" class="empty-rows" hidden>No books match this filter.</div>
+      </div>
+      <div class="review-foot">
+        <span>🔒 Nothing is added until you choose Import.</span>
+        <button class="primary import-button" type="button">Import <span class="selected-count">0</span> books <span aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
+    <section id="importingScreen" class="center-screen" hidden aria-live="polite">
+      <div class="book-loader" aria-hidden="true"><span></span><span></span><span></span></div>
+      <h1 id="importingTitle">Building your library…</h1>
+      <p id="importingMessage">Saving your first batch.</p>
+      <div class="progress-shell" role="progressbar" aria-label="Import progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div id="progressBar"></div>
+      </div>
+      <p class="progress-copy" id="progressCopy">0 of 0 books saved</p>
+      <div id="importError" class="alert error" role="alert" hidden></div>
+      <button class="primary" id="retryButton" type="button" hidden>Retry remaining books</button>
+    </section>
+
+    <section id="doneScreen" class="center-screen done-screen" hidden>
+      <div class="done-check" aria-hidden="true">✓</div>
+      <p class="eyebrow">WELCOME HOME</p>
+      <h1>Your library is here.</h1>
+      <p class="lede"><strong id="doneCount">0 books</strong> made the move. Anything that was already on your shelf stayed untouched.</p>
+      <div class="done-actions">
+        <a class="primary big" href="/bookshelf/">Explore my bookshelf <span aria-hidden="true">→</span></a>
+        <button class="text-button" id="restartButton" type="button">Import another file</button>
+      </div>
+    </section>
+  </main>
+
+  <noscript><p class="noscript">JavaScript is required to review and import a library.</p></noscript>
+</body>
+</html>

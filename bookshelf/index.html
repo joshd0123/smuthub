@@ -232,7 +232,7 @@
   .rail-btn{width:100%;margin-top:13px;border:1px solid rgba(225,185,107,.35);border-radius:99px;padding:.7em;background:linear-gradient(100deg,#d9b76c,#9d692f);color:#1b1008;font:800 .73rem 'Hanken Grotesk';cursor:pointer}
   .rail-card.world-card::before{background:radial-gradient(80% 70% at 100% 0%,rgba(98,135,224,.16),transparent 70%)}
   .rail-card.tbr-card::before{background:radial-gradient(80% 70% at 100% 0%,rgba(126,54,86,.2),transparent 70%)}
-  .rail-card .rail-link{display:inline-flex;margin-top:10px;color:#e7c77e;font-size:.7rem;font-weight:800;cursor:pointer;background:none;border:0;padding:0}
+  .rail-card .rail-link{display:inline-flex;margin-top:10px;color:#e7c77e;font-size:.7rem;font-weight:800;cursor:pointer;background:none;border:0;padding:0;text-decoration:none}
 
   /* DNF drawer below the cabinet */
   .dnfwrap{width:100%;max-width:560px;margin:14px auto 0}
@@ -733,7 +733,7 @@
     shelf=(r1.data||[]).sort(shelfCmp); spiceMap={};
     // Official spine art is catalog-owned. Enrich matching shelf snapshots
     // without requiring users to remove and re-add books after an asset lands.
-    const catalogKeys=shelf.map(b=>b.book_key).filter(k=>k&&k.indexOf('gb:')!==0&&k.indexOf('/')<0&&k.indexOf('demo-')!==0);
+    const catalogKeys=shelf.map(b=>b.book_key).filter(k=>k&&k.indexOf('gb:')!==0&&k.indexOf('import:')!==0&&k.indexOf('/')<0&&k.indexOf('demo-')!==0);
     if(catalogKeys.length){
       const {data:spines,error:spineError}=await sb.from('books').select('slug,spine_url,spine_position,spine_source').in('slug',[...new Set(catalogKeys)]);
       if(!spineError){
@@ -846,6 +846,9 @@
       + '<section class="rail-card tbr-card"><div class="rail-kicker">Your visual TBR</div><h3>Make anticipation part of the ritual.</h3>'
       + '<p>A beautiful to-be-read shelf should make choosing the next romance or fantasy book feel as satisfying as finishing one.</p>'
       + '<button class="rail-link" id="openTbrWorld">Open your TBR →</button></section>'
+      + '<section class="rail-card"><div class="rail-kicker">Bring your books home</div><h3>Already have a reading history?</h3>'
+      + '<p>Import your Goodreads, StoryGraph, or CSV shelf in a few guided steps. Duplicates stay out automatically.</p>'
+      + '<a class="rail-link" href="/import/">Import your library →</a></section>'
       + '</aside></div>';
     attachRoom();
   }
@@ -942,7 +945,7 @@
     const moves=SHELVES.filter(([s])=>s!==b.status).map(([s,l])=>'<button class="pillbtn" onclick="setStatus(\''+esc(key)+'\',\''+s+'\')">→ '+l+'</button>').join('');
     // Catalog books (book_key === slug; not a Google "gb:"/OpenLibrary "/works/"/demo key)
     // get a link to their plot page. External shelf entries don't have one.
-    const slug=(key && key.indexOf('gb:')!==0 && key.indexOf('/')<0 && key.indexOf('demo-')!==0) ? key : null;
+    const slug=(key && key.indexOf('gb:')!==0 && key.indexOf('import:')!==0 && key.indexOf('/')<0 && key.indexOf('demo-')!==0) ? key : null;
     const viewBtn = slug ? '<a class="pillbtn view" href="/books/'+encodeURIComponent(slug)+'/">📖 View book page</a>' : '';
     const added=b.created_at?new Intl.DateTimeFormat('en-CA',{month:'short',year:'numeric'}).format(new Date(b.created_at)):'In your library';
     $('sheetbg').innerHTML = '<article class="openbook" role="dialog" aria-modal="true" aria-labelledby="openBookTitle">'
