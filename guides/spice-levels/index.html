@@ -170,27 +170,15 @@
     .scale-key{margin-top:22px;display:flex;align-items:center;gap:9px;color:#8f7d84;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
     .scale-key b{color:#ff6b79;letter-spacing:0}
     .book-list{border-top:1px solid var(--line)}
-    .book-row{--level:#f1b2a4;min-height:410px;padding:48px 0;display:grid;grid-template-columns:minmax(270px,.72fr) 1.7fr;align-items:center;gap:clamp(40px,6vw,90px);border-bottom:1px solid var(--line)}
-    .book-art{position:relative;width:min(100%,260px);min-height:378px;margin:auto;padding-left:18px;filter:drop-shadow(18px 24px 14px rgba(0,0,0,.48));perspective:1200px}
-    .spine{position:absolute;inset:7px auto 7px 0;z-index:3;width:20px;display:grid;place-items:center;border:1px solid color-mix(in srgb,var(--level) 45%,#2b1520);background:#190a11;box-shadow:-4px 5px 0 #070405;color:rgba(255,232,225,.65);font-size:.55rem;font-weight:800;letter-spacing:.14em;writing-mode:vertical-rl}
-    .cover{position:relative;z-index:2;min-height:378px;padding:27px 24px 21px;overflow:hidden;display:flex;flex-direction:column;border:1px solid color-mix(in srgb,var(--level) 45%,#3b1c28);background:radial-gradient(circle at 50% 38%,color-mix(in srgb,var(--level) 28%,transparent),transparent 28%),linear-gradient(150deg,color-mix(in srgb,var(--level) 18%,#09050a),#12070e 58%,#050304);box-shadow:inset 0 0 0 7px #090508,inset 0 0 0 8px color-mix(in srgb,var(--level) 40%,#2a1320),10px 11px 0 #080405;color:#f9eae5;transform:rotateY(-2deg);transition:transform .25s ease,box-shadow .25s ease}
-    .cover::before,.cover::after{content:"";position:absolute;pointer-events:none}
-    .cover::before{inset:22px;border:1px solid color-mix(in srgb,var(--level) 65%,transparent);border-radius:48% 48% 5px 5px;opacity:.75}
-    .cover::after{top:-58px;left:50%;width:190px;height:190px;border:1px solid color-mix(in srgb,var(--level) 55%,transparent);border-radius:50%;box-shadow:0 0 0 16px rgba(255,255,255,.012),0 0 0 33px color-mix(in srgb,var(--level) 7%,transparent);transform:translateX(-50%)}
-    .book-row:hover .cover{transform:translateY(-5px) rotateY(-3deg) rotateZ(-.5deg);box-shadow:inset 0 0 0 7px #090508,inset 0 0 0 8px color-mix(in srgb,var(--level) 55%,#2a1320),14px 18px 0 #080405}
-    .cover>*{position:relative;z-index:2}
-    .series{color:color-mix(in srgb,var(--level) 75%,#fff);font-size:.5rem;font-weight:800;letter-spacing:.16em;text-align:center}
-    .motif{margin:50px 0 23px;color:color-mix(in srgb,var(--level) 70%,#ffe8df);font-family:"Fraunces",Georgia,serif;font-size:1.55rem;font-style:normal;letter-spacing:.18em;text-align:center;text-shadow:0 0 18px color-mix(in srgb,var(--level) 50%,transparent)}
-    .cover strong{max-width:190px;margin:0 auto 12px;font-family:"Fraunces",Georgia,serif;font-size:clamp(1.45rem,2.1vw,2rem);font-weight:500;line-height:.93;text-align:center}
-    .peppers{margin:0 auto;font-size:1rem;font-style:normal;letter-spacing:-.32em;padding-right:.32em;filter:saturate(1.2)}
-    .cover-line{max-width:180px;margin:auto auto 14px;color:#baa2aa;font-family:"Fraunces",Georgia,serif;font-size:.74rem;font-style:italic;line-height:1.35;text-align:center}
-    .volume{margin-top:auto;padding-top:12px;border-top:1px solid color-mix(in srgb,var(--level) 35%,#43232e);color:#937c84;font-size:.54rem;font-weight:800;letter-spacing:.14em;text-align:center}
-    .l2 .cover{background:repeating-radial-gradient(ellipse at 50% 105%,transparent 0 24px,rgba(239,141,130,.08) 25px 26px),radial-gradient(circle at 50% 35%,rgba(239,141,130,.25),transparent 29%),linear-gradient(150deg,#24111a,#0b070b 70%)}
-    .l3 .cover{background:linear-gradient(55deg,transparent 46%,rgba(238,98,95,.12) 47% 49%,transparent 50%),linear-gradient(-55deg,transparent 46%,rgba(238,98,95,.12) 47% 49%,transparent 50%),radial-gradient(circle at 50% 35%,rgba(238,98,95,.28),transparent 28%),#10070c}
-    .l4 .cover{background:repeating-conic-gradient(from 45deg at 50% 40%,rgba(237,63,77,.09) 0 7deg,transparent 7deg 18deg),radial-gradient(circle at 50% 36%,rgba(237,63,77,.3),transparent 27%),linear-gradient(145deg,#250812,#090407 74%)}
-    .l5 .cover{background:repeating-conic-gradient(from 0deg at 50% 36%,rgba(255,50,78,.14) 0 5deg,transparent 5deg 13deg),radial-gradient(circle at 50% 36%,rgba(179,15,56,.48),transparent 26%),linear-gradient(145deg,#2e0613,#050203 72%)}
-    .l4 .cover::before,.l5 .cover::before{inset:16px;border-width:2px}
-    .l5 .motif{font-size:1.9rem;text-shadow:0 0 12px #e42b51,0 0 28px rgba(228,43,81,.7)}
+    .book-row{--level:#f1b2a4;min-height:410px;padding:48px 0;display:grid;grid-template-columns:minmax(280px,.78fr) 1.7fr;align-items:center;gap:clamp(40px,6vw,90px);border-bottom:1px solid var(--line)}
+    .book-examples{width:min(100%,310px);margin:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 14px}
+    .example-book{min-width:0;color:var(--cream);text-decoration:none}
+    .example-cover{position:relative;aspect-ratio:2/3;overflow:hidden;display:block;border:1px solid color-mix(in srgb,var(--level) 42%,#3b2830);background:#1d1116;box-shadow:0 16px 28px -15px rgba(0,0,0,.85);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+    .example-cover::after{content:"";position:absolute;inset:0;border:1px solid rgba(255,255,255,.08);pointer-events:none}
+    .example-cover img{width:100%;height:100%;display:block;object-fit:cover}
+    .example-book:hover .example-cover,.example-book:focus-visible .example-cover{border-color:var(--level);box-shadow:0 20px 34px -14px rgba(0,0,0,.95);transform:translateY(-4px)}
+    .example-book strong{min-height:2.3em;margin-top:8px;display:-webkit-box;overflow:hidden;color:#eadfdc;font-family:"Fraunces",Georgia,serif;font-size:.76rem;font-weight:500;line-height:1.15;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+    .example-book small{margin-top:2px;display:block;overflow:hidden;color:#8f7d84;font-size:.57rem;line-height:1.2;text-overflow:ellipsis;white-space:nowrap}
     .book-copy{min-width:0}
     .eyebrow,.explainers span,.terms>span{color:var(--level);font-size:.62rem;font-weight:800;letter-spacing:.13em}
     .book-copy h2{margin:8px 0 12px;font-family:"Fraunces",Georgia,serif;font-size:clamp(2.7rem,4.3vw,4.4rem);font-weight:500;letter-spacing:-.04em;line-height:.92}
@@ -237,22 +225,22 @@
     @media(max-width:980px){
       .nav{padding:13px 0;flex-wrap:wrap}.navlinks{order:3;width:100%;padding-bottom:4px;overflow-x:auto}
       .hero{grid-template-columns:1fr;gap:38px}.hero-copy{max-width:620px}
-      .book-row{grid-template-columns:270px 1fr;gap:40px}
+      .book-row{grid-template-columns:290px 1fr;gap:40px}
     }
     @media(max-width:700px){
       .wrap{padding-left:18px;padding-right:18px}
       .site-header{position:relative}.nav{gap:12px}.navlinks{gap:15px}.navlinks a{font-size:.82rem}.authbox{margin-left:auto}
       .guide-bar .wrap{min-height:56px}.guide-label{font-size:.56rem}.guide-label b{font-size:.56rem}.jump{display:none}
       .hero{padding-top:48px;padding-bottom:42px}.hero h1{font-size:clamp(3.65rem,17vw,5rem)}.hero-copy p{font-size:.95rem}
-      .book-row{padding:38px 0 44px;display:block}.book-art{width:min(100%,310px);min-height:330px;margin-bottom:38px}.cover{min-height:330px}
-      .motif{margin:39px 0 18px}.book-copy h2{font-size:2.9rem}.definition{font-size:.93rem}
+      .book-row{padding:38px 0 44px;display:block}.book-examples{width:min(100%,330px);margin-bottom:42px;gap:19px 15px}
+      .example-book strong{font-size:.82rem}.example-book small{font-size:.61rem}.book-copy h2{font-size:2.9rem}.definition{font-size:.93rem}
       .explainers{grid-template-columns:1fr}.explainers>div{padding:16px 0}.explainers>div+div{padding-left:0;border-top:1px solid var(--line);border-left:0}
       .book-bottom{align-items:stretch;flex-direction:column}.level-cta{text-align:center}
       .truths,.faq{margin-top:46px;display:block}.truths dl{margin:28px 0;grid-template-columns:1fr;gap:19px}.rule{margin-top:24px}
       .faq-grid{margin-top:28px;grid-template-columns:1fr}.faq-grid details:nth-child(odd),.faq-grid details:nth-child(even){padding:0;border-right:0}
       .footer-inner{min-height:150px;flex-wrap:wrap}.footer-inner p{display:none}
     }
-    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.cover,.level-cta{transition:none}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.example-cover,.level-cta{transition:none}}
   </style>
 </head>
 <body>
@@ -281,23 +269,33 @@
     <section class="hero" aria-labelledby="page-title">
       <div>
         <p class="kicker">THE COMPLETE SMUTHUB SPICE GUIDE</p>
-        <h1 id="page-title">Five books.<em>Every level open.</em></h1>
+        <h1 id="page-title">Five shelves.<em>Every level open.</em></h1>
       </div>
       <div class="hero-copy">
-        <p>Read straight down the shelf. Each volume explains what appears on the page, what the rating leaves out and the terms readers commonly use for that level.</p>
+        <p>Read straight down the shelf. Each level pairs four real examples with what appears on the page, what the rating leaves out and the terms readers commonly use.</p>
         <div class="scale-key"><span>Less explicit</span><b>🌶️ → 🌶️🌶️🌶️🌶️🌶️</b><span>More explicit</span></div>
       </div>
     </section>
 
     <section class="book-list" id="levels" aria-label="Complete spice rating levels">
-      <article class="book-row l1" style="--level:#f1b2a4">
-        <div class="book-art" aria-hidden="true">
-          <span class="spine">VOLUME 01</span>
-          <div class="cover">
-            <span class="series">THE SMUTHUB SPICE LIBRARY</span><i class="motif">☾ ✦ ☽</i>
-            <strong>Glimpses &amp; Kisses</strong><em class="peppers">🌶️</em>
-            <p class="cover-line">A tale of yearning, moonlight &amp; impeccable restraint</p><small class="volume">VOLUME 01</small>
-          </div>
+      <article class="book-row l1" id="level-1" style="--level:#f1b2a4">
+        <div class="book-examples" role="group" aria-label="Books rated level 1">
+          <a class="example-book" href="/books/divine-rivals-ross/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/divine-rivals-ross.jpg" alt="Divine Rivals book cover" loading="lazy"></span>
+            <strong>Divine Rivals</strong><small>Rebecca Ross</small>
+          </a>
+          <a class="example-book" href="/books/the-cruel-prince-black/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/the-cruel-prince-black.jpg" alt="The Cruel Prince book cover" loading="lazy"></span>
+            <strong>The Cruel Prince</strong><small>Holly Black</small>
+          </a>
+          <a class="example-book" href="/books/once-upon-a-broken-heart-garber-2021/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/once-upon-a-broken-heart-garber-2021.jpg" alt="Once Upon a Broken Heart book cover" loading="lazy"></span>
+            <strong>Once Upon a Broken Heart</strong><small>Stephanie Garber</small>
+          </a>
+          <a class="example-book" href="/books/powerless-roberts-2023/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/powerless-roberts-2023.jpg" alt="Powerless book cover" loading="lazy"></span>
+            <strong>Powerless</strong><small>Lauren Roberts</small>
+          </a>
         </div>
         <div class="book-copy">
           <span class="eyebrow">LEVEL 1 · NO ON-PAGE SEX</span>
@@ -315,14 +313,24 @@
         </div>
       </article>
 
-      <article class="book-row l2" style="--level:#ef8d82">
-        <div class="book-art" aria-hidden="true">
-          <span class="spine">VOLUME 02</span>
-          <div class="cover">
-            <span class="series">THE SMUTHUB SPICE LIBRARY</span><i class="motif">❦ ◇ ❦</i>
-            <strong>Behind Closed Doors</strong><em class="peppers">🌶️🌶️</em>
-            <p class="cover-line">The door closes. The tension absolutely does not.</p><small class="volume">VOLUME 02</small>
-          </div>
+      <article class="book-row l2" id="level-2" style="--level:#ef8d82">
+        <div class="book-examples" role="group" aria-label="Books rated level 2">
+          <a class="example-book" href="/books/one-dark-window-gillig/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/one-dark-window-gillig.jpg" alt="One Dark Window book cover" loading="lazy"></span>
+            <strong>One Dark Window</strong><small>Rachel Gillig</small>
+          </a>
+          <a class="example-book" href="/books/the-song-of-achilles-miller-2011/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/the-song-of-achilles-miller-2011.jpg" alt="The Song of Achilles book cover" loading="lazy"></span>
+            <strong>The Song of Achilles</strong><small>Madeline Miller</small>
+          </a>
+          <a class="example-book" href="/books/uprooted-novik-2015/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/uprooted-novik-2015.jpg" alt="Uprooted book cover" loading="lazy"></span>
+            <strong>Uprooted</strong><small>Naomi Novik</small>
+          </a>
+          <a class="example-book" href="/books/throne-of-glass-maas/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/throne-of-glass-maas.jpg" alt="Throne of Glass book cover" loading="lazy"></span>
+            <strong>Throne of Glass</strong><small>Sarah J. Maas</small>
+          </a>
         </div>
         <div class="book-copy">
           <span class="eyebrow">LEVEL 2 · FADE TO BLACK</span>
@@ -340,14 +348,24 @@
         </div>
       </article>
 
-      <article class="book-row l3" style="--level:#ee625f">
-        <div class="book-art" aria-hidden="true">
-          <span class="spine">VOLUME 03</span>
-          <div class="cover">
-            <span class="series">THE SMUTHUB SPICE LIBRARY</span><i class="motif">⚔ ☾ ⚔</i>
-            <strong>Open Door</strong><em class="peppers">🌶️🌶️🌶️</em>
-            <p class="cover-line">A romantasy of inconvenient doors &amp; excellent timing</p><small class="volume">VOLUME 03</small>
-          </div>
+      <article class="book-row l3" id="level-3" style="--level:#ee625f">
+        <div class="book-examples" role="group" aria-label="Books rated level 3">
+          <a class="example-book" href="/books/bride-hazelwood/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/bride-hazelwood.jpg" alt="Bride book cover" loading="lazy"></span>
+            <strong>Bride</strong><small>Ali Hazelwood</small>
+          </a>
+          <a class="example-book" href="/books/heartless-hunter-ciccarelli/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/heartless-hunter-ciccarelli.jpg" alt="Heartless Hunter book cover" loading="lazy"></span>
+            <strong>Heartless Hunter</strong><small>Kristen Ciccarelli</small>
+          </a>
+          <a class="example-book" href="/books/the-serpent-and-the-wings-of-night-broadbent/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/the-serpent-and-the-wings-of-night-broadbent.jpg" alt="The Serpent and the Wings of Night book cover" loading="lazy"></span>
+            <strong>The Serpent and the Wings of Night</strong><small>Carissa Broadbent</small>
+          </a>
+          <a class="example-book" href="/books/the-bridge-kingdom-jensen/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/the-bridge-kingdom-jensen.jpg" alt="The Bridge Kingdom book cover" loading="lazy"></span>
+            <strong>The Bridge Kingdom</strong><small>Danielle L. Jensen</small>
+          </a>
         </div>
         <div class="book-copy">
           <span class="eyebrow">LEVEL 3 · ON-PAGE SEX</span>
@@ -365,14 +383,24 @@
         </div>
       </article>
 
-      <article class="book-row l4" style="--level:#ed3f4d">
-        <div class="book-art" aria-hidden="true">
-          <span class="spine">VOLUME 04</span>
-          <div class="cover">
-            <span class="series">THE SMUTHUB SPICE LIBRARY</span><i class="motif">♛ ✦ ♛</i>
-            <strong>Explicit Open Door</strong><em class="peppers">🌶️🌶️🌶️🌶️</em>
-            <p class="cover-line">The crown is cursed. The bedroom is considerably busier.</p><small class="volume">VOLUME 04</small>
-          </div>
+      <article class="book-row l4" id="level-4" style="--level:#ed3f4d">
+        <div class="book-examples" role="group" aria-label="Books rated level 4">
+          <a class="example-book" href="/books/fourth-wing-yarros/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/fourth-wing-yarros.jpg" alt="Fourth Wing book cover" loading="lazy"></span>
+            <strong>Fourth Wing</strong><small>Rebecca Yarros</small>
+          </a>
+          <a class="example-book" href="/books/quicksilver-hart/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/quicksilver-hart.jpg" alt="Quicksilver book cover" loading="lazy"></span>
+            <strong>Quicksilver</strong><small>Callie Hart</small>
+          </a>
+          <a class="example-book" href="/books/a-court-of-thorns-and-roses-maas/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/a-court-of-thorns-and-roses-maas.jpg" alt="A Court of Thorns and Roses book cover" loading="lazy"></span>
+            <strong>A Court of Thorns and Roses</strong><small>Sarah J. Maas</small>
+          </a>
+          <a class="example-book" href="/books/from-blood-and-ash-armentrout-2020/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/from-blood-and-ash-armentrout-2020.jpg" alt="From Blood and Ash book cover" loading="lazy"></span>
+            <strong>From Blood and Ash</strong><small>Jennifer L. Armentrout</small>
+          </a>
         </div>
         <div class="book-copy">
           <span class="eyebrow">LEVEL 4 · EXPLICIT ON PAGE</span>
@@ -390,14 +418,24 @@
         </div>
       </article>
 
-      <article class="book-row l5" style="--level:#d31947">
-        <div class="book-art" aria-hidden="true">
-          <span class="spine">VOLUME 05</span>
-          <div class="cover">
-            <span class="series">THE SMUTHUB SPICE LIBRARY</span><i class="motif">♠ ♛ ♠</i>
-            <strong>Explicit &amp; Plentiful</strong><em class="peppers">🌶️🌶️🌶️🌶️🌶️</em>
-            <p class="cover-line">There was a plot. Then the ancient prophecy took its shirt off.</p><small class="volume">VOLUME 05</small>
-          </div>
+      <article class="book-row l5" id="level-5" style="--level:#d31947">
+        <div class="book-examples" role="group" aria-label="Books rated level 5">
+          <a class="example-book" href="/books/a-court-of-silver-flames-maas-2021/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/a-court-of-silver-flames-maas-2021.png" alt="A Court of Silver Flames book cover" loading="lazy"></span>
+            <strong>A Court of Silver Flames</strong><small>Sarah J. Maas</small>
+          </a>
+          <a class="example-book" href="/books/neon-gods-robert-2021/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/neon-gods-robert-2021.jpg" alt="Neon Gods book cover" loading="lazy"></span>
+            <strong>Neon Gods</strong><small>Katee Robert</small>
+          </a>
+          <a class="example-book" href="/books/king-of-battle-and-blood-clair-2021/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/king-of-battle-and-blood-clair-2021.jpg" alt="King of Battle and Blood book cover" loading="lazy"></span>
+            <strong>King of Battle and Blood</strong><small>Scarlett St. Clair</small>
+          </a>
+          <a class="example-book" href="/books/a-hunger-like-no-other-cole-2006/">
+            <span class="example-cover"><img src="https://covers.smuthub.ca/a-hunger-like-no-other-cole-2006.jpg" alt="A Hunger Like No Other book cover" loading="lazy"></span>
+            <strong>A Hunger Like No Other</strong><small>Kresley Cole</small>
+          </a>
         </div>
         <div class="book-copy">
           <span class="eyebrow">LEVEL 5 · MAXIMUM HEAT</span>
