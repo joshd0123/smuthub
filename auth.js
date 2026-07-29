@@ -67,6 +67,14 @@
   function mountUmami(){
     if (!/^https:\/\//.test(UMAMI.src)) return;                 // dormant until a public https URL is set
     if (/(^|\/)(admin|catalog-admin)\.html$/.test(location.pathname)) return; // keep admin usage out of the stats
+    // Keep admin PEOPLE out of the stats too — not just admin pages. Umami's
+    // automatic pageview is not routed through track(), so without this an
+    // admin's browsing of /books, /search etc. inflates pageviews and sessions
+    // even though their custom events are already suppressed. isAdminSession()
+    // reads the sessionStorage mirror, so from the 2nd page of a session on it
+    // is reliable; at most the first cold pageview before the profile resolves
+    // slips through.
+    if (isAdminSession()) return;
     if (document.querySelector('script[data-website-id]')) return;
     const s = document.createElement('script');
     s.defer = true; s.src = UMAMI.src; s.setAttribute('data-website-id', UMAMI.websiteId);

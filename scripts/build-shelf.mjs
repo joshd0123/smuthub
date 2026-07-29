@@ -235,14 +235,12 @@ function cardHTML(row){
     : `<div class="ph">${esc(title)}</div>`;
   const spice = sp ? `<span class="spice" title="${sp} out of 5 spice">${'🌶️'.repeat(Math.min(sp,5))}</span>` : '';
   const off = curated ? '' : '<span class="off" title="Not in the smutHub catalog yet">find</span>';
-  // Umami click tracking (auto-fired on data-umami-event; beacons before nav).
-  // Matched covers report which book was clicked through to — the metric that
-  // shows the discovery surface is actually sending readers into book pages.
-  const track = curated
-    ? ` data-umami-event="bookshelf-book-click" data-umami-event-book="${escAttr(cat.slug)}"`
-    : ` data-umami-event="bookshelf-search-click"`;
+  // NOTE: no per-cover click event here on purpose. The destination book page
+  // already fires `book-open` with from=bookshelf (its 'from' classifier treats
+  // a /bookshelf/... referrer as such), and that path respects the admin-session
+  // exclusion — whereas raw data-umami-event attributes would not.
   return `<li class="card">`
-    + `<a href="${escAttr(href)}"${curated ? '' : ' data-off="1"'}${track}>`
+    + `<a href="${escAttr(href)}"${curated ? '' : ' data-off="1"'}>`
     + `<span class="frame">${cover}${spice}${off}</span>`
     + `<span class="meta"><span class="t">${esc(title)}</span>${author ? `<span class="a">${esc(author)}</span>` : ''}</span>`
     + `</a></li>`;
