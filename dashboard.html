@@ -95,6 +95,12 @@
   .pill.a{background:rgba(255,171,64,.16);color:var(--amber)}
   .pill.b{background:rgba(255,61,118,.16);color:#ff7a8f}
   .pill.c{background:rgba(122,220,150,.16);color:var(--green)}
+  .pubshelf{margin-top:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--ink-2)}
+  .pubshelf .ps-lbl{font-size:.78rem;color:var(--muted);font-weight:600}
+  .pubshelf .ps-url{font-size:.82rem;color:var(--cream);text-decoration:none;font-weight:700}
+  .pubshelf .ps-url:hover{color:var(--amber)}
+  .pubshelf .ps-copy{font-size:.74rem;font-weight:700;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:8px;padding:.35em .7em;cursor:pointer;transition:color .2s,border-color .2s}
+  .pubshelf .ps-copy:hover{color:var(--cream);border-color:#43222c}
 
   /* ── SECTIONS ── */
   section{padding:20px 0 4px}
@@ -234,6 +240,11 @@
       <button class="iconbtn" id="quipHide" title="Hide">✕</button>
     </div>
     <div class="pills" id="pills"></div>
+    <div class="pubshelf" id="pubshelf" hidden>
+      <span class="ps-lbl">🔗 Your public bookshelf (website version)</span>
+      <a class="ps-url" id="psUrl" href="#" target="_blank" rel="noopener"></a>
+      <button class="ps-copy" id="psCopy" type="button">Copy link</button>
+    </div>
   </div>
 
   <a class="shc-cameo" data-companion-beta hidden href="/companion.html?tool=next-read" aria-label="Open your companion's reading pick">
@@ -430,6 +441,24 @@
     user = e.detail.user;
     const display = user ? ((e.detail.profile && e.detail.profile.username) || user.email.split('@')[0]) : 'friend';
     $('hellName').textContent = display;
+
+    // ── Public bookshelf (website version) share row ──────────────────────
+    // Shown only when the account has a real username to route on. Links to the
+    // crawlable static page built by scripts/build-shelf.mjs at /bookshelf/<user>/.
+    { const uname = user && e.detail.profile && e.detail.profile.username;
+      const box = $('pubshelf');
+      if (uname && box){
+        const path = '/bookshelf/' + encodeURIComponent(uname) + '/';
+        const abs = location.origin + path;
+        const a = $('psUrl'); a.href = path; a.textContent = location.host + path;
+        $('psCopy').onclick = async ()=>{
+          try { await navigator.clipboard.writeText(abs); $('psCopy').textContent = 'Copied ✓'; setTimeout(()=>$('psCopy').textContent='Copy link', 1600); }
+          catch { window.prompt('Copy your public bookshelf link:', abs); }
+          if (window.SH) SH.track('share-bookshelf');
+        };
+        box.hidden = false;
+      } else if (box){ box.hidden = true; }
+    }
 
     if (!user){
       $('demobar').classList.add('show');
