@@ -158,6 +158,7 @@
   /* Corner markers: ⭐ = free today, 💎 = premium (returns when billing opens).
      Just the emoji, no pill — free cards listed first, paid after. */
   .room .rtag{position:absolute;top:8px;right:10px;font-size:.95rem;line-height:1}
+  .room .rtag.live{font-size:.52rem;font-weight:800;letter-spacing:.09em;color:#1a0c10;background:var(--amber);padding:.3em .55em;border-radius:99px;line-height:1;box-shadow:0 0 0 3px rgba(255,171,64,.16)}
   .room.locked{opacity:.9}
   .room.locked .ico{filter:saturate(.65)}
   .room.more{border-style:solid;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted)}
@@ -269,12 +270,12 @@
       <div class="room"><span class="rtag free" title="Free">⭐</span><div class="ico">💬</div><div class="nm">Community Pulse</div><div class="sb">polls &amp; hot takes</div></div>
       <div class="room"><span class="rtag free" title="Free">⭐</span><div class="ico">🐉</div><div class="nm">Trope of the Week</div><div class="sb">themed mini-lists</div></div>
       <div class="room"><span class="rtag free" title="Free">⭐</span><div class="ico">🧩</div><div class="nm">Quizzes &amp; Games</div><div class="sb">test your trope IQ</div></div>
-      <a class="room live" href="/import/"><span class="rtag free" title="Free">⭐</span><div class="ico">↗</div><div class="nm">Import Library</div><div class="sb">Goodreads, StoryGraph, CSV &amp; ISBN</div></a>
+      <a class="room live" href="/import/"><span class="rtag live" title="Live now">LIVE</span><div class="ico">↗</div><div class="nm">Import Library</div><div class="sb">Goodreads, StoryGraph, CSV &amp; ISBN</div></a>
       <div class="room locked"><span class="rtag soon" title="Premium — unlocks when billing opens">💎</span><div class="ico">✍️</div><div class="nm">Annotation</div><div class="sb">notes as you read</div></div>
       <div class="room locked"><span class="rtag soon" title="Premium — unlocks when billing opens">💎</span><div class="ico">✦</div><div class="nm">Companion</div><div class="sb">your AI reading buddy</div></div>
       <div class="room locked"><span class="rtag soon" title="Premium — unlocks when billing opens">💎</span><div class="ico">📸</div><div class="nm">Scan to Add</div><div class="sb">camera → shelf</div></div>
     </div>
-    <p class="roomsnote">⭐ free today · 💎 premium (unlocks once billing opens). More rooms on the way — <a href="#" id="roomsFb">tell us what to build next →</a></p>
+    <p class="roomsnote"><b style="color:var(--amber)">LIVE</b> = available now · ⭐ free · 💎 premium (unlocks once billing opens). More rooms on the way — <a href="#" id="roomsFb">tell us what to build next →</a></p>
   </section>
 
   <!-- FEEDBACK -->
