@@ -9,6 +9,40 @@ Work top to bottom. Steps 1–4 are the launch itself; 5–8 are verification.
 
 ---
 
+## Pre-deploy checks — run before **every** `wrangler deploy`
+
+Quick gate so a new release can't ship with dead CTAs or broken links. Takes ~2 min.
+
+**1. Automated: click-blocker lint.** Catches decorative overlays that silently
+eat clicks on buttons/links (the bug where the homepage "Sign in free" / "Browse
+the books" CTAs became unclickable — a `.cta::before` gradient with no
+`pointer-events:none` sat over them):
+
+```bash
+node scripts/check-ctas.mjs
+```
+
+Exit 0 = clean. If it flags a full-cover `::before/::after` overlay, either add
+`pointer-events:none` to it (if decorative) or give the CTA beneath it
+`position:relative;z-index:1`.
+
+**2. Manual: CTA smoke test.** Static analysis can't prove a specific button
+navigates, so eyeball the money paths on the pages you changed. Load the local
+site and actually click:
+
+- **Homepage** (`/`) — both CTA rows: top hero "Browse the shelves" + "Explore
+  romantasy", **and** the bottom "Your shelf is waiting" → "Browse the books" +
+  "Sign in free". Each must navigate / open the sign-in sheet.
+- **Header nav** on any page — Browse Books, Guides, My Bookshelf, Find a Store,
+  Add a Book, Log in.
+- The primary CTA of **whatever you changed this release**.
+
+> Tip: don't trust a viewport-less/headless hit-test to confirm clickability —
+> click it in a real browser window. A CTA can render perfectly and still be
+> covered by an invisible overlay.
+
+---
+
 ### 1. Remove the parked DNS records
 
 Cloudflare dashboard → **smuthub.ca** → DNS. Delete the records that currently
