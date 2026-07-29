@@ -109,6 +109,19 @@
           SH.profile = SH.user ? await loadProfile() : null;
           renderAuthbox();
           window.dispatchEvent(new CustomEvent('sh-auth', { detail: { user: SH.user, profile: SH.profile } }));
+          // Conversion tracking. Only a genuine login is 'SIGNED_IN' — a restored
+          // session arrives as 'INITIAL_SESSION' — but SIGNED_IN can still repeat
+          // across page loads, so dedupe once per browser session. A brand-new
+          // account (created seconds ago) is a signup; everyone else a signin.
+          // track() already no-ops for admin sessions, so our own logins are out.
+          if (event === 'SIGNED_IN' && SH.user) {
+            let first = true;
+            try { first = !sessionStorage.getItem('sh_signin_tracked'); if (first) sessionStorage.setItem('sh_signin_tracked','1'); } catch(_) {}
+            if (first) {
+              const created = new Date(SH.user.created_at).getTime();
+              track(Date.now() - created < 60000 ? 'signup' : 'signin');
+            }
+          }
         }, 0);
       }
       if (location.hash.includes('access_token') || location.search.includes('code=')) {
