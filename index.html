@@ -178,6 +178,16 @@
   .lvl .desc b{font-family:'Fraunces';font-weight:600;font-style:italic}
 
   /* ---------- CTA ---------- */
+  /* ═══════════════════════════════════════════════════════════════════════
+     ⚠️  DO NOT REMOVE THE CTA CLICK-THROUGH SAFEGUARDS BELOW.
+     The .cta::before decorative tint is an absolute overlay. Without BOTH
+       (a) pointer-events:none on .cta::before, and
+       (b) .cta>* { position:relative; z-index:1 }
+     the overlay sits on top of the "Browse the books" / "Sign in free"
+     buttons and silently swallows their clicks. This has regressed THREE
+     times from edits that dropped these lines. Keep both. Test: clicking
+     the #shelf CTAs must navigate / open sign-in.
+     ═══════════════════════════════════════════════════════════════════════ */
   .cta{text-align:center;background:var(--ink-2);border:1px solid var(--line);border-radius:24px;padding:60px 28px;position:relative;overflow:hidden}
   /* Decorative tint only — must never intercept clicks. Without pointer-events:none
      this absolute overlay paints over the static .hero-cta buttons and swallows
