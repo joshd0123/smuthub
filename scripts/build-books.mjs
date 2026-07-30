@@ -1563,7 +1563,11 @@ const INDEX_CSS = `<style>
   .bmeta{padding:10px 12px 13px;display:flex;flex-direction:column;flex:1}
   .bmeta .bt{font-family:'Fraunces',serif;font-weight:500;font-size:.98rem;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .bmeta .ba{color:var(--muted);font-size:.78rem;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .bmeta .bs{margin-top:6px;font-size:.72rem;letter-spacing:.04em}
+  /* Rating (left, under author) + spice to its right — per reader feedback that
+     the star rating is more useful at a glance than the spice level. */
+  .bmeta .bstat{margin-top:7px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .bmeta .brate{color:var(--amber);font-weight:800;font-size:.8rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bmeta .bs{font-size:.72rem;letter-spacing:.04em}
   .noresults{color:var(--muted);font-style:italic;padding:24px 0 40px}
 </style>`;
 
@@ -1599,6 +1603,7 @@ function renderBookIndex(allBooks){
   const cardFor = b => {
     const author = b.author || 'Unknown';
     const spice = Math.max(0, Math.min(5, Number(b.spice_level) || 0));
+    const rating = b.rating_avg ? Number(b.rating_avg).toFixed(2) : '';
     // ALL tag keys, not just tropes: every glossary term — kink, warning,
     // setting, archetype — can then deep link into this page via ?tag=.
     const tagKeys = tagsOf(b).map(t => t.category + ':' + t.slug).join(' ');
@@ -1611,7 +1616,10 @@ function renderBookIndex(allBooks){
         <div class="bmeta">
           <div class="bt">${esc(b.title)}</div>
           <div class="ba">${esc(author)}</div>
-          ${spice ? `<div class="bs">${'🌶️'.repeat(spice)}</div>` : ''}
+          ${(rating || spice) ? `<div class="bstat">
+            ${rating ? `<span class="brate">★ ${rating}</span>` : ''}
+            ${spice ? `<span class="bs">${'🌶️'.repeat(spice)}</span>` : ''}
+          </div>` : ''}
         </div>
       </a>`;
   };
