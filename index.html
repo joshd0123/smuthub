@@ -182,7 +182,10 @@
   /* Decorative tint only — must never intercept clicks. Without pointer-events:none
      this absolute overlay paints over the static .hero-cta buttons and swallows
      their clicks (the .cta text children escape only because they are position:relative). */
-  .cta::before{content:"";position:absolute;inset:0;background:var(--grad);opacity:.08;pointer-events:none}
+  .cta::before{content:"";position:absolute;inset:0;background:var(--grad);opacity:.08;pointer-events:none;z-index:0}
+  /* Overwrite-proof: every real child of .cta sits ABOVE the decorative ::before
+     overlay, so clicks land even if a future edit drops pointer-events:none. */
+  .cta>*{position:relative;z-index:1}
   .cta h2{font-family:'Fraunces';font-weight:500;font-size:clamp(1.8rem,4vw,2.8rem);position:relative}
   .cta p{color:var(--muted);max-width:42ch;margin:14px auto 28px;position:relative}
   .cta .join{display:inline-flex;gap:10px;position:relative;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:6px 6px 6px 20px;box-shadow:var(--shadow)}
