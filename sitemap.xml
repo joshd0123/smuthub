@@ -21,6 +21,12 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://smuthub.ca/guides/what-is-romantasy/</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
   <!-- /search is deliberately excluded — it's a noindex tool, not content. -->
   <url>
     <loc>https://smuthub.ca/dashboard.html</loc>

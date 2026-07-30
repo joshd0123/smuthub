@@ -146,6 +146,7 @@
         <summary><span class="sh-guides-label">Guides</span><svg class="sh-guides-chevron" aria-hidden="true" focusable="false" viewBox="0 0 12 8"><path d="M1 1.25 6 6.25 11 1.25"/></svg></summary>
         <div class="sh-guides-menu">
           <a href="/guides/"><b>All Guides</b><small>Start with the full library</small></a>
+          <a href="/guides/what-is-romantasy/"><b>What Is Romantasy?</b><small>Start with the genre essentials</small></a>
           <a href="/guides/spice-levels/"><b>Spice Levels</b><small>Choose your heat with no surprises</small></a>
           <a href="/glossary/"><b>Glossary</b><small>Decode 356 romantasy terms</small></a>
           <a href="/glossary/trope/"><b>Tropes</b><small>Browse the story dynamics you love</small></a>
