@@ -35,6 +35,9 @@ worlds and interactive additions.
   that book.
 - The exterior bookcase remains horizontally browsable and shows a visible
   overflow cue once a row exceeds its first display.
+- Books never move vertically on hover. Pointer focus changes their lighting,
+  shelf rows suppress nested vertical scrolling, and open overlays lock the
+  background until the reader returns to the bookcase.
 
 ## Founder’s Key launch offer
 

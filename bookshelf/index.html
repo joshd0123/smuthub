@@ -62,6 +62,7 @@
   body.art-on .bd-plain{background:var(--room-img) center/cover no-repeat, var(--room)}
 
   *{margin:0;padding:0;box-sizing:border-box}
+  html{scrollbar-gutter:stable}
   body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
   .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
   a{color:inherit;text-decoration:none}
@@ -123,14 +124,24 @@
   .world-ribbon strong{font:600 1.02rem 'Fraunces';margin-top:2px}
   .world-ribbon span{color:rgba(244,232,227,.62);font-size:.66rem;margin-top:1px}
   .world-ribbon b{padding:.55em .85em;border:1px solid rgba(231,199,126,.45);border-radius:99px;background:rgba(7,8,16,.66);color:#f2d48d;font-size:.65rem;white-space:nowrap}
-  .case-name{position:relative;z-index:4;margin:0 auto -1px;width:max-content;max-width:82%;padding:.45em 1.2em;border:1px solid rgba(239,207,137,.45);
-    border-radius:12px 12px 4px 4px;background:linear-gradient(180deg,#7d592d,#3d2714);box-shadow:0 8px 18px rgba(0,0,0,.42),inset 0 1px rgba(255,255,255,.18);
-    color:#f1d596;font-family:'Fraunces';font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;text-align:center}
+  .case-identity{position:relative;z-index:4;display:flex;flex-direction:column;align-items:center;width:max-content;max-width:90%;margin:0 auto -1px}
+  .case-name{position:relative;width:100%;min-width:250px;padding:.55em 2.3em .62em;border:1px solid rgba(239,207,137,.54);
+    border-radius:15px 15px 7px 7px;background:linear-gradient(180deg,#6d4927,#2e1b10);box-shadow:0 10px 22px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.17),inset 0 0 0 3px rgba(23,12,8,.28);
+    color:#f1d596;font-family:'Fraunces';text-transform:uppercase;text-align:center}
+  .case-name::before,.case-name::after{content:"✦";position:absolute;top:50%;transform:translateY(-50%);color:rgba(240,205,132,.66);font-size:.55rem}.case-name::before{left:15px}.case-name::after{right:15px}
+  .case-name small,.case-name strong{display:block}
+  .case-name small{font:800 .45rem 'Hanken Grotesk';letter-spacing:.2em;color:rgba(244,232,227,.6)}
+  .case-name strong{font-size:.82rem;font-weight:600;letter-spacing:.16em;line-height:1.15;margin-top:2px}
+  .founder-edition-bar{position:relative;margin-top:-2px;padding:.4em 1.45em .38em;border:1px solid rgba(229,194,116,.46);border-top-color:rgba(255,232,173,.7);border-radius:2px 2px 11px 11px;
+    background:linear-gradient(180deg,#18111a,#09070b);box-shadow:0 9px 18px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.08);
+    color:#e8c77e;font-size:.5rem;font-weight:800;letter-spacing:.17em;text-transform:uppercase;white-space:nowrap}
+  .founder-edition-bar span{color:#fff0c5}
   .case-flourish{display:none;position:absolute;inset:7px;z-index:3;border:1px solid rgba(232,197,116,.56);border-radius:10px;pointer-events:none}
   body[data-library-detail="gilded"] .case-flourish{display:block}
   body[data-library-detail="gilded"] .bookcase{box-shadow:0 38px 78px -30px rgba(0,0,0,.85),0 0 0 1px rgba(232,197,116,.45),0 0 45px rgba(232,197,116,.1),inset 0 2px rgba(255,255,255,.12)}
   body[data-library-detail="rain"] .roomwrap.library-mode::before{opacity:.74;filter:saturate(.6) blur(1px)}
   body[data-library-detail="plaque"] .case-name{background:linear-gradient(180deg,#d8b66b,#7d5423);color:#251509;border-color:#f5dda6}
+  body[data-library-detail="plaque"] .case-name small{color:rgba(37,21,9,.64)}
 
   /* ── THE BOOKCASE (cabinet) ── */
   .bookcase{position:relative;width:100%;max-width:690px;padding:13px 13px 15px;border:1px solid rgba(238,209,145,.18);border-radius:14px;
@@ -149,11 +160,12 @@
   body[data-cabinet="moon-arch"] .bookcase{max-width:650px;padding-top:48px;border-radius:110px 110px 18px 18px}
   body[data-cabinet="moon-arch"] .bookcase::before{left:16%;right:16%;top:11px;height:15px;border-radius:50%}
   body[data-cabinet="moon-arch"] .interior{border-radius:82px 82px 9px 9px;padding-top:23px}
-  body[data-cabinet="moon-arch"] .case-name{border-radius:99px;margin-bottom:-16px}
+  body[data-cabinet="moon-arch"] .case-identity{margin-bottom:-16px}
+  body[data-cabinet="moon-arch"] .case-name{border-radius:99px 99px 9px 9px}
   body[data-cabinet="gothic-tower"] .library-main{max-width:590px;justify-self:center;width:100%}
   body[data-cabinet="gothic-tower"] .bookcase{max-width:560px;margin:43px auto 0;border-radius:8px;padding-left:20px;padding-right:20px}
   body[data-cabinet="gothic-tower"] .cabinet-crest{display:block;clip-path:polygon(0 100%,13% 44%,26% 68%,50% 0,74% 68%,87% 44%,100% 100%)}
-  body[data-cabinet="gothic-tower"] .case-name{margin-bottom:-43px}
+  body[data-cabinet="gothic-tower"] .case-identity{margin-bottom:-43px}
   body[data-cabinet="floating-gallery"] .bookcase{max-width:700px;padding:0;background:transparent;box-shadow:none}
   body[data-cabinet="floating-gallery"] .bookcase::before,body[data-cabinet="floating-gallery"] .bookcase::after{display:none}
   body[data-cabinet="floating-gallery"] .interior{padding:0 4px 8px;background:transparent;box-shadow:none;overflow:visible}
@@ -185,17 +197,17 @@
   .row::before{content:"";position:absolute;left:0;right:0;top:-2px;height:30px;pointer-events:none;z-index:2;
     background:linear-gradient(rgba(0,0,0,.5),transparent)}
   .books{position:relative;z-index:2;display:flex;gap:7px;align-items:flex-end;justify-content:flex-start;
-    overflow-x:auto;padding:18px 26px 0 4px;min-height:172px;scrollbar-width:none;scroll-snap-type:x proximity;overscroll-behavior-x:contain}
+    overflow-x:auto;overflow-y:hidden;overflow-anchor:none;padding:18px 26px 0 4px;min-height:172px;scrollbar-width:none;scroll-snap-type:x proximity;overscroll-behavior-x:contain}
   .books::-webkit-scrollbar{display:none}
-  .book{flex:0 0 auto;cursor:grab;transition:transform .2s ease;position:relative;
-    touch-action:manipulation;scroll-snap-align:start;filter:drop-shadow(0 9px 9px rgba(0,0,0,.5))}
+  .book{flex:0 0 auto;cursor:grab;transition:filter .18s ease,opacity .18s ease;position:relative;
+    touch-action:pan-x pan-y;scroll-snap-align:start;filter:drop-shadow(0 9px 9px rgba(0,0,0,.5))}
   .shelfrow.has-overflow .row::after{content:"";position:absolute;z-index:5;right:-1px;top:10px;bottom:0;width:34px;pointer-events:none;background:linear-gradient(90deg,transparent,var(--wood-dk))}
   .swipecue{margin-left:auto;font-family:'Hanken Grotesk';font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);opacity:.88}
   .book.face{width:clamp(72px,18vw,92px)}
   .book.spine{width:var(--book-w,42px)}
   .book::after{content:"";position:absolute;left:8%;right:8%;bottom:-5px;height:8px;border-radius:50%;
     background:radial-gradient(ellipse at center,rgba(0,0,0,.5),transparent 72%)}
-  .book:hover{transform:translateY(-12px);z-index:4}
+  @media(hover:hover) and (pointer:fine){.book:hover{z-index:4;filter:drop-shadow(0 12px 13px rgba(0,0,0,.68)) brightness(1.08)}}
   .book.dragging{opacity:.4;cursor:grabbing}
   .book.dnf{filter:grayscale(1) drop-shadow(0 9px 9px rgba(0,0,0,.5));opacity:.85}
   .book .bcov{width:100%;border-radius:1px 3px 3px 1px;display:block;object-fit:cover;
@@ -236,7 +248,7 @@
     color:#211408;font:700 .58rem 'Fraunces';line-height:.85;text-transform:uppercase}
   .tbr-stack .tbr-copy strong{display:block;font:800 1rem 'Hanken Grotesk';line-height:.8}
   .tbr-stack::after{content:"Open TBR";position:absolute;left:9px;right:9px;bottom:-14px;text-align:center;color:rgba(244,232,227,.52);font-size:.5rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
-  .tbr-stack:hover{transform:translateY(-7px)}
+  @media(hover:hover) and (pointer:fine){.tbr-stack:hover{filter:drop-shadow(0 13px 15px rgba(0,0,0,.7)) brightness(1.06)}}
 
   .library-rail{display:grid;gap:12px;padding-top:50px}
   .rail-card{position:relative;overflow:hidden;border:1px solid rgba(225,185,107,.23);border-radius:18px;padding:17px;background:rgba(10,9,14,.72);backdrop-filter:blur(14px);box-shadow:0 18px 40px rgba(0,0,0,.28)}
@@ -584,7 +596,8 @@
     .world-ribbon{grid-template-columns:auto 1fr;padding:11px}.world-ribbon b{grid-column:2;justify-self:start}.world-ribbon .moon-seal{width:40px;height:40px}
     .world-ribbon-desc{display:none!important}
     .world-ribbon strong{font-size:.9rem}.world-ribbon span{font-size:.61rem}
-    .case-name{font-size:.61rem}
+    .case-identity{max-width:94%}.case-name{min-width:220px;padding-left:1.8em;padding-right:1.8em}
+    .case-name strong{font-size:.7rem}.founder-edition-bar{font-size:.44rem;letter-spacing:.13em}
     .shelf-door{font-size:.5rem;padding:.3em .5em}
     .tbr-stack{flex-basis:100px;height:128px;margin-right:-2px;background-size:145px auto}
     .tbr-stack .tbr-copy{width:36px;height:36px}
@@ -721,7 +734,7 @@
 
   const REVIEW_MODE=new URLSearchParams(location.search).get('prototype')==='bookcase-v2';
   const TRIAL_KEY='sh_bookcase_trials_v1', TRIAL_MS=24*60*60*1000;
-  let sb=null, user=null, shelf=[], spiceMap={}, theme='walnut', isPremium=false, readerName='Your';
+  let sb=null, user=null, shelf=[], spiceMap={}, theme='walnut', isPremium=false, readerName='Your', founderNumber=null;
   let libraryDetail='', cabinetStyle=REVIEW_MODE?'moon-arch':'grand-heirloom';
   let custom={};
   let ownedProducts=new Set(), accountTrials={};
@@ -735,6 +748,18 @@
   function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1700);}
   const hash=s=>{let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;};
   const labelOf=st=>(SHELVES.find(s=>s[0]===st)||[,st])[1];
+  function founderEditionHTML(){
+    if(founderNumber) return '<div class="founder-edition-bar">✦ Founder’s Edition · <span>Key No. '+String(founderNumber).padStart(3,'0')+'</span> ✦</div>';
+    if(REVIEW_MODE) return '<div class="founder-edition-bar">✦ Founder’s Edition · <span>Original 100</span> ✦</div>';
+    return '';
+  }
+  function syncScrollLock(){
+    const locked=['sheetbg','shelfview','themesheetbg','upsell'].some(id=>{
+      const el=$(id);
+      return el&&el.classList.contains('open');
+    });
+    document.body.style.overflow=locked?'hidden':'';
+  }
 
   window.addEventListener('sh-auth', async (e)=>{
     sb = window.SH ? window.SH.sb : null; user = e.detail.user;
@@ -752,6 +777,8 @@
     if(!user){ renderGate(); $('themepill').classList.remove('show'); return; }
     isPremium = !!(e.detail.profile && e.detail.profile.is_premium);
     const profile=e.detail.profile||{};
+    const parsedFounder=Number(profile.founder_number);
+    founderNumber=Number.isInteger(parsedFounder)&&parsedFounder>=1&&parsedFounder<=100?parsedFounder:null;
     const rawName=profile.display_name||profile.username||(user.email||'').split('@')[0];
     readerName=rawName ? rawName.charAt(0).toUpperCase()+rawName.slice(1) : 'Your';
     if(e.detail.profile && e.detail.profile.theme){
@@ -831,6 +858,7 @@
     worldState=freshWorldState();
     renderShelfView();
     $('shelfview').classList.add('open');
+    syncScrollLock();
   }
 
   function shelfCmp(a,b){
@@ -885,7 +913,7 @@
       + '<div class="library-stats"><span class="library-stat"><strong>'+counts.reading+'</strong> reading now</span>'
       + '<span class="library-stat"><strong>'+counts.want+'</strong> waiting in TBR</span><span class="library-stat"><strong>'+counts.read+'</strong> finished</span></div>'
       + '<button class="world-ribbon" id="openLiveWorld"><span class="moon-seal" aria-hidden="true">✦</span><span class="world-ribbon-copy"><small>Live premium world · 3 secrets to awaken</small><strong>The Moonlit Reading Room</strong><span class="world-ribbon-desc">Your books, a working clock, candlelight and visitors that leave something behind.</span></span><b>Enter world →</b></button>'
-      + '<div class="case-name">'+esc(readerName)+' Library · Ex Libris</div>'
+      + '<div class="case-identity"><div class="case-name"><small>The private library of</small><strong>'+esc(readerName)+'</strong></div>'+founderEditionHTML()+'</div>'
       + '<div class="bookcase"><span class="cabinet-crest"></span><span class="case-flourish"></span><div class="interior">'
       + visible.map(([st,label])=>{
           const items=ordered.filter(b=>b.status===st);
@@ -924,7 +952,7 @@
   function attachRoom(){
     attachDnD();
     const dt=$('dnftoggle'); if(dt) dt.onclick=()=>{ dnfOpen=!dnfOpen; renderRoom(); };
-    const atelier=$('openAtelier'); if(atelier) atelier.onclick=()=>{ buildThemeSheet(); $('themesheetbg').classList.add('open'); };
+    const atelier=$('openAtelier'); if(atelier) atelier.onclick=()=>{ buildThemeSheet(); $('themesheetbg').classList.add('open'); syncScrollLock(); };
     const readingWorld=$('openReadingWorld'); if(readingWorld) readingWorld.onclick=()=>enterShelf('reading');
     const liveWorld=$('openLiveWorld'); if(liveWorld) liveWorld.onclick=()=>enterShelf('reading');
     const tbrWorld=$('openTbrWorld'); if(tbrWorld) tbrWorld.onclick=()=>enterShelf('want');
@@ -1022,9 +1050,9 @@
       +'<div class="acts">'+viewBtn+moves+'<button class="pillbtn rec" onclick="recommend(\''+esc(key)+'\')">↗ Recommend</button>'
       +'<button class="pillbtn rm" onclick="removeBook(\''+esc(key)+'\')">Remove</button></div></section></div></article>';
     $('sheetbg').classList.add('open');
-    document.body.style.overflow='hidden';
+    syncScrollLock();
   }
-  function closeSheet(){ $('sheetbg').classList.remove('open'); document.body.style.overflow=''; }
+  function closeSheet(){ $('sheetbg').classList.remove('open'); syncScrollLock(); }
 
   async function setStatus(key,status){
     const row=shelf.find(b=>b.book_key===key); if(row) row.status=status;
@@ -1161,16 +1189,17 @@
       if(item&&item.premium) requestCollectorPiece('detail:'+key,item.name,apply); else apply();
     });
   }
-  $('themepill').onclick=()=>{ buildThemeSheet(); $('themesheetbg').classList.add('open'); };
+  $('themepill').onclick=()=>{ buildThemeSheet(); $('themesheetbg').classList.add('open'); syncScrollLock(); };
   $('themesheetbg').onclick=(e)=>{ if(e.target===$('themesheetbg')) closeThemeSheet(); };
-  function closeThemeSheet(){ $('themesheetbg').classList.remove('open'); }
+  function closeThemeSheet(){ $('themesheetbg').classList.remove('open'); syncScrollLock(); }
 
   function showUpsell(title, onGo){
     $('upsellTitle').textContent=title;
     $('upsell').classList.add('open');
+    syncScrollLock();
     $('upsellGo').onclick=()=>{ closeUpsell(); if(onGo) onGo(); };
   }
-  function closeUpsell(){ $('upsell').classList.remove('open'); }
+  function closeUpsell(){ $('upsell').classList.remove('open'); syncScrollLock(); }
 
   // ── IMMERSIVE SHELF WORLD ──
   function enterShelf(status){
@@ -1182,8 +1211,9 @@
     worldState=freshWorldState();
     renderShelfView();
     $('shelfview').classList.add('open');
+    syncScrollLock();
   }
-  function exitShelf(){ collectionOpen=false; $('shelfview').classList.remove('open'); }
+  function exitShelf(){ collectionOpen=false; $('shelfview').classList.remove('open'); syncScrollLock(); }
   function activeWorld(status){
     const saved=(custom[status]&&custom[status].world_key)||'moonlit';
     return previewWorld||saved;
