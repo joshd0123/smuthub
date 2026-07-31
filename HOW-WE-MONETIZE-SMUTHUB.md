@@ -8,6 +8,20 @@ The free product must remain useful on its own: readers can build a bookcase, or
 
 The bookcase is the storefront. The immersive shelf worlds are the aspiration.
 
+## Founder launch directive
+
+The first public paid offer is the **$29 Founder’s Key**, limited to the first
+100 paid founders. It promises every SmutHub-created bookshelf world, current
+and future.
+
+That offer cannot open until the immutable honest gate in
+[`FOUNDERS-KEY-LAUNCH-GATE.md`](FOUNDERS-KEY-LAUNCH-GATE.md) passes. Moonlit
+Reading Room is the live premium proof. Future rooms must be described as `In
+development` or `Planned`, never presented as delivered value.
+
+The individual prices below are post-Founder hypotheses and internal planning
+inputs. They are not launch-page promises.
+
 ## The monetization ladder
 
 | Tier | What it sells | Target price | Purpose |

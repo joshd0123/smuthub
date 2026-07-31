@@ -1,5 +1,16 @@
 # smutHub · Launch checklist
 
+## Founder’s Key commercial gate
+
+Site availability and paid-launch readiness are separate events. The site may
+be live while Founder’s Key checkout remains closed.
+
+Before adding or enabling a $29 checkout URL, complete every required item in
+[`FOUNDERS-KEY-LAUNCH-GATE.md`](FOUNDERS-KEY-LAUNCH-GATE.md). This rule is
+fail-closed: one live premium world is necessary, but payment entitlements,
+account trials, founder numbering, and the real remaining-Founder count must
+also pass.
+
 Going live means pointing **smuthub.ca** at the Worker. Everything is built and
 deployed already — the site serves from `smuthub.joshd0123.workers.dev`, and the
 whole codebase (canonicals, `og:url`, JSON-LD, all 672 sitemap URLs) already

@@ -13,7 +13,8 @@ worlds and interactive additions.
 1. The logged-out page sells the feeling first, then opens a populated sample
    shelf world without requiring an account.
 2. A signed-in reader taps a shelf plaque to enter its immersive world.
-3. The free Moonlit Reading Room establishes the quality bar.
+3. The finished Moonlit Reading Room is publicly previewable and establishes
+   the premium quality bar behind the Founder’s Key.
 4. The room contains meaningful interactions:
    - wind the clock to move from midnight toward dawn;
    - call or settle the fairies;
@@ -34,39 +35,36 @@ worlds and interactive additions.
 - The exterior bookcase remains horizontally browsable and shows a visible
   overflow cue once a row exceeds its first display.
 
-## Launch catalog
+## Founder’s Key launch offer
 
-| Product | Price (CAD) | Role |
-|---|---:|---|
-| Moonlit Reading Room | Free | Acquisition and first-session magic |
-| Candlelit Boudoir | $7.99 | Hero paid world |
-| Fairy Visitors | $2.99 | Small interactive purchase |
-| The Witching Hour | $2.99 | Small interactive purchase |
-| Founder's Sanctuary | $9.99 | Launch bundle and best-value anchor |
+The launch offer is the **$29 Founder’s Key for the first 100 paid founders**.
+It includes every SmutHub-created bookshelf world, current and future. Moonlit
+is the live, touchable proof; it remains freely previewable before purchase.
 
-Avoid individual $0.99 card checkouts at launch. They carry too much fixed
-payment cost and friction. Singles can later be sold through credits or as
-optional add-ons inside a larger checkout.
+Individual world and add-on prices remain internal hypotheses during the
+Founder launch. The live UI uses the diamond marker, account-bound 24-hour
+trials, and explicit `Live`, `In development`, or `Planned` availability
+instead of publishing prices for products that are not yet for sale.
 
 ## Release cadence
 
-- **Launch:** Moonlit Reading Room, Candlelit Boudoir, Fairy Visitors,
-  The Witching Hour, Founder's Sanctuary.
-- **August 2026:** The Rainbound Archive.
-- **Late August 2026:** The Dragon's Hoard.
-- **September 2026:** Familiar Companions.
-- **October 2026:** The Haunted Manor seasonal world.
+- **Live now:** Moonlit Reading Room, including its clock, candle and fairy
+  interactions.
+- **In development:** Candlelit Boudoir and Founder’s Sanctuary.
+- **Planned:** Rainbound Archive, Dragon’s Hoard and Familiar Companions.
+- **Seasonal concept:** Haunted Manor.
 
-The target rhythm after launch is one meaningful world every four to six weeks
-and one smaller interaction pack between worlds. Reuse the same scene engine;
-new releases should mostly be art, configuration and one distinctive
-interaction rather than new application architecture.
+Dates stay off the public promise until a release has passed production QA.
+The target internal rhythm after launch is one meaningful world every four to
+six weeks and one smaller interaction pack between worlds.
 
 ## Commerce boundary
 
-The browser may preview any product, but it never grants ownership. Stripe
-Checkout confirms payment and a verified webhook writes the entitlement.
-Entitlements are account-based so purchases follow the reader across devices.
+The browser may preview a product marked `Live`, but it never grants ownership.
+Stripe Checkout confirms payment and a verified webhook writes the
+entitlement. Entitlements and one-time trials are account-based so they follow
+the reader across devices. Checkout remains absent until every item in
+[`FOUNDERS-KEY-LAUNCH-GATE.md`](FOUNDERS-KEY-LAUNCH-GATE.md) passes.
 
 ## V1 success signals
 

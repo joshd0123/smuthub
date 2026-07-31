@@ -51,7 +51,7 @@ create policy "users can read own bookcase entitlements"
 insert into bookcase_products
   (product_key, product_type, name, description, price_cents, currency, status, metadata, sort_order)
 values
-  ('world_moonlit_reading_room','world','Moonlit Reading Room','The free immersive starter world.',0,'cad','active','{"world_key":"moonlit"}',10),
+  ('world_moonlit_reading_room','world','Moonlit Reading Room','The live premium Founder''s Key proof; publicly previewable without granting ownership.',0,'cad','active','{"world_key":"moonlit","included_with_founders_key":true}',10),
   ('world_candlelit_boudoir','world','Candlelit Boudoir','Rose velvet and warm brass launch world.',799,'cad','draft','{"world_key":"boudoir"}',20),
   ('pack_fairy_visitors','interaction','Fairy Visitors','Interactive fairy trio and hidden bookmark.',299,'cad','draft','{"interaction_key":"fairies"}',30),
   ('pack_witching_hour','interaction','The Witching Hour','Interactive clock with three time states.',299,'cad','draft','{"interaction_key":"clock"}',40),

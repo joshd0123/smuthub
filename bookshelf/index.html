@@ -25,7 +25,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/config.js"></script>
 <script defer src="/auth.js"></script>
-<script src="/bookcase-catalog.js"></script>
+<script src="/bookcase-catalog.js?v=founders-key-gate-1"></script>
 <link rel="stylesheet" href="/companion.css">
 <script defer src="/companion.js"></script>
 <style>
@@ -452,7 +452,9 @@
   .product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
   .product-card{position:relative;display:flex;flex-direction:column;min-height:184px;padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--ink-2)}
   .product-card.previewing{border-color:var(--amber);box-shadow:0 0 0 1px rgba(255,171,64,.22)}
+  .product-card.live{border-color:rgba(126,224,176,.32)}
   .product-badge{align-self:flex-start;padding:.2em .55em;border-radius:99px;background:rgba(255,171,64,.12);color:var(--amber);font-size:.62rem;font-weight:800;letter-spacing:.08em}
+  .product-card.live .product-badge{background:rgba(91,206,159,.12);color:#9be7c6}
   .product-card h4{font-family:'Fraunces';font-weight:600;font-size:1.05rem;margin:8px 0 3px}
   .product-card p{color:var(--muted);font-size:.78rem;line-height:1.35;margin-bottom:12px}
   .product-actions{display:flex;align-items:center;gap:7px;margin-top:auto}
@@ -466,6 +468,11 @@
   .release-card h4{font-family:'Fraunces';font-weight:600;font-size:.98rem}
   .release-card p{color:var(--muted);font-size:.76rem}
   .release-price{font-weight:800;font-size:.82rem}
+  .founder-note{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 14px;padding:12px 14px;border:1px solid rgba(225,185,107,.28);border-radius:14px;background:linear-gradient(105deg,rgba(113,72,31,.3),rgba(27,18,22,.8))}
+  .founder-note strong,.founder-note small{display:block}
+  .founder-note strong{font-family:'Fraunces';font-size:.96rem}
+  .founder-note small{color:var(--muted);font-size:.7rem}
+  .founder-state{flex:0 0 auto;color:#e7c77e;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
   @media(prefers-reduced-motion:reduce){.world-clock,.world-fairies,.world-candle{transition:none}.sv-shelf.page-next .books,.sv-shelf.page-prev .books{animation:none}}
   @keyframes shelfPageNext{from{opacity:.15;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
   @keyframes shelfPagePrev{from{opacity:.15;transform:translateX(-24px)}to{opacity:1;transform:translateX(0)}}
@@ -484,6 +491,8 @@
     .shelf-range{top:calc(100% + 9px);font-size:.59rem}
     .product-grid{grid-template-columns:1fr}
     .release-card{grid-template-columns:80px 1fr}.release-price{grid-column:2}
+    .founder-note{align-items:flex-start;flex-direction:column}
+    .founder-state{white-space:normal}
     .themegrid{grid-template-columns:repeat(2,1fr)}
     .cabinetgrid{grid-template-columns:repeat(2,1fr)}
     .detailgrid{grid-template-columns:repeat(2,1fr)}
@@ -509,8 +518,11 @@
   .gate-card::before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(4,7,14,.96) 8%,rgba(4,7,14,.76) 52%,rgba(4,7,14,.38)),url("/themes/moonlit-reading-room/room-v1.jpg") center 28%/cover}
   .gate-card::after{content:"";position:absolute;inset:0;z-index:-1;box-shadow:inset 0 0 90px rgba(0,0,0,.55);pointer-events:none}
   .gate-eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:#d5b36a;margin-bottom:14px}
-  .gate-card h2{max-width:520px;font-family:Georgia,serif;font-size:clamp(2rem,6vw,3.8rem);line-height:.98;margin:0 0 16px;color:#fff7e7}
+  .gate-proof{display:inline-flex;align-items:center;gap:8px;margin-bottom:18px;padding:.45em .75em;border:1px solid rgba(126,224,176,.34);border-radius:99px;background:rgba(7,30,25,.58);color:#9be7c6;font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+  .gate-proof::before{content:"";width:7px;height:7px;border-radius:50%;background:#78e0b3;box-shadow:0 0 12px rgba(120,224,179,.85)}
+  .gate-card h2{max-width:560px;font-family:Georgia,serif;font-size:clamp(2rem,5.2vw,3.35rem);line-height:1;margin:0 0 16px;color:#fff7e7}
   .gate-card p{max-width:520px;color:#d8d8df;line-height:1.65;margin:0 0 24px}
+  .gate-promise{display:block;max-width:520px;margin:-10px 0 24px;color:#e7c77e;font-size:.78rem;font-weight:700}
   .gate-actions{display:flex;flex-wrap:wrap;gap:12px}
   .gate-actions button{border:0;border-radius:999px;padding:13px 20px;font-weight:800;cursor:pointer}
   .gate-actions .primary{background:#d5b36a;color:#171009}
@@ -674,7 +686,7 @@
   let sb=null, user=null, shelf=[], spiceMap={}, theme='walnut', isPremium=false, readerName='Your';
   let libraryDetail='', cabinetStyle=REVIEW_MODE?'moon-arch':'grand-heirloom';
   let custom={};
-  let ownedProducts=new Set(['world_moonlit_reading_room']);
+  let ownedProducts=new Set(), accountTrials={};
   let dnfOpen=false, shelfIndex=0, selectedProp=null, drawerTab='worlds', previewWorld=null;
   let shelfPages={reading:0,want:0,read:0,dnf:0}, pageDirection=0, collectionOpen=false, collectionQuery='';
   let worldState={dawn:false,fairies:false,candleDim:false,memory:false};
@@ -723,11 +735,12 @@
   }
 
   async function loadAll(){
-    const [r1,r2,r3,r4]=await Promise.all([
+    const [r1,r2,r3,r4,r5]=await Promise.all([
       sb.from('shelf').select('*'),
       sb.from('book_tags').select('book_key,spice'),
       sb.from('shelf_customization').select('*'),
-      sb.from('user_bookcase_entitlements').select('product_key')
+      sb.from('user_bookcase_entitlements').select('product_key'),
+      sb.from('user_bookcase_trials').select('product_key,expires_at')
     ]);
     if(r1.error) throw r1.error;
     shelf=(r1.data||[]).sort(shelfCmp); spiceMap={};
@@ -746,18 +759,29 @@
     if(!r2.error) (r2.data||[]).forEach(t=>{ if(t.spice) spiceMap[t.book_key]=t.spice; });
     custom={};
     if(!r3.error) (r3.data||[]).forEach(c=>{ custom[c.shelf_status]={world_key:c.world_key||'moonlit',backdrop_key:c.backdrop_key,lighting_key:c.lighting_key,props:Array.isArray(c.props)?c.props:[]}; });
-    ownedProducts=new Set(['world_moonlit_reading_room']);
+    ownedProducts=new Set();
     if(!r4.error) (r4.data||[]).forEach(e=>ownedProducts.add(e.product_key));
+    accountTrials={};
+    if(!r5.error){
+      const now=Date.now();
+      (r5.data||[]).forEach(t=>{
+        const expiry=Date.parse(t.expires_at);
+        if(expiry>now) accountTrials[t.product_key]=expiry;
+      });
+    } else if(!/user_bookcase_trials|relation|schema cache/i.test(r5.error.message||'')){
+      console.warn('bookcase trials failed',r5.error);
+    }
   }
 
   function renderGate(){
     $('roomwrap').classList.remove('library-mode');
     document.querySelector('.roomhead h1').innerHTML='My <em>Bookshelf</em>';
     $('stage').innerHTML='<section class="gate-card">'
-      +'<div class="gate-eyebrow">A living bookcase</div>'
+      +'<div class="gate-eyebrow">A living bookcase</div><div class="gate-proof">Premium world · live now</div>'
       +'<h2>Step inside your next reading world.</h2>'
-      +'<p>Books are only the beginning. Enter the Moonlit Reading Room, wake its objects, meet its visitors, and imagine the shelf you will make your own.</p>'
-      +'<div class="gate-actions"><button class="primary" onclick="enterDemoWorld()">Preview the shelf world</button>'
+      +'<p>Enter the finished Moonlit Reading Room. Wind its clock, wake its fairies, dim its candle, and imagine the shelf you will make your own.</p>'
+      +'<span class="gate-promise">Free to preview. The first premium world included with the Founder’s Key.</span>'
+      +'<div class="gate-actions"><button class="primary" onclick="enterDemoWorld()">Enter Moonlit Reading Room</button>'
       +'<button class="secondary" onclick="SH.openAuth()">Log in to build yours</button></div></section>';
   }
 
@@ -996,6 +1020,7 @@
 
   // ── THEME SHEET + 24-HOUR COLLECTOR TRIALS ──
   function readTrials(){
+    if(!REVIEW_MODE) return accountTrials;
     try{
       const parsed=JSON.parse(localStorage.getItem(TRIAL_KEY)||'{}'), now=Date.now(), active={};
       Object.keys(parsed).forEach(k=>{ if(+parsed[k]>now) active[k]=+parsed[k]; });
@@ -1007,15 +1032,36 @@
   function hasAccess(productKey,premium){ return !premium||isPremium||trialExpiry(productKey)>Date.now(); }
   function trialLabel(productKey,premium){
     if(!premium) return 'In your collection';
-    if(isPremium) return '◆ Collected';
+    if(isPremium) return '◆ Included with Founder’s Key';
     const left=trialExpiry(productKey)-Date.now();
     if(left>0) return '◆ Trial · '+Math.max(1,Math.ceil(left/3600000))+'h left';
     return '◆ Try free for 24 hours';
   }
-  function beginTrial(productKey,name,onStart){
-    const trials=readTrials();
-    trials[productKey]=Date.now()+TRIAL_MS;
-    try{ localStorage.setItem(TRIAL_KEY,JSON.stringify(trials)); }catch(_){}
+  async function beginTrial(productKey,name,onStart){
+    if(REVIEW_MODE){
+      const trials=readTrials();
+      trials[productKey]=Date.now()+TRIAL_MS;
+      try{ localStorage.setItem(TRIAL_KEY,JSON.stringify(trials)); }catch(_){}
+    } else {
+      if(!user||!sb){
+        toast('Log in to start a trial that follows your account.');
+        if(window.SH) SH.openAuth();
+        return;
+      }
+      const {data,error}=await sb.rpc('start_bookcase_trial',{p_product_key:productKey});
+      if(error){
+        console.error('bookcase trial failed',error);
+        toast('Trials are still being prepared — nothing was charged.');
+        return;
+      }
+      const row=Array.isArray(data)?data[0]:data;
+      const expiry=Date.parse(row&&row.expires_at);
+      if(!Number.isFinite(expiry)){
+        toast('The trial could not be confirmed. Please try again.');
+        return;
+      }
+      accountTrials[productKey]=expiry;
+    }
     if(onStart) onStart();
     buildThemeSheet();
     toast(name+' is yours to try for 24 hours ◆');
@@ -1087,7 +1133,9 @@
   // ── IMMERSIVE SHELF WORLD ──
   function enterShelf(status){
     shelfIndex=Math.max(0, SHELVES.findIndex(([s])=>s===status));
-    previewWorld=null;
+    const saved=(custom[status]&&custom[status].world_key)||'moonlit';
+    const product=(catalog().products||[]).find(p=>p.worldKey===saved);
+    previewWorld=product&&!owns(product.key)?saved:null;
     collectionOpen=false; collectionQuery='';
     worldState={dawn:false,fairies:false,candleDim:false,memory:false};
     renderShelfView();
@@ -1148,6 +1196,9 @@
   function renderShelfView(){
     const [status,label]=SHELVES[shelfIndex];
     const world=activeWorld(status);
+    const worldProduct=(catalog().products||[]).find(p=>p.worldKey===world);
+    const isWorldPreview=!!(worldProduct&&!owns(worldProduct.key));
+    const worldContext=isWorldPreview?'Live premium preview':(isPremium?'Founder’s collection':label);
     const info=shelfPageInfo(status);
     const books=info.pageItems.length?info.pageItems.map((b,i)=>bookHTML(b,i===0)).join(''):ghostHTML;
     const range=info.items.length?(info.start+1)+'–'+info.end+' of '+info.items.length:'Empty shelf';
@@ -1156,7 +1207,7 @@
       '<div class="sv-backdrop world-'+world+'"></div>'
       + '<div class="sv-light '+(worldState.dawn?'light-dawn':(world==='boudoir'?'light-candlelit':'light-moonlit'))+'"></div>'
       + '<div class="sv-top"><button class="sv-back" id="svback" aria-label="Back to bookcase">←</button>'
-      + '<div class="sv-label"><small>'+esc(label)+'</small>'+esc(worldTitle(world))+'</div>'
+      + '<div class="sv-label"><small>'+esc(worldContext)+(worldContext!==label?' · '+esc(label):'')+'</small>'+esc(worldTitle(world))+'</div>'
       + '<button class="sv-shopbtn" id="svshop">✨ Shop &amp; decorate</button></div>'
       + '<div class="sv-world"><div class="world-message" id="worldMessage">The shelf is listening. Touch something and let the room answer.</div>'
       + '<div class="world-stage">'
@@ -1250,16 +1301,18 @@
     $('svdrawer').classList.add('open');
   }
   function productCard(p,status){
-    const owned=owns(p.key), previewing=!!(p.worldKey&&previewWorld===p.worldKey);
-    return '<article class="product-card'+(previewing?' previewing':'')+'">'
+    const owned=owns(p.key), live=p.availability==='live', previewing=!!(p.worldKey&&previewWorld===p.worldKey);
+    const state=owned?(isPremium?'◆ Included with Key':'Collected'):(live?'Live premium preview':'◆ Included with Key');
+    const action=!live?'In development':(owned?'Use':(p.worldKey?'Key opens soon':'Try now'));
+    return '<article class="product-card'+(previewing?' previewing':'')+(live?' live':'')+'">'
       +'<span class="product-badge">'+esc(p.badge||p.type)+'</span>'
       +'<h4>'+esc(p.name)+'</h4><p>'+esc(p.description)+'</p>'
-      +'<div class="product-actions"><span class="product-price">'+(owned?'Owned':'💎 Premium')+'</span>'
-      +(p.worldKey?'<button class="mini-btn preview" data-preview="'+esc(p.key)+'">'+(previewing?'Previewing':'Preview')+'</button>':'')
-      +'<button class="mini-btn buy" data-buy="'+esc(p.key)+'">'+(owned?'Use':'Soon')+'</button></div></article>';
+      +'<div class="product-actions"><span class="product-price">'+state+'</span>'
+      +(p.worldKey&&live?'<button class="mini-btn preview" data-preview="'+esc(p.key)+'">'+(previewing?'Previewing':'Preview')+'</button>':'')
+      +'<button class="mini-btn buy" data-buy="'+esc(p.key)+'">'+action+'</button></div></article>';
   }
   function releaseCard(r){
-    return '<article class="release-card"><div class="release-date">'+esc(r.release)+'</div><div><h4>'+esc(r.name)+'</h4><p>'+esc(r.description)+'</p></div><div class="release-price">💎</div></article>';
+    return '<article class="release-card"><div class="release-date">'+esc(r.release)+'</div><div><h4>'+esc(r.name)+'</h4><p>'+esc(r.description)+'</p></div><div class="release-price">◆ Key</div></article>';
   }
   function renderWorldStore(status){
     const all=catalog().products||[];
@@ -1267,11 +1320,14 @@
     const body=drawerTab==='releases'
       ?'<div class="release-list">'+(catalog().releases||[]).map(releaseCard).join('')+'</div>'
       :'<div class="product-grid">'+products.map(p=>productCard(p,status)).join('')+'</div>';
+    const key=catalog().foundersKey||{};
+    const founderState=key.status==='open'?'Founder’s Key · open now':'Founder’s Key · launch gate in progress';
     $('svdrawer').innerHTML =
-      '<div class="store-head"><div><h3>Make this shelf yours</h3><p>Preview everything here. 💎 finishes unlock when billing opens — more rooms on the way.</p></div><button class="store-close" id="storeClose" aria-label="Close store">×</button></div>'
+      '<div class="store-head"><div><h3>The Founder’s Collection</h3><p>Moonlit is live and touchable now. Future SmutHub-created worlds are included with the Founder’s Key; concepts below are clearly marked until they ship.</p></div><button class="store-close" id="storeClose" aria-label="Close store">×</button></div>'
+      +'<div class="founder-note"><div><strong>Every SmutHub-created world, forever.</strong><small>No checkout opens until the live-world, entitlement and purchase-flow checks pass.</small></div><span class="founder-state">'+founderState+'</span></div>'
       +'<div class="tabs"><button data-storetab="worlds" class="'+(drawerTab==='worlds'?'on':'')+'">Worlds</button>'
       +'<button data-storetab="interactions" class="'+(drawerTab==='interactions'?'on':'')+'">Interactions</button>'
-      +'<button data-storetab="releases" class="'+(drawerTab==='releases'?'on':'')+'">Coming soon</button></div>'+body;
+      +'<button data-storetab="releases" class="'+(drawerTab==='releases'?'on':'')+'">Roadmap</button></div>'+body;
     $('storeClose').onclick=()=>{$('svdrawer').classList.remove('open');};
     $('svdrawer').querySelectorAll('[data-storetab]').forEach(b=>b.onclick=()=>{drawerTab=b.dataset.storetab;renderWorldStore(status);});
     $('svdrawer').querySelectorAll('[data-preview]').forEach(b=>b.onclick=()=>previewProduct(b.dataset.preview,status));
@@ -1279,16 +1335,15 @@
   }
   function findProduct(key){ return (catalog().products||[]).find(p=>p.key===key); }
   function previewProduct(key,status){
-    const p=findProduct(key); if(!p) return;
+    const p=findProduct(key); if(!p||p.availability!=='live') return;
     if(p.worldKey) previewWorld=p.worldKey;
     renderShelfView(); openWorldStore(status);
     worldMessage('Previewing '+p.name+' in your shelf.');
   }
   function buyOrUseProduct(key,status){
     const p=findProduct(key); if(!p) return;
-    if(!user){
-      toast('Log in to save worlds and purchases to your bookcase.');
-      SH.openAuth();
+    if(p.availability!=='live'){
+      toast(p.name+' is in development — it is not being sold as live.');
       return;
     }
     if(owns(key)){
@@ -1300,9 +1355,14 @@
       }
       return;
     }
-    // Billing is intentionally not open yet — no prices shown, no checkout.
-    // Everything stays previewable; premium unlocks when billing launches.
-    toast('Locked for now — this unlocks when billing opens ✨');
+    if(p.interactionKey){
+      $('svdrawer').classList.remove('open');
+      const control=$(p.interactionKey==='clock'?'worldClock':'worldFairies');
+      if(control) control.click();
+      return;
+    }
+    // Billing stays fail-closed until the Founder’s Key launch gate passes.
+    toast('Founder’s Key checkout opens only after every launch check passes.');
   }
   function ensure(status){
     if(!custom[status]) custom[status]={world_key:'moonlit',backdrop_key:null,lighting_key:null,props:[]};
