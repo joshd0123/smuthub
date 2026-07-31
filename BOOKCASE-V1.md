@@ -16,16 +16,17 @@ worlds and interactive additions.
 3. The finished Moonlit Reading Room is publicly previewable and establishes
    the premium quality bar behind the Founder’s Key.
 4. The room contains meaningful interactions:
-   - wind the clock to move from midnight toward dawn;
-   - call or settle the fairies;
+   - turn the architectural clock through midnight, blue hour, and dawn;
+   - call or settle fairy visitors in the upper gallery;
    - dim or relight the reading candle;
-   - open the featured book to reveal a saved reading memory.
+   - awaken a three-part Moonlit seal by discovering every interaction;
+   - open the featured book without leaving the room.
 5. The Shop & Decorate drawer previews products inside the reader's own room.
 6. Purchased products become permanent account entitlements.
 
 ## Shelf capacity
 
-- The immersive room displays six books per section on phones and ten on
+- The immersive room displays five books per section on phones and ten on
   larger screens.
 - Brass bookends and horizontal swipes move between physical shelf sections.
 - The range control always states what is visible, for example `7–12 of 84`.

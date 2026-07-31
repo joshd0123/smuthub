@@ -111,6 +111,18 @@
   .library-stat{display:flex;align-items:center;gap:6px;padding:.48em .8em;border:1px solid rgba(225,185,107,.2);border-radius:99px;
     background:rgba(8,8,13,.54);backdrop-filter:blur(9px);color:rgba(244,232,227,.72);font-size:.7rem;font-weight:700}
   .library-stat strong{color:#e8c77e;font-size:.82rem}
+  .world-ribbon{position:relative;isolation:isolate;overflow:hidden;width:100%;margin:0 0 18px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;text-align:left;
+    border:1px solid rgba(136,166,231,.34);border-radius:16px;background:linear-gradient(105deg,rgba(9,17,36,.93),rgba(20,15,25,.92));color:var(--cream);cursor:pointer;
+    box-shadow:0 18px 36px rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.05)}
+  .world-ribbon::before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(7,11,24,.95) 12%,rgba(7,11,24,.8) 56%,rgba(7,11,24,.25)),url('/themes/moonlit-reading-room/room-v1.jpg') center 31%/cover;opacity:.82}
+  .world-ribbon::after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(60% 120% at 18% 50%,rgba(113,155,255,.2),transparent 74%)}
+  .world-ribbon:hover{border-color:rgba(231,199,126,.68);transform:translateY(-1px)}
+  .world-ribbon .moon-seal{width:45px;height:45px;display:grid;place-items:center;border:1px solid rgba(231,199,126,.46);border-radius:50%;background:radial-gradient(circle at 35% 28%,#fff4c5 0 12%,#d6bc72 13% 28%,#273a6c 30% 62%,#0a1026 65%);box-shadow:0 0 26px rgba(106,147,255,.3);color:#fff;font-size:.65rem}
+  .world-ribbon small,.world-ribbon strong,.world-ribbon span{display:block}
+  .world-ribbon small{color:#e7c77e;font-size:.56rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+  .world-ribbon strong{font:600 1.02rem 'Fraunces';margin-top:2px}
+  .world-ribbon span{color:rgba(244,232,227,.62);font-size:.66rem;margin-top:1px}
+  .world-ribbon b{padding:.55em .85em;border:1px solid rgba(231,199,126,.45);border-radius:99px;background:rgba(7,8,16,.66);color:#f2d48d;font-size:.65rem;white-space:nowrap}
   .case-name{position:relative;z-index:4;margin:0 auto -1px;width:max-content;max-width:82%;padding:.45em 1.2em;border:1px solid rgba(239,207,137,.45);
     border-radius:12px 12px 4px 4px;background:linear-gradient(180deg,#7d592d,#3d2714);box-shadow:0 8px 18px rgba(0,0,0,.42),inset 0 1px rgba(255,255,255,.18);
     color:#f1d596;font-family:'Fraunces';font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;text-align:center}
@@ -121,9 +133,9 @@
   body[data-library-detail="plaque"] .case-name{background:linear-gradient(180deg,#d8b66b,#7d5423);color:#251509;border-color:#f5dda6}
 
   /* ── THE BOOKCASE (cabinet) ── */
-  .bookcase{position:relative;width:100%;max-width:690px;padding:13px 13px 15px;border-radius:14px;
+  .bookcase{position:relative;width:100%;max-width:690px;padding:13px 13px 15px;border:1px solid rgba(238,209,145,.18);border-radius:14px;
     background:var(--wood-tex), linear-gradient(150deg,var(--wood-lt),var(--wood) 32%,var(--wood-dk));background-blend-mode:soft-light,normal;
-    box-shadow:0 38px 78px -30px rgba(0,0,0,.85), inset 0 2px 0 rgba(255,255,255,.12), inset 0 -3px 7px rgba(0,0,0,.4);
+    box-shadow:0 38px 78px -30px rgba(0,0,0,.85),0 0 0 5px rgba(0,0,0,.16),0 0 45px var(--glow),inset 0 2px 0 rgba(255,255,255,.12),inset 0 -3px 7px rgba(0,0,0,.4);
     transition:max-width .45s,border-radius .45s,padding .45s,box-shadow .45s}
   .bookcase::before{content:"";position:absolute;left:-4px;right:-4px;top:-7px;height:11px;border-radius:7px 7px 3px 3px;
     background:var(--wood-tex), linear-gradient(var(--wood-lt),var(--wood-dk));background-blend-mode:soft-light,normal;
@@ -157,6 +169,7 @@
     box-shadow:inset 0 0 55px rgba(0,0,0,.72), inset 0 2px 12px rgba(0,0,0,.82)}
   .interior::before{content:"";position:absolute;left:0;right:0;top:0;height:54px;pointer-events:none;
     background:radial-gradient(40% 80% at 20% 0%, var(--glow), transparent 70%), radial-gradient(40% 80% at 80% 0%, var(--glow), transparent 70%)}
+  .interior::after{content:"";position:absolute;inset:6px;z-index:0;border:1px solid rgba(235,206,142,.09);border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 26px rgba(0,0,0,.55)}
 
   .shelfrow{position:relative;padding-top:6px}
   /* elegant engraved gold label — no chunky plaque */
@@ -165,6 +178,8 @@
     text-shadow:0 1px 3px rgba(0,0,0,.75)}
   .plate .ct{font-family:'Hanken Grotesk';font-weight:800;font-size:.7rem;color:var(--accent);opacity:.85}
   .plate .shelf-sub{font-family:'Hanken Grotesk';font-size:.61rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,232,227,.44)}
+  .shelf-door{margin-left:auto;padding:.34em .66em;border:1px solid rgba(231,199,126,.24);border-radius:99px;background:rgba(8,8,13,.42);color:#e7c77e;font:800 .55rem 'Hanken Grotesk';letter-spacing:.07em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+  .shelf-door:hover{border-color:#e7c77e;background:rgba(40,28,24,.72)}
 
   .row{position:relative}
   .row::before{content:"";position:absolute;left:0;right:0;top:-2px;height:30px;pointer-events:none;z-index:2;
@@ -230,7 +245,11 @@
   .rail-card h3{font-family:'Fraunces';font-weight:600;font-size:1.2rem;line-height:1.1;margin:6px 0}
   .rail-card p{color:rgba(244,232,227,.58);font-size:.76rem;line-height:1.45}
   .rail-btn{width:100%;margin-top:13px;border:1px solid rgba(225,185,107,.35);border-radius:99px;padding:.7em;background:linear-gradient(100deg,#d9b76c,#9d692f);color:#1b1008;font:800 .73rem 'Hanken Grotesk';cursor:pointer}
-  .rail-card.world-card::before{background:radial-gradient(80% 70% at 100% 0%,rgba(98,135,224,.16),transparent 70%)}
+  .rail-card.world-card{min-height:202px;display:flex;flex-direction:column;justify-content:flex-end;background:#0a0d18}
+  .rail-card.world-card::after{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,rgba(5,8,18,.08),rgba(5,8,18,.96) 76%),url('/themes/moonlit-reading-room/room-v1.jpg') center 30%/cover;opacity:.92}
+  .rail-card.world-card>*{position:relative;z-index:1}
+  .rail-card.world-card::before{z-index:2;background:radial-gradient(80% 70% at 100% 0%,rgba(98,135,224,.16),transparent 70%)}
+  .world-live{display:inline-flex!important;align-self:flex-start;margin-bottom:auto;padding:.34em .62em;border:1px solid rgba(117,225,178,.4);border-radius:99px;background:rgba(8,31,26,.72);color:#9be7c6!important;font-size:.53rem!important;font-weight:800!important;letter-spacing:.11em;text-transform:uppercase}
   .rail-card.tbr-card::before{background:radial-gradient(80% 70% at 100% 0%,rgba(126,54,86,.2),transparent 70%)}
   .rail-card .rail-link{display:inline-flex;margin-top:10px;color:#e7c77e;font-size:.7rem;font-weight:800;cursor:pointer;background:none;border:0;padding:0}
 
@@ -367,25 +386,28 @@
   .world-message{position:absolute;top:84px;left:50%;transform:translateX(-50%);max-width:420px;width:calc(100% - 40px);
     padding:8px 12px;text-align:center;border-radius:99px;background:rgba(8,7,10,.46);backdrop-filter:blur(8px);
     color:rgba(244,232,227,.82);font-size:.78rem;transition:opacity .2s}
-  .world-stage{position:relative;width:100%;max-width:760px;height:min(64vh,520px);margin:0 auto}
+  .world-discovery{position:absolute;top:128px;left:50%;z-index:7;transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:.46em .72em;border:1px solid rgba(231,199,126,.22);border-radius:99px;background:rgba(6,8,16,.52);backdrop-filter:blur(9px);color:#e7c77e;font-size:.6rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+  .world-discovery .secret-dots{display:flex;gap:4px}.world-discovery i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18);box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+  .world-discovery i.on{background:#e7c77e;box-shadow:0 0 9px rgba(231,199,126,.7)}
+  .world-stage{position:relative;width:100%;max-width:1080px;height:min(68vh,620px);margin:0 auto}
   .world-clock,.world-fairies,.world-candle{border:0;color:#fff;cursor:pointer;background-color:transparent;background-position:center;background-repeat:no-repeat;background-size:contain;
     transition:transform .7s cubic-bezier(.2,.8,.2,1),filter .5s ease,opacity .4s ease}
   .world-clock:focus-visible,.world-fairies:focus-visible,.world-candle:focus-visible{outline:2px solid var(--amber);outline-offset:-10px}
-  .world-clock{position:absolute;z-index:5;left:-2%;bottom:20px;width:150px;height:330px;
+  .world-clock{position:absolute;z-index:5;left:0;bottom:-8px;width:220px;height:440px;
     background-image:url('/themes/moonlit-reading-room/addons/clock-v3.png');
     filter:drop-shadow(0 20px 24px rgba(0,0,0,.62))}
-  .world-clock:hover{transform:translateY(-4px) scale(1.025);filter:drop-shadow(0 24px 28px rgba(0,0,0,.72)) brightness(1.08)}
+  .world-clock:hover{transform:translateY(-5px) scale(1.018);filter:drop-shadow(0 24px 30px rgba(0,0,0,.74)) brightness(1.08)}
   .clock-hands{display:none}
   .clock-time{position:absolute;left:50%;bottom:17px;transform:translateX(-50%);padding:.35em .7em;border:1px solid rgba(231,197,128,.24);border-radius:99px;
     background:rgba(4,7,13,.68);backdrop-filter:blur(7px);font-size:.62rem;letter-spacing:.08em;white-space:nowrap;color:#e8c778;box-shadow:0 8px 20px rgba(0,0,0,.38)}
-  .world-fairies{position:absolute;z-index:5;right:-2%;bottom:72px;width:220px;height:190px;
+  .world-fairies{position:absolute;z-index:5;right:2%;top:10%;width:245px;height:180px;
     background-image:url('/themes/moonlit-reading-room/addons/fairies-v3.png');
-    filter:drop-shadow(0 0 15px rgba(255,205,110,.18))}
-  .world-fairies:hover{transform:translate(-4px,-5px) scale(1.025);filter:drop-shadow(0 0 22px rgba(255,205,110,.32)) brightness(1.08)}
+    opacity:.42;filter:drop-shadow(0 0 12px rgba(255,205,110,.14)) saturate(.72)}
+  .world-fairies:hover{transform:scale(1.025);opacity:.8;filter:drop-shadow(0 0 24px rgba(255,205,110,.34)) brightness(1.08)}
   .fairy{display:none}
   .fairy-label{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);padding:.38em .7em;border:1px solid rgba(231,197,128,.2);border-radius:99px;
     background:rgba(4,7,13,.64);backdrop-filter:blur(7px);font-family:inherit;font-weight:700;font-size:.66rem;white-space:nowrap;color:rgba(244,232,227,.86)}
-  .sv-shelf{position:absolute;left:50%;bottom:48px;transform:translateX(-50%);z-index:4;width:min(74%,620px)}
+  .sv-shelf{position:absolute;left:50%;bottom:48px;transform:translateX(-50%);z-index:4;width:min(58%,620px)}
   .sv-shelf .books{justify-content:center;min-height:190px;overflow:visible;padding-right:4px;scroll-snap-type:none}
   .sv-shelf.page-next .books{animation:shelfPageNext .34s cubic-bezier(.2,.8,.2,1)}
   .sv-shelf.page-prev .books{animation:shelfPagePrev .34s cubic-bezier(.2,.8,.2,1)}
@@ -401,21 +423,31 @@
   .shelf-range{position:absolute;left:50%;top:calc(100% + 11px);transform:translateX(-50%);z-index:8;border:1px solid rgba(225,185,107,.28);border-radius:99px;
     padding:.42em .8em;background:rgba(6,7,12,.72);backdrop-filter:blur(8px);color:#e7c57f;font-family:inherit;font-weight:800;font-size:.66rem;white-space:nowrap;cursor:pointer}
   .shelf-range:hover{border-color:#e7c57f;background:rgba(24,17,14,.86)}
-  .world-candle{position:absolute;z-index:5;left:14%;bottom:28px;width:105px;height:190px;
+  .world-candle{position:absolute;z-index:5;right:8%;bottom:14px;width:118px;height:215px;
     background-image:url('/themes/moonlit-reading-room/addons/candle-v4.png');
     filter:drop-shadow(0 0 20px rgba(255,163,64,.28))}
   .world-candle:hover{transform:translateY(-3px) scale(1.035);filter:drop-shadow(0 0 28px rgba(255,163,64,.46)) brightness(1.08)}
   .world-candle .wax,.world-candle .flame{display:none}
+  .candle-label{position:absolute;left:50%;bottom:2px;transform:translateX(-50%);padding:.38em .7em;border:1px solid rgba(231,197,128,.2);border-radius:99px;background:rgba(4,7,13,.7);backdrop-filter:blur(7px);font-family:inherit;font-weight:700;font-size:.6rem;white-space:nowrap;color:rgba(244,232,227,.86)}
+  .fairy-trail{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+  .fairy-trail span{position:absolute;width:5px;height:5px;border-radius:50%;background:#ffe7a0;opacity:0;box-shadow:0 0 6px #ffd16a,0 0 18px rgba(255,209,106,.75)}
+  .fairy-trail span:nth-child(1){right:23%;top:29%}.fairy-trail span:nth-child(2){right:34%;top:37%}.fairy-trail span:nth-child(3){right:29%;top:47%}.fairy-trail span:nth-child(4){right:43%;top:31%}.fairy-trail span:nth-child(5){right:19%;top:43%}.fairy-trail span:nth-child(6){right:39%;top:51%}
   .world-memory{position:absolute;left:50%;bottom:255px;transform:translateX(-50%) translateY(10px);width:min(86%,430px);z-index:6;
     padding:16px 18px;border:1px solid rgba(244,232,227,.2);border-radius:16px;background:rgba(10,8,12,.76);backdrop-filter:blur(12px);
     text-align:center;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s}
   .world-memory.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .world-memory small{display:block;color:var(--amber);font-weight:800;text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px}
   .world-memory strong{font-family:'Fraunces';font-weight:500}
-  .shelfview.fairies-awake .world-fairies{transform:translate(-46px,-30px) scale(1.08);filter:drop-shadow(0 0 30px rgba(255,205,110,.48)) brightness(1.17)}
+  .shelfview.fairies-awake .world-fairies{opacity:1;transform:scale(1.06);filter:drop-shadow(0 0 32px rgba(255,205,110,.5)) brightness(1.14);animation:fairyArrival .8s cubic-bezier(.2,.8,.2,1)}
+  .shelfview.fairies-awake .fairy-trail span{animation:fairyDust 3.8s ease-in-out infinite}
+  .shelfview.fairies-awake .fairy-trail span:nth-child(2){animation-delay:.45s}.shelfview.fairies-awake .fairy-trail span:nth-child(3){animation-delay:.9s}.shelfview.fairies-awake .fairy-trail span:nth-child(4){animation-delay:1.35s}.shelfview.fairies-awake .fairy-trail span:nth-child(5){animation-delay:1.8s}.shelfview.fairies-awake .fairy-trail span:nth-child(6){animation-delay:2.25s}
   .shelfview.candle-dim .world-candle{opacity:.23;filter:saturate(.35) brightness(.55)}
+  .shelfview.time-blue .world-clock{filter:drop-shadow(0 18px 28px rgba(0,0,0,.55)) brightness(1.1) saturate(.86)}
+  .shelfview.time-blue .sv-light{background:linear-gradient(0deg,rgba(108,128,220,.24),rgba(66,82,160,.1))}
   .shelfview.time-dawn .world-clock{filter:drop-shadow(0 18px 28px rgba(0,0,0,.55)) brightness(1.2) sepia(.12)}
   .shelfview.time-dawn .sv-light{background:linear-gradient(0deg,rgba(255,166,95,.38),rgba(255,110,145,.1))}
+  @keyframes fairyArrival{0%{opacity:0;transform:translate(80px,-28px) scale(.72)}65%{opacity:1}100%{transform:translate(0,0) scale(1.06)}}
+  @keyframes fairyDust{0%,100%{opacity:0;transform:translate(0,8px) scale(.6)}35%{opacity:1}70%{opacity:.35;transform:translate(-24px,-30px) scale(1.25)}}
   .sv-dots{position:absolute;left:0;right:0;bottom:16px;z-index:7;display:flex;gap:7px;justify-content:center}
   .sv-dots button{width:9px;height:9px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;box-shadow:0 0 0 5px transparent}
   .sv-dots button.on{background:var(--accent);box-shadow:0 0 8px var(--accent)}
@@ -478,13 +510,15 @@
   @keyframes shelfPagePrev{from{opacity:.15;transform:translateX(-24px)}to{opacity:1;transform:translateX(0)}}
   @media(max-width:620px){
     .sv-world{padding-left:10px;padding-right:10px}
-    .world-stage{height:min(68vh,560px)}
-    .world-clock{left:-7px;bottom:0;width:120px;height:270px}
+    .world-discovery{top:139px;font-size:.53rem}
+    .world-stage{height:min(70vh,580px)}
+    .world-clock{left:-18px;bottom:-4px;width:135px;height:300px}
     .clock-time{bottom:9px;font-size:.54rem}
-    .world-fairies{right:-7px;bottom:72px;width:150px;height:130px}
+    .world-fairies{right:-12px;top:20%;width:145px;height:112px}
     .fairy-label{bottom:2px;font-size:.58rem}
-    .world-candle{left:18%;bottom:30px;width:78px;height:150px}
-    .sv-shelf{width:74%}.sv-shelf .book.face{width:82px}.sv-shelf .book.spine{width:34px}
+    .world-candle{right:10px;bottom:12px;width:78px;height:152px}
+    .candle-label{font-size:.54rem}
+    .sv-shelf{width:62%}.sv-shelf .book.face{width:82px}.sv-shelf .book.spine{width:34px}
     .sv-shelf .book.spine .spineinner{height:138px}.sv-shelf .book.spine .stitle{max-height:104px}
     .shelf-turn{bottom:112px;width:30px;height:52px;font-size:1.35rem}
     .shelf-turn.prev{left:max(3px,calc(13% - 35px))}.shelf-turn.next{right:max(3px,calc(13% - 35px))}
@@ -547,7 +581,11 @@
     .stage{padding-left:9px;padding-right:9px}
     .library-rail{grid-template-columns:1fr}
     .library-stats{gap:5px}.library-stat{font-size:.62rem}
+    .world-ribbon{grid-template-columns:auto 1fr;padding:11px}.world-ribbon b{grid-column:2;justify-self:start}.world-ribbon .moon-seal{width:40px;height:40px}
+    .world-ribbon-desc{display:none!important}
+    .world-ribbon strong{font-size:.9rem}.world-ribbon span{font-size:.61rem}
     .case-name{font-size:.61rem}
+    .shelf-door{font-size:.5rem;padding:.3em .5em}
     .tbr-stack{flex-basis:100px;height:128px;margin-right:-2px;background-size:145px auto}
     .tbr-stack .tbr-copy{width:36px;height:36px}
     body[data-cabinet="moon-arch"] .bookcase{padding-top:36px;border-radius:72px 72px 14px 14px}
@@ -689,7 +727,8 @@
   let ownedProducts=new Set(), accountTrials={};
   let dnfOpen=false, shelfIndex=0, selectedProp=null, drawerTab='worlds', previewWorld=null;
   let shelfPages={reading:0,want:0,read:0,dnf:0}, pageDirection=0, collectionOpen=false, collectionQuery='';
-  let worldState={dawn:false,fairies:false,candleDim:false,memory:false};
+  const freshWorldState=()=>({time:0,fairies:false,candleDim:false,memory:false,discovered:{clock:false,fairies:false,candle:false}});
+  let worldState=freshWorldState();
 
   const $=id=>document.getElementById(id);
   const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -789,7 +828,7 @@
     shelfIndex=0;
     previewWorld='moonlit';
     collectionOpen=false; collectionQuery='';
-    worldState={dawn:false,fairies:false,candleDim:false,memory:false};
+    worldState=freshWorldState();
     renderShelfView();
     $('shelfview').classList.add('open');
   }
@@ -845,6 +884,7 @@
     $('stage').innerHTML = '<div class="library-layout"><div class="library-main">'
       + '<div class="library-stats"><span class="library-stat"><strong>'+counts.reading+'</strong> reading now</span>'
       + '<span class="library-stat"><strong>'+counts.want+'</strong> waiting in TBR</span><span class="library-stat"><strong>'+counts.read+'</strong> finished</span></div>'
+      + '<button class="world-ribbon" id="openLiveWorld"><span class="moon-seal" aria-hidden="true">✦</span><span class="world-ribbon-copy"><small>Live premium world · 3 secrets to awaken</small><strong>The Moonlit Reading Room</strong><span class="world-ribbon-desc">Your books, a working clock, candlelight and visitors that leave something behind.</span></span><b>Enter world →</b></button>'
       + '<div class="case-name">'+esc(readerName)+' Library · Ex Libris</div>'
       + '<div class="bookcase"><span class="cabinet-crest"></span><span class="case-flourish"></span><div class="interior">'
       + visible.map(([st,label])=>{
@@ -854,7 +894,7 @@
           const displayLabel=st==='want'?'TBR':label;
           const shelfSub=st==='want'?'<span class="shelf-sub">Want to Read</span>':'';
           return '<div class="shelfrow'+(overflow?' has-overflow':'')+'"><div class="plate">'+displayLabel+' '+shelfSub+' <span class="ct">'+items.length+'</span>'
-            +(overflow?'<span class="swipecue">Swipe or enter ↔</span>':'')+'</div>'
+            +'<button class="shelf-door" data-enter-shelf="'+st+'">Enter Moonlit ↗</button></div>'
             + '<div class="row"><div class="books" data-status="'+st+'" aria-label="'+esc(label)+', '+items.length+' books">'+inner+'</div></div><div class="plank"></div></div>';
         }).join('')
       + '</div></div>'
@@ -864,8 +904,8 @@
       + '<section class="rail-card"><div class="rail-kicker">The Library Atelier</div><h3>The bookcase is collectible, too.</h3>'
       + '<p>Choose a wide heirloom cabinet, a moon arch, a gothic tower, or open gallery shelves. Then layer in finishes, plaques, gilded trim, and atmosphere.</p>'
       + '<button class="rail-btn" id="openAtelier">Style this library</button></section>'
-      + '<section class="rail-card world-card"><div class="rail-kicker">Immersive shelf worlds</div><h3>Every shelf opens somewhere else.</h3>'
-      + '<p>Your currently reading, visual TBR, finished, and DNF shelves each become an interactive romantasy reading room with their own mood and collectibles.</p>'
+      + '<section class="rail-card world-card"><span class="world-live">Live and touchable</span><div class="rail-kicker">The Moonlit Reading Room</div><h3>This is a world, not a skin.</h3>'
+      + '<p>Change the hour, wake hidden visitors, alter the light, and bring the books from this shelf with you.</p>'
       + '<button class="rail-link" id="openReadingWorld">Enter the reading world →</button></section>'
       + '<section class="rail-card tbr-card"><div class="rail-kicker">Your visual TBR</div><h3>Make anticipation part of the ritual.</h3>'
       + '<p>A beautiful to-be-read shelf should make choosing the next romance or fantasy book feel as satisfying as finishing one.</p>'
@@ -886,8 +926,10 @@
     const dt=$('dnftoggle'); if(dt) dt.onclick=()=>{ dnfOpen=!dnfOpen; renderRoom(); };
     const atelier=$('openAtelier'); if(atelier) atelier.onclick=()=>{ buildThemeSheet(); $('themesheetbg').classList.add('open'); };
     const readingWorld=$('openReadingWorld'); if(readingWorld) readingWorld.onclick=()=>enterShelf('reading');
+    const liveWorld=$('openLiveWorld'); if(liveWorld) liveWorld.onclick=()=>enterShelf('reading');
     const tbrWorld=$('openTbrWorld'); if(tbrWorld) tbrWorld.onclick=()=>enterShelf('want');
     document.querySelectorAll('[data-open-tbr]').forEach(el=>el.onclick=()=>enterShelf('want'));
+    document.querySelectorAll('[data-enter-shelf]').forEach(el=>el.onclick=e=>{ e.stopPropagation(); enterShelf(el.dataset.enterShelf); });
     document.querySelectorAll('#stage .book').forEach(el=>{
       const key=el.dataset.key; let lp=null;
       el.addEventListener('click', ()=>{ if(el._suppress){ el._suppress=false; return; } openBook(key); });
@@ -1137,7 +1179,7 @@
     const product=(catalog().products||[]).find(p=>p.worldKey===saved);
     previewWorld=product&&!owns(product.key)?saved:null;
     collectionOpen=false; collectionQuery='';
-    worldState={dawn:false,fairies:false,candleDim:false,memory:false};
+    worldState=freshWorldState();
     renderShelfView();
     $('shelfview').classList.add('open');
   }
@@ -1156,11 +1198,21 @@
     const sv=$('shelfview');
     sv.classList.toggle('fairies-awake',worldState.fairies);
     sv.classList.toggle('candle-dim',worldState.candleDim);
-    sv.classList.toggle('time-dawn',worldState.dawn);
+    sv.classList.toggle('time-blue',worldState.time===1);
+    sv.classList.toggle('time-dawn',worldState.time===2);
+    const discovered=Object.values(worldState.discovered).filter(Boolean).length;
+    const count=$('secretCount'); if(count) count.textContent=discovered+'/3 secrets awakened';
+    document.querySelectorAll('#shelfview [data-secret]').forEach(dot=>dot.classList.toggle('on',!!worldState.discovered[dot.dataset.secret]));
+    const memory=$('worldMemory'); if(memory) memory.classList.toggle('show',worldState.memory);
+  }
+  function discoverWorldSecret(key){
+    worldState.discovered[key]=true;
+    if(Object.values(worldState.discovered).every(Boolean)) worldState.memory=true;
+    syncWorldClasses();
   }
 
   let lastRenderedPageSize=null, shelfResizeTimer=null;
-  const shelfPageSize=()=>window.matchMedia('(max-width:620px)').matches?6:10;
+  const shelfPageSize=()=>window.matchMedia('(max-width:620px)').matches?5:10;
   function shelfItems(status){
     return [...(user?shelf:DEMO_SHELF)].sort(shelfCmp).filter(b=>b.status===status);
   }
@@ -1203,23 +1255,27 @@
     const books=info.pageItems.length?info.pageItems.map((b,i)=>bookHTML(b,i===0)).join(''):ghostHTML;
     const range=info.items.length?(info.start+1)+'–'+info.end+' of '+info.items.length:'Empty shelf';
     const pageClass=pageDirection>0?' page-next':(pageDirection<0?' page-prev':'');
+    const times=[['11:47 PM','light-moonlit'],['3:18 AM','light-moonlit'],['6:02 AM','light-dawn']];
+    const discovered=Object.values(worldState.discovered).filter(Boolean).length;
     $('shelfview').innerHTML =
       '<div class="sv-backdrop world-'+world+'"></div>'
-      + '<div class="sv-light '+(worldState.dawn?'light-dawn':(world==='boudoir'?'light-candlelit':'light-moonlit'))+'"></div>'
+      + '<div class="sv-light '+(world==='boudoir'?'light-candlelit':times[worldState.time][1])+'"></div>'
       + '<div class="sv-top"><button class="sv-back" id="svback" aria-label="Back to bookcase">←</button>'
       + '<div class="sv-label"><small>'+esc(worldContext)+(worldContext!==label?' · '+esc(label):'')+'</small>'+esc(worldTitle(world))+'</div>'
       + '<button class="sv-shopbtn" id="svshop">✨ Shop &amp; decorate</button></div>'
       + '<div class="sv-world"><div class="world-message" id="worldMessage">The shelf is listening. Touch something and let the room answer.</div>'
+      + '<div class="world-discovery"><span id="secretCount">'+discovered+'/3 secrets awakened</span><span class="secret-dots"><i data-secret="clock"></i><i data-secret="fairies"></i><i data-secret="candle"></i></span></div>'
       + '<div class="world-stage">'
-      + '<button class="world-clock" id="worldClock" aria-label="Wind the clock"><span class="clock-hands"></span><span class="clock-time">'+(worldState.dawn?'6:02 AM':'11:47 PM')+'</span></button>'
+      + '<div class="fairy-trail" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>'
+      + '<button class="world-clock" id="worldClock" aria-label="Turn the clock to another hour"><span class="clock-hands"></span><span class="clock-time">'+times[worldState.time][0]+'</span></button>'
       + '<button class="world-fairies" id="worldFairies" aria-label="Call the fairies"><span class="fairy"></span><span class="fairy"></span><span class="fairy"></span><span class="fairy-label">'+(worldState.fairies?'Settle fairies':'Call fairies')+'</span></button>'
-      + '<button class="world-candle" id="worldCandle" aria-label="'+(worldState.candleDim?'Relight':'Dim')+' the candle"><span class="flame"></span><span class="wax"></span></button>'
+      + '<button class="world-candle" id="worldCandle" aria-label="'+(worldState.candleDim?'Relight':'Dim')+' the candle"><span class="flame"></span><span class="wax"></span><span class="candle-label">'+(worldState.candleDim?'Relight candle':'Dim candle')+'</span></button>'
       + '<button class="shelf-turn prev" id="shelfPrev" aria-label="Previous shelf section" '+(info.page===0?'disabled':'')+'>‹</button>'
       + '<div class="sv-shelf'+pageClass+'">'
       + '<div class="books" data-status="'+status+'">'+books+'</div><div class="plank"></div>'
       + '<button class="shelf-range" id="shelfRange" aria-label="View all '+info.items.length+' books">'+range+' · View all</button></div>'
       + '<button class="shelf-turn next" id="shelfNext" aria-label="Next shelf section" '+(info.page>=info.pageCount-1?'disabled':'')+'>›</button>'
-      + '<div class="world-memory'+(worldState.memory?' show':'')+'" id="worldMemory"><small>Reading memory</small><strong>The scene that made you stay up until 2 AM.</strong></div>'
+      + '<div class="world-memory'+(worldState.memory?' show':'')+'" id="worldMemory"><small>Moonlit seal awakened</small><strong>You found all three secrets. The room is fully awake.</strong></div>'
       + '</div></div>'
       + '<div class="sv-dots">'+SHELVES.map((s,i)=>'<button data-shelf-index="'+i+'" class="'+(i===shelfIndex?'on':'')+'" aria-label="Open '+esc(s[1])+'" title="'+esc(s[1])+'"></button>').join('')+'</div>'
       + '<div class="sv-drawer" id="svdrawer"></div>'
@@ -1241,17 +1297,22 @@
     document.querySelectorAll('#shelfview [data-collection-index]').forEach(el=>el.onclick=()=>focusCollectionBook(status,Number(el.dataset.collectionIndex)));
     document.querySelectorAll('#shelfview [data-shelf-index]').forEach(el=>el.onclick=()=>switchShelfTo(Number(el.dataset.shelfIndex)));
     $('worldClock').onclick=()=>{
-      worldState.dawn=!worldState.dawn; syncWorldClasses();
-      $('worldClock').querySelector('.clock-time').textContent=worldState.dawn?'6:02 AM':'11:47 PM';
-      worldMessage(worldState.dawn?'Dawn enters the window and warms every book spine.':'The clock returns the room to midnight.');
+      const times=['11:47 PM','3:18 AM','6:02 AM'];
+      const messages=['The clock returns the room to midnight.','Blue hour settles over the shelves. Something is almost awake.','Dawn enters the window and warms every book spine.'];
+      worldState.time=(worldState.time+1)%times.length;
+      discoverWorldSecret('clock');
+      $('worldClock').querySelector('.clock-time').textContent=times[worldState.time];
+      worldMessage(messages[worldState.time]);
     };
     $('worldFairies').onclick=()=>{
-      worldState.fairies=!worldState.fairies; syncWorldClasses();
+      worldState.fairies=!worldState.fairies; discoverWorldSecret('fairies');
       $('worldFairies').querySelector('.fairy-label').textContent=worldState.fairies?'Settle fairies':'Call fairies';
-      worldMessage(worldState.fairies?'The fairies scatter starlight and leave a hidden bookmark.':'The fairies settle back into the room.');
+      worldMessage(worldState.fairies?'The visitors cross the moonlight and leave a gold bookmark behind.':'The visitors return to the upper gallery. Their bookmark remains.');
     };
     $('worldCandle').onclick=()=>{
-      worldState.candleDim=!worldState.candleDim; syncWorldClasses();
+      worldState.candleDim=!worldState.candleDim; discoverWorldSecret('candle');
+      $('worldCandle').querySelector('.candle-label').textContent=worldState.candleDim?'Relight candle':'Dim candle';
+      $('worldCandle').setAttribute('aria-label',(worldState.candleDim?'Relight':'Dim')+' the candle');
       worldMessage(worldState.candleDim?'The candle dims. Moonlight takes over the shelf.':'Warm candlelight returns.');
     };
     document.querySelectorAll('#shelfview .book').forEach(el=>{
@@ -1423,7 +1484,7 @@
   function switchShelfTo(index){
     shelfIndex=Math.min(SHELVES.length-1,Math.max(0,index));
     collectionOpen=false; collectionQuery=''; pageDirection=0;
-    previewWorld=null; worldState={dawn:false,fairies:false,candleDim:false,memory:false};
+    previewWorld=null; worldState=freshWorldState();
     renderShelfView();
   }
   window.addEventListener('resize',()=>{
