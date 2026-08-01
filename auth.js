@@ -396,9 +396,12 @@
       header .sh-guides{position:relative}
       header .sh-guides>summary{position:relative;padding-right:17px;list-style:none}
       header .sh-guides>summary::-webkit-details-marker{display:none}
+      /* Keep the label on its own layer so Safari can't skew it while the
+         chevron re-composites on hover-open (a WebKit <details> glitch). */
+      header .sh-guides-label{position:relative;z-index:1;transform:none}
       header .sh-guides-chevron{position:absolute;right:1px;top:50%;width:10px;height:7px;margin-top:-3.5px;overflow:visible;
         fill:none;stroke:var(--amber,#ffab40);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
-        opacity:.65;transition:opacity .16s,transform .16s}
+        opacity:.65;transition:opacity .16s}
       header .sh-guides>summary:focus-visible .sh-guides-chevron,
       header .sh-guides[open] .sh-guides-chevron{opacity:1}
       header .sh-guides[open] .sh-guides-chevron{transform:rotate(180deg)}
