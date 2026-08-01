@@ -1569,6 +1569,7 @@ const INDEX_CSS = `<style>
   .bmeta .bstat{margin-top:7px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .bmeta .brate{color:var(--amber);font-weight:800;font-size:.8rem;font-variant-numeric:tabular-nums;white-space:nowrap}
   .bmeta .bs{font-size:.72rem;letter-spacing:.04em}
+  .bmeta .bs .off{filter:grayscale(1);opacity:.28}
   .noresults{color:var(--muted);font-style:italic;padding:24px 0 40px}
 </style>`;
 
@@ -1619,7 +1620,7 @@ function renderBookIndex(allBooks){
           <div class="ba">${esc(author)}</div>
           ${(rating || spice) ? `<div class="bstat">
             ${rating ? `<span class="brate">★ ${rating}</span>` : ''}
-            ${spice ? `<span class="bs">${'🌶️'.repeat(spice)}</span>` : ''}
+            ${spice ? `<span class="bs">${'🌶️'.repeat(spice)}<span class="off">${'🌶️'.repeat(5 - spice)}</span></span>` : ''}
           </div>` : ''}
         </div>
       </a>`;
