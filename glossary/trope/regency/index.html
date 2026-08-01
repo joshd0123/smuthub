@@ -52,14 +52,15 @@
      Hidden on mobile (hamburger handles nav); shown ≥900px. Hover/focus opens
      the panel; on touch ≥900px a tap on the strip toggles it via the click
      handler at the bottom of this file. */
-  .sh-rail{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:45;display:none}
-  @media(min-width:900px){.sh-rail{display:flex;align-items:center}}
+  /* Sticky left-edge category navigator — shown on every screen size now
+     (mobile readers need the quick jump between categories most of all). */
+  .sh-rail{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:45;display:flex;align-items:center}
   .sh-rail-strip{display:flex;flex-direction:column;gap:6px;padding:14px 9px;background:rgba(28,19,22,.92);border:1px solid var(--line);border-left:0;border-radius:0 12px 12px 0;backdrop-filter:blur(8px);cursor:pointer;transition:background .15s}
   .sh-rail:hover .sh-rail-strip,.sh-rail.open .sh-rail-strip{background:rgba(40,28,32,.96)}
   .sh-rail-strip i{display:block;width:22px;height:2px;background:var(--muted);border-radius:1px;transition:background .15s,width .15s}
   .sh-rail:hover .sh-rail-strip i,.sh-rail.open .sh-rail-strip i{background:var(--amber)}
   .sh-rail-strip i:nth-child(odd){width:16px}
-  .sh-rail-panel{position:absolute;left:100%;top:50%;transform:translate(-12px,-50%);background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:260px;max-height:80vh;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;box-shadow:0 22px 50px rgba(0,0,0,.55);margin-left:8px}
+  .sh-rail-panel{position:absolute;left:100%;top:50%;transform:translate(-12px,-50%);background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:14px;width:min(280px,calc(100vw - 54px));max-height:80vh;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;box-shadow:0 22px 50px rgba(0,0,0,.55);margin-left:8px}
   /* Invisible bridge across the 8px gap between strip and panel. Without it the
      pointer crosses dead space that belongs to neither element, the rail loses
      :hover mid-reach and the panel snaps shut — which is why the rail felt like
@@ -164,7 +165,7 @@
 
   <section class="detail" id="books">
     <h2>Books featuring this trope</h2>
-    <div class="grid" id="bookGrid"><a class="card" href="/books/half-a-soul-atwater-2020/"><div class="cover"><img src="https://covers.smuthub.ca/half-a-soul-atwater-2020.jpg" alt="Half a Soul book cover" loading="lazy"></div><div class="meta"><div class="t">Half a Soul</div><div class="a">Olivia Atwater</div></div></a></div>
+    <div class="grid" id="bookGrid"><a class="card" href="/books/a-kiss-of-iron-sager/"><div class="cover"><img src="https://covers.smuthub.ca/a-kiss-of-iron-sager.jpg" alt="A Kiss of Iron book cover" loading="lazy"></div><div class="meta"><div class="t">A Kiss of Iron</div><div class="a">Clare Sager</div></div></a><a class="card" href="/books/half-a-soul-atwater-2020/"><div class="cover"><img src="https://covers.smuthub.ca/half-a-soul-atwater-2020.jpg" alt="Half a Soul book cover" loading="lazy"></div><div class="meta"><div class="t">Half a Soul</div><div class="a">Olivia Atwater</div></div></a></div>
   </section>
 
 
