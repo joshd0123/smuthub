@@ -182,24 +182,30 @@
   /* recessed interior — reads as dark wood, not a black void */
   .interior{position:relative;border-radius:7px;padding:6px 14px 12px;overflow:hidden;
     background:
-      repeating-linear-gradient(90deg, rgba(255,255,255,.022) 0 1px, transparent 1px 72px),
+      radial-gradient(85% 38% at 50% 0%,rgba(105,47,70,.13),transparent 72%),
+      linear-gradient(90deg,rgba(255,255,255,.018),transparent 14%,rgba(0,0,0,.06) 52%,transparent 84%),
       var(--wood-tex),
-      linear-gradient(160deg, var(--wood-dk), #0c0805);
-    background-blend-mode:normal,soft-light,normal;
-    box-shadow:inset 0 0 55px rgba(0,0,0,.72), inset 0 2px 12px rgba(0,0,0,.82)}
+      linear-gradient(165deg,color-mix(in srgb,var(--wood-dk) 76%,#170c18),#080607);
+    background-blend-mode:screen,soft-light,soft-light,normal;
+    box-shadow:inset 0 0 68px rgba(0,0,0,.74),inset 15px 0 24px -18px rgba(255,231,187,.12),inset -18px 0 28px -18px rgba(0,0,0,.88),inset 0 3px 15px rgba(0,0,0,.86)}
   .interior::before{content:"";position:absolute;left:0;right:0;top:0;height:54px;pointer-events:none;
-    background:radial-gradient(40% 80% at 20% 0%, var(--glow), transparent 70%), radial-gradient(40% 80% at 80% 0%, var(--glow), transparent 70%)}
-  .interior::after{content:"";position:absolute;inset:6px;z-index:0;border:1px solid rgba(235,206,142,.09);border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 26px rgba(0,0,0,.55)}
+    background:radial-gradient(38% 90% at 22% 0%,var(--glow),transparent 72%),radial-gradient(38% 90% at 78% 0%,var(--glow),transparent 72%),linear-gradient(180deg,rgba(245,215,153,.035),transparent)}
+  .interior::after{content:"";position:absolute;inset:6px;z-index:0;border:1px solid rgba(235,206,142,.1);border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 0 3px rgba(0,0,0,.15),inset 0 0 30px rgba(0,0,0,.58)}
 
-  .shelfrow{position:relative;padding-top:6px}
+  .shelfrow{position:relative;padding-top:8px}
+  .shelfrow::before,.shelfrow::after{content:"";position:absolute;z-index:5;bottom:1px;width:7px;height:7px;border:1px solid rgba(236,196,111,.5);border-radius:50%;pointer-events:none;
+    background:radial-gradient(circle at 36% 30%,#f2d28a 0 13%,#9d6a2f 32%,#2a170e 72%);box-shadow:0 2px 4px rgba(0,0,0,.58),inset 0 0 0 1px rgba(31,14,8,.35)}
+  .shelfrow::before{left:5px}.shelfrow::after{right:5px}
   /* elegant engraved gold label — no chunky plaque */
-  .plate{position:relative;z-index:3;display:flex;width:calc(100% - 8px);align-items:baseline;gap:8px;margin:0 0 2px 4px;
-    font-family:'Fraunces';font-weight:600;font-size:.96rem;letter-spacing:.03em;color:var(--plate);
-    text-shadow:0 1px 3px rgba(0,0,0,.75)}
+  .plate{position:relative;z-index:3;display:flex;width:calc(100% - 8px);align-items:baseline;gap:8px;margin:0 0 1px 4px;padding:0 4px 3px;
+    font-family:'Fraunces';font-weight:600;font-size:.96rem;letter-spacing:.035em;color:color-mix(in srgb,var(--plate) 90%,#f1d5a0);
+    text-shadow:0 1px 3px rgba(0,0,0,.82),0 0 11px rgba(211,167,81,.08)}
   .plate .ct{font-family:'Hanken Grotesk';font-weight:800;font-size:.7rem;color:var(--accent);opacity:.85}
   .plate .shelf-sub{font-family:'Hanken Grotesk';font-size:.61rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,232,227,.44)}
-  .shelf-door{margin-left:auto;padding:.34em .66em;border:1px solid rgba(231,199,126,.24);border-radius:99px;background:rgba(8,8,13,.42);color:#e7c77e;font:800 .55rem 'Hanken Grotesk';letter-spacing:.07em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
-  .shelf-door:hover{border-color:#e7c77e;background:rgba(40,28,24,.72)}
+  .shelf-door{margin-left:auto;transform:translateY(3px);padding:.36em .72em .4em;border:1px solid rgba(231,199,126,.3);border-bottom-color:rgba(59,34,18,.72);border-radius:5px 5px 2px 2px;
+    background:linear-gradient(180deg,rgba(172,123,54,.2),rgba(20,12,12,.8));box-shadow:inset 0 1px rgba(255,229,165,.1),0 4px 8px rgba(0,0,0,.35);color:#e7c77e;
+    font:800 .52rem 'Hanken Grotesk';letter-spacing:.09em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+  .shelf-door:hover{border-color:#e7c77e;background:linear-gradient(180deg,rgba(192,143,70,.29),rgba(31,18,17,.88))}
 
   .row{position:relative}
   .row::before{content:"";position:absolute;left:0;right:0;top:-2px;height:30px;pointer-events:none;z-index:2;
@@ -235,17 +241,19 @@
       var(--spine-art,linear-gradient(var(--spine,#4a1d30),var(--spine,#4a1d30))),
       linear-gradient(var(--spine,#4a1d30),var(--spine,#4a1d30));
     background-size:auto,auto,cover,auto;background-position:center,center,var(--spine-pos,50%) center,center;background-repeat:no-repeat;
-    background-blend-mode:normal,normal,normal,normal;border-left:2px solid rgba(0,0,0,.55);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+    background-blend-mode:normal,normal,normal,normal;border-left:2px solid rgba(0,0,0,.55);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+    transform:translateY(var(--sit,0px)) rotate(var(--lean,0deg));transform-origin:50% 100%}
   .book.spine .spineinner::before,.book.spine .spineinner::after{content:"";position:absolute;left:4px;right:4px;height:4px;background:var(--accent);opacity:.4;border-radius:1px}
   .book.spine .spineinner::before{top:11px}.book.spine .spineinner::after{bottom:11px}
   .book.spine .stitle{position:relative;z-index:2;writing-mode:vertical-rl;font-family:'Fraunces';font-weight:600;font-size:.64rem;letter-spacing:.02em;
     color:#fff4de;white-space:nowrap;overflow:hidden;max-height:104px;padding:5px 3px;border-radius:3px;background:rgba(9,6,8,.42);text-shadow:0 1px 4px #000;backdrop-filter:blur(1px)}
   .book.spine .sp{top:3px;right:3px;font-size:.5rem;padding:.04em .2em}
   .book.spine .grave{top:3px;left:3px;font-size:.62rem}
-  /* slim refined shelf ledge */
-  .plank{height:10px;margin-top:-2px;border-radius:2px;position:relative;z-index:1;
-    background:var(--wood-tex), linear-gradient(var(--wood-lt),var(--wood) 45%,var(--wood-dk));background-blend-mode:soft-light,normal;
-    box-shadow:0 9px 15px -5px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.22)}
+  /* hand-finished shelf ledge with a real front lip */
+  .plank{height:14px;margin-top:-2px;border:1px solid rgba(236,205,139,.1);border-radius:3px;position:relative;z-index:1;
+    background:var(--wood-tex),linear-gradient(180deg,var(--wood-lt) 0,var(--wood) 34%,var(--wood-dk) 68%,#080505 100%);background-blend-mode:soft-light,normal;
+    box-shadow:0 11px 17px -5px rgba(0,0,0,.7),inset 0 2px rgba(255,255,255,.2),inset 0 -4px rgba(0,0,0,.3)}
+  .plank::before{content:"";position:absolute;left:3%;right:3%;top:2px;height:1px;background:linear-gradient(90deg,transparent,rgba(239,202,123,.2) 18%,rgba(255,233,179,.1) 62%,transparent)}
   .ghost{flex:0 0 auto;width:clamp(72px,18vw,92px);height:128px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
     border:2px dashed rgba(255,255,255,.16);border-radius:1px 4px 4px 1px;color:var(--accent);font-weight:700;font-size:.78rem;cursor:pointer;opacity:.75}
   .ghost:hover{border-color:var(--accent);background:rgba(255,255,255,.04);opacity:1}
@@ -900,7 +908,8 @@
     }
     const bookHash=hash(b.book_key), color=SPINES[bookHash%SPINES.length], spineArt=b.spine_url||coverSrc(b);
     const spinePosition=b.spine_url?(Number.isFinite(+b.spine_position)?+b.spine_position:50):(20+(bookHash%61));
-    const spineStyle='--spine:'+color+';--book-w:'+(34+(bookHash%15))+'px;--book-h:'+(132+((bookHash>>3)%15))+'px;--spine-pos:'+Math.max(0,Math.min(100,spinePosition))+'%;'
+    const spineLean=((bookHash%5)-2)*.34, spineSit=Math.floor(bookHash/5)%3;
+    const spineStyle='--spine:'+color+';--book-w:'+(34+(bookHash%15))+'px;--book-h:'+(132+((bookHash>>3)%15))+'px;--spine-pos:'+Math.max(0,Math.min(100,spinePosition))+'%;--lean:'+spineLean+'deg;--sit:'+spineSit+'px;'
       +(spineArt?'--spine-art:url(&quot;'+esc(spineArt)+'&quot;);':'');
     return '<div class="book spine'+(dnf?' dnf':'')+'" draggable="true" data-key="'+esc(b.book_key)+'" style="--book-w:'+(34+(bookHash%15))+'px">'
       + '<div class="spineinner" style="'+spineStyle+'"><span class="stitle">'+esc(b.title||'Untitled')+'</span></div>'
