@@ -305,6 +305,15 @@
   rail.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ setOpen(false); strip.focus(); } });
   document.addEventListener('click', function(e){ if(!rail.contains(e.target)) setOpen(false); });
 
+  // Close the panel the instant any category is chosen. On touch the panel
+  // overlays the content, so leaving it open after a tap forces the reader to
+  // "click off" (and risks tapping a term behind it). Fires on every page —
+  // for a navigating link it closes then follows; for the same-page anchor
+  // links below it just doubles the setOpen(false) they already do.
+  rail.querySelectorAll('.sh-rail-panel a').forEach(function(a){
+    a.addEventListener('click', function(){ setOpen(false); });
+  });
+
   // ── Same-page anchoring (glossary index only) ────────────────────────────
   // The index already renders every category as a .catblock, so following
   // /glossary/<cat>/ from here would be a full page load to reach content
