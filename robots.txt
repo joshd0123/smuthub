@@ -1,22 +1,30 @@
 # ════════════════════════════════════════════════════════════════════
-#  ⚠️  EARLY LIVE RELEASE — CRAWLING IS DISABLED ON PURPOSE
+#  ⚠️  EARLY LIVE RELEASE — CRAWLING IS LIMITED ON PURPOSE
 #
-#  smutHub is live for invited/early users, but search discovery is not being
-#  opened yet. Keep the global block below until the public indexing launch is
-#  explicitly approved.
+#  smutHub is live for invited/early users. The global site remains blocked,
+#  with explicit exceptions for the first two approved gift-guide URLs.
 #
 #  Left crawlable, search engines could index an early release before launch
 #  QA, canonical-host checks, and the public sitemap rollout are complete.
 #
-#  ►►► ON INDEXING LAUNCH DAY: delete the Disallow line below, then uncomment the
-#      block underneath. See LAUNCH.md step 4.
-#      Skipping this leaves the live site invisible to search engines,
-#      and nothing on the site will look broken — so it is easy to miss.
+#  ►►► ON FULL INDEXING LAUNCH DAY: replace the limited block below with the
+#      public crawler block underneath, then move the guide URLs into the main
+#      sitemap. See LAUNCH.md step 4.
 # ════════════════════════════════════════════════════════════════════
 
 User-agent: *
 Disallow: /
-Disallow: /guides/what-is-romantasy/
+# First public search surface: allow only the two distinct partner gift guides
+# and the assets required for Google to render them accurately.
+Allow: /guides/romantasy-gift-ideas/listening-ledger/
+Allow: /guides/romantasy-gift-ideas/gift-compass/
+Allow: /guides/romantasy-gift-ideas/assets/
+Allow: /guides/romantasy-gift-ideas/downloads/
+Allow: /guides/romantasy-gift-ideas/shared.css
+Allow: /guides/romantasy-gift-ideas/shared.js
+Allow: /sitemap-gift-guides.xml
+
+Sitemap: https://smuthub.ca/sitemap-gift-guides.xml
 
 # ── Restore at launch (and delete the two lines above) ───────────────
 # smutHub — public crawler rules

@@ -31,3 +31,7 @@
 # Bookcase page renamed to /bookshelf/ (2026-07)
 /smuthub-bookcase.html  /bookshelf/  301
 /smuthub-bookcase  /bookshelf/  301
+
+# The standalone field kit was consolidated into the Gift Compass.
+/guides/romantasy-gift-ideas/date-night-field-kit/  /guides/romantasy-gift-ideas/gift-compass/#never-fail  301
+/guides/romantasy-gift-ideas/date-night-field-kit.html  /guides/romantasy-gift-ideas/gift-compass/#never-fail  301
