@@ -12,10 +12,31 @@
 #      sitemap. See LAUNCH.md step 4.
 # ════════════════════════════════════════════════════════════════════
 
-User-agent: *
+# Cloudflare Managed robots.txt prepends a global `User-agent: * / Allow: /`
+# group in production. Search-specific groups are intentionally declared here:
+# specific groups take precedence over Cloudflare's global group and preserve
+# the limited-release crawl gate for the major indexing crawlers.
+User-agent: Googlebot
+User-agent: Bingbot
+User-agent: Applebot
+User-agent: DuckDuckBot
+User-agent: YandexBot
+User-agent: Baiduspider
 Disallow: /
 # First public search surface: allow only the two distinct partner gift guides
 # and the assets required for Google to render them accurately.
+Allow: /guides/romantasy-gift-ideas/listening-ledger/
+Allow: /guides/romantasy-gift-ideas/gift-compass/
+Allow: /guides/romantasy-gift-ideas/assets/
+Allow: /guides/romantasy-gift-ideas/downloads/
+Allow: /guides/romantasy-gift-ideas/shared.css
+Allow: /guides/romantasy-gift-ideas/shared.js
+Allow: /sitemap-gift-guides.xml
+
+# Fallback for crawlers when the origin robots.txt is served without
+# Cloudflare's managed header.
+User-agent: *
+Disallow: /
 Allow: /guides/romantasy-gift-ideas/listening-ledger/
 Allow: /guides/romantasy-gift-ideas/gift-compass/
 Allow: /guides/romantasy-gift-ideas/assets/
