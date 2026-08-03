@@ -36,6 +36,7 @@
     /* themed (set by .theme-* below) */
     --case:#1c130c;--wood:#7a4e2a;--wood-dk:#3d2614;--wood-lt:#9c6a3c;--back:#170d06;
     --plate:#c9a063;--plate-tx:#2a1a0c;--accent:#ffab40;
+    --wood-surface:var(--wood-tex);--metal:#b68743;--metal-hi:#f0cf85;
     --room:radial-gradient(130% 90% at 50% -20%,#241612,#0b0706 72%);
     --glow:rgba(255,171,64,.16);
     /* procedural textures (offline, no external assets) */
@@ -49,6 +50,7 @@
   .theme-faerie {--case:#0c1a14;--wood:#3a6a4e;--wood-dk:#1a3326;--wood-lt:#58936e;--back:#0a1810;--plate:#e0cf7a;--plate-tx:#0c1a14;--accent:#62e0b0;--room:radial-gradient(130% 90% at 50% -18%,#143026,#06100b 72%);--glow:rgba(98,224,176,.20);}
   .theme-academia{--case:#170f0c;--wood:#7a4a32;--wood-dk:#3a2418;--wood-lt:#9c6442;--back:#160d08;--plate:#caa063;--plate-tx:#170f0c;--accent:#e0a85e;--room:radial-gradient(130% 90% at 50% -18%,#26180f,#0c0908 72%);--glow:rgba(224,168,94,.18);}
   .theme-boudoir{--case:#1a0c12;--wood:#7e3656;--wood-dk:#3e1a2c;--wood-lt:#a04e72;--back:#1a0a12;--plate:#eec078;--plate-tx:#1a0c12;--accent:#ff6ea0;--room:radial-gradient(130% 90% at 50% -18%,#2e1320,#0c0708 72%);--glow:rgba(255,110,160,.20);}
+  .theme-founder{--case:#160a0c;--wood:#4a1719;--wood-dk:#170809;--wood-lt:#71302c;--back:#100709;--plate:#d8b56f;--plate-tx:#1d0b0d;--accent:#d34765;--metal:#a97735;--metal-hi:#efcf87;--wood-surface:url('/themes/bookcase/blackened-rosewood-v1.jpg');--room:radial-gradient(130% 90% at 50% -18%,#2b1119,#090609 72%);--glow:rgba(190,48,83,.16);}
 
   /* Optional per-theme background ART. These files don't exist yet; the site
      stays on the CSS gradients above until you (a) drop an image at the path
@@ -58,6 +60,7 @@
   .theme-faerie  {--room-img:url('/themes/faerie/room.jpg')}
   .theme-academia{--room-img:url('/themes/academia/room.jpg')}
   .theme-boudoir {--room-img:url('/themes/boudoir/room.jpg')}
+  .theme-founder {--room-img:url('/themes/founder/room.jpg')}
   body.art-on .roomwrap{background:var(--room-img) center/cover no-repeat, var(--room)}
   body.art-on .bd-plain{background:var(--room-img) center/cover no-repeat, var(--room)}
 
@@ -124,15 +127,8 @@
   .world-ribbon strong{font:600 1.02rem 'Fraunces';margin-top:2px}
   .world-ribbon span{color:rgba(244,232,227,.62);font-size:.66rem;margin-top:1px}
   .world-ribbon b{padding:.55em .85em;border:1px solid rgba(231,199,126,.45);border-radius:99px;background:rgba(7,8,16,.66);color:#f2d48d;font-size:.65rem;white-space:nowrap}
-  .case-identity{position:relative;z-index:4;width:min(620px,94%);padding-top:39px;margin:0 auto -18px;filter:drop-shadow(0 14px 18px rgba(0,0,0,.5))}
-  .case-identity::before{content:"";position:absolute;z-index:-2;left:50%;top:0;width:100%;height:22px;transform:translateX(-50%);border:1px solid rgba(238,209,145,.2);border-radius:5px;
-    background:var(--wood-tex),linear-gradient(180deg,var(--wood-lt) 0,var(--wood) 36%,var(--wood-dk) 70%,#090506 100%);background-blend-mode:soft-light,normal;
-    box-shadow:inset 0 2px rgba(255,255,255,.18),inset 0 -4px rgba(0,0,0,.34),0 8px 9px -4px rgba(0,0,0,.72),8px 9px 0 -5px rgba(0,0,0,.48)}
-  .case-identity::after{content:"";position:absolute;z-index:-3;left:4%;right:4%;top:15px;height:15px;background:linear-gradient(180deg,rgba(0,0,0,.72),transparent);filter:blur(3px)}
-  .plaque-chain{position:absolute;z-index:-1;top:12px;width:7px;height:42px;border:1px solid rgba(242,205,119,.62);border-radius:5px;
-    background:repeating-linear-gradient(180deg,#3a291c 0 3px,#d2a759 3px 5px,#140d0d 5px 8px);box-shadow:inset 1px 0 rgba(255,239,190,.35),2px 3px 4px rgba(0,0,0,.6);transform-origin:50% 0}
-  .plaque-chain::before{content:"";position:absolute;left:50%;top:-6px;width:11px;height:11px;transform:translateX(-50%);border:2px solid #b58a43;border-radius:50%;background:#1c1110;box-shadow:inset 0 0 0 2px #4b2e1d}
-  .plaque-chain.left{left:27%;transform:rotate(5deg)}.plaque-chain.right{right:27%;transform:rotate(-5deg)}
+  .case-identity{position:relative;z-index:8;width:min(620px,94%);margin:0 auto -18px;filter:drop-shadow(0 14px 18px rgba(0,0,0,.5))}
+  .plaque-chain{display:none}
   .case-name{position:relative;width:min(520px,84%);aspect-ratio:3/1;margin:0 auto;color:#f1d596;font-family:'Fraunces';text-transform:uppercase;text-align:center}
   .case-art{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 9px 7px rgba(0,0,0,.62));pointer-events:none;user-select:none}
   .case-copy{position:absolute;z-index:1;left:24%;right:24%;top:49%;transform:translateY(-10%)}
@@ -140,7 +136,7 @@
   .case-name small{font:800 .46rem 'Hanken Grotesk';letter-spacing:.23em;color:rgba(244,224,215,.7);text-shadow:0 2px 4px #080306}
   .case-name strong{font-size:1.22rem;font-weight:600;letter-spacing:.18em;line-height:1.05;margin-top:2px;color:#ffe3a6;text-shadow:0 2px 2px #16090c,0 0 15px rgba(220,146,73,.22)}
   .case-motto{margin-top:4px;color:rgba(231,181,139,.78);font:800 .4rem 'Hanken Grotesk';letter-spacing:.24em;text-shadow:0 2px 3px #080306}
-  .founder-edition-bar{position:relative;width:min(340px,68%);margin:-2px auto 0;padding:.48em 2.2em .46em;border:1px solid rgba(229,194,116,.62);border-top-color:rgba(255,230,165,.85);border-radius:2px 2px 9px 9px;
+  .founder-edition-bar{position:relative;z-index:8;width:min(340px,68%);margin:-2px auto 0;padding:.48em 2.2em .46em;border:1px solid rgba(229,194,116,.62);border-top-color:rgba(255,230,165,.85);border-radius:2px 2px 9px 9px;
     background:linear-gradient(90deg,#120a10,#2d101d 48%,#120a10);box-shadow:0 10px 20px rgba(0,0,0,.55),inset 0 1px rgba(255,255,255,.09),inset 0 0 0 3px rgba(3,2,3,.4);
     color:#dcae5e;font-size:.49rem;font-weight:800;letter-spacing:.16em;text-align:center;text-transform:uppercase;white-space:nowrap}
   .founder-edition-bar::before,.founder-edition-bar::after{position:absolute;top:50%;transform:translateY(-52%);color:#bd334f;font:1rem 'Fraunces'}
@@ -153,20 +149,26 @@
   body[data-library-detail="plaque"] .case-art{filter:drop-shadow(0 9px 7px rgba(0,0,0,.62)) drop-shadow(0 0 18px rgba(207,152,72,.18)) brightness(1.05)}
 
   /* ── THE BOOKCASE (cabinet) ── */
-  .bookcase{position:relative;width:100%;max-width:690px;padding:13px 13px 15px;border:1px solid rgba(238,209,145,.18);border-width:1px 5px 7px;border-radius:14px;
-    background:var(--wood-tex), linear-gradient(150deg,var(--wood-lt),var(--wood) 32%,var(--wood-dk));background-blend-mode:soft-light,normal;
-    box-shadow:11px 14px 0 -4px rgba(0,0,0,.42),0 38px 78px -30px rgba(0,0,0,.9),0 0 0 5px rgba(0,0,0,.16),0 0 45px var(--glow),inset 0 2px rgba(255,255,255,.15),inset 7px 0 10px -8px rgba(255,255,255,.2),inset -10px 0 14px -9px rgba(0,0,0,.72),inset 0 -5px 9px rgba(0,0,0,.5);
+  .bookcase{position:relative;width:100%;max-width:690px;padding:24px 24px 30px;border:1px solid rgba(238,209,145,.16);border-width:1px 6px 9px;border-radius:8px 8px 13px 13px;
+    background:linear-gradient(90deg,rgba(255,255,255,.09),transparent 9%,rgba(0,0,0,.1) 48%,transparent 88%,rgba(0,0,0,.48)),var(--wood-surface),linear-gradient(150deg,var(--wood-lt),var(--wood) 32%,var(--wood-dk));background-size:auto,520px auto,auto;background-blend-mode:soft-light,soft-light,normal;
+    box-shadow:17px 18px 0 -7px rgba(0,0,0,.5),0 44px 84px -28px rgba(0,0,0,.94),0 0 0 5px rgba(0,0,0,.2),0 0 48px var(--glow),inset 0 2px rgba(255,255,255,.13),inset 12px 0 17px -12px rgba(255,255,255,.22),inset -14px 0 19px -11px rgba(0,0,0,.82),inset 0 -8px 13px rgba(0,0,0,.66);
     transition:max-width .45s,border-radius .45s,padding .45s,box-shadow .45s}
-  .bookcase::before{content:"";position:absolute;left:-11px;right:-11px;top:-12px;height:20px;border:1px solid rgba(238,209,145,.18);border-radius:7px 7px 3px 3px;
-    background:var(--wood-tex), linear-gradient(var(--wood-lt),var(--wood-dk));background-blend-mode:soft-light,normal;
-    box-shadow:0 9px 13px -5px rgba(0,0,0,.72),inset 0 2px rgba(255,255,255,.18),inset 0 -5px rgba(0,0,0,.26)}
-  .bookcase::after{content:"";position:absolute;left:-10px;right:-10px;bottom:-13px;height:18px;border-radius:3px 3px 7px 7px;
-    background:var(--wood-tex), linear-gradient(var(--wood),var(--wood-dk));background-blend-mode:soft-light,normal;
-    box-shadow:0 14px 20px -7px rgba(0,0,0,.78),inset 0 2px rgba(255,255,255,.08)}
+  .bookcase::before{content:"";position:absolute;z-index:6;left:-15px;right:-15px;top:-16px;height:31px;border:1px solid rgba(238,209,145,.2);border-radius:5px 5px 2px 2px;
+    background:linear-gradient(180deg,rgba(255,255,255,.16) 0,transparent 18%,rgba(0,0,0,.7) 100%),var(--wood-surface),linear-gradient(var(--wood-lt),var(--wood-dk));background-size:auto,500px auto,auto;background-blend-mode:soft-light,soft-light,normal;
+    box-shadow:0 -3px 0 -1px rgba(26,8,10,.95),0 3px 0 -1px rgba(230,193,113,.22),0 13px 17px -6px rgba(0,0,0,.82),inset 0 3px rgba(255,255,255,.16),inset 0 -8px rgba(0,0,0,.32)}
+  .bookcase::after{content:"";position:absolute;z-index:6;left:-17px;right:-17px;bottom:-20px;height:31px;border:1px solid rgba(228,190,110,.18);border-radius:2px 2px 8px 8px;
+    background:linear-gradient(180deg,rgba(255,255,255,.07),transparent 20%,rgba(0,0,0,.65)),var(--wood-surface),linear-gradient(var(--wood),var(--wood-dk));background-size:auto,500px auto,auto;background-blend-mode:soft-light,soft-light,normal;
+    box-shadow:0 6px 0 -2px #100607,0 18px 25px -7px rgba(0,0,0,.84),inset 0 2px rgba(255,255,255,.09),inset 0 -6px rgba(0,0,0,.38)}
+  .cabinet-pilaster{position:absolute;z-index:5;top:16px;bottom:17px;width:19px;border:1px solid rgba(225,188,108,.15);pointer-events:none;
+    background:linear-gradient(90deg,rgba(255,255,255,.16),transparent 22%,rgba(0,0,0,.56) 84%),var(--wood-surface),linear-gradient(90deg,var(--wood-lt),var(--wood-dk));background-size:auto,350px auto,auto;background-blend-mode:soft-light,soft-light,normal;
+    box-shadow:inset 3px 0 5px rgba(255,255,255,.06),inset -5px 0 7px rgba(0,0,0,.52),5px 0 8px rgba(0,0,0,.3)}
+  .cabinet-pilaster.left{left:3px}.cabinet-pilaster.right{right:3px;transform:scaleX(-1)}
+  .cabinet-pilaster::before,.cabinet-pilaster::after{content:"";position:absolute;left:-4px;right:-4px;height:13px;border:1px solid rgba(232,196,116,.19);background:linear-gradient(180deg,var(--wood-lt),var(--wood-dk));box-shadow:inset 0 1px rgba(255,255,255,.15),0 4px 5px rgba(0,0,0,.42)}
+  .cabinet-pilaster::before{top:-5px;border-radius:3px 3px 1px 1px}.cabinet-pilaster::after{bottom:-5px;border-radius:1px 1px 3px 3px}
   .cabinet-crest{display:none;position:absolute;z-index:-1;left:12%;right:12%;top:-48px;height:58px;
-    background:var(--wood-tex),linear-gradient(145deg,var(--wood-lt),var(--wood-dk));background-blend-mode:soft-light,normal;
+    background:var(--wood-surface),linear-gradient(145deg,var(--wood-lt),var(--wood-dk));background-blend-mode:soft-light,normal;
     filter:drop-shadow(0 10px 14px rgba(0,0,0,.5))}
-  body[data-cabinet="moon-arch"] .bookcase{max-width:650px;padding-top:48px;border-radius:110px 110px 18px 18px}
+  body[data-cabinet="moon-arch"] .bookcase{max-width:650px;padding-top:54px;border-radius:86px 86px 13px 13px}
   body[data-cabinet="moon-arch"] .bookcase::before{left:16%;right:16%;top:11px;height:15px;border-radius:50%}
   body[data-cabinet="moon-arch"] .interior{border-radius:82px 82px 9px 9px;padding-top:23px}
   body[data-cabinet="moon-arch"] .case-identity{margin-bottom:-18px}
@@ -180,7 +182,7 @@
   body[data-cabinet="floating-gallery"] .shelfrow{margin:0 0 18px;padding:10px 14px 0;border-radius:12px;background:linear-gradient(180deg,rgba(15,11,12,.7),rgba(7,6,7,.28));border:1px solid rgba(225,185,107,.12)}
   body[data-cabinet="floating-gallery"] .plank{height:15px;margin-left:-18px;margin-right:-18px}
   /* recessed interior — reads as dark wood, not a black void */
-  .interior{position:relative;border-radius:7px;padding:6px 14px 12px;overflow:hidden;
+  .interior{position:relative;border:1px solid rgba(221,184,105,.11);border-radius:4px;padding:10px 17px 16px;overflow:hidden;
     background:
       radial-gradient(85% 38% at 50% 0%,rgba(105,47,70,.13),transparent 72%),
       linear-gradient(90deg,rgba(255,255,255,.018),transparent 14%,rgba(0,0,0,.06) 52%,transparent 84%),
@@ -196,6 +198,11 @@
   .shelfrow::before,.shelfrow::after{content:"";position:absolute;z-index:5;bottom:1px;width:7px;height:7px;border:1px solid rgba(236,196,111,.5);border-radius:50%;pointer-events:none;
     background:radial-gradient(circle at 36% 30%,#f2d28a 0 13%,#9d6a2f 32%,#2a170e 72%);box-shadow:0 2px 4px rgba(0,0,0,.58),inset 0 0 0 1px rgba(31,14,8,.35)}
   .shelfrow::before{left:5px}.shelfrow::after{right:5px}
+  .shelfrow[data-shelf-status="dnf"]{margin-top:2px;background:linear-gradient(180deg,rgba(91,20,39,.055),transparent 38%)}
+  .shelfrow[data-shelf-status="dnf"] .plate{color:#d8a7a9}
+  .shelfrow[data-shelf-status="dnf"] .plate::before{content:"✦";font-family:'Hanken Grotesk';font-size:.54rem;color:#8f3047;transform:translateY(-1px)}
+  .shelfrow[data-shelf-status="dnf"] .ct{color:#b54a62}
+  .shelfrow[data-shelf-status="dnf"] .plank{filter:saturate(.78) brightness(.84)}
   /* elegant engraved gold label — no chunky plaque */
   .plate{position:relative;z-index:3;display:flex;width:calc(100% - 8px);align-items:baseline;gap:8px;margin:0 0 1px 4px;padding:0 4px 3px;
     font-family:'Fraunces';font-weight:600;font-size:.96rem;letter-spacing:.035em;color:color-mix(in srgb,var(--plate) 90%,#f1d5a0);
@@ -250,10 +257,10 @@
   .book.spine .sp{top:3px;right:3px;font-size:.5rem;padding:.04em .2em}
   .book.spine .grave{top:3px;left:3px;font-size:.62rem}
   /* hand-finished shelf ledge with a real front lip */
-  .plank{height:14px;margin-top:-2px;border:1px solid rgba(236,205,139,.1);border-radius:3px;position:relative;z-index:1;
-    background:var(--wood-tex),linear-gradient(180deg,var(--wood-lt) 0,var(--wood) 34%,var(--wood-dk) 68%,#080505 100%);background-blend-mode:soft-light,normal;
-    box-shadow:0 11px 17px -5px rgba(0,0,0,.7),inset 0 2px rgba(255,255,255,.2),inset 0 -4px rgba(0,0,0,.3)}
-  .plank::before{content:"";position:absolute;left:3%;right:3%;top:2px;height:1px;background:linear-gradient(90deg,transparent,rgba(239,202,123,.2) 18%,rgba(255,233,179,.1) 62%,transparent)}
+  .plank{height:18px;margin:0 -3px -1px;border:1px solid rgba(236,205,139,.12);border-radius:2px;position:relative;z-index:1;
+    background:linear-gradient(180deg,rgba(255,255,255,.13),transparent 24%,rgba(0,0,0,.62)),var(--wood-surface),linear-gradient(180deg,var(--wood-lt) 0,var(--wood) 34%,var(--wood-dk) 68%,#080505 100%);background-size:auto,420px auto,auto;background-blend-mode:soft-light,soft-light,normal;
+    box-shadow:0 14px 20px -6px rgba(0,0,0,.77),0 3px 0 -1px rgba(198,145,63,.27),inset 0 2px rgba(255,255,255,.16),inset 0 -5px rgba(0,0,0,.42)}
+  .plank::before{content:"";position:absolute;left:3%;right:3%;top:3px;height:1px;background:linear-gradient(90deg,transparent,var(--metal) 18%,var(--metal-hi) 50%,var(--metal) 82%,transparent);opacity:.48}
   .ghost{flex:0 0 auto;width:clamp(72px,18vw,92px);height:128px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
     border:2px dashed rgba(255,255,255,.16);border-radius:1px 4px 4px 1px;color:var(--accent);font-weight:700;font-size:.78rem;cursor:pointer;opacity:.75}
   .ghost:hover{border-color:var(--accent);background:rgba(255,255,255,.04);opacity:1}
@@ -281,15 +288,6 @@
   .rail-card.tbr-card::before{background:radial-gradient(80% 70% at 100% 0%,rgba(126,54,86,.2),transparent 70%)}
   .rail-card .rail-link{display:inline-flex;margin-top:10px;color:#e7c77e;font-size:.7rem;font-weight:800;cursor:pointer;background:none;border:0;padding:0}
 
-  /* DNF drawer below the cabinet */
-  .dnfwrap{width:100%;max-width:560px;margin:14px auto 0}
-  .dnfstrip{width:100%;text-align:left;color:var(--cream);cursor:pointer;display:flex;align-items:center;gap:8px;
-    font-family:inherit;font-weight:700;font-size:.85rem;padding:.7em 1em;border-radius:8px;
-    background:var(--wood-tex), linear-gradient(var(--wood-dk),#0c0706);background-blend-mode:soft-light,normal;
-    border:1px solid rgba(0,0,0,.5);box-shadow:0 10px 20px -8px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.1)}
-  .dnfstrip .caret{margin-left:auto;transition:transform .2s}
-  .dnfwrap.open .dnfstrip .caret{transform:rotate(180deg)}
-  .dnfbooks{background:linear-gradient(160deg,var(--back),#070403);border-radius:0 0 8px 8px;box-shadow:inset 0 0 30px rgba(0,0,0,.8);padding:0 10px}
   .hint{text-align:center;color:#7a5e5b;font-size:.78rem;margin:18px auto 0;max-width:520px}
 
   /* ── FLOATING THEME PILL + SHEET ── */
@@ -595,7 +593,7 @@
 
   /* responsive: roomier on tablet/desktop */
   @media(min-width:760px){
-    .bookcase{max-width:690px;padding:16px 16px 18px}
+    .bookcase{max-width:690px;padding:25px 25px 31px}
     .book.face,.ghost{width:clamp(84px,9vw,100px)}
     .book.spine{width:var(--book-w,44px)}
     .books{gap:9px;min-height:172px}
@@ -612,16 +610,19 @@
     .world-ribbon{grid-template-columns:auto 1fr;padding:11px}.world-ribbon b{grid-column:2;justify-self:start}.world-ribbon .moon-seal{width:40px;height:40px}
     .world-ribbon-desc{display:none!important}
     .world-ribbon strong{font-size:.9rem}.world-ribbon span{font-size:.61rem}
-    .case-identity{width:min(350px,94%);padding-top:35px;margin-bottom:-14px}.case-name{width:94%}.case-copy{left:22%;right:22%;top:47%}
-    .plaque-chain{height:38px}.plaque-chain.left{left:25%}.plaque-chain.right{right:25%}
+    .case-identity{width:min(350px,94%);margin-bottom:-14px}.case-name{width:94%}.case-copy{left:22%;right:22%;top:47%}
     .case-name strong{font-size:.84rem}.case-name small{font-size:.37rem}.case-motto{font-size:.32rem;margin-top:2px}
     .founder-edition-bar{width:84%;font-size:.41rem;letter-spacing:.11em;padding-left:2em;padding-right:2em}
     .founder-edition-bar::before{left:8px}.founder-edition-bar::after{right:8px}
     .shelf-door{font-size:.5rem;padding:.3em .5em}
     .tbr-stack{flex-basis:100px;height:128px;margin-right:-2px;background-size:145px auto}
     .tbr-stack .tbr-copy{width:36px;height:36px}
-    .bookcase::before,.bookcase::after{left:-6px;right:-6px}
-    body[data-cabinet="moon-arch"] .bookcase{padding-top:36px;border-radius:72px 72px 14px 14px}
+    .bookcase{padding:19px 16px 25px;border-width:1px 4px 7px}
+    .bookcase::before{left:-7px;right:-7px;top:-11px;height:23px}.bookcase::after{left:-8px;right:-8px;bottom:-16px;height:25px}
+    .cabinet-pilaster{width:13px;top:13px;bottom:14px}.cabinet-pilaster.left{left:2px}.cabinet-pilaster.right{right:2px}
+    .cabinet-pilaster::before,.cabinet-pilaster::after{left:-3px;right:-3px;height:10px}
+    .interior{padding-left:11px;padding-right:11px}
+    body[data-cabinet="moon-arch"] .bookcase{padding-top:42px;border-radius:58px 58px 12px 12px}
     body[data-cabinet="moon-arch"] .interior{border-radius:54px 54px 8px 8px}
   }
   @media(min-width:1100px){ .bookcase{max-width:700px} }
@@ -699,7 +700,7 @@
     {book_key:'demo-2',title:'The Ascended',author:'Ellie Lennox',status:'reading',cover_url:'https://covers.smuthub.ca/the-ascended-lennox-2025.jpg'},
     {book_key:'demo-3',title:'Fourth Wing',author:'Rebecca Yarros',status:'reading',cover_url:'https://covers.smuthub.ca/fourth-wing-yarros.jpg'},
     {book_key:'demo-4',title:'The Cruel Prince',author:'Holly Black',status:'read',cover_url:'https://covers.smuthub.ca/the-cruel-prince-black.jpg'},
-    {book_key:'demo-5',title:'One Dark Window',author:'Rachel Gillig',status:'want',cover_url:'https://covers.smuthub.ca/one-dark-window-gillig.jpg'},
+    {book_key:'demo-5',title:'One Dark Window',author:'Rachel Gillig',status:'dnf',cover_url:'https://covers.smuthub.ca/one-dark-window-gillig.jpg'},
     {book_key:'demo-6',title:'Heartless Hunter',author:'Kristen Ciccarelli',status:'want',cover_url:'https://covers.smuthub.ca/heartless-hunter-ciccarelli.jpg'},
     {book_key:'demo-7',title:'Divine Rivals',author:'Rebecca Ross',status:'reading',cover_url:'https://covers.smuthub.ca/divine-rivals-ross.jpg'},
     {book_key:'demo-8',title:'Moonbound',author:'A. Vesper',status:'want',cover_url:''},
@@ -707,10 +708,11 @@
     {book_key:'demo-10',title:'Serpent & Saint',author:'J. Wilde',status:'reading',cover_url:''},
     {book_key:'demo-11',title:'The Raven’s Oath',author:'D. Winter',status:'want',cover_url:''},
     {book_key:'demo-12',title:'Ashes of Desire',author:'P. Storm',status:'reading',cover_url:''},
-    {book_key:'demo-13',title:'Claimed by Night',author:'K. Fable',status:'read',cover_url:''},
+    {book_key:'demo-13',title:'Claimed by Night',author:'K. Fable',status:'want',cover_url:''},
     {book_key:'demo-14',title:'The Last Enchantment',author:'T. Vale',status:'reading',cover_url:''}
   ];
   const THEMES=[
+    {id:'founder', name:'Blackthorn Rosewood',color:'#4a1719', premium:true,desc:'Blackened rosewood, oxblood depth and antique brass.'},
     {id:'walnut',  name:'Heirloom Walnut',  color:'#7a4e2a', premium:false,desc:'Warm, classic and quietly dramatic.'},
     {id:'noir',    name:'Midnight Lacquer', color:'#3a3a44', premium:false,desc:'A clean black cabinet for every world.'},
     {id:'boudoir', name:'Rosewood Velvet',  color:'#7e3656', premium:true,desc:'Deep berry wood with golden warmth.'},
@@ -755,10 +757,10 @@
   const REVIEW_MODE=new URLSearchParams(location.search).get('prototype')==='bookcase-v2';
   const TRIAL_KEY='sh_bookcase_trials_v1', TRIAL_MS=24*60*60*1000;
   let sb=null, user=null, shelf=[], spiceMap={}, theme='walnut', isPremium=false, readerName='Your', founderNumber=null;
-  let libraryDetail='', cabinetStyle=REVIEW_MODE?'moon-arch':'grand-heirloom';
+  let libraryDetail='', cabinetStyle='grand-heirloom';
   let custom={};
   let ownedProducts=new Set(), accountTrials={};
-  let dnfOpen=false, shelfIndex=0, selectedProp=null, drawerTab='worlds', previewWorld=null;
+  let shelfIndex=0, selectedProp=null, drawerTab='worlds', previewWorld=null;
   let shelfPages={reading:0,want:0,read:0,dnf:0}, pageDirection=0, collectionOpen=false, collectionQuery='';
   const freshWorldState=()=>({time:0,fairies:false,candleDim:false,memory:false,discovered:{clock:false,fairies:false,candle:false}});
   let worldState=freshWorldState();
@@ -770,7 +772,7 @@
   const labelOf=st=>(SHELVES.find(s=>s[0]===st)||[,st])[1];
   function founderEditionHTML(){
     if(founderNumber) return '<div class="founder-edition-bar">✦ Founder’s Edition · <span>Key No. '+String(founderNumber).padStart(3,'0')+'</span> ✦</div>';
-    if(REVIEW_MODE) return '<div class="founder-edition-bar">✦ Founder’s Edition · <span>Original 100</span> ✦</div>';
+    if(REVIEW_MODE) return '<div class="founder-edition-bar">✦ Founder’s Edition · <span>001</span> ✦</div>';
     return '';
   }
   function syncScrollLock(){
@@ -789,7 +791,7 @@
       readerName='Novarin';
       shelf=DEMO_SHELF.map((b,i)=>({...b,sort_order:i,created_at:new Date(Date.now()-i*86400000).toISOString()}));
       spiceMap={'demo-1':4,'demo-2':5,'demo-4':5,'demo-7':3};
-      setTheme('faerie',true);
+      setTheme('founder',true);
       document.body.dataset.cabinet=cabinetStyle;
       renderRoom(); buildThemeSheet(); $('themepill').classList.add('show');
       return;
@@ -927,27 +929,26 @@
     $('roomwrap').classList.add('library-mode');
     document.querySelector('.roomhead h1').innerHTML='Your <em>Reading Sanctuary</em>';
     $('sub').textContent = total ? 'The calm before each reading world. Choose a shelf, open a book, or make the library unmistakably yours.' : "Empty shelves… for now. Go find some trouble.";
-    const visible=SHELVES.filter(([st])=>st!=='dnf');
-    const dnfItems=ordered.filter(b=>b.status==='dnf');
+    const visible=SHELVES;
     const counts=Object.fromEntries(SHELVES.map(([st])=>[st,ordered.filter(b=>b.status===st).length]));
     $('stage').innerHTML = '<div class="library-layout"><div class="library-main">'
       + '<div class="library-stats"><span class="library-stat"><strong>'+counts.reading+'</strong> reading now</span>'
-      + '<span class="library-stat"><strong>'+counts.want+'</strong> waiting in TBR</span><span class="library-stat"><strong>'+counts.read+'</strong> finished</span></div>'
+      + '<span class="library-stat"><strong>'+counts.want+'</strong> waiting in TBR</span><span class="library-stat"><strong>'+counts.read+'</strong> finished</span>'
+      + '<span class="library-stat"><strong>'+counts.dnf+'</strong> laid to rest</span></div>'
       + '<button class="world-ribbon" id="openLiveWorld"><span class="moon-seal" aria-hidden="true">✦</span><span class="world-ribbon-copy"><small>Live premium world · 3 secrets to awaken</small><strong>The Moonlit Reading Room</strong><span class="world-ribbon-desc">Your books, a working clock, candlelight and visitors that leave something behind.</span></span><b>Enter world →</b></button>'
       + '<div class="case-identity"><span class="plaque-chain left" aria-hidden="true"></span><span class="plaque-chain right" aria-hidden="true"></span><div class="case-name"><img class="case-art" src="/themes/bookcase/romantasy-plaque-v2.webp" alt="" aria-hidden="true" decoding="async"><div class="case-copy"><small>The enchanted library of</small><strong>'+esc(readerName)+'</strong><span class="case-motto">Love · Death · Ever After</span></div></div>'+founderEditionHTML()+'</div>'
-      + '<div class="bookcase"><span class="cabinet-crest"></span><span class="case-flourish"></span><div class="interior">'
+      + '<div class="bookcase"><span class="cabinet-crest"></span><span class="cabinet-pilaster left"></span><span class="cabinet-pilaster right"></span><span class="case-flourish"></span><div class="interior">'
       + visible.map(([st,label])=>{
           const items=ordered.filter(b=>b.status===st);
           const inner = (st==='want'&&items.length?tbrStackHTML(items.length):'')+(items.length ? items.map((b,i)=>bookHTML(b,i===0)).join('') : ghostHTML);
           const overflow=items.length>7;
-          const displayLabel=st==='want'?'TBR':label;
-          const shelfSub=st==='want'?'<span class="shelf-sub">Want to Read</span>':'';
-          return '<div class="shelfrow'+(overflow?' has-overflow':'')+'"><div class="plate">'+displayLabel+' '+shelfSub+' <span class="ct">'+items.length+'</span>'
-            +'<button class="shelf-door" data-enter-shelf="'+st+'">Enter Moonlit ↗</button></div>'
+          const displayLabel=st==='want'?'TBR':st==='dnf'?'DNF':label;
+          const shelfSub=st==='want'?'<span class="shelf-sub">Want to Read</span>':st==='dnf'?'<span class="shelf-sub">Laid to Rest</span>':'';
+          return '<div class="shelfrow'+(overflow?' has-overflow':'')+'" data-shelf-status="'+st+'"><div class="plate">'+displayLabel+' '+shelfSub+' <span class="ct">'+items.length+'</span>'
+            +'<button class="shelf-door" data-enter-shelf="'+st+'">Enter world ↗</button></div>'
             + '<div class="row"><div class="books" data-status="'+st+'" aria-label="'+esc(label)+', '+items.length+' books">'+inner+'</div></div><div class="plank"></div></div>';
         }).join('')
       + '</div></div>'
-      + dnfStripHTML(dnfItems)
       + (total?'<p class="hint">✋ Drag books to reorder · tap a shelf label or ledge to enter its world</p>':'')
       + '</div><aside class="library-rail">'
       + '<section class="rail-card"><div class="rail-kicker">The Library Atelier</div><h3>The bookcase is collectible, too.</h3>'
@@ -962,17 +963,9 @@
       + '</aside></div>';
     attachRoom();
   }
-  function dnfStripHTML(items){
-    if(!items.length) return '';
-    return '<div class="dnfwrap'+(dnfOpen?' open':'')+'">'
-      + '<button class="dnfstrip" id="dnftoggle">🪦 DNF ('+items.length+') <span class="caret">▾</span></button>'
-      + (dnfOpen?'<div class="dnfbooks"><div class="row"><div class="books" data-status="dnf">'+items.map((b,i)=>bookHTML(b,i===0)).join('')+'</div></div><div class="plank"></div></div>':'')
-      + '</div>';
-  }
 
   function attachRoom(){
     attachDnD();
-    const dt=$('dnftoggle'); if(dt) dt.onclick=()=>{ dnfOpen=!dnfOpen; renderRoom(); };
     const atelier=$('openAtelier'); if(atelier) atelier.onclick=()=>{ buildThemeSheet(); $('themesheetbg').classList.add('open'); syncScrollLock(); };
     const readingWorld=$('openReadingWorld'); if(readingWorld) readingWorld.onclick=()=>enterShelf('reading');
     const liveWorld=$('openLiveWorld'); if(liveWorld) liveWorld.onclick=()=>enterShelf('reading');
