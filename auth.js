@@ -455,7 +455,29 @@
         background:none;border:1px solid var(--line,#2a1d22);color:var(--cream,#f4e8e3);cursor:pointer;flex:0 0 auto;text-decoration:none;
         transition:border-color .2s,color .2s}
       .sh-search-btn svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-      .sh-search-btn:hover{border-color:var(--amber,#ffab40);color:var(--amber,#ffab40)}
+      .sh-search-btn:hover,.sh-search-btn.on{border-color:var(--amber,#ffab40);color:var(--amber,#ffab40)}
+      /* Live type-ahead search dropdown (anchored under the header). */
+      .sh-search-panel{position:absolute;z-index:120;top:calc(100% + 7px);right:10px;left:auto;
+        width:min(430px,calc(100vw - 20px));background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:16px;
+        box-shadow:0 22px 50px rgba(0,0,0,.55);padding:10px;display:none}
+      .sh-search-panel.open{display:block}
+      .sh-search-input{width:100%;box-sizing:border-box;background:#1c1316;border:1px solid var(--line,#2a1d22);
+        color:var(--cream,#f4e8e3);font-family:inherit;font-size:16px;border-radius:11px;padding:.72em .95em;outline:none}
+      .sh-search-input:focus{border-color:var(--amber,#ffab40)}
+      .sh-search-results{margin-top:8px;max-height:min(58vh,430px);overflow-y:auto;overscroll-behavior:contain}
+      .sh-search-results a{display:flex;gap:11px;align-items:center;padding:8px;border-radius:10px;text-decoration:none;color:var(--cream,#f4e8e3)}
+      .sh-search-results a:hover,.sh-search-results a.sh-sel{background:#1c1316}
+      .sh-sr-cover{width:36px;height:52px;flex:0 0 auto;border-radius:5px;object-fit:cover;background:#241a1e;
+        display:flex;align-items:center;justify-content:center;overflow:hidden;
+        font-family:Fraunces,serif;font-style:italic;font-size:.62rem;color:#b69089;text-align:center;line-height:1.05;padding:2px}
+      .sh-sr-cover img{width:100%;height:100%;object-fit:cover;display:block}
+      .sh-sr-meta{min-width:0;flex:1}
+      .sh-sr-title{display:block;font-size:.9rem;font-weight:600;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .sh-sr-author{display:block;font-size:.78rem;color:var(--muted,#b69089);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+      .sh-sr-spice{flex:0 0 auto;font-size:.72rem;color:#ff8a5c;letter-spacing:1px}
+      .sh-search-hint{padding:12px 9px;color:var(--muted,#b69089);font-size:.85rem;text-align:center}
+      .sh-search-hint a{color:var(--amber,#ffab40);text-decoration:none;font-weight:600}
+      @media(max-width:880px){ .sh-search-panel{right:10px;left:10px;width:auto} }
       /* Account section that lives inside the mobile nav drawer (replaces the
          header avatar on small screens). Hidden on desktop, where the avatar
          in #authbox stays. */
@@ -473,6 +495,9 @@
         header .navlinks>a:hover,header .sh-guides>summary:hover{color:var(--cream,#f4e8e3)}
         header .sh-guides>summary:hover .sh-guides-chevron{opacity:1}
         header .sh-guides-menu a:hover{background:rgba(255,171,64,.1)}
+        /* Pull the search+avatar cluster tight to the right edge instead of
+           letting justify-content:space-between fan everything apart. */
+        header .sh-search-btn{margin-left:auto}
       }
       .sh-hamburger{display:none;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;
         background:none;border:1px solid var(--line,#2a1d22);color:var(--cream,#f4e8e3);font-size:1.3rem;line-height:1;cursor:pointer;flex:0 0 auto}
@@ -528,7 +553,8 @@
     links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setOpen(false)));
     // close the nav drawer if another header menu opens (e.g. the avatar dropdown)
     window.addEventListener('sh-menu-open',(ev)=>{ if(ev.detail && ev.detail.id!=='shNav') setOpen(false); });
-    // Global search shortcut — a magnifier that jumps to the searchable catalog.
+    // Global search — a magnifier that opens a live type-ahead dropdown.
+    // Falls back to a plain /books/ link when Supabase isn't configured.
     const search=document.createElement('a');
     search.className='sh-search-btn'; search.href='/books/';
     search.setAttribute('aria-label','Search books'); search.setAttribute('title','Search books');
@@ -536,6 +562,78 @@
     const authbox=document.getElementById('authbox');
     if(authbox) nav.insertBefore(search, authbox); else nav.appendChild(search);
     nav.appendChild(burger);   // far right
+    if(SH.configured) mountSearch(nav, search);
+  }
+
+  // ── live book search dropdown ────────────────────────────────────────────
+  function mountSearch(nav, btn){
+    const panel=document.createElement('div');
+    panel.className='sh-search-panel'; panel.setAttribute('role','dialog'); panel.setAttribute('aria-label','Search books');
+    panel.innerHTML='<input type="text" class="sh-search-input" placeholder="Search books or authors…" autocomplete="off" spellcheck="false" aria-label="Search books or authors">'
+      +'<div class="sh-search-results" role="listbox"></div>';
+    nav.appendChild(panel);
+    const input=panel.querySelector('.sh-search-input');
+    const results=panel.querySelector('.sh-search-results');
+    let open=false, seq=0, sel=-1, rows=[];
+
+    const setOpen=(o)=>{
+      open=o; panel.classList.toggle('open',o); btn.classList.toggle('on',o);
+      btn.setAttribute('aria-expanded',o?'true':'false');
+      if(o){ window.dispatchEvent(new CustomEvent('sh-menu-open',{detail:{id:'shSearch'}})); setTimeout(()=>input.focus(),20); }
+      else { input.value=''; results.innerHTML=''; sel=-1; rows=[]; }
+    };
+    btn.setAttribute('role','button'); btn.setAttribute('aria-haspopup','dialog'); btn.setAttribute('aria-expanded','false');
+    btn.addEventListener('click',(e)=>{ e.preventDefault(); e.stopPropagation(); setOpen(!open); });
+    // close when another header menu opens, on outside click, on Escape
+    window.addEventListener('sh-menu-open',(ev)=>{ if(ev.detail && ev.detail.id!=='shSearch' && open) setOpen(false); });
+    document.addEventListener('click',(e)=>{ if(open && !panel.contains(e.target) && e.target!==btn && !btn.contains(e.target)) setOpen(false); });
+
+    const cover=(b)=> b.cover_url
+      ? '<span class="sh-sr-cover"><img loading="lazy" src="'+esc(b.cover_url)+'" alt=""></span>'
+      : '<span class="sh-sr-cover">'+esc((b.title||'?').slice(0,18))+'</span>';
+    const spice=(n)=> n>0 ? '<span class="sh-sr-spice" title="Spice '+n+'/5">'+'🌶️'.repeat(Math.min(5,n))+'</span>' : '';
+
+    const highlight=(i)=>{
+      sel=i;
+      [...results.querySelectorAll('a')].forEach((a,idx)=>a.classList.toggle('sh-sel',idx===i));
+      const cur=results.querySelector('a.sh-sel'); if(cur) cur.scrollIntoView({block:'nearest'});
+    };
+    const render=(q)=>{
+      if(!rows.length){
+        results.innerHTML='<div class="sh-search-hint">No matches for “'+esc(q)+'”. <a href="/books/">Browse the full catalog →</a></div>';
+        return;
+      }
+      results.innerHTML=rows.map(b=>
+        '<a role="option" href="/books/'+esc(b.slug)+'/">'+cover(b)
+        +'<span class="sh-sr-meta"><span class="sh-sr-title">'+esc(b.title||'Untitled')+'</span>'
+        +'<span class="sh-sr-author">'+esc(b.author||'')+'</span></span>'+spice(b.spice_level)+'</a>'
+      ).join('');
+      sel=-1;
+    };
+    async function run(q){
+      const my=++seq;
+      const clean=q.trim().replace(/[,%_()]/g,' ').replace(/\s+/g,' ').trim();
+      if(clean.length<2){ results.innerHTML='<div class="sh-search-hint">Type at least 2 letters…</div>'; rows=[]; return; }
+      results.innerHTML='<div class="sh-search-hint">Searching…</div>';
+      const like='%'+clean+'%';
+      let data=[];
+      try{
+        const r=await SH.sb.from('books').select('slug,title,author,cover_url,spice_level,rating_avg')
+          .eq('status','live').or('title.ilike.'+like+',author.ilike.'+like)
+          .order('rating_avg',{ascending:false,nullsFirst:false}).limit(8);
+        data=r.data||[];
+      }catch(err){ console.warn('[smuthub search]',err); }
+      if(my!==seq) return;           // a newer keystroke already fired
+      rows=data; render(clean);
+    }
+    let t; input.addEventListener('input',()=>{ clearTimeout(t); const q=input.value; t=setTimeout(()=>run(q),180); });
+    input.addEventListener('keydown',(e)=>{
+      const links=[...results.querySelectorAll('a')];
+      if(e.key==='ArrowDown'){ e.preventDefault(); if(links.length) highlight((sel+1)%links.length); }
+      else if(e.key==='ArrowUp'){ e.preventDefault(); if(links.length) highlight((sel-1+links.length)%links.length); }
+      else if(e.key==='Enter'){ const go=links[sel>=0?sel:0]; if(go){ e.preventDefault(); location.href=go.getAttribute('href'); } }
+      else if(e.key==='Escape'){ e.preventDefault(); setOpen(false); btn.focus(); }
+    });
   }
   // Floating "↑ back to top" button (every page). Appears after the user scrolls
   // ~800px down, smooth-scrolls to top on click. Visible / aria-hidden when not.
