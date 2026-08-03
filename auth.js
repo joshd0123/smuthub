@@ -194,6 +194,36 @@
       document.addEventListener('click', e => { if(guides.open && !guides.contains(e.target)) guides.open = false; });
       document.addEventListener('keydown', e => { if(e.key === 'Escape' && guides.open){ guides.open = false; guides.querySelector('summary').focus(); } });
     }
+    renderNavAccount();
+  }
+
+  // ── account block inside the mobile nav drawer ──────────────────────────
+  // On small screens the header avatar is hidden and the account lives here,
+  // at the foot of the hamburger drawer. Re-rendered whenever auth changes.
+  // No-op visually on desktop (kept display:none), where #authbox owns it.
+  function renderNavAccount(){
+    const nav = document.querySelector('header .navlinks');
+    if(!nav) return;
+    const old = document.getElementById('shNavAccount');
+    if(old) old.remove();
+    const wrap = document.createElement('div');
+    wrap.id = 'shNavAccount';
+    wrap.className = 'sh-nav-account';
+    if(SH.user){
+      const name = displayName();
+      wrap.innerHTML = `
+        <div class="sh-nav-acct-hd">Signed in as<br><b>${esc(name)}</b></div>
+        <a href="/dashboard">📊 Dashboard</a>
+        <a href="/import/">↗ Import library</a>
+        <button type="button" data-act="username">✏️ Set username</button>
+        <button type="button" data-act="logout">👋 Log out</button>`;
+      wrap.querySelectorAll('button[data-act]').forEach(b=>{
+        b.onclick = ()=> b.dataset.act==='logout' ? logout() : setUsername();
+      });
+    } else {
+      wrap.innerHTML = `<button type="button" class="sh-nav-login" onclick="SH.openAuth()">Log in / Sign up</button>`;
+    }
+    nav.appendChild(wrap);
   }
 
   // ── header widget ──
@@ -235,8 +265,10 @@
         mi.onmouseleave = ()=> mi.style.background='none';
         mi.onclick = ()=> mi.dataset.act==='logout' ? logout() : setUsername();
       });
+      renderNavAccount();
     } else {
       box.innerHTML = `<button class="sh-login-button" onclick="SH.openAuth()" style="background:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:.55em 1.1em;border-radius:99px;cursor:pointer;font-size:.85rem"><span class="sh-login-full">Log in / Sign up</span><span class="sh-login-short">Join free</span></button>`;
+      renderNavAccount();
     }
   }
 
@@ -416,6 +448,27 @@
         cursor:pointer;text-decoration:none}
       .sh-account-menu .sh-menu-link:hover,.sh-account-menu .shMenuItem:hover{background:#1c1316}
       .sh-login-short{display:none}
+      /* Persistent global search shortcut — always-visible icon in the header
+         bar so readers can jump straight to the catalog without opening the
+         hamburger. Links to /books/ (the searchable browse index). */
+      .sh-search-btn{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;
+        background:none;border:1px solid var(--line,#2a1d22);color:var(--cream,#f4e8e3);cursor:pointer;flex:0 0 auto;text-decoration:none;
+        transition:border-color .2s,color .2s}
+      .sh-search-btn svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+      .sh-search-btn:hover{border-color:var(--amber,#ffab40);color:var(--amber,#ffab40)}
+      /* Account section that lives inside the mobile nav drawer (replaces the
+         header avatar on small screens). Hidden on desktop, where the avatar
+         in #authbox stays. */
+      #shNavAccount{display:none}
+      .sh-nav-account>a,.sh-nav-account>button{display:block;width:100%;box-sizing:border-box;text-align:left;background:none;
+        border:0;color:var(--cream,#f4e8e3);font-family:inherit;font-size:.95rem;font-weight:600;padding:.68em .85em;border-radius:10px;
+        cursor:pointer;text-decoration:none}
+      .sh-nav-account>a:hover,.sh-nav-account>button:hover{background:#1c1316}
+      .sh-nav-acct-hd{padding:.6em .85em .35em;color:var(--muted,#b69089);font-size:.78rem;line-height:1.35}
+      .sh-nav-acct-hd b{color:var(--amber,#ffab40);font-size:.9rem}
+      .sh-nav-account .sh-nav-login{background:linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40);color:#1a0c10;text-align:center;
+        font-weight:800;border-radius:99px;margin-top:4px}
+      .sh-nav-account .sh-nav-login:hover{background:linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40)}
       @media(min-width:881px){
         header .navlinks>a:hover,header .sh-guides>summary:hover{color:var(--cream,#f4e8e3)}
         header .sh-guides>summary:hover .sh-guides-chevron{opacity:1}
@@ -449,6 +502,11 @@
         header .sh-guides-menu a{padding:7px 10px}
         header .sh-guides-menu b{font-size:.86rem}
         header .sh-guides-menu small{font-size:.72rem}
+        header .sh-search-btn{width:38px;height:38px;border-radius:11px}
+        /* On mobile the account moves into the hamburger drawer, so the header
+           avatar / login button is hidden and the drawer account block shows. */
+        header #authbox{display:none}
+        #shNavAccount{display:block;border-top:1px solid var(--line,#2a1d22);margin-top:5px;padding-top:5px}
       }`;
     document.head.appendChild(st);
   }
@@ -470,6 +528,13 @@
     links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setOpen(false)));
     // close the nav drawer if another header menu opens (e.g. the avatar dropdown)
     window.addEventListener('sh-menu-open',(ev)=>{ if(ev.detail && ev.detail.id!=='shNav') setOpen(false); });
+    // Global search shortcut — a magnifier that jumps to the searchable catalog.
+    const search=document.createElement('a');
+    search.className='sh-search-btn'; search.href='/books/';
+    search.setAttribute('aria-label','Search books'); search.setAttribute('title','Search books');
+    search.innerHTML='<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg>';
+    const authbox=document.getElementById('authbox');
+    if(authbox) nav.insertBefore(search, authbox); else nav.appendChild(search);
     nav.appendChild(burger);   // far right
   }
   // Floating "↑ back to top" button (every page). Appears after the user scrolls
