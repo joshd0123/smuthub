@@ -268,6 +268,23 @@ const ASK_CSS = `
   .af-actions button.on{border-color:var(--rose);color:var(--cream)}
   .af-facts{margin:24px 0 0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
   @media(max-width:720px){.af-facts{grid-column:1/-1;grid-template-columns:repeat(2,1fr)}}
+  /* ── Mobile hero (Option C): a compact, balanced landing. The cover floats
+     left; the title/author/rating wrap to its right and continue full-width
+     below it; the facts grid and Ask panel then clear beneath. Float keeps it
+     robust no matter how many meta lines a given book has. ── */
+  @media(max-width:720px){
+    .af-hero{display:block;padding:16px 0 4px}
+    .af-cover-col{display:block}
+    .af-cover{float:left;width:100px;margin:0 15px 10px 0;box-shadow:0 16px 34px -16px rgba(0,0,0,.72)}
+    .af-flags{gap:5px}
+    .af-flags span{font-size:.58rem;padding:4px 7px}
+    .af-core h1{font-size:1.55rem;line-height:1.14;margin:7px 0 5px;letter-spacing:-.012em}
+    .af-byline{font-size:.9rem}
+    .af-pulse{margin:9px 0 0;padding:0;border:0}
+    .af-pulse b{font-size:1.12rem}
+    .af-facts{clear:both;margin-top:16px}
+    .af-ask{clear:both}
+  }
   .af-facts>div{padding:15px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
   .af-facts dt,.af-facts small{display:block;color:var(--muted);font-size:.64rem;text-transform:uppercase;letter-spacing:.1em}
   .af-facts dd{margin:7px 0 5px;font-family:'Fraunces',serif;font-weight:500;font-size:1.16rem}
@@ -1561,9 +1578,15 @@ const INDEX_CSS = `<style>
   .bcard .cover-img{object-fit:contain;z-index:1}
   .bcard .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px;font-family:'Fraunces',serif;font-style:italic;font-size:.95rem;line-height:1.2;color:#fff;background:linear-gradient(160deg,#3a0d2a,#7a1238)}
   .bmeta{padding:10px 12px 13px;display:flex;flex-direction:column;flex:1}
-  .bmeta .bt{font-family:'Fraunces',serif;font-weight:500;font-size:.98rem;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  /* Reserve 2 title lines so author/rating/spice stay level across cards. */
+  .bmeta .bt{font-family:'Fraunces',serif;font-weight:500;font-size:.98rem;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.4em}
   .bmeta .ba{color:var(--muted);font-size:.78rem;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .bmeta .bs{margin-top:6px;font-size:.72rem;letter-spacing:.04em}
+  /* Rating (left, under author) + spice to its right — per reader feedback that
+     the star rating is more useful at a glance than the spice level. */
+  .bmeta .bstat{margin-top:7px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .bmeta .brate{color:var(--amber);font-weight:800;font-size:.8rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bmeta .bs{font-size:.72rem;letter-spacing:.04em}
+  .bmeta .bs .off{filter:grayscale(1);opacity:.28}
   .noresults{color:var(--muted);font-style:italic;padding:24px 0 40px}
 </style>`;
 
@@ -1599,6 +1622,7 @@ function renderBookIndex(allBooks){
   const cardFor = b => {
     const author = b.author || 'Unknown';
     const spice = Math.max(0, Math.min(5, Number(b.spice_level) || 0));
+    const rating = b.rating_avg ? Number(b.rating_avg).toFixed(2) : '';
     // ALL tag keys, not just tropes: every glossary term — kink, warning,
     // setting, archetype — can then deep link into this page via ?tag=.
     const tagKeys = tagsOf(b).map(t => t.category + ':' + t.slug).join(' ');
@@ -1611,7 +1635,10 @@ function renderBookIndex(allBooks){
         <div class="bmeta">
           <div class="bt">${esc(b.title)}</div>
           <div class="ba">${esc(author)}</div>
-          ${spice ? `<div class="bs">${'🌶️'.repeat(spice)}</div>` : ''}
+          ${(rating || spice) ? `<div class="bstat">
+            ${rating ? `<span class="brate">★ ${rating}</span>` : ''}
+            ${spice ? `<span class="bs">${'🌶️'.repeat(spice)}<span class="off">${'🌶️'.repeat(5 - spice)}</span></span>` : ''}
+          </div>` : ''}
         </div>
       </a>`;
   };

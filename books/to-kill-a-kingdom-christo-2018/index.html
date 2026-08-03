@@ -158,6 +158,23 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-actions button.on{border-color:var(--rose);color:var(--cream)}
   .af-facts{margin:24px 0 0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
   @media(max-width:720px){.af-facts{grid-column:1/-1;grid-template-columns:repeat(2,1fr)}}
+  /* ── Mobile hero (Option C): a compact, balanced landing. The cover floats
+     left; the title/author/rating wrap to its right and continue full-width
+     below it; the facts grid and Ask panel then clear beneath. Float keeps it
+     robust no matter how many meta lines a given book has. ── */
+  @media(max-width:720px){
+    .af-hero{display:block;padding:16px 0 4px}
+    .af-cover-col{display:block}
+    .af-cover{float:left;width:100px;margin:0 15px 10px 0;box-shadow:0 16px 34px -16px rgba(0,0,0,.72)}
+    .af-flags{gap:5px}
+    .af-flags span{font-size:.58rem;padding:4px 7px}
+    .af-core h1{font-size:1.55rem;line-height:1.14;margin:7px 0 5px;letter-spacing:-.012em}
+    .af-byline{font-size:.9rem}
+    .af-pulse{margin:9px 0 0;padding:0;border:0}
+    .af-pulse b{font-size:1.12rem}
+    .af-facts{clear:both;margin-top:16px}
+    .af-ask{clear:both}
+  }
   .af-facts>div{padding:15px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
   .af-facts dt,.af-facts small{display:block;color:var(--muted);font-size:.64rem;text-transform:uppercase;letter-spacing:.1em}
   .af-facts dd{margin:7px 0 5px;font-family:'Fraunces',serif;font-weight:500;font-size:1.16rem}
@@ -483,12 +500,12 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     </a><a class="af-bcard" href="/books/a-court-of-thorns-and-roses-maas/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/a-court-of-thorns-and-roses-maas.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/a-court-of-thorns-and-roses-maas.jpg" alt="A Court of Thorns and Roses book cover" loading="lazy"></div>
       <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>A Court of Thorns and Roses</h3><p>Sarah J. Maas</p></div>
-    </a><a class="af-bcard" href="/books/a-dawn-of-onyx-golden/">
-      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/a-dawn-of-onyx-golden.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/a-dawn-of-onyx-golden.jpg" alt="A Dawn of Onyx book cover" loading="lazy"></div>
-      <div class="bm"><span>🌶️🌶️🌶️</span><h3>A Dawn of Onyx</h3><p>Kate Golden</p></div>
-    </a><a class="af-bcard" href="/books/a-marvellous-light-marske-2021/">
-      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/a-marvellous-light-marske-2021.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/a-marvellous-light-marske-2021.jpg" alt="A Marvellous Light book cover" loading="lazy"></div>
-      <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>A Marvellous Light</h3><p>Freya Marske</p></div>
+    </a><a class="af-bcard" href="/books/quicksilver-hart-2024/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/quicksilver-hart.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/quicksilver-hart.jpg" alt="Quicksilver book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>Quicksilver</h3><p>Callie Hart</p></div>
+    </a><a class="af-bcard" href="/books/the-bridge-kingdom-jensen-2019/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/the-bridge-kingdom-jensen.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/the-bridge-kingdom-jensen.jpg" alt="The Bridge Kingdom book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️🌶️</span><h3>The Bridge Kingdom</h3><p>Danielle L. Jensen</p></div>
     </a></div>
   </section>
 

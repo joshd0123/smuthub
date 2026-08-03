@@ -158,6 +158,23 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-actions button.on{border-color:var(--rose);color:var(--cream)}
   .af-facts{margin:24px 0 0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
   @media(max-width:720px){.af-facts{grid-column:1/-1;grid-template-columns:repeat(2,1fr)}}
+  /* ── Mobile hero (Option C): a compact, balanced landing. The cover floats
+     left; the title/author/rating wrap to its right and continue full-width
+     below it; the facts grid and Ask panel then clear beneath. Float keeps it
+     robust no matter how many meta lines a given book has. ── */
+  @media(max-width:720px){
+    .af-hero{display:block;padding:16px 0 4px}
+    .af-cover-col{display:block}
+    .af-cover{float:left;width:100px;margin:0 15px 10px 0;box-shadow:0 16px 34px -16px rgba(0,0,0,.72)}
+    .af-flags{gap:5px}
+    .af-flags span{font-size:.58rem;padding:4px 7px}
+    .af-core h1{font-size:1.55rem;line-height:1.14;margin:7px 0 5px;letter-spacing:-.012em}
+    .af-byline{font-size:.9rem}
+    .af-pulse{margin:9px 0 0;padding:0;border:0}
+    .af-pulse b{font-size:1.12rem}
+    .af-facts{clear:both;margin-top:16px}
+    .af-ask{clear:both}
+  }
   .af-facts>div{padding:15px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
   .af-facts dt,.af-facts small{display:block;color:var(--muted);font-size:.64rem;text-transform:uppercase;letter-spacing:.1em}
   .af-facts dd{margin:7px 0 5px;font-family:'Fraunces',serif;font-weight:500;font-size:1.16rem}
@@ -456,7 +473,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     <span class="af-num">06</span>
     <div><p class="af-label">What&#39;s the commitment?</p><h2>603 pages, book 1 of the series.</h2><div class="af-commit">
           <div><span>Book length</span><b>603 pages</b></div>
-          <div><span>Series position</span><b>Book 1</b><small>Next: Blood at the Root</small></div>
+          <div><span>Series position</span><b>Book 1</b></div>
           <div><span>Ending</span><b>Cliffhanger</b><small>Ends on a cliffhanger</small></div>
         </div>
         <details class="af-more"><summary>Every recorded detail +</summary><section class="blk">
@@ -467,19 +484,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   </section></details></div>
   </section>
 
-    <section class="af-disc" id="af-series" aria-labelledby="af-series-h">
-    <div class="af-disc-head">
-      <div><span>Keep reading</span><h2 id="af-series-h">Books in the series</h2><p>The full reading order, without leaving this page.</p></div>
-      <a href="/books/?q=The%20Scarlet%20Veil">View full series →</a>
-    </div>
-    <div class="af-rail"><a class="af-bcard is-current" href="/books/the-scarlet-veil-mahurin-2023/" aria-current="page">
-      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/the-scarlet-veil-mahurin-2023.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/the-scarlet-veil-mahurin-2023.jpg" alt="The Scarlet Veil book cover" loading="lazy"></div>
-      <div class="bm"><span>Book 1 · You are here</span><h3>The Scarlet Veil</h3><p>Shelby Mahurin</p></div>
-    </a><a class="af-bcard" href="/books/blood-at-the-root-mahurin-2024/">
-      <div class="cv"><div class="ph">Blood at the Root</div></div>
-      <div class="bm"><span>Book 2</span><h3>Blood at the Root</h3><p>Shelby Mahurin</p></div>
-    </a></div>
-  </section>
+    
 
     <section class="af-disc" id="af-related" aria-labelledby="af-related-h">
     <div class="af-disc-head">

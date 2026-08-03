@@ -97,6 +97,7 @@
   a.title{text-decoration:none;color:inherit;cursor:pointer;transition:color .15s}
   a.title:hover{color:var(--rose)}
   .author{color:var(--muted);font-size:.82rem;line-height:1.3;min-height:1.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .srate{color:var(--amber);font-weight:800;font-size:.82rem;margin-top:4px;font-variant-numeric:tabular-nums}
   .actions{margin-top:auto;display:flex;flex-direction:column}
   .spice{margin-top:8px;font-size:1rem;letter-spacing:.06em;cursor:pointer;user-select:none;white-space:nowrap;display:flex;align-items:center}
   .spice span{flex:0 0 auto;filter:grayscale(1);opacity:.3}
@@ -569,7 +570,7 @@
     // tags, matched against the synced tag_ids[] cache ("category:slug") so this
     // stays a single fast .contains() query. RLS already hides non-live books;
     // .eq('status','live') keeps an admin's public browse to live too.
-    let q=_sb.from('books').select('slug,title,author,cover_url,year,spice_level').eq('status','live');
+    let q=_sb.from('books').select('slug,title,author,cover_url,year,spice_level,rating_avg').eq('status','live');
     if(F.spice)  q=q.gte('spice_level', +F.spice);
     if(F.trope)  q=q.contains('tag_ids',['trope:'+F.trope]);
     if(F.mood)   q=q.contains('tag_ids',['mood:'+F.mood]);
@@ -624,7 +625,7 @@
             // in favour of external Google editions. Cover-less rows render the
             // styled title tile and still link to /books/<slug>/.
             const { data } = await _sb.from('books')
-              .select('slug,title,author,cover_url,year,spice_level')
+              .select('slug,title,author,cover_url,year,spice_level,rating_avg')
               .eq('status','live')
               .or('title.ilike.'+like+',author.ilike.'+like)
               .limit(24);
@@ -684,7 +685,7 @@
           try{
             const _sb = window.SH && window.SH.sb;
             if(_sb){
-              const { data } = await _sb.from('books').select('slug,title,author,cover_url,spice_level,year').eq('status','live');
+              const { data } = await _sb.from('books').select('slug,title,author,cover_url,spice_level,rating_avg,year').eq('status','live');
               if(data && data.length){
                 const toDoc = b=>({ key:b.slug, title:b.title, author_name:b.author?[b.author]:[], cover_url:b.cover_url, cover_i:null, year:b.year||0, ratings:0 });
                 const covered = shuffle(data.filter(b=>b.cover_url)).map(toDoc);
@@ -818,6 +819,7 @@
         <div class="meta">
           ${href?`<a class="title" href="${href}">${title}</a>`:`<div class="title">${title}</div>`}
           <div class="author">by ${escH(author)}</div>
+          ${b.rating_avg?`<div class="srate">★ ${Number(b.rating_avg).toFixed(2)}</div>`:''}
           <div class="actions">
             <div class="spice" id="sp_${id}">${chilis}</div>
             ${addControlHTML(b.key, id, on)}

@@ -67,6 +67,14 @@
   function mountUmami(){
     if (!/^https:\/\//.test(UMAMI.src)) return;                 // dormant until a public https URL is set
     if (/(^|\/)(admin|catalog-admin)\.html$/.test(location.pathname)) return; // keep admin usage out of the stats
+    // Keep admin PEOPLE out of the stats too — not just admin pages. Umami's
+    // automatic pageview is not routed through track(), so without this an
+    // admin's browsing of /books, /search etc. inflates pageviews and sessions
+    // even though their custom events are already suppressed. isAdminSession()
+    // reads the sessionStorage mirror, so from the 2nd page of a session on it
+    // is reliable; at most the first cold pageview before the profile resolves
+    // slips through.
+    if (isAdminSession()) return;
     if (document.querySelector('script[data-website-id]')) return;
     const s = document.createElement('script');
     s.defer = true; s.src = UMAMI.src; s.setAttribute('data-website-id', UMAMI.websiteId);
@@ -101,6 +109,19 @@
           SH.profile = SH.user ? await loadProfile() : null;
           renderAuthbox();
           window.dispatchEvent(new CustomEvent('sh-auth', { detail: { user: SH.user, profile: SH.profile } }));
+          // Conversion tracking. Only a genuine login is 'SIGNED_IN' — a restored
+          // session arrives as 'INITIAL_SESSION' — but SIGNED_IN can still repeat
+          // across page loads, so dedupe once per browser session. A brand-new
+          // account (created seconds ago) is a signup; everyone else a signin.
+          // track() already no-ops for admin sessions, so our own logins are out.
+          if (event === 'SIGNED_IN' && SH.user) {
+            let first = true;
+            try { first = !sessionStorage.getItem('sh_signin_tracked'); if (first) sessionStorage.setItem('sh_signin_tracked','1'); } catch(_) {}
+            if (first) {
+              const created = new Date(SH.user.created_at).getTime();
+              track(Date.now() - created < 60000 ? 'signup' : 'signin');
+            }
+          }
         }, 0);
       }
       if (location.hash.includes('access_token') || location.search.includes('code=')) {
@@ -146,6 +167,7 @@
         <summary><span class="sh-guides-label">Guides</span><svg class="sh-guides-chevron" aria-hidden="true" focusable="false" viewBox="0 0 12 8"><path d="M1 1.25 6 6.25 11 1.25"/></svg></summary>
         <div class="sh-guides-menu">
           <a href="/guides/"><b>All Guides</b><small>Start with the full library</small></a>
+          <a href="/guides/what-is-romantasy/"><b>What Is Romantasy?</b><small>Start with the genre essentials</small></a>
           <a href="/guides/spice-levels/"><b>Spice Levels</b><small>Choose your heat with no surprises</small></a>
           <a href="/glossary/"><b>Glossary</b><small>Decode 356 romantasy terms</small></a>
           <a href="/glossary/trope/"><b>Tropes</b><small>Browse the story dynamics you love</small></a>
@@ -172,6 +194,36 @@
       document.addEventListener('click', e => { if(guides.open && !guides.contains(e.target)) guides.open = false; });
       document.addEventListener('keydown', e => { if(e.key === 'Escape' && guides.open){ guides.open = false; guides.querySelector('summary').focus(); } });
     }
+    renderNavAccount();
+  }
+
+  // ── account block inside the mobile nav drawer ──────────────────────────
+  // On small screens the header avatar is hidden and the account lives here,
+  // at the foot of the hamburger drawer. Re-rendered whenever auth changes.
+  // No-op visually on desktop (kept display:none), where #authbox owns it.
+  function renderNavAccount(){
+    const nav = document.querySelector('header .navlinks');
+    if(!nav) return;
+    const old = document.getElementById('shNavAccount');
+    if(old) old.remove();
+    const wrap = document.createElement('div');
+    wrap.id = 'shNavAccount';
+    wrap.className = 'sh-nav-account';
+    if(SH.user){
+      const name = displayName();
+      wrap.innerHTML = `
+        <div class="sh-nav-acct-hd">Signed in as<br><b>${esc(name)}</b></div>
+        <a href="/dashboard">📊 Dashboard</a>
+        <a href="/import/">↗ Import library</a>
+        <button type="button" data-act="username">✏️ Set username</button>
+        <button type="button" data-act="logout">👋 Log out</button>`;
+      wrap.querySelectorAll('button[data-act]').forEach(b=>{
+        b.onclick = ()=> b.dataset.act==='logout' ? logout() : setUsername();
+      });
+    } else {
+      wrap.innerHTML = `<button type="button" class="sh-nav-login" onclick="SH.openAuth()">Log in / Sign up</button>`;
+    }
+    nav.appendChild(wrap);
   }
 
   // ── header widget ──
@@ -187,6 +239,7 @@
           <div id="shMenu" class="sh-account-menu" role="menu" style="display:none;position:absolute;right:0;top:125%;z-index:95;background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:14px;min-width:220px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.5)">
             <div style="padding:.7em 1.1em;border-bottom:1px solid var(--line,#2a1d22);color:#b69089;font-size:.78rem">Signed in as<br><b style="color:var(--amber,#ffab40);font-size:.92rem">${esc(name)}</b></div>
             <a class="sh-menu-link" role="menuitem" href="/dashboard">📊 Dashboard</a>
+            <a class="sh-menu-link" role="menuitem" href="/import/">↗ Import library</a>
             <button type="button" class="shMenuItem" role="menuitem" data-act="username">✏️ Set username</button>
             <button type="button" class="shMenuItem" role="menuitem" data-act="logout">👋 Log out</button>
           </div>
@@ -212,8 +265,10 @@
         mi.onmouseleave = ()=> mi.style.background='none';
         mi.onclick = ()=> mi.dataset.act==='logout' ? logout() : setUsername();
       });
+      renderNavAccount();
     } else {
       box.innerHTML = `<button class="sh-login-button" onclick="SH.openAuth()" style="background:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%);color:#1a0c10;border:0;font-family:inherit;font-weight:800;padding:.55em 1.1em;border-radius:99px;cursor:pointer;font-size:.85rem"><span class="sh-login-full">Log in / Sign up</span><span class="sh-login-short">Join free</span></button>`;
+      renderNavAccount();
     }
   }
 
@@ -373,9 +428,12 @@
       header .sh-guides{position:relative}
       header .sh-guides>summary{position:relative;padding-right:17px;list-style:none}
       header .sh-guides>summary::-webkit-details-marker{display:none}
+      /* Keep the label on its own layer so Safari can't skew it while the
+         chevron re-composites on hover-open (a WebKit <details> glitch). */
+      header .sh-guides-label{position:relative;z-index:1;transform:none}
       header .sh-guides-chevron{position:absolute;right:1px;top:50%;width:10px;height:7px;margin-top:-3.5px;overflow:visible;
         fill:none;stroke:var(--amber,#ffab40);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
-        opacity:.65;transition:opacity .16s,transform .16s}
+        opacity:.65;transition:opacity .16s}
       header .sh-guides>summary:focus-visible .sh-guides-chevron,
       header .sh-guides[open] .sh-guides-chevron{opacity:1}
       header .sh-guides[open] .sh-guides-chevron{transform:rotate(180deg)}
@@ -390,10 +448,56 @@
         cursor:pointer;text-decoration:none}
       .sh-account-menu .sh-menu-link:hover,.sh-account-menu .shMenuItem:hover{background:#1c1316}
       .sh-login-short{display:none}
+      /* Persistent global search shortcut — always-visible icon in the header
+         bar so readers can jump straight to the catalog without opening the
+         hamburger. Links to /books/ (the searchable browse index). */
+      .sh-search-btn{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;
+        background:none;border:1px solid var(--line,#2a1d22);color:var(--cream,#f4e8e3);cursor:pointer;flex:0 0 auto;text-decoration:none;
+        transition:border-color .2s,color .2s}
+      .sh-search-btn svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+      .sh-search-btn:hover,.sh-search-btn.on{border-color:var(--amber,#ffab40);color:var(--amber,#ffab40)}
+      /* Live type-ahead search dropdown (anchored under the header). */
+      .sh-search-panel{position:absolute;z-index:120;top:calc(100% + 7px);right:10px;left:auto;
+        width:min(430px,calc(100vw - 20px));background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:16px;
+        box-shadow:0 22px 50px rgba(0,0,0,.55);padding:10px;display:none}
+      .sh-search-panel.open{display:block}
+      .sh-search-input{width:100%;box-sizing:border-box;background:#1c1316;border:1px solid var(--line,#2a1d22);
+        color:var(--cream,#f4e8e3);font-family:inherit;font-size:16px;border-radius:11px;padding:.72em .95em;outline:none}
+      .sh-search-input:focus{border-color:var(--amber,#ffab40)}
+      .sh-search-results{margin-top:8px;max-height:min(58vh,430px);overflow-y:auto;overscroll-behavior:contain}
+      .sh-search-results a{display:flex;gap:11px;align-items:center;padding:8px;border-radius:10px;text-decoration:none;color:var(--cream,#f4e8e3)}
+      .sh-search-results a:hover,.sh-search-results a.sh-sel{background:#1c1316}
+      .sh-sr-cover{width:36px;height:52px;flex:0 0 auto;border-radius:5px;object-fit:cover;background:#241a1e;
+        display:flex;align-items:center;justify-content:center;overflow:hidden;
+        font-family:Fraunces,serif;font-style:italic;font-size:.62rem;color:#b69089;text-align:center;line-height:1.05;padding:2px}
+      .sh-sr-cover img{width:100%;height:100%;object-fit:cover;display:block}
+      .sh-sr-meta{min-width:0;flex:1}
+      .sh-sr-title{display:block;font-size:.9rem;font-weight:600;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .sh-sr-author{display:block;font-size:.78rem;color:var(--muted,#b69089);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+      .sh-sr-spice{flex:0 0 auto;font-size:.72rem;color:#ff8a5c;letter-spacing:1px}
+      .sh-search-hint{padding:12px 9px;color:var(--muted,#b69089);font-size:.85rem;text-align:center}
+      .sh-search-hint a{color:var(--amber,#ffab40);text-decoration:none;font-weight:600}
+      @media(max-width:880px){ .sh-search-panel{right:10px;left:10px;width:auto} }
+      /* Account section that lives inside the mobile nav drawer (replaces the
+         header avatar on small screens). Hidden on desktop, where the avatar
+         in #authbox stays. */
+      #shNavAccount{display:none}
+      .sh-nav-account>a,.sh-nav-account>button{display:block;width:100%;box-sizing:border-box;text-align:left;background:none;
+        border:0;color:var(--cream,#f4e8e3);font-family:inherit;font-size:.95rem;font-weight:600;padding:.68em .85em;border-radius:10px;
+        cursor:pointer;text-decoration:none}
+      .sh-nav-account>a:hover,.sh-nav-account>button:hover{background:#1c1316}
+      .sh-nav-acct-hd{padding:.6em .85em .35em;color:var(--muted,#b69089);font-size:.78rem;line-height:1.35}
+      .sh-nav-acct-hd b{color:var(--amber,#ffab40);font-size:.9rem}
+      .sh-nav-account .sh-nav-login{background:linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40);color:#1a0c10;text-align:center;
+        font-weight:800;border-radius:99px;margin-top:4px}
+      .sh-nav-account .sh-nav-login:hover{background:linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40)}
       @media(min-width:881px){
         header .navlinks>a:hover,header .sh-guides>summary:hover{color:var(--cream,#f4e8e3)}
         header .sh-guides>summary:hover .sh-guides-chevron{opacity:1}
         header .sh-guides-menu a:hover{background:rgba(255,171,64,.1)}
+        /* Pull the search+avatar cluster tight to the right edge instead of
+           letting justify-content:space-between fan everything apart. */
+        header .sh-search-btn{margin-left:auto}
       }
       .sh-hamburger{display:none;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;
         background:none;border:1px solid var(--line,#2a1d22);color:var(--cream,#f4e8e3);font-size:1.3rem;line-height:1;cursor:pointer;flex:0 0 auto}
@@ -423,6 +527,11 @@
         header .sh-guides-menu a{padding:7px 10px}
         header .sh-guides-menu b{font-size:.86rem}
         header .sh-guides-menu small{font-size:.72rem}
+        header .sh-search-btn{width:38px;height:38px;border-radius:11px}
+        /* On mobile the account moves into the hamburger drawer, so the header
+           avatar / login button is hidden and the drawer account block shows. */
+        header #authbox{display:none}
+        #shNavAccount{display:block;border-top:1px solid var(--line,#2a1d22);margin-top:5px;padding-top:5px}
       }`;
     document.head.appendChild(st);
   }
@@ -444,7 +553,87 @@
     links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setOpen(false)));
     // close the nav drawer if another header menu opens (e.g. the avatar dropdown)
     window.addEventListener('sh-menu-open',(ev)=>{ if(ev.detail && ev.detail.id!=='shNav') setOpen(false); });
+    // Global search — a magnifier that opens a live type-ahead dropdown.
+    // Falls back to a plain /books/ link when Supabase isn't configured.
+    const search=document.createElement('a');
+    search.className='sh-search-btn'; search.href='/books/';
+    search.setAttribute('aria-label','Search books'); search.setAttribute('title','Search books');
+    search.innerHTML='<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg>';
+    const authbox=document.getElementById('authbox');
+    if(authbox) nav.insertBefore(search, authbox); else nav.appendChild(search);
     nav.appendChild(burger);   // far right
+    if(SH.configured) mountSearch(nav, search);
+  }
+
+  // ── live book search dropdown ────────────────────────────────────────────
+  function mountSearch(nav, btn){
+    const panel=document.createElement('div');
+    panel.className='sh-search-panel'; panel.setAttribute('role','dialog'); panel.setAttribute('aria-label','Search books');
+    panel.innerHTML='<input type="text" class="sh-search-input" placeholder="Search books or authors…" autocomplete="off" spellcheck="false" aria-label="Search books or authors">'
+      +'<div class="sh-search-results" role="listbox"></div>';
+    nav.appendChild(panel);
+    const input=panel.querySelector('.sh-search-input');
+    const results=panel.querySelector('.sh-search-results');
+    let open=false, seq=0, sel=-1, rows=[];
+
+    const setOpen=(o)=>{
+      open=o; panel.classList.toggle('open',o); btn.classList.toggle('on',o);
+      btn.setAttribute('aria-expanded',o?'true':'false');
+      if(o){ window.dispatchEvent(new CustomEvent('sh-menu-open',{detail:{id:'shSearch'}})); setTimeout(()=>input.focus(),20); }
+      else { input.value=''; results.innerHTML=''; sel=-1; rows=[]; }
+    };
+    btn.setAttribute('role','button'); btn.setAttribute('aria-haspopup','dialog'); btn.setAttribute('aria-expanded','false');
+    btn.addEventListener('click',(e)=>{ e.preventDefault(); e.stopPropagation(); setOpen(!open); });
+    // close when another header menu opens, on outside click, on Escape
+    window.addEventListener('sh-menu-open',(ev)=>{ if(ev.detail && ev.detail.id!=='shSearch' && open) setOpen(false); });
+    document.addEventListener('click',(e)=>{ if(open && !panel.contains(e.target) && e.target!==btn && !btn.contains(e.target)) setOpen(false); });
+
+    const cover=(b)=> b.cover_url
+      ? '<span class="sh-sr-cover"><img loading="lazy" src="'+esc(b.cover_url)+'" alt=""></span>'
+      : '<span class="sh-sr-cover">'+esc((b.title||'?').slice(0,18))+'</span>';
+    const spice=(n)=> n>0 ? '<span class="sh-sr-spice" title="Spice '+n+'/5">'+'🌶️'.repeat(Math.min(5,n))+'</span>' : '';
+
+    const highlight=(i)=>{
+      sel=i;
+      [...results.querySelectorAll('a')].forEach((a,idx)=>a.classList.toggle('sh-sel',idx===i));
+      const cur=results.querySelector('a.sh-sel'); if(cur) cur.scrollIntoView({block:'nearest'});
+    };
+    const render=(q)=>{
+      if(!rows.length){
+        results.innerHTML='<div class="sh-search-hint">No matches for “'+esc(q)+'”. <a href="/books/">Browse the full catalog →</a></div>';
+        return;
+      }
+      results.innerHTML=rows.map(b=>
+        '<a role="option" href="/books/'+esc(b.slug)+'/">'+cover(b)
+        +'<span class="sh-sr-meta"><span class="sh-sr-title">'+esc(b.title||'Untitled')+'</span>'
+        +'<span class="sh-sr-author">'+esc(b.author||'')+'</span></span>'+spice(b.spice_level)+'</a>'
+      ).join('');
+      sel=-1;
+    };
+    async function run(q){
+      const my=++seq;
+      const clean=q.trim().replace(/[,%_()]/g,' ').replace(/\s+/g,' ').trim();
+      if(clean.length<2){ results.innerHTML='<div class="sh-search-hint">Type at least 2 letters…</div>'; rows=[]; return; }
+      results.innerHTML='<div class="sh-search-hint">Searching…</div>';
+      const like='%'+clean+'%';
+      let data=[];
+      try{
+        const r=await SH.sb.from('books').select('slug,title,author,cover_url,spice_level,rating_avg')
+          .eq('status','live').or('title.ilike.'+like+',author.ilike.'+like)
+          .order('rating_avg',{ascending:false,nullsFirst:false}).limit(8);
+        data=r.data||[];
+      }catch(err){ console.warn('[smuthub search]',err); }
+      if(my!==seq) return;           // a newer keystroke already fired
+      rows=data; render(clean);
+    }
+    let t; input.addEventListener('input',()=>{ clearTimeout(t); const q=input.value; t=setTimeout(()=>run(q),180); });
+    input.addEventListener('keydown',(e)=>{
+      const links=[...results.querySelectorAll('a')];
+      if(e.key==='ArrowDown'){ e.preventDefault(); if(links.length) highlight((sel+1)%links.length); }
+      else if(e.key==='ArrowUp'){ e.preventDefault(); if(links.length) highlight((sel-1+links.length)%links.length); }
+      else if(e.key==='Enter'){ const go=links[sel>=0?sel:0]; if(go){ e.preventDefault(); location.href=go.getAttribute('href'); } }
+      else if(e.key==='Escape'){ e.preventDefault(); setOpen(false); btn.focus(); }
+    });
   }
   // Floating "↑ back to top" button (every page). Appears after the user scrolls
   // ~800px down, smooth-scrolls to top on click. Visible / aria-hidden when not.

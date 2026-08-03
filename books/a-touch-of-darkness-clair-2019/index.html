@@ -14,12 +14,12 @@
 <meta property="og:title" content="A Touch of Darkness — Spice, Tropes &amp; Warnings | smutHub">
 <meta property="og:description" content="Persephone is a journalism student hiding a shameful secret: the goddess of spring can&#39;t make anything grow. When a bet in a shadowy nightclub binds her to Ha">
 <meta property="og:url" content="https://smuthub.ca/books/a-touch-of-darkness-clair-2019/">
-<meta property="og:image" content="https://smuthub.ca/og-image.jpg">
+<meta property="og:image" content="https://covers.smuthub.ca/a-touch-of-darkness-clair-2019.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="A Touch of Darkness — Spice, Tropes &amp; Warnings | smutHub">
 <meta name="twitter:description" content="Persephone is a journalism student hiding a shameful secret: the goddess of spring can&#39;t make anything grow. When a bet in a shadowy nightclub binds her to Ha">
-<meta name="twitter:image" content="https://smuthub.ca/og-image.jpg">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Book","name":"A Touch of Darkness","url":"https://smuthub.ca/books/a-touch-of-darkness-clair-2019/","author":{"@type":"Person","name":"Scarlett St. Clair"},"description":"Persephone is a journalism student hiding a shameful secret: the goddess of spring can't make anything grow. When a bet in a shadowy nightclub binds her to Hades himself, she must create life in the Underworld or lose her freedom — if she doesn't lose her heart first. A steamy modern Greek retelling.","datePublished":"2019","inLanguage":"en","genre":"Dark Romance","isPartOf":{"@type":"BookSeries","name":"Hades x Persephone Saga","position":1}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smuthub.ca/"},{"@type":"ListItem","position":2,"name":"All books","item":"https://smuthub.ca/books/"},{"@type":"ListItem","position":3,"name":"A Touch of Darkness","item":"https://smuthub.ca/books/a-touch-of-darkness-clair-2019/"}]}]}</script>
+<meta name="twitter:image" content="https://covers.smuthub.ca/a-touch-of-darkness-clair-2019.jpg">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Book","name":"A Touch of Darkness","url":"https://smuthub.ca/books/a-touch-of-darkness-clair-2019/","author":{"@type":"Person","name":"Scarlett St. Clair"},"image":"https://covers.smuthub.ca/a-touch-of-darkness-clair-2019.jpg","description":"Persephone is a journalism student hiding a shameful secret: the goddess of spring can't make anything grow. When a bet in a shadowy nightclub binds her to Hades himself, she must create life in the Underworld or lose her freedom — if she doesn't lose her heart first. A steamy modern Greek retelling.","datePublished":"2019","isbn":"9780991132379","publisher":{"@type":"Organization","name":"Sourcebooks, Inc."},"inLanguage":"en","genre":"Dark Romance","isPartOf":{"@type":"BookSeries","name":"Hades x Persephone Saga","position":1}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smuthub.ca/"},{"@type":"ListItem","position":2,"name":"All books","item":"https://smuthub.ca/books/"},{"@type":"ListItem","position":3,"name":"A Touch of Darkness","item":"https://smuthub.ca/books/a-touch-of-darkness-clair-2019/"}]}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -158,6 +158,23 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-actions button.on{border-color:var(--rose);color:var(--cream)}
   .af-facts{margin:24px 0 0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
   @media(max-width:720px){.af-facts{grid-column:1/-1;grid-template-columns:repeat(2,1fr)}}
+  /* ── Mobile hero (Option C): a compact, balanced landing. The cover floats
+     left; the title/author/rating wrap to its right and continue full-width
+     below it; the facts grid and Ask panel then clear beneath. Float keeps it
+     robust no matter how many meta lines a given book has. ── */
+  @media(max-width:720px){
+    .af-hero{display:block;padding:16px 0 4px}
+    .af-cover-col{display:block}
+    .af-cover{float:left;width:100px;margin:0 15px 10px 0;box-shadow:0 16px 34px -16px rgba(0,0,0,.72)}
+    .af-flags{gap:5px}
+    .af-flags span{font-size:.58rem;padding:4px 7px}
+    .af-core h1{font-size:1.55rem;line-height:1.14;margin:7px 0 5px;letter-spacing:-.012em}
+    .af-byline{font-size:.9rem}
+    .af-pulse{margin:9px 0 0;padding:0;border:0}
+    .af-pulse b{font-size:1.12rem}
+    .af-facts{clear:both;margin-top:16px}
+    .af-ask{clear:both}
+  }
   .af-facts>div{padding:15px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
   .af-facts dt,.af-facts small{display:block;color:var(--muted);font-size:.64rem;text-transform:uppercase;letter-spacing:.1em}
   .af-facts dd{margin:7px 0 5px;font-family:'Fraunces',serif;font-weight:500;font-size:1.16rem}
@@ -359,8 +376,8 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   <!-- ── Above the fold: cover + rate, core info, Ask First menu ── -->
   <section class="af-hero">
     <div class="af-cover-col">
-      <div class="af-cover"><div class="ph">A Touch of Darkness</div></div>
-      
+      <div class="af-cover"><img class="cover-bg" src="https://covers.smuthub.ca/a-touch-of-darkness-clair-2019.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/a-touch-of-darkness-clair-2019.jpg" alt="A Touch of Darkness book cover" loading="lazy"></div>
+      <p class="af-format">438 pages</p>
 
       <div class="af-rate" id="af-review">
         <span>Finished it?</span>
@@ -387,11 +404,11 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       <div class="af-flags">
         <span>Hades x Persephone Saga #1</span>
         <span>Dark Romance</span>
-        <span>Adult</span>
+        <span>NA</span>
       </div>
       <h1>A Touch of Darkness</h1>
       <p class="af-byline">by <a href="/books/?q=Scarlett%20St.%20Clair">Scarlett St. Clair</a> · 2019</p>
-      
+      <div class="af-pulse"><b>3.80</b><small>average reader rating</small></div>
 
       <div class="af-actions">
         <button type="button" class="af-primary" id="afWant">＋ Want to read</button>
@@ -400,7 +417,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       </div>
 
       <dl class="af-facts" aria-label="Quick book facts">
-        <div><dt>Series</dt><dd>Book 1</dd><small>Hades x Persephone Saga</small></div><div><dt>POV</dt><dd>Third person</dd><small>Single POV</small></div><div><dt>Pairing</dt><dd>M/F</dd><small>Central romance</small></div><div><dt>Ending</dt><dd>HFN</dd><small>No cliffhanger</small></div>
+        <div><dt>Length</dt><dd>438 pages</dd></div><div><dt>Series</dt><dd>Book 1</dd><small>Hades x Persephone Saga</small></div><div><dt>POV</dt><dd>Third person</dd><small>Single POV</small></div><div><dt>Pairing</dt><dd>M/F</dd><small>Central romance</small></div><div><dt>Ending</dt><dd>HFN</dd><small>No cliffhanger</small></div>
       </dl>
     </div>
 
@@ -410,7 +427,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>4 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>4 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>none recorded</em></span></a><a href="#af-fit"><span class="af-qn">05</span><span class="af-qa"><b>Is it for me?</b><em>likely yes</em></span></a><a href="#af-commitment"><span class="af-qn">06</span><span class="af-qa"><b>What&#39;s the commitment?</b><em>book 1</em></span></a>
+        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>4 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>9 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>none recorded</em></span></a><a href="#af-fit"><span class="af-qn">05</span><span class="af-qa"><b>Is it for me?</b><em>likely yes</em></span></a><a href="#af-commitment"><span class="af-qn">06</span><span class="af-qa"><b>What&#39;s the commitment?</b><em>438 pp · book 1</em></span></a>
       </nav>
     </aside>
   </section>
@@ -436,8 +453,8 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
     <section class="af-sec" id="af-tropes">
     <span class="af-num">03</span>
-    <div><p class="af-label">Which tropes?</p><h2>Bargain, Forbidden Love, Grumpy x Sunshine, and more.</h2><div class="af-tags"><span>Bargain</span><span>Forbidden Love</span><a href="/glossary/trope/grumpy-sunshine/">Grumpy x Sunshine</a><span>Hidden Identity</span></div>
-        </div>
+    <div><p class="af-label">Which tropes?</p><h2>Bargain, Forbidden Love, Grumpy x Sunshine, and more.</h2><div class="af-tags"><span>Bargain</span><span>Forbidden Love</span><a href="/glossary/trope/grumpy-sunshine/">Grumpy x Sunshine</a><span>Hidden Identity</span><span>High Fantasy</span><span>Magic</span><span>Vampire</span><span>Vampires</span></div>
+        <button type="button" class="af-seeall" data-drawer="tropes">See all 9 tropes <span>→</span></button></div>
   </section>
 
     <section class="af-sec" id="af-warnings">
@@ -454,15 +471,15 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
     <section class="af-sec" id="af-commitment">
     <span class="af-num">06</span>
-    <div><p class="af-label">What&#39;s the commitment?</p><h2>book 1 of the series.</h2><div class="af-commit">
-          
+    <div><p class="af-label">What&#39;s the commitment?</p><h2>438 pages, book 1 of the series.</h2><div class="af-commit">
+          <div><span>Book length</span><b>438 pages</b></div>
           <div><span>Series position</span><b>Book 1</b></div>
           <div><span>Ending</span><b>Happy For Now (HFN)</b><small>No cliffhanger</small></div>
         </div>
         <details class="af-more"><summary>Every recorded detail +</summary><section class="blk">
     <h2>The details</h2>
     <div class="dgrid">
-      <div class="drow"><span class="dk">Series</span><span class="dv">Hades x Persephone Saga · Book 1</span></div><div class="drow"><span class="dk">POV</span><span class="dv">Third person · single</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Dark Romance</span></div><div class="drow"><span class="dk">World</span><span class="dv">Urban Fantasy</span></div><div class="drow"><span class="dk">Ending</span><span class="dv">Happy For Now (HFN)</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div>
+      <div class="drow"><span class="dk">Series</span><span class="dv">Hades x Persephone Saga · Book 1</span></div><div class="drow"><span class="dk">POV</span><span class="dv">Third person · single</span></div><div class="drow"><span class="dk">Length</span><span class="dv">438 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Dark Romance</span></div><div class="drow"><span class="dk">World</span><span class="dv">Urban Fantasy</span></div><div class="drow"><span class="dk">Ending</span><span class="dv">Happy For Now (HFN)</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">NA</span></div>
     </div>
   </section></details></div>
   </section>
@@ -474,21 +491,21 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       <div><span>What next?</span><h2 id="af-related-h">Related books</h2><p>Matched on tropes, heat and setting.</p></div>
       <a href="/books/">See all matches →</a>
     </div>
-    <div class="af-rail"><a class="af-bcard" href="/books/a-dance-with-the-fae-prince-kova-2021/">
-      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/a-dance-with-the-fae-prince-kova-2021.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/a-dance-with-the-fae-prince-kova-2021.jpg" alt="A Dance with the Fae Prince book cover" loading="lazy"></div>
-      <div class="bm"><span>🌶️🌶️</span><h3>A Dance with the Fae Prince</h3><p>Elise Kova</p></div>
-    </a><a class="af-bcard" href="/books/a-duel-with-the-vampire-lord-kova-2021/">
-      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/a-duel-with-the-vampire-lord-kova-2021.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/a-duel-with-the-vampire-lord-kova-2021.jpg" alt="A Duel with the Vampire Lord book cover" loading="lazy"></div>
-      <div class="bm"><span>🌶️🌶️</span><h3>A Duel with the Vampire Lord</h3><p>Elise Kova</p></div>
-    </a><a class="af-bcard" href="/books/a-marvellous-light-marske-2021/">
-      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/a-marvellous-light-marske-2021.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/a-marvellous-light-marske-2021.jpg" alt="A Marvellous Light book cover" loading="lazy"></div>
-      <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>A Marvellous Light</h3><p>Freya Marske</p></div>
-    </a><a class="af-bcard" href="/books/air-awakens-kova-2015/">
-      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/air-awakens-kova-2015.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/air-awakens-kova-2015.jpg" alt="Air Awakens book cover" loading="lazy"></div>
-      <div class="bm"><span>🌶️🌶️</span><h3>Air Awakens</h3><p>Elise Kova</p></div>
-    </a><a class="af-bcard" href="/books/an-enchantment-of-ravens-rogerson-2017/">
-      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/an-enchantment-of-ravens-rogerson-2017.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/an-enchantment-of-ravens-rogerson-2017.jpg" alt="An Enchantment of Ravens book cover" loading="lazy"></div>
-      <div class="bm"><span>🌶️</span><h3>An Enchantment of Ravens</h3><p>Margaret Rogerson</p></div>
+    <div class="af-rail"><a class="af-bcard" href="/books/quicksilver-hart-2024/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/quicksilver-hart.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/quicksilver-hart.jpg" alt="Quicksilver book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>Quicksilver</h3><p>Callie Hart</p></div>
+    </a><a class="af-bcard" href="/books/the-ballad-of-never-after-garber-2022/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/the-ballad-of-never-after-garber-2022.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/the-ballad-of-never-after-garber-2022.jpg" alt="The Ballad of Never After book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️</span><h3>The Ballad of Never After</h3><p>Stephanie Garber</p></div>
+    </a><a class="af-bcard" href="/books/clash-of-claws-dear-2025/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/clash-of-claws-dear-2025.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/clash-of-claws-dear-2025.jpg" alt="Clash of Claws book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️🌶️</span><h3>Clash of Claws</h3><p>Elizabeth Dear</p></div>
+    </a><a class="af-bcard" href="/books/crush-wolff-2021/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/crush-wolff-2021.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/crush-wolff-2021.jpg" alt="Crush book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️</span><h3>Crush</h3><p>Tracy Wolff</p></div>
+    </a><a class="af-bcard" href="/books/fourth-wing-yarros/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/fourth-wing-yarros.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/fourth-wing-yarros.jpg" alt="Fourth Wing book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>Fourth Wing</h3><p>Rebecca Yarros</p></div>
     </a></div>
   </section>
 
@@ -518,11 +535,11 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
 <!-- Drawer content is server-rendered and hidden, so the complete trope and
      warning lists exist in the HTML for crawlers and for no-JS readers. -->
-<template id="afDrawerTropes"><div><span>01</span><b>Bargain</b></div><div><span>02</span><b>Forbidden Love</b></div><a href="/glossary/trope/grumpy-sunshine/"><span>03</span><b>Grumpy x Sunshine</b></a><div><span>04</span><b>Hidden Identity</b></div></template>
+<template id="afDrawerTropes"><div><span>01</span><b>Bargain</b></div><div><span>02</span><b>Forbidden Love</b></div><a href="/glossary/trope/grumpy-sunshine/"><span>03</span><b>Grumpy x Sunshine</b></a><div><span>04</span><b>Hidden Identity</b></div><div><span>05</span><b>High Fantasy</b></div><div><span>06</span><b>Magic</b></div><div><span>07</span><b>Vampire</b></div><div><span>08</span><b>Vampires</b></div><div><span>09</span><b>Witches</b></div></template>
 <template id="afDrawerWarnings"></template>
 <noscript>
   <div class="wrap">
-    <section class="blk"><h2>All tropes</h2><div class="af-tags"><span>Bargain</span><span>Forbidden Love</span><span>Grumpy x Sunshine</span><span>Hidden Identity</span></div></section>
+    <section class="blk"><h2>All tropes</h2><div class="af-tags"><span>Bargain</span><span>Forbidden Love</span><span>Grumpy x Sunshine</span><span>Hidden Identity</span><span>High Fantasy</span><span>Magic</span><span>Vampire</span><span>Vampires</span><span>Witches</span></div></section>
     
   </div>
 </noscript>
@@ -533,7 +550,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   // Server-rendered book metadata is embedded so the shelf row carries a
   // title/author/cover snapshot.
   (function(){
-    var BOOK = {"key":"a-touch-of-darkness-clair-2019","title":"A Touch of Darkness","author":"Scarlett St. Clair","cover_url":null};
+    var BOOK = {"key":"a-touch-of-darkness-clair-2019","title":"A Touch of Darkness","author":"Scarlett St. Clair","cover_url":"https://covers.smuthub.ca/a-touch-of-darkness-clair-2019.jpg"};
     var LABEL = { want:'Want to Read', reading:'Currently Reading', read:'Read', dnf:'DNF' };
     var btn = document.getElementById('shelfBtn');
     var sel = document.getElementById('shelfSel');

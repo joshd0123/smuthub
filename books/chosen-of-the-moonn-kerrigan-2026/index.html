@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chosen of the Moon — Spice, Tropes &amp; Warnings | smutHub</title>
-<meta name="description" content="Chosen of the Moon by Lynn Kerrigan: spice level, content warnings, tropes, and where it fits in the series — decoded on smutHub.">
+<meta name="description" content="In the kingdom of Cúil Cullach, rulers are chosen by prophecy, not blood. A tradition thrown into chaos when, on the night of the king’s coronation, the Oracl">
 <link rel="canonical" href="https://smuthub.ca/books/chosen-of-the-moonn-kerrigan-2026/">
 <meta name="theme-color" content="#0c0708">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -12,14 +12,14 @@
 <meta property="og:type" content="book">
 <meta property="og:site_name" content="smutHub">
 <meta property="og:title" content="Chosen of the Moon — Spice, Tropes &amp; Warnings | smutHub">
-<meta property="og:description" content="Chosen of the Moon by Lynn Kerrigan: spice level, content warnings, tropes, and where it fits in the series — decoded on smutHub.">
+<meta property="og:description" content="In the kingdom of Cúil Cullach, rulers are chosen by prophecy, not blood. A tradition thrown into chaos when, on the night of the king’s coronation, the Oracl">
 <meta property="og:url" content="https://smuthub.ca/books/chosen-of-the-moonn-kerrigan-2026/">
 <meta property="og:image" content="https://covers.smuthub.ca/chosen-of-the-moonn-kerrigan-2026.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Chosen of the Moon — Spice, Tropes &amp; Warnings | smutHub">
-<meta name="twitter:description" content="Chosen of the Moon by Lynn Kerrigan: spice level, content warnings, tropes, and where it fits in the series — decoded on smutHub.">
+<meta name="twitter:description" content="In the kingdom of Cúil Cullach, rulers are chosen by prophecy, not blood. A tradition thrown into chaos when, on the night of the king’s coronation, the Oracl">
 <meta name="twitter:image" content="https://covers.smuthub.ca/chosen-of-the-moonn-kerrigan-2026.jpg">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Book","name":"Chosen of the Moon","url":"https://smuthub.ca/books/chosen-of-the-moonn-kerrigan-2026/","author":{"@type":"Person","name":"Lynn Kerrigan"},"image":"https://covers.smuthub.ca/chosen-of-the-moonn-kerrigan-2026.jpg","datePublished":"2026","isbn":"8878538582","inLanguage":"en","genre":"Fantasy Romance","isPartOf":{"@type":"BookSeries","name":"The Cullachian","position":1}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smuthub.ca/"},{"@type":"ListItem","position":2,"name":"All books","item":"https://smuthub.ca/books/"},{"@type":"ListItem","position":3,"name":"Chosen of the Moon","item":"https://smuthub.ca/books/chosen-of-the-moonn-kerrigan-2026/"}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Book","name":"Chosen of the Moon","url":"https://smuthub.ca/books/chosen-of-the-moonn-kerrigan-2026/","author":{"@type":"Person","name":"Lynn Kerrigan"},"image":"https://covers.smuthub.ca/chosen-of-the-moonn-kerrigan-2026.jpg","description":"In the kingdom of Cúil Cullach, rulers are chosen by prophecy, not blood. A tradition thrown into chaos when, on the night of the king’s coronation, the Oracle names a queen.\n\nCerys, a reclusive male druid with a dangerous gift, is forced to wed the newly crowned and wildly immature Skyre, sparking a collision between a dying belief in the old gods and the rising institutional power of the Sun Faith. But as political and personal tensions simmer, Cerys’ dreams begin to bleed with memory and omens. Can he and Skyre work through their differences to unite a fracturing kingdom against an ancient foe?","datePublished":"2026","isbn":"8878538582","inLanguage":"en","genre":"Fantasy Romance","isPartOf":{"@type":"BookSeries","name":"The Cullachian","position":1}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smuthub.ca/"},{"@type":"ListItem","position":2,"name":"All books","item":"https://smuthub.ca/books/"},{"@type":"ListItem","position":3,"name":"Chosen of the Moon","item":"https://smuthub.ca/books/chosen-of-the-moonn-kerrigan-2026/"}]}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -158,6 +158,23 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-actions button.on{border-color:var(--rose);color:var(--cream)}
   .af-facts{margin:24px 0 0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
   @media(max-width:720px){.af-facts{grid-column:1/-1;grid-template-columns:repeat(2,1fr)}}
+  /* ── Mobile hero (Option C): a compact, balanced landing. The cover floats
+     left; the title/author/rating wrap to its right and continue full-width
+     below it; the facts grid and Ask panel then clear beneath. Float keeps it
+     robust no matter how many meta lines a given book has. ── */
+  @media(max-width:720px){
+    .af-hero{display:block;padding:16px 0 4px}
+    .af-cover-col{display:block}
+    .af-cover{float:left;width:100px;margin:0 15px 10px 0;box-shadow:0 16px 34px -16px rgba(0,0,0,.72)}
+    .af-flags{gap:5px}
+    .af-flags span{font-size:.58rem;padding:4px 7px}
+    .af-core h1{font-size:1.55rem;line-height:1.14;margin:7px 0 5px;letter-spacing:-.012em}
+    .af-byline{font-size:.9rem}
+    .af-pulse{margin:9px 0 0;padding:0;border:0}
+    .af-pulse b{font-size:1.12rem}
+    .af-facts{clear:both;margin-top:16px}
+    .af-ask{clear:both}
+  }
   .af-facts>div{padding:15px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
   .af-facts dt,.af-facts small{display:block;color:var(--muted);font-size:.64rem;text-transform:uppercase;letter-spacing:.1em}
   .af-facts dd{margin:7px 0 5px;font-family:'Fraunces',serif;font-weight:500;font-size:1.16rem}
@@ -360,7 +377,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   <section class="af-hero">
     <div class="af-cover-col">
       <div class="af-cover"><img class="cover-bg" src="https://covers.smuthub.ca/chosen-of-the-moonn-kerrigan-2026.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/chosen-of-the-moonn-kerrigan-2026.jpg" alt="Chosen of the Moon book cover" loading="lazy"></div>
-      
+      <p class="af-format">418 pages</p>
 
       <div class="af-rate" id="af-review">
         <span>Finished it?</span>
@@ -400,7 +417,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       </div>
 
       <dl class="af-facts" aria-label="Quick book facts">
-        <div><dt>Series</dt><dd>Book 1</dd><small>The Cullachian</small></div><div><dt>Pairing</dt><dd>M/M</dd><small>Central romance</small></div>
+        <div><dt>Length</dt><dd>418 pages</dd></div><div><dt>Series</dt><dd>Book 1</dd><small>The Cullachian</small></div><div><dt>POV</dt><dd>First person</dd><small>Dual POV</small></div><div><dt>Pairing</dt><dd>M/M</dd><small>Central romance</small></div>
       </dl>
     </div>
 
@@ -410,7 +427,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>not recorded</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>not recorded</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>none tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>none recorded</em></span></a><a href="#af-fit"><span class="af-qn">05</span><span class="af-qa"><b>Is it for me?</b><em>depends</em></span></a><a href="#af-commitment"><span class="af-qn">06</span><span class="af-qa"><b>What&#39;s the commitment?</b><em>book 1</em></span></a>
+        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>3 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>4 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>7 warnings</em></span></a><a href="#af-fit"><span class="af-qn">05</span><span class="af-qa"><b>Is it for me?</b><em>yes, with caveats</em></span></a><a href="#af-commitment"><span class="af-qn">06</span><span class="af-qa"><b>What&#39;s the commitment?</b><em>418 pp · book 1</em></span></a>
       </nav>
     </aside>
   </section>
@@ -419,49 +436,78 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   <div class="af-answers" id="af-answers">
     <section class="af-sec" id="af-plot">
     <span class="af-num">01</span>
-    <div><p class="af-label">What&#39;s it about?</p><h2>Chosen of the Moon</h2><p class="af-empty-note">No description recorded yet.</p></div>
+    <div><p class="af-label">What&#39;s it about?</p><h2>In the kingdom of Cúil Cullach, rulers are chosen by prophecy, not blood. A tradition thrown into chaos when, on the night of the king’s coronation, the Oracle names a queen.</h2><details class="af-blurb">
+        <summary>Read the full blurb <span>+</span></summary>
+        <div class="af-blurb-body"><p class="lead">In the kingdom of Cúil Cullach, rulers are chosen by prophecy, not blood. A tradition thrown into chaos when, on the night of the king’s coronation, the Oracle names a queen.</p><div class="more"><p>Cerys, a reclusive male druid with a dangerous gift, is forced to wed the newly crowned and wildly immature Skyre, sparking a collision between a dying belief in the old gods and the rising institutional power of the Sun Faith. But as political and personal tensions simmer, Cerys’ dreams begin to bleed with memory and omens. Can he and Skyre work through their differences to unite a fracturing kingdom against an ancient foe?</p></div><div class="fade"></div></div>
+      </details></div>
   </section>
 
     <section class="af-sec" id="af-spice">
     <span class="af-num">02</span>
-    <div><p class="af-label">How spicy is it?</p><h2>Not recorded yet.</h2><p class="af-empty-note">No spice rating recorded yet — check back as the catalog fills in.</p></div>
+    <div><p class="af-label">How spicy is it?</p><h2>3 / 5 — on-page (open door).</h2><div class="af-spice">
+        <span class="af-gauge" aria-label="Spice level 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
+        <span><b>Door</b>On-page (open door)</span>
+        <span><b>Frequency</b>Occasional</span>
+      </div></div>
   </section>
 
     <section class="af-sec" id="af-tropes">
     <span class="af-num">03</span>
-    <div><p class="af-label">Which tropes?</p><h2>No tropes tagged yet.</h2><p class="af-empty-note">Nobody has tagged this book's tropes yet.</p></div>
+    <div><p class="af-label">Which tropes?</p><h2>Age Gap, Class Difference, Enemies to Lovers, and more.</h2><div class="af-tags"><a href="/glossary/trope/age-gap/">Age Gap</a><span>Class Difference</span><a href="/glossary/trope/enemies-to-lovers/">Enemies to Lovers</a><a href="/glossary/trope/forced-proximity/">Forced Proximity</a></div>
+        </div>
   </section>
 
     <section class="af-sec" id="af-warnings">
     <span class="af-num">04</span>
-    <div><p class="af-label">Any hard nos?</p><h2>No content warnings recorded for this book.</h2>
-        
-        <p class="af-empty-note">Nobody has flagged content warnings here yet. That's not a guarantee the book is warning-free — just that we don't have them recorded.</p></div>
+    <div><p class="af-label">Any hard nos?</p><h2>Flagged: ableism, abuse, graphic violence, and more.</h2><div class="af-tags is-warn"><a href="/glossary/warning/ableism/">Ableism</a><a href="/glossary/warning/abuse/">Abuse</a><a href="/glossary/warning/graphic-violence/">Graphic Violence</a><a href="/glossary/warning/mental-trauma/">Mental Trauma</a><a href="/glossary/warning/non-traditional-hea/">Non-Traditional HEA</a><a href="/glossary/warning/religious-trauma/">Religious Trauma</a></div>
+        <button type="button" class="af-seeall" data-drawer="warnings">See all 7 warnings <span>→</span></button>
+        </div>
   </section>
 
     <section class="af-sec" id="af-fit">
     <span class="af-num">05</span>
-    <div><p class="af-label">Is it for me?</p><h2>Depends on what you want from it.</h2></div>
+    <div><p class="af-label">Is it for me?</p><h2>Yes — if you want real heat without it taking over.</h2><p>Skip it if ableism, abuse, graphic violence (and 4 more flagged) are a hard no for you.</p></div>
   </section>
 
     <section class="af-sec" id="af-commitment">
     <span class="af-num">06</span>
-    <div><p class="af-label">What&#39;s the commitment?</p><h2>book 1 of the series.</h2><div class="af-commit">
-          
+    <div><p class="af-label">What&#39;s the commitment?</p><h2>418 pages, book 1 of the series.</h2><div class="af-commit">
+          <div><span>Book length</span><b>418 pages</b></div>
           <div><span>Series position</span><b>Book 1</b></div>
           
         </div>
         <details class="af-more"><summary>Every recorded detail +</summary><section class="blk">
     <h2>The details</h2>
     <div class="dgrid">
-      <div class="drow"><span class="dk">Series</span><span class="dv">The Cullachian · Book 1</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Fantasy Romance</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/M</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div>
+      <div class="drow"><span class="dk">Series</span><span class="dv">The Cullachian · Book 1</span></div><div class="drow"><span class="dk">POV</span><span class="dv">First person · dual</span></div><div class="drow"><span class="dk">Length</span><span class="dv">418 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Fantasy Romance</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/M</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div>
     </div>
   </section></details></div>
   </section>
 
     
 
-    
+    <section class="af-disc" id="af-related" aria-labelledby="af-related-h">
+    <div class="af-disc-head">
+      <div><span>What next?</span><h2 id="af-related-h">Related books</h2><p>Matched on tropes, heat and setting.</p></div>
+      <a href="/books/">See all matches →</a>
+    </div>
+    <div class="af-rail"><a class="af-bcard" href="/books/clash-of-claws-dear-2025/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/clash-of-claws-dear-2025.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/clash-of-claws-dear-2025.jpg" alt="Clash of Claws book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️🌶️</span><h3>Clash of Claws</h3><p>Elizabeth Dear</p></div>
+    </a><a class="af-bcard" href="/books/a-court-of-thorns-and-roses-maas/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/a-court-of-thorns-and-roses-maas.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/a-court-of-thorns-and-roses-maas.jpg" alt="A Court of Thorns and Roses book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>A Court of Thorns and Roses</h3><p>Sarah J. Maas</p></div>
+    </a><a class="af-bcard" href="/books/quicksilver-hart-2024/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/quicksilver-hart.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/quicksilver-hart.jpg" alt="Quicksilver book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>Quicksilver</h3><p>Callie Hart</p></div>
+    </a><a class="af-bcard" href="/books/assistant-to-the-villain-maehrer/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/assistant-to-the-villain-maehrer.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/assistant-to-the-villain-maehrer.jpg" alt="Assistant to the Villain book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️</span><h3>Assistant to the Villain</h3><p>Hannah Nicole Maehrer</p></div>
+    </a><a class="af-bcard" href="/books/his-empress-rossi-2026/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/his-empress-rossi-2026.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/his-empress-rossi-2026.jpg" alt="His Empress book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>His Empress</h3><p>Emilia Rossi</p></div>
+    </a></div>
+  </section>
 
     
   </div>
@@ -480,12 +526,12 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
 <!-- Drawer content is server-rendered and hidden, so the complete trope and
      warning lists exist in the HTML for crawlers and for no-JS readers. -->
-<template id="afDrawerTropes"></template>
-<template id="afDrawerWarnings"></template>
+<template id="afDrawerTropes"><a href="/glossary/trope/age-gap/"><span>01</span><b>Age Gap</b></a><div><span>02</span><b>Class Difference</b></div><a href="/glossary/trope/enemies-to-lovers/"><span>03</span><b>Enemies to Lovers</b></a><a href="/glossary/trope/forced-proximity/"><span>04</span><b>Forced Proximity</b></a></template>
+<template id="afDrawerWarnings"><a href="/glossary/warning/ableism/"><span>01</span><b>Ableism</b></a><a href="/glossary/warning/abuse/"><span>02</span><b>Abuse</b></a><a href="/glossary/warning/graphic-violence/"><span>03</span><b>Graphic Violence</b></a><a href="/glossary/warning/mental-trauma/"><span>04</span><b>Mental Trauma</b></a><a href="/glossary/warning/non-traditional-hea/"><span>05</span><b>Non-Traditional HEA</b></a><a href="/glossary/warning/religious-trauma/"><span>06</span><b>Religious Trauma</b></a><a href="/glossary/warning/substance-abuse/"><span>07</span><b>Substance Abuse</b></a></template>
 <noscript>
   <div class="wrap">
-    
-    
+    <section class="blk"><h2>All tropes</h2><div class="af-tags"><span>Age Gap</span><span>Class Difference</span><span>Enemies to Lovers</span><span>Forced Proximity</span></div></section>
+    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Ableism</span><span>Abuse</span><span>Graphic Violence</span><span>Mental Trauma</span><span>Non-Traditional HEA</span><span>Religious Trauma</span><span>Substance Abuse</span></div></section>
   </div>
 </noscript>
 

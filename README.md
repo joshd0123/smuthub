@@ -11,7 +11,8 @@ Static site (plain HTML/JS) deployed to Cloudflare Workers static assets at
 |---|---|
 | `index.html` | Landing page + email waitlist |
 | `smuthub-app.html` | Search + spice ratings + add-to-shelf; catalog browse & filters (live books) |
-| `smuthub-bookcase.html` | The bookcase: shelves, themes, book detail sheet |
+| `bookshelf/` | The bookcase: shelves, themes, book detail sheet |
+| `import/` | Authenticated Goodreads, StoryGraph, CSV, and ISBN library importer |
 | `admin.html` | Admin-only bulk CSV import into the catalog (via `upsert_book`) |
 | `catalog-admin.html` | Admin-only catalog manager: books list + per-book edit form (facts, spice, tags, status) |
 | `stores.html` | Store finder (Leaflet/OpenStreetMap demo) |

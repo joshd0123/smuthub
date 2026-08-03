@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A Flame Among the Seas — Spice, Tropes &amp; Warnings | smutHub</title>
-<meta name="description" content="A Flame Among the Seas by Emilia Jae: spice level, content warnings, tropes (Fantasy Romance, Pirates, Summer, Enemies to Lovers), and where it fits in the se">
+<meta name="description" content="A kingdom risen. A goddess reborn. A world burning red. Esmyra now knows the truth of her magic, but it’s cost her everything. Draevyn shattered her heart, an">
 <link rel="canonical" href="https://smuthub.ca/books/a-flame-among-the-seas-jae-2026/">
 <meta name="theme-color" content="#0c0708">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -12,14 +12,14 @@
 <meta property="og:type" content="book">
 <meta property="og:site_name" content="smutHub">
 <meta property="og:title" content="A Flame Among the Seas — Spice, Tropes &amp; Warnings | smutHub">
-<meta property="og:description" content="A Flame Among the Seas by Emilia Jae: spice level, content warnings, tropes (Fantasy Romance, Pirates, Summer, Enemies to Lovers), and where it fits in the se">
+<meta property="og:description" content="A kingdom risen. A goddess reborn. A world burning red. Esmyra now knows the truth of her magic, but it’s cost her everything. Draevyn shattered her heart, an">
 <meta property="og:url" content="https://smuthub.ca/books/a-flame-among-the-seas-jae-2026/">
 <meta property="og:image" content="https://covers.smuthub.ca/a-flame-among-the-seas-jae-2026.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="A Flame Among the Seas — Spice, Tropes &amp; Warnings | smutHub">
-<meta name="twitter:description" content="A Flame Among the Seas by Emilia Jae: spice level, content warnings, tropes (Fantasy Romance, Pirates, Summer, Enemies to Lovers), and where it fits in the se">
+<meta name="twitter:description" content="A kingdom risen. A goddess reborn. A world burning red. Esmyra now knows the truth of her magic, but it’s cost her everything. Draevyn shattered her heart, an">
 <meta name="twitter:image" content="https://covers.smuthub.ca/a-flame-among-the-seas-jae-2026.jpg">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Book","name":"A Flame Among the Seas","url":"https://smuthub.ca/books/a-flame-among-the-seas-jae-2026/","author":{"@type":"Person","name":"Emilia Jae"},"image":"https://covers.smuthub.ca/a-flame-among-the-seas-jae-2026.jpg","datePublished":"2026","isbn":"9798995622901","inLanguage":"en","genre":"Romantasy","isPartOf":{"@type":"BookSeries","name":"Beyond the Tides","position":2}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smuthub.ca/"},{"@type":"ListItem","position":2,"name":"All books","item":"https://smuthub.ca/books/"},{"@type":"ListItem","position":3,"name":"A Flame Among the Seas","item":"https://smuthub.ca/books/a-flame-among-the-seas-jae-2026/"}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Book","name":"A Flame Among the Seas","url":"https://smuthub.ca/books/a-flame-among-the-seas-jae-2026/","author":{"@type":"Person","name":"Emilia Jae"},"image":"https://covers.smuthub.ca/a-flame-among-the-seas-jae-2026.jpg","description":"A kingdom risen. A goddess reborn. A world burning red.\n\nEsmyra now knows the truth of her magic, but it’s cost her everything. Draevyn shattered her heart, and she’s sworn to make him pay. But when her hunt uncovers ancient lies, she finds herself entangled in a battle far greater than vengeance.\n\nThe truths revealed will unravel everything Esmyra thought she knew about him, herself, and the goddesses risen from the waves. Meanwhile, powers older than any empire stir, enemies wear masks of loyalty, and her own heart betrays her with its unrelenting pull toward the one man she’s vowed to hate.\n\nWith her crew caught in the crossfire and Syrena tightening her grip, Esmyra must learn who to trust—and who to destroy—before the tide drags her under. Because every choice carves her fate, and one misstep could strip her of everything she has left…including her soul.","datePublished":"2026","isbn":"9798995622901","inLanguage":"en","genre":"Romantasy","isPartOf":{"@type":"BookSeries","name":"Beyond the Tides","position":2}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://smuthub.ca/"},{"@type":"ListItem","position":2,"name":"All books","item":"https://smuthub.ca/books/"},{"@type":"ListItem","position":3,"name":"A Flame Among the Seas","item":"https://smuthub.ca/books/a-flame-among-the-seas-jae-2026/"}]}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -158,6 +158,23 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-actions button.on{border-color:var(--rose);color:var(--cream)}
   .af-facts{margin:24px 0 0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
   @media(max-width:720px){.af-facts{grid-column:1/-1;grid-template-columns:repeat(2,1fr)}}
+  /* ── Mobile hero (Option C): a compact, balanced landing. The cover floats
+     left; the title/author/rating wrap to its right and continue full-width
+     below it; the facts grid and Ask panel then clear beneath. Float keeps it
+     robust no matter how many meta lines a given book has. ── */
+  @media(max-width:720px){
+    .af-hero{display:block;padding:16px 0 4px}
+    .af-cover-col{display:block}
+    .af-cover{float:left;width:100px;margin:0 15px 10px 0;box-shadow:0 16px 34px -16px rgba(0,0,0,.72)}
+    .af-flags{gap:5px}
+    .af-flags span{font-size:.58rem;padding:4px 7px}
+    .af-core h1{font-size:1.55rem;line-height:1.14;margin:7px 0 5px;letter-spacing:-.012em}
+    .af-byline{font-size:.9rem}
+    .af-pulse{margin:9px 0 0;padding:0;border:0}
+    .af-pulse b{font-size:1.12rem}
+    .af-facts{clear:both;margin-top:16px}
+    .af-ask{clear:both}
+  }
   .af-facts>div{padding:15px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
   .af-facts dt,.af-facts small{display:block;color:var(--muted);font-size:.64rem;text-transform:uppercase;letter-spacing:.1em}
   .af-facts dd{margin:7px 0 5px;font-family:'Fraunces',serif;font-weight:500;font-size:1.16rem}
@@ -360,7 +377,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   <section class="af-hero">
     <div class="af-cover-col">
       <div class="af-cover"><img class="cover-bg" src="https://covers.smuthub.ca/a-flame-among-the-seas-jae-2026.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/a-flame-among-the-seas-jae-2026.jpg" alt="A Flame Among the Seas book cover" loading="lazy"></div>
-      
+      <p class="af-format">580 pages · audiobook</p>
 
       <div class="af-rate" id="af-review">
         <span>Finished it?</span>
@@ -387,7 +404,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       <div class="af-flags">
         <span>Beyond the Tides #2</span>
         <span>Romantasy</span>
-        
+        <span>YA</span>
       </div>
       <h1>A Flame Among the Seas</h1>
       <p class="af-byline">by <a href="/books/?q=Emilia%20Jae">Emilia Jae</a> · 2026</p>
@@ -400,7 +417,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       </div>
 
       <dl class="af-facts" aria-label="Quick book facts">
-        <div><dt>Series</dt><dd>Book 2</dd><small>Beyond the Tides</small></div>
+        <div><dt>Length</dt><dd>580 pages</dd><small>Audiobook too</small></div><div><dt>Series</dt><dd>Book 2</dd><small>Beyond the Tides</small></div>
       </dl>
     </div>
 
@@ -410,7 +427,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>not recorded</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>not recorded</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>2 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>none recorded</em></span></a><a href="#af-fit"><span class="af-qn">05</span><span class="af-qa"><b>Is it for me?</b><em>depends</em></span></a><a href="#af-commitment"><span class="af-qn">06</span><span class="af-qa"><b>What&#39;s the commitment?</b><em>book 2</em></span></a>
+        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>closed</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>8 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>none recorded</em></span></a><a href="#af-fit"><span class="af-qn">05</span><span class="af-qa"><b>Is it for me?</b><em>depends</em></span></a><a href="#af-commitment"><span class="af-qn">06</span><span class="af-qa"><b>What&#39;s the commitment?</b><em>580 pp · book 2</em></span></a>
       </nav>
     </aside>
   </section>
@@ -419,17 +436,24 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   <div class="af-answers" id="af-answers">
     <section class="af-sec" id="af-plot">
     <span class="af-num">01</span>
-    <div><p class="af-label">What&#39;s it about?</p><h2>A Flame Among the Seas</h2><p class="af-empty-note">No description recorded yet.</p></div>
+    <div><p class="af-label">What&#39;s it about?</p><h2>A kingdom risen. A goddess reborn. A world burning red. Esmyra now knows the truth of her magic, but it’s cost her everything. Draevyn shattered her heart, and she’s sworn to make him pay.</h2><details class="af-blurb">
+        <summary>Read the full blurb <span>+</span></summary>
+        <div class="af-blurb-body"><p class="lead">A kingdom risen. A goddess reborn. A world burning red.</p><div class="more"><p>Esmyra now knows the truth of her <span class="term">magic</span>, but it’s cost her everything. Draevyn shattered her heart, and she’s sworn to make him pay. But when her hunt uncovers ancient lies, she finds herself entangled in a battle far greater than vengeance.</p><p>The truths revealed will unravel everything Esmyra thought she knew about him, herself, and the goddesses risen from the waves. Meanwhile, powers older than any empire stir, enemies wear masks of loyalty, and her own heart betrays her with its unrelenting pull toward the one man she’s vowed to hate.</p><p>With her crew caught in the crossfire and Syrena tightening her grip, Esmyra must learn who to trust—and who to destroy—before the tide drags her under. Because every choice carves her fate, and one misstep could strip her of everything she has left…including her soul.</p></div><div class="fade"></div></div>
+      </details></div>
   </section>
 
     <section class="af-sec" id="af-spice">
     <span class="af-num">02</span>
-    <div><p class="af-label">How spicy is it?</p><h2>Not recorded yet.</h2><p class="af-empty-note">No spice rating recorded yet — check back as the catalog fills in.</p></div>
+    <div><p class="af-label">How spicy is it?</p><h2>Closed door</h2><div class="af-spice">
+        <span></span>
+        <span><b>Door</b>Closed door</span>
+        <span><b>Frequency</b>None on-page</span>
+      </div></div>
   </section>
 
     <section class="af-sec" id="af-tropes">
     <span class="af-num">03</span>
-    <div><p class="af-label">Which tropes?</p><h2>Enemies to Lovers, Historical.</h2><div class="af-tags"><a href="/glossary/trope/enemies-to-lovers/">Enemies to Lovers</a><span>Historical</span></div>
+    <div><p class="af-label">Which tropes?</p><h2>Enemies to Lovers, Fated Mates, Found Family, and more.</h2><div class="af-tags"><a href="/glossary/trope/enemies-to-lovers/">Enemies to Lovers</a><a href="/glossary/trope/fated-mates/">Fated Mates</a><a href="/glossary/trope/found-family/">Found Family</a><span>High Fantasy</span><span>Historical</span><span>Magic</span><span>Political</span><span>Political Court Intrigue</span></div>
         </div>
   </section>
 
@@ -447,15 +471,15 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
     <section class="af-sec" id="af-commitment">
     <span class="af-num">06</span>
-    <div><p class="af-label">What&#39;s the commitment?</p><h2>book 2 of the series.</h2><div class="af-commit">
-          
+    <div><p class="af-label">What&#39;s the commitment?</p><h2>580 pages, book 2 of the series.</h2><div class="af-commit">
+          <div><span>Book length</span><b>580 pages</b><small>Audiobook available</small></div>
           <div><span>Series position</span><b>Book 2</b></div>
           
         </div>
         <details class="af-more"><summary>Every recorded detail +</summary><section class="blk">
     <h2>The details</h2>
     <div class="dgrid">
-      <div class="drow"><span class="dk">Series</span><span class="dv">Beyond the Tides · Book 2</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div>
+      <div class="drow"><span class="dk">Series</span><span class="dv">Beyond the Tides · Book 2</span></div><div class="drow"><span class="dk">Length</span><span class="dv">580 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">YA</span></div><div class="drow"><span class="dk">Audiobook</span><span class="dv">Available</span></div>
     </div>
   </section></details></div>
   </section>
@@ -467,21 +491,21 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       <div><span>What next?</span><h2 id="af-related-h">Related books</h2><p>Matched on tropes, heat and setting.</p></div>
       <a href="/books/">See all matches →</a>
     </div>
-    <div class="af-rail"><a class="af-bcard" href="/books/a-court-of-thorns-and-roses-maas/">
-      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/a-court-of-thorns-and-roses-maas.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/a-court-of-thorns-and-roses-maas.jpg" alt="A Court of Thorns and Roses book cover" loading="lazy"></div>
-      <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>A Court of Thorns and Roses</h3><p>Sarah J. Maas</p></div>
-    </a><a class="af-bcard" href="/books/a-court-of-mist-and-fury-maas/">
-      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/a-court-of-mist-and-fury-maas.png" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/a-court-of-mist-and-fury-maas.png" alt="A Court of Mist and Fury book cover" loading="lazy"></div>
-      <div class="bm"><span>🌶️🌶️🌶️</span><h3>A Court of Mist and Fury</h3><p>Sarah J. Maas</p></div>
-    </a><a class="af-bcard" href="/books/bloom-blood-chase-2026/">
-      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/bloom-blood-chase-2026.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/bloom-blood-chase-2026.jpg" alt="Bloom &amp; Blood book cover" loading="lazy"></div>
-      <div class="bm"><span>🌶️🌶️🌶️</span><h3>Bloom &amp; Blood</h3><p>Eva Chase</p></div>
-    </a><a class="af-bcard" href="/books/court-of-lies-and-deceit-blackwood-2025/">
-      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/court-of-lies-and-deceit-blackwood-2025.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/court-of-lies-and-deceit-blackwood-2025.jpg" alt="Court of Lies and Deceit book cover" loading="lazy"></div>
-      <div class="bm"><h3>Court of Lies and Deceit</h3><p>Marion Blackwood</p></div>
-    </a><a class="af-bcard" href="/books/crown-me-dead-zander-2026/">
-      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/crown-me-dead-zander-2026.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/crown-me-dead-zander-2026.jpg" alt="Crown Me Dead book cover" loading="lazy"></div>
-      <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>Crown Me Dead</h3><p>Liv Zander</p></div>
+    <div class="af-rail"><a class="af-bcard" href="/books/fourth-wing-yarros/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/fourth-wing-yarros.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/fourth-wing-yarros.jpg" alt="Fourth Wing book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>Fourth Wing</h3><p>Rebecca Yarros</p></div>
+    </a><a class="af-bcard" href="/books/glow-kennedy-2022/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/glow-kennedy-2022.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/glow-kennedy-2022.jpg" alt="Glow book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>Glow</h3><p>Raven Kennedy</p></div>
+    </a><a class="af-bcard" href="/books/veil-of-ash-hendrix-2026/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/veil-of-ash-hendrix-2026.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/veil-of-ash-hendrix-2026.jpg" alt="Veil of Ash book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>Veil of Ash</h3><p>Fallon Hendrix</p></div>
+    </a><a class="af-bcard" href="/books/clash-of-claws-dear-2025/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/clash-of-claws-dear-2025.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/clash-of-claws-dear-2025.jpg" alt="Clash of Claws book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️🌶️</span><h3>Clash of Claws</h3><p>Elizabeth Dear</p></div>
+    </a><a class="af-bcard" href="/books/quicksilver-hart-2024/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/quicksilver-hart.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/quicksilver-hart.jpg" alt="Quicksilver book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>Quicksilver</h3><p>Callie Hart</p></div>
     </a></div>
   </section>
 
@@ -502,11 +526,11 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
 <!-- Drawer content is server-rendered and hidden, so the complete trope and
      warning lists exist in the HTML for crawlers and for no-JS readers. -->
-<template id="afDrawerTropes"><a href="/glossary/trope/enemies-to-lovers/"><span>01</span><b>Enemies to Lovers</b></a><div><span>02</span><b>Historical</b></div></template>
+<template id="afDrawerTropes"><a href="/glossary/trope/enemies-to-lovers/"><span>01</span><b>Enemies to Lovers</b></a><a href="/glossary/trope/fated-mates/"><span>02</span><b>Fated Mates</b></a><a href="/glossary/trope/found-family/"><span>03</span><b>Found Family</b></a><div><span>04</span><b>High Fantasy</b></div><div><span>05</span><b>Historical</b></div><div><span>06</span><b>Magic</b></div><div><span>07</span><b>Political</b></div><div><span>08</span><b>Political Court Intrigue</b></div></template>
 <template id="afDrawerWarnings"></template>
 <noscript>
   <div class="wrap">
-    <section class="blk"><h2>All tropes</h2><div class="af-tags"><span>Enemies to Lovers</span><span>Historical</span></div></section>
+    <section class="blk"><h2>All tropes</h2><div class="af-tags"><span>Enemies to Lovers</span><span>Fated Mates</span><span>Found Family</span><span>High Fantasy</span><span>Historical</span><span>Magic</span><span>Political</span><span>Political Court Intrigue</span></div></section>
     
   </div>
 </noscript>

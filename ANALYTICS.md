@@ -22,12 +22,15 @@ The script is injected by `mountUmami()` in `auth.js`, so every page that loads
 
 1. **Admin pages.** `mountUmami()` refuses to load on `admin.html` and
    `catalog-admin.html`.
-2. **Admin people.** `SH.track()` is a no-op when the signed-in profile has
-   `is_admin`. Curating the catalog means browsing `/search`, `/books/` and the
-   book pages constantly — the exact pages being measured — so without this an
-   admin's own sessions read as reader behaviour. The flag is mirrored into
-   `sessionStorage` because the profile loads asynchronously; without that,
-   events fired before the profile resolved would still be recorded.
+2. **Admin people — pageviews *and* events.** `mountUmami()` also refuses to
+   load at all for an admin session (`isAdminSession()`), so an admin's
+   pageviews and sessions are excluded, not just their custom events; and
+   `SH.track()` is independently a no-op for admins. Curating the catalog means
+   browsing `/search`, `/books/` and the book pages constantly — the exact pages
+   being measured — so without this an admin's own sessions read as reader
+   behaviour. The flag is mirrored into `sessionStorage` because the profile
+   loads asynchronously; on the *first* page of a fresh session the pageview can
+   still slip through before the profile resolves, but every page after is out.
 3. **Anything identifying.** Search terms are truncated to 80 characters and
    no user id, email or shelf content is ever sent.
 
@@ -84,7 +87,9 @@ referrer cannot distinguish "series" from "related" (both are `/books/<slug>/`).
 | `ask-jump` | `question`, `slug` | book page | **Whether "answers first" is the right hierarchy.** `question` is `plot`, `spice`, `tropes`, `warnings`, `fit` or `commitment` |
 | `blurb-expand` | `slug` | book page | Whether the 30-second answer is enough, or readers always want the full blurb |
 | `drawer-open` | `kind` | book page | Demand for the complete trope / warning lists |
+| `review-open` | `slug` | book page | Demand for reader reviews on a book |
 | `share` | `where` | book page | |
+| `share-bookshelf` | — | dashboard | Whether readers share their public bookshelf (website version) link |
 
 ### Conversion
 
@@ -92,8 +97,21 @@ referrer cannot distinguish "series" from "related" (both are `/books/<slug>/`).
 |---|---|---|---|
 | `shelve` | `status`, `where` | book page, `/search` | `status` = `want`/`reading`/`read`/`dnf` |
 | `spice-rate` | `n`, `where` | book page, `/search` | 1–5 |
-| `waitlist-signup` | — | homepage | Top pre-launch conversion |
+| `signup` | — | any page (`auth.js`) | New account created (fired on the first `SIGNED_IN` for an account < 60s old) — the top post-launch conversion now that the waitlist is gone |
+| `signin` | — | any page (`auth.js`) | Returning login (first genuine `SIGNED_IN` per session; session restores are `INITIAL_SESSION` and excluded) |
 | `add-to-catalog` | — | `/search` | Admin-only, so suppressed in practice |
+
+> Removed **2026-07-28:** `waitlist-signup` — the pre-launch waitlist was retired
+> in favour of Google sign-in, so the event no longer fires. `signup` replaces it.
+
+### Library import — `/import/`
+
+| Event | Payload | Question it answers |
+|---|---|---|
+| `library-import-start` | — | How many readers begin a Goodreads/StoryGraph/CSV import |
+| `library-import-parsed` | — | How many get a file parsed successfully (drop-off before this = format/upload friction) |
+| `library-import-complete` | — | How many finish — the real conversion of the import feature |
+| `library-import-error` | — | Where imports fail (the denominator for import reliability) |
 
 ---
 

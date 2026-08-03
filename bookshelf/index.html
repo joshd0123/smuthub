@@ -286,7 +286,7 @@
   .rail-card.world-card::before{z-index:2;background:radial-gradient(80% 70% at 100% 0%,rgba(98,135,224,.16),transparent 70%)}
   .world-live{display:inline-flex!important;align-self:flex-start;margin-bottom:auto;padding:.34em .62em;border:1px solid rgba(117,225,178,.4);border-radius:99px;background:rgba(8,31,26,.72);color:#9be7c6!important;font-size:.53rem!important;font-weight:800!important;letter-spacing:.11em;text-transform:uppercase}
   .rail-card.tbr-card::before{background:radial-gradient(80% 70% at 100% 0%,rgba(126,54,86,.2),transparent 70%)}
-  .rail-card .rail-link{display:inline-flex;margin-top:10px;color:#e7c77e;font-size:.7rem;font-weight:800;cursor:pointer;background:none;border:0;padding:0}
+  .rail-card .rail-link{display:inline-flex;margin-top:10px;color:#e7c77e;font-size:.7rem;font-weight:800;cursor:pointer;background:none;border:0;padding:0;text-decoration:none}
 
   .hint{text-align:center;color:#7a5e5b;font-size:.78rem;margin:18px auto 0;max-width:520px}
 
@@ -395,7 +395,7 @@
   .sv-backdrop.world-academia{background:
     radial-gradient(55% 44% at 50% 10%,rgba(210,170,105,.22),transparent 65%),
     linear-gradient(#21170f,#070605)}
-  .sv-backdrop::after{content:"";position:absolute;inset:0;background:
+  .sv-backdrop::after{content:"";position:absolute;inset:0;pointer-events:none;background:
     radial-gradient(85% 70% at 50% 46%,transparent 34%,rgba(3,5,10,.74) 100%),
     linear-gradient(180deg,rgba(4,4,8,.14),rgba(4,4,8,.58))}
   .sv-light{position:absolute;inset:0;z-index:1;pointer-events:none;transition:background .45s,opacity .45s}
@@ -834,7 +834,7 @@
     shelf=(r1.data||[]).sort(shelfCmp); spiceMap={};
     // Official spine art is catalog-owned. Enrich matching shelf snapshots
     // without requiring users to remove and re-add books after an asset lands.
-    const catalogKeys=shelf.map(b=>b.book_key).filter(k=>k&&k.indexOf('gb:')!==0&&k.indexOf('/')<0&&k.indexOf('demo-')!==0);
+    const catalogKeys=shelf.map(b=>b.book_key).filter(k=>k&&k.indexOf('gb:')!==0&&k.indexOf('import:')!==0&&k.indexOf('/')<0&&k.indexOf('demo-')!==0);
     if(catalogKeys.length){
       const {data:spines,error:spineError}=await sb.from('books').select('slug,spine_url,spine_position,spine_source').in('slug',[...new Set(catalogKeys)]);
       if(!spineError){
@@ -960,6 +960,9 @@
       + '<section class="rail-card tbr-card"><div class="rail-kicker">Your visual TBR</div><h3>Make anticipation part of the ritual.</h3>'
       + '<p>A beautiful to-be-read shelf should make choosing the next romance or fantasy book feel as satisfying as finishing one.</p>'
       + '<button class="rail-link" id="openTbrWorld">Open your TBR →</button></section>'
+      + '<section class="rail-card"><div class="rail-kicker">Bring your books home</div><h3>Already have a reading history?</h3>'
+      + '<p>Import your Goodreads, StoryGraph, or CSV shelf in a few guided steps. Duplicates stay out automatically.</p>'
+      + '<a class="rail-link" href="/import/">Import your library →</a></section>'
       + '</aside></div>';
     attachRoom();
   }
@@ -1050,7 +1053,7 @@
     const moves=SHELVES.filter(([s])=>s!==b.status).map(([s,l])=>'<button class="pillbtn" onclick="setStatus(\''+esc(key)+'\',\''+s+'\')">→ '+l+'</button>').join('');
     // Catalog books (book_key === slug; not a Google "gb:"/OpenLibrary "/works/"/demo key)
     // get a link to their plot page. External shelf entries don't have one.
-    const slug=(key && key.indexOf('gb:')!==0 && key.indexOf('/')<0 && key.indexOf('demo-')!==0) ? key : null;
+    const slug=(key && key.indexOf('gb:')!==0 && key.indexOf('import:')!==0 && key.indexOf('/')<0 && key.indexOf('demo-')!==0) ? key : null;
     const viewBtn = slug ? '<a class="pillbtn view" href="/books/'+encodeURIComponent(slug)+'/">📖 View book page</a>' : '';
     const added=b.created_at?new Intl.DateTimeFormat('en-CA',{month:'short',year:'numeric'}).format(new Date(b.created_at)):'In your library';
     $('sheetbg').innerHTML = '<article class="openbook" role="dialog" aria-modal="true" aria-labelledby="openBookTitle">'
