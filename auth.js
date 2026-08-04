@@ -495,8 +495,13 @@
         header .navlinks>a:hover,header .sh-guides>summary:hover{color:var(--cream,#f4e8e3)}
         header .sh-guides>summary:hover .sh-guides-chevron{opacity:1}
         header .sh-guides-menu a:hover{background:rgba(255,171,64,.1)}
-        /* Pull the search+avatar cluster tight to the right edge instead of
-           letting justify-content:space-between fan everything apart. */
+        /* Center the primary nav in the header on every page. The links are
+           lifted out of flow and pinned to the middle, so the logo sits left,
+           the search+avatar cluster sits right, and the nav is truly centered
+           regardless of how wide either side is. */
+        header .nav{position:relative}
+        header .navlinks{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+          justify-content:center;white-space:nowrap}
         header .sh-search-btn{margin-left:auto}
       }
       .sh-hamburger{display:none;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;
