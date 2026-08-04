@@ -490,12 +490,15 @@
 .clue-bridge span{display:block;color:#ff7a4d;font-size:.59rem;font-weight:800;letter-spacing:.14em}
 .clue-bridge strong{display:block;margin-top:4px;font:500 1.25rem var(--serif)}
 .clue-bridge .button{flex:none}
-.compass-complete .quick-wins{position:relative;overflow:hidden}
-.compass-complete .quick-wins::before{
-  content:"";position:absolute;inset:0;pointer-events:none;opacity:.18;
-  background:url("./assets/gift-compass-map-warm.png") center 42%/cover no-repeat;mix-blend-mode:multiply
-}
+.compass-complete .quick-wins{position:relative;overflow:clip}
 .compass-complete .quick-wins .wrap{position:relative;z-index:1}
+.map-orb-layer{position:absolute;z-index:0;inset:0;pointer-events:none}
+.map-orb{
+  width:min(88vw,1120px);aspect-ratio:1;position:absolute;top:clamp(24px,7vh,72px);left:50%;transform:translateX(-50%);
+  border-radius:50%;opacity:.17;background:url("./assets/gift-compass-map-warm.png") center 46%/auto 165% no-repeat;
+  mix-blend-mode:multiply;-webkit-mask-image:radial-gradient(circle,#000 0 62%,rgba(0,0,0,.82) 73%,transparent 100%);mask-image:radial-gradient(circle,#000 0 62%,rgba(0,0,0,.82) 73%,transparent 100%)
+}
+.taste-section .map-orb{opacity:.12;top:clamp(24px,9vh,88px)}
 .quick-grid{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .quick-card{
   min-height:390px;padding:30px;display:flex;flex-direction:column;
@@ -520,8 +523,7 @@
 .permission-card h3{max-width:12ch;margin:43px 0 16px;color:#f4e8e3;font-size:2.15rem;line-height:1.02}
 .permission-card p{margin:0;color:#c1a6a2;font-size:.88rem;line-height:1.65}
 .permission-card small{margin-top:auto;padding-top:24px;color:#d59a6e;font-size:.62rem;font-weight:750;letter-spacing:.04em;line-height:1.55;text-transform:uppercase}
-.taste-section{position:relative;overflow:hidden}
-.taste-section::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.11;background:url("./assets/gift-compass-map-warm.png") center 48%/cover no-repeat;mix-blend-mode:multiply}
+.taste-section{position:relative;overflow:clip}
 .taste-section .wrap{position:relative;z-index:1}
 .taste-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;border:1px solid #d7c1bd;background:#d7c1bd}
 .taste-grid article{min-height:390px;padding:34px;display:flex;flex-direction:column;background:rgba(255,249,245,.94)}
@@ -593,6 +595,7 @@
   .compass-complete .hero h1{font-size:clamp(3.2rem,13.6vw,4.6rem);line-height:.96}
   .clue-bridge .wrap{align-items:stretch;flex-direction:column}.clue-bridge .button{width:100%}
   .quick-grid{grid-template-columns:1fr}.quick-card{min-height:350px;padding:25px}
+  .map-orb{width:118vw;top:18px;opacity:.14}.taste-section .map-orb{top:18px;opacity:.1}
   .permission-grid{grid-template-columns:1fr}.permission-card{min-height:330px;padding:25px}
   .never-fail__plans article,.never-fail__plans article:nth-child(2),.never-fail__plans article:nth-child(3){transform:none;padding:25px}
   .never-fail__plans .lore-mark{width:48px;height:48px;right:20px;top:20px}.never-fail__plans .lore-mark::before{width:59px}.never-fail__plans .lore-mark::after{height:59px}.never-fail__plans h3{max-width:100%;font-size:2rem}
