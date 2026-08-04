@@ -95,8 +95,16 @@
   .pill.a{background:rgba(255,171,64,.16);color:var(--amber)}
   .pill.b{background:rgba(255,61,118,.16);color:#ff7a8f}
   .pill.c{background:rgba(122,220,150,.16);color:var(--green)}
-  .pubshelf{margin-top:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--ink-2)}
-  .pubshelf .ps-lbl{font-size:.78rem;color:var(--muted);font-weight:600}
+  .pubshelf{margin-top:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--ink-2)}
+  .pubshelf .ps-toggle{display:inline-flex;align-items:center;gap:9px;cursor:pointer;user-select:none}
+  .pubshelf .ps-toggle input{position:absolute;opacity:0;width:0;height:0}
+  .pubshelf .ps-track{position:relative;width:38px;height:22px;border-radius:99px;background:var(--line);transition:background .2s;flex:0 0 auto}
+  .pubshelf .ps-track::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:var(--cream);transition:transform .2s}
+  .pubshelf .ps-toggle input:checked + .ps-track{background:var(--grad)}
+  .pubshelf .ps-toggle input:checked + .ps-track::after{transform:translateX(16px)}
+  .pubshelf .ps-toggle input:focus-visible + .ps-track{outline:2px solid var(--amber);outline-offset:2px}
+  .pubshelf .ps-lbl{font-size:.82rem;color:var(--cream);font-weight:600}
+  .pubshelf .ps-state{font-size:.76rem;color:var(--muted)}
   .pubshelf .ps-url{font-size:.82rem;color:var(--cream);text-decoration:none;font-weight:700}
   .pubshelf .ps-url:hover{color:var(--amber)}
   .pubshelf .ps-copy{font-size:.74rem;font-weight:700;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:8px;padding:.35em .7em;cursor:pointer;transition:color .2s,border-color .2s}
@@ -244,9 +252,10 @@
     </div>
     <div class="pills" id="pills"></div>
     <div class="pubshelf" id="pubshelf" hidden>
-      <span class="ps-lbl">🔗 Your public bookshelf (website version)</span>
-      <a class="ps-url" id="psUrl" href="#" target="_blank" rel="noopener"></a>
-      <button class="ps-copy" id="psCopy" type="button">Copy link</button>
+      <label class="ps-toggle"><input type="checkbox" id="psPublic"><span class="ps-track"></span><span class="ps-lbl">Show my bookshelf publicly</span></label>
+      <span class="ps-state" id="psState"></span>
+      <a class="ps-url" id="psUrl" href="#" target="_blank" rel="noopener" hidden></a>
+      <button class="ps-copy" id="psCopy" type="button" hidden>Copy link</button>
     </div>
   </div>
 
@@ -445,17 +454,39 @@
     const display = user ? ((e.detail.profile && e.detail.profile.username) || user.email.split('@')[0]) : 'friend';
     $('hellName').textContent = display;
 
-    // ── Public bookshelf (website version) share row ──────────────────────
-    // Shown only when the account has a real username to route on. Links to the
-    // crawlable static page built by scripts/build-shelf.mjs at /bookshelf/<user>/.
-    { const uname = user && e.detail.profile && e.detail.profile.username;
+    // ── Public bookshelf: opt-in toggle + share link ─────────────────────
+    // The shelf is private until the reader turns this on (profiles.is_public).
+    // Turning it on reveals the shareable /bookshelf/<username>/ link.
+    { const profile = e.detail.profile || {};
+      const uname = user && profile.username;
       const box = $('pubshelf');
       if (uname && box){
-        const path = '/bookshelf/' + encodeURIComponent(uname) + '/';
+        const path = '/u/?h=' + encodeURIComponent(uname);
         const abs = location.origin + path;
-        const a = $('psUrl'); a.href = path; a.textContent = location.host + path;
-        $('psCopy').onclick = async ()=>{
-          try { await navigator.clipboard.writeText(abs); $('psCopy').textContent = 'Copied ✓'; setTimeout(()=>$('psCopy').textContent='Copy link', 1600); }
+        const chk = $('psPublic'), state = $('psState'), a = $('psUrl'), copy = $('psCopy');
+        a.href = path; a.textContent = location.host + '/u/' + uname;
+
+        const paint = (isPublic)=>{
+          chk.checked = !!isPublic;
+          state.textContent = isPublic ? 'Anyone with the link can view it.' : 'Private — only you can see it.';
+          a.hidden = !isPublic; copy.hidden = !isPublic;
+        };
+        paint(!!profile.is_public);
+
+        chk.onchange = async ()=>{
+          const next = chk.checked;
+          paint(next);                                   // optimistic
+          const { error } = await sb.from('profiles').upsert({ id: user.id, is_public: next });
+          if (error){
+            paint(!next);                                // revert on failure
+            toast ? toast('Could not update: ' + error.message) : alert('Could not update: ' + error.message);
+            return;
+          }
+          if (window.SH) SH.profile && (SH.profile.is_public = next);
+          if (window.SH) SH.track(next ? 'bookshelf-public-on' : 'bookshelf-public-off');
+        };
+        copy.onclick = async ()=>{
+          try { await navigator.clipboard.writeText(abs); copy.textContent = 'Copied ✓'; setTimeout(()=>copy.textContent='Copy link', 1600); }
           catch { window.prompt('Copy your public bookshelf link:', abs); }
           if (window.SH) SH.track('share-bookshelf');
         };

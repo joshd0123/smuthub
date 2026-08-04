@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A reader's bookshelf | smutHub</title>
+<meta name="description" content="Browse a reader's public romantasy and spicy romance bookshelf on smutHub — what they want to read, are reading, and have read.">
+<!-- Live, per-user public shelf viewer. Not pre-rendered, so keep it out of the
+     index; the crawlable per-user pages come later via SSR. -->
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#0c0708">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<script defer src="/auth.js"></script>
+<style>
+  :root{--ink:#0c0708;--ink-2:#150e10;--panel:#1c1316;--line:#2a1d22;--cream:#f4e8e3;--muted:#b69089;--rose:#ff3d76;--amber:#ffab40;--grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(800px 500px at 10% -5%,rgba(255,61,118,.12),transparent 60%)}
+  a{color:inherit}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap}
+  .navlinks{display:flex;gap:18px;align-items:center}
+  .navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none;transition:color .2s}
+  .navlinks a:hover{color:var(--cream)}
+  @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
+  footer{border-top:1px solid var(--line);margin-top:56px;padding:32px 0 40px}
+  footer .ft{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:.86rem}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--cream)}
+
+  .crumb{padding:20px 0 0;color:var(--muted);font-size:.85rem}
+  .crumb a{color:var(--muted);text-decoration:none}
+  .crumb a:hover{color:var(--cream)}
+  .hero{padding:26px 0 6px}
+  .hero .eyebrow{color:var(--amber);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.72rem}
+  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.9rem,6vw,2.9rem);line-height:1.08;margin:.3em 0 .25em}
+  .hero h1 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .hero p{color:var(--muted);max-width:60ch}
+  .stat{display:inline-flex;gap:6px;align-items:baseline;color:var(--muted);font-size:.9rem;margin-top:10px}
+  .stat b{color:var(--cream);font-weight:700}
+  .followbtn{margin-top:16px;display:none;align-items:center;gap:8px;font-weight:800;font-size:.9rem;border:0;border-radius:99px;padding:11px 22px;cursor:pointer;background:var(--grad);color:#1a0c10;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
+  .followbtn.following{background:var(--panel);color:var(--cream);border:1px solid var(--line);box-shadow:none}
+
+  .group{margin-top:34px}
+  .group>h2,.group summary{font-family:'Fraunces',serif;font-weight:600;font-size:1.35rem;display:flex;align-items:center;gap:.5rem;margin-bottom:16px}
+  .group .ico{font-style:normal}
+  .group .count{font-family:'Hanken Grotesk',sans-serif;font-size:.8rem;font-weight:700;color:var(--muted);background:var(--ink-2);border:1px solid var(--line);border-radius:999px;padding:.15em .6em}
+  .group.dnf details>summary{cursor:pointer;list-style:none;color:var(--muted)}
+  .group.dnf details>summary::-webkit-details-marker{display:none}
+  .group.dnf details>summary::after{content:"▾";margin-left:.4rem;font-size:.9em;transition:transform .2s}
+  .group.dnf details[open]>summary::after{transform:rotate(180deg)}
+  .group.dnf .grid{margin-top:16px;filter:grayscale(1);opacity:.72}
+
+  .grid{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:20px 18px}
+  @media(max-width:680px){.grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:16px 12px}}
+  .card a{display:flex;flex-direction:column;gap:9px;text-decoration:none}
+  .frame{position:relative;aspect-ratio:2/3;border-radius:10px;overflow:hidden;background:var(--panel);border:1px solid var(--line);box-shadow:0 12px 28px -14px rgba(0,0,0,.75);transition:transform .18s ease,box-shadow .18s ease}
+  .card a:hover .frame{transform:translateY(-4px);box-shadow:0 18px 36px -14px rgba(255,61,118,.45);border-color:#43222c}
+  .cov{width:100%;height:100%;object-fit:cover;display:block}
+  .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-family:'Fraunces',serif;font-size:.85rem;color:var(--muted);background:linear-gradient(160deg,#241318,#160d10)}
+  .spice{position:absolute;left:6px;bottom:6px;font-size:.7rem;background:rgba(12,7,8,.72);backdrop-filter:blur(4px);border-radius:6px;padding:.1em .35em;letter-spacing:-.05em}
+  .off{position:absolute;right:6px;top:6px;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--amber);background:rgba(12,7,8,.72);border:1px solid var(--line);border-radius:6px;padding:.15em .4em}
+  .meta{display:flex;flex-direction:column;gap:1px}
+  .meta .t{font-weight:700;font-size:.86rem;color:var(--cream);line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .meta .a{font-size:.76rem;color:var(--muted)}
+  .state{margin:60px auto;text-align:center;max-width:460px;color:var(--muted)}
+  .state h2{font-family:'Fraunces',serif;color:var(--cream);margin-bottom:10px}
+  .state a{color:var(--amber);text-decoration:none;font-weight:700}
+</style>
+</head>
+<body>
+<header>
+  <div class="nav wrap">
+    <a href="/" class="logo">smut<span class="box">Hub</span></a>
+    <nav class="navlinks" aria-label="Primary navigation">
+      <a href="/books/">Browse Books</a>
+      <a href="/glossary/">Glossary</a>
+      <a href="/bookshelf">My Bookshelf</a>
+      <a href="/search">Add a Book</a>
+    </nav>
+    <div class="authbox" id="authbox"></div>
+  </div>
+</header>
+<main class="wrap" id="main">
+  <div class="state"><p>Loading bookshelf…</p></div>
+</main>
+<footer>
+  <div class="wrap ft">
+    <span>© <span id="yr"></span> smutHub · Romantasy, decoded.</span>
+    <span><a href="/books/">All Books</a> · <a href="/glossary/">Glossary</a> · <a href="/about.html">About</a> · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></span>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  const $main = document.getElementById('main');
+  const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const COVERS = 'https://covers.smuthub.ca';
+
+  // handle from ?h= (primary) or a trailing /u/<handle> path (future pretty URL)
+  function getHandle(){
+    const q = new URLSearchParams(location.search).get('h');
+    if (q) return q.trim().toLowerCase();
+    const m = location.pathname.match(/\/u\/([^\/?#]+)/);
+    return m ? decodeURIComponent(m[1]).trim().toLowerCase() : '';
+  }
+
+  const STATUS_META = [
+    { key:'want',    icon:'📌', label:'Want to Read' },
+    { key:'reading', icon:'📖', label:'Currently Reading' },
+    { key:'read',    icon:'✓',  label:'Read' },
+    { key:'dnf',     icon:'🪦', label:'Did Not Finish' },
+  ];
+  const norm = s => String(s||'').toLowerCase().replace(/\(.*?\)/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+  const lastName = a => { const t=norm(a).split(' ').filter(Boolean); return t[t.length-1]||''; };
+
+  function showState(html){ $main.innerHTML = '<div class="state">'+html+'</div>'; }
+
+  async function main(){
+    const handle = getHandle();
+    if (!handle){ showState('<h2>No bookshelf specified</h2><p>Try <a href="/books/">browsing books</a> instead.</p>'); return; }
+    if (!(window.SH && SH.sb)){ setTimeout(main, 150); return; }   // wait for supabase client
+    const sb = SH.sb;
+
+    // 1) resolve the public profile (view returns only public users' safe columns)
+    const { data: prof, error: pErr } = await sb.from('public_profiles').select('id,username,created_at').eq('username', handle).maybeSingle();
+    if (pErr){ showState('<h2>Couldn’t load this bookshelf</h2><p>'+esc(pErr.message)+'</p>'); return; }
+    if (!prof){ showState('<h2>This bookshelf isn’t available</h2><p>It may be private, or the name is wrong. <a href="/">Go home</a>.</p>'); return; }
+
+    // 2) shelf + spice + catalog (all public reads)
+    const [{ data: shelf }, { data: tags }, { data: books }] = await Promise.all([
+      sb.from('shelf').select('*').eq('user_id', prof.id),
+      sb.from('book_tags').select('book_key,spice').eq('user_id', prof.id),
+      sb.from('books').select('slug,title,author,spice_level,cover_url').eq('status','live'),
+    ]);
+    const rows = shelf || [];
+    if (!rows.length){ showState('<h2>@'+esc(prof.username)+'’s bookshelf is empty</h2><p>Nothing shelved here yet.</p>'); return; }
+
+    // catalog reconciliation (mirrors scripts/build-shelf.mjs)
+    const bySlug = new Map((books||[]).map(b=>[b.slug,b]));
+    const byTitle = new Map(); (books||[]).forEach(b=>{ const k=norm(b.title); if(k&&!byTitle.has(k)) byTitle.set(k,b); });
+    const catalogFor = r => {
+      if (r.__c!==undefined) return r.__c;
+      let hit = bySlug.get(r.book_key) || byTitle.get(norm(r.title)) || null;
+      if (!hit){ const t=norm(r.title), a=lastName(r.author);
+        if (t.length>3 && a) hit = (books||[]).find(b=>norm(b.author).split(' ').includes(a) && (norm(b.title).includes(t)||t.includes(norm(b.title)))) || null; }
+      return (r.__c = hit);
+    };
+    const userSpice = {}; (tags||[]).forEach(t=>{ if(t.spice) userSpice[t.book_key]=t.spice; });
+    const spiceFor = r => userSpice[r.book_key] || (catalogFor(r)?catalogFor(r).spice_level:0) || 0;
+    const coverSrc = r => { const c=catalogFor(r); if(c&&c.cover_url) return c.cover_url; if(r.cover_url) return r.cover_url; if(r.cover_i) return 'https://covers.openlibrary.org/b/id/'+r.cover_i+'-L.jpg'; return null; };
+    const linkFor = r => { const c=catalogFor(r); return c ? '/books/'+c.slug+'/' : '/search?q='+encodeURIComponent(r.title||''); };
+
+    const shelfCmp = (a,b)=>{ const ao=a.sort_order,bo=b.sort_order; if(ao==null&&bo==null) return String(b.created_at||'').localeCompare(String(a.created_at||'')); if(ao==null) return -1; if(bo==null) return 1; return ao-bo; };
+    const byStatus = Object.fromEntries(STATUS_META.map(s=>[s.key,[]]));
+    rows.forEach(r=>{ if(byStatus[r.status]) byStatus[r.status].push(r); });
+    Object.keys(byStatus).forEach(k=>byStatus[k].sort(shelfCmp));
+
+    const cardHTML = r => {
+      const cat=catalogFor(r), src=coverSrc(r), href=linkFor(r), curated=!!cat;
+      const title=r.title||'Untitled', author=r.author||'', sp=spiceFor(r);
+      const cover = src
+        ? '<img class="cov" src="'+esc(src)+'" alt="'+esc(title)+(author?' by '+esc(author):'')+' — book cover" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="ph" style="display:none">'+esc(title)+'</div>'
+        : '<div class="ph">'+esc(title)+'</div>';
+      const spice = sp ? '<span class="spice" title="'+sp+' out of 5 spice">'+'🌶️'.repeat(Math.min(sp,5))+'</span>' : '';
+      const off = curated ? '' : '<span class="off" title="Not in the smutHub catalog yet">find</span>';
+      return '<li class="card"><a href="'+esc(href)+'"><span class="frame">'+cover+spice+off+'</span>'
+        + '<span class="meta"><span class="t">'+esc(title)+'</span>'+(author?'<span class="a">'+esc(author)+'</span>':'')+'</span></a></li>';
+    };
+    const groupHTML = m => {
+      const g = byStatus[m.key]; if(!g.length) return '';
+      const grid = '<ul class="grid">'+g.map(cardHTML).join('')+'</ul>';
+      if (m.key==='dnf') return '<section class="group dnf"><details><summary><span class="ico">'+m.icon+'</span> '+m.label+' <span class="count">'+g.length+'</span></summary>'+grid+'</details></section>';
+      return '<section class="group"><h2><span class="ico">'+m.icon+'</span> '+m.label+' <span class="count">'+g.length+'</span></h2>'+grid+'</section>';
+    };
+
+    const name = prof.username.charAt(0).toUpperCase()+prof.username.slice(1);
+    const poss = /s$/i.test(name) ? name+'’' : name+'’s';
+    document.title = poss+' Bookshelf | smutHub';
+    $main.innerHTML =
+      '<nav class="crumb" aria-label="Breadcrumb"><a href="/">Home</a> · <a href="/books/">Books</a> · '+esc(poss)+' Bookshelf</nav>'
+      + '<section class="hero"><div class="eyebrow">A reader’s bookshelf</div>'
+      + '<h1>'+esc(poss)+' <em>Bookshelf</em></h1>'
+      + '<p>A public bookshelf of romantasy and spicy romance books. Tap any cover to read its spice rating, tropes, and content notes.</p>'
+      + '<div class="stat"><b>'+rows.length+'</b> books&nbsp;·&nbsp;<b>'+byStatus.read.length+'</b> read</div>'
+      + '<button class="followbtn" id="followbtn" data-uid="'+esc(prof.id)+'">+ Follow</button>'
+      + '</section>'
+      + STATUS_META.map(groupHTML).join('');
+
+    setupFollow(prof.id, prof.username);
+  }
+
+  // Phase 2 hook: wire up in the follow step. Shown only to a logged-in viewer
+  // who isn't the owner. Kept minimal here; full follow UI lands with the graph.
+  async function setupFollow(ownerId, ownerName){
+    const btn = document.getElementById('followbtn'); if(!btn) return;
+    const me = window.SH && SH.user;
+    if (!me || me.id === ownerId) return;          // hidden for guests + self
+    // (Phase 2) query follows for current state, toggle on click. Left dormant
+    // until the follow graph ships so we don't half-wire it now.
+  }
+
+  window.addEventListener('sh-auth', ()=>{ /* re-run follow state once auth resolves */ });
+  main();
+</script>
+</body>
+</html>
