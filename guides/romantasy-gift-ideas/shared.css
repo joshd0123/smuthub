@@ -493,8 +493,9 @@
 .compass-complete .quick-wins{position:relative;overflow:hidden}
 .compass-complete .quick-wins::before{
   content:"";position:absolute;inset:0;pointer-events:none;opacity:.18;
-  background:url("./assets/gift-compass-map-warm.png") center 18%/1050px auto no-repeat;mix-blend-mode:multiply
+  background:url("./assets/gift-compass-map-warm.png") center 42%/cover no-repeat;mix-blend-mode:multiply
 }
+.compass-complete .quick-wins .wrap{position:relative;z-index:1}
 .quick-grid{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .quick-card{
   min-height:390px;padding:30px;display:flex;flex-direction:column;
@@ -520,7 +521,7 @@
 .permission-card p{margin:0;color:#c1a6a2;font-size:.88rem;line-height:1.65}
 .permission-card small{margin-top:auto;padding-top:24px;color:#d59a6e;font-size:.62rem;font-weight:750;letter-spacing:.04em;line-height:1.55;text-transform:uppercase}
 .taste-section{position:relative;overflow:hidden}
-.taste-section::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.11;background:url("./assets/gift-compass-map-warm.png") center/1100px auto no-repeat;mix-blend-mode:multiply}
+.taste-section::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.11;background:url("./assets/gift-compass-map-warm.png") center 48%/cover no-repeat;mix-blend-mode:multiply}
 .taste-section .wrap{position:relative;z-index:1}
 .taste-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;border:1px solid #d7c1bd;background:#d7c1bd}
 .taste-grid article{min-height:390px;padding:34px;display:flex;flex-direction:column;background:rgba(255,249,245,.94)}
@@ -536,6 +537,7 @@
 .never-fail .wrap{position:relative;display:grid;grid-template-columns:.62fr 1.38fr;gap:48px;align-items:start}
 .never-fail__intro{position:sticky;top:28px}
 .never-fail__intro h2{margin:14px 0 24px;font-size:clamp(3.5rem,6vw,6rem)}
+.never-fail__line{display:inline-block;white-space:nowrap}
 .never-fail__intro h2 em{color:#f2b460}
 .never-fail__intro>p:not(.eyebrow){max-width:390px;color:#ddc6cc}
 .never-fail__intro .button{margin-top:22px;background:#f0b55d;color:#351722;box-shadow:none}
