@@ -692,6 +692,18 @@
     .books{gap:9px;min-height:172px}
     .stage{padding:30px 16px 140px}
   }
+  @media(min-width:901px){
+    .library-layout{grid-template-columns:minmax(0,700px)}
+    .library-stats,.world-ribbon,.library-main,.library-rail{grid-column:1}
+    .library-rail{grid-row:4;grid-template-columns:repeat(2,minmax(0,1fr));padding-top:0!important;margin-top:20px}
+    .rail-card{padding:14px 16px;border-radius:15px}
+    .rail-card h3{font-size:1.05rem;margin:4px 0}
+    .rail-card p{font-size:.7rem;line-height:1.38}
+    .rail-card.world-card{min-height:0;justify-content:flex-start}
+    .world-live{margin-bottom:8px}
+    .rail-btn{margin-top:9px;padding:.58em}
+    .rail-card .rail-link{margin-top:7px;font-size:.66rem}
+  }
   @media(max-width:900px){
     .library-layout{grid-template-columns:minmax(0,650px);justify-content:center}
     .library-main{grid-column:1;grid-row:3}
