@@ -51,6 +51,7 @@
   .theme-academia{--case:#170f0c;--wood:#7a4a32;--wood-dk:#3a2418;--wood-lt:#9c6442;--back:#160d08;--plate:#caa063;--plate-tx:#170f0c;--accent:#e0a85e;--room:radial-gradient(130% 90% at 50% -18%,#26180f,#0c0908 72%);--glow:rgba(224,168,94,.18);}
   .theme-boudoir{--case:#1a0c12;--wood:#7e3656;--wood-dk:#3e1a2c;--wood-lt:#a04e72;--back:#1a0a12;--plate:#eec078;--plate-tx:#1a0c12;--accent:#ff6ea0;--room:radial-gradient(130% 90% at 50% -18%,#2e1320,#0c0708 72%);--glow:rgba(255,110,160,.20);}
   .theme-founder{--case:#160a0c;--wood:#4a1719;--wood-dk:#170809;--wood-lt:#71302c;--back:#100709;--plate:#d8b56f;--plate-tx:#1d0b0d;--accent:#d34765;--metal:#a97735;--metal-hi:#efcf87;--wood-surface:url('/themes/bookcase/blackened-rosewood-v1.jpg');--room:radial-gradient(130% 90% at 50% -18%,#2b1119,#090609 72%);--glow:rgba(190,48,83,.16);}
+  .theme-warbound{--case:#09090b;--wood:#19181c;--wood-dk:#060608;--wood-lt:#343138;--back:#07070a;--plate:#a89a91;--plate-tx:#09090b;--accent:#a82743;--metal:#5e5554;--metal-hi:#b6aaa1;--wood-surface:url('/themes/bookcase/blackened-rosewood-v1.jpg');--room:radial-gradient(120% 86% at 50% -18%,#241016,#07070a 64%,#030304 100%);--glow:rgba(128,18,43,.2);}
 
   /* Optional per-theme background ART. These files don't exist yet; the site
      stays on the CSS gradients above until you (a) drop an image at the path
@@ -61,6 +62,7 @@
   .theme-academia{--room-img:url('/themes/academia/room.jpg')}
   .theme-boudoir {--room-img:url('/themes/boudoir/room.jpg')}
   .theme-founder {--room-img:url('/themes/founder/room.jpg')}
+  .theme-warbound{--room-img:url('/themes/warbound/room.jpg')}
   body.art-on .roomwrap{background:var(--room-img) center/cover no-repeat, var(--room)}
   body.art-on .bd-plain{background:var(--room-img) center/cover no-repeat, var(--room)}
 
@@ -109,13 +111,13 @@
   .roomwrap.library-mode .roomhead{padding-top:28px}
   .roomwrap.library-mode .roomhead h1{font-size:clamp(1.85rem,5vw,3.2rem);color:#fff6e8}
   .roomwrap.library-mode .roomhead .sub{max-width:620px;margin:6px auto 0;color:rgba(244,232,227,.66)}
-  .library-layout{width:min(100%,1080px);display:grid;grid-template-columns:minmax(0,700px) 290px;align-items:start;gap:26px}
-  .library-main{min-width:0}
-  .library-stats{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+  .library-layout{width:min(100%,1080px);display:grid;grid-template-columns:minmax(0,700px) 290px;justify-content:center;align-items:start;column-gap:26px;row-gap:0}
+  .library-main{min-width:0;grid-column:1;grid-row:3}
+  .library-stats{grid-column:1/-1;display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-bottom:14px}
   .library-stat{display:flex;align-items:center;gap:6px;padding:.48em .8em;border:1px solid rgba(225,185,107,.2);border-radius:99px;
     background:rgba(8,8,13,.54);backdrop-filter:blur(9px);color:rgba(244,232,227,.72);font-size:.7rem;font-weight:700}
   .library-stat strong{color:#e8c77e;font-size:.82rem}
-  .world-ribbon{position:relative;isolation:isolate;overflow:hidden;width:100%;margin:0 0 18px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;text-align:left;
+  .world-ribbon{grid-column:1/-1;justify-self:center;position:relative;isolation:isolate;overflow:hidden;width:100%;max-width:700px;margin:0 0 18px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;text-align:left;
     border:1px solid rgba(136,166,231,.34);border-radius:16px;background:linear-gradient(105deg,rgba(9,17,36,.93),rgba(20,15,25,.92));color:var(--cream);cursor:pointer;
     box-shadow:0 18px 36px rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.05)}
   .world-ribbon::before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(7,11,24,.95) 12%,rgba(7,11,24,.8) 56%,rgba(7,11,24,.25)),url('/themes/moonlit-reading-room/room-v1.jpg') center 31%/cover;opacity:.82}
@@ -127,21 +129,35 @@
   .world-ribbon strong{font:600 1.02rem 'Fraunces';margin-top:2px}
   .world-ribbon span{color:rgba(244,232,227,.62);font-size:.66rem;margin-top:1px}
   .world-ribbon b{padding:.55em .85em;border:1px solid rgba(231,199,126,.45);border-radius:99px;background:rgba(7,8,16,.66);color:#f2d48d;font-size:.65rem;white-space:nowrap}
-  .case-identity{position:relative;z-index:8;width:min(620px,94%);margin:0 auto -18px;filter:drop-shadow(0 14px 18px rgba(0,0,0,.5))}
+  .case-identity{--crest-rx:0deg;--crest-ry:0deg;--crest-x:0px;--crest-y:0px;--crest-copy-x:0px;--crest-copy-y:0px;position:relative;z-index:8;width:min(620px,94%);margin:0 auto -18px;filter:drop-shadow(0 14px 18px rgba(0,0,0,.5));perspective:900px;transform-style:preserve-3d}
   .plaque-chain{display:none}
-  .case-name{position:relative;width:min(520px,84%);aspect-ratio:3/1;margin:0 auto;color:#f1d596;font-family:'Fraunces';text-transform:uppercase;text-align:center}
-  .case-art{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 9px 7px rgba(0,0,0,.62));pointer-events:none;user-select:none}
-  .case-copy{position:absolute;z-index:1;left:24%;right:24%;top:49%;transform:translateY(-10%)}
+  .case-name{position:relative;isolation:isolate;transform-style:preserve-3d;width:min(520px,84%);aspect-ratio:3/1;margin:0 auto;color:#f1d596;font-family:'Fraunces';text-transform:uppercase;text-align:center}
+  .crest-glass,.crest-reflection{display:none;position:absolute;pointer-events:none}
+  .case-art{position:absolute;z-index:2;inset:0;width:100%;height:100%;object-fit:contain;transform:translate3d(var(--crest-x),var(--crest-y),28px) rotateX(var(--crest-rx)) rotateY(var(--crest-ry));filter:drop-shadow(0 9px 7px rgba(0,0,0,.62));transition:transform .18s ease-out,filter .3s;pointer-events:none;user-select:none;will-change:transform}
+  .case-copy{position:absolute;z-index:4;left:24%;right:24%;top:49%;transform:translate3d(var(--crest-copy-x),calc(-10% + var(--crest-copy-y)),58px);transition:transform .2s ease-out;will-change:transform}
   .case-name small,.case-name strong,.case-motto{display:block}
   .case-name small{font:800 .46rem 'Hanken Grotesk';letter-spacing:.23em;color:rgba(244,224,215,.7);text-shadow:0 2px 4px #080306}
   .case-name strong{font-size:1.22rem;font-weight:600;letter-spacing:.18em;line-height:1.05;margin-top:2px;color:#ffe3a6;text-shadow:0 2px 2px #16090c,0 0 15px rgba(220,146,73,.22)}
   .case-motto{margin-top:4px;color:rgba(231,181,139,.78);font:800 .4rem 'Hanken Grotesk';letter-spacing:.24em;text-shadow:0 2px 3px #080306}
+  .case-name[data-crest="moonlit-cathedral"]{width:min(500px,82%);aspect-ratio:1089/520}.case-name[data-crest="moonlit-cathedral"] .case-copy{left:24%;right:24%;top:57%}.case-name[data-crest="moonlit-cathedral"] small{color:rgba(215,228,255,.75)}.case-name[data-crest="moonlit-cathedral"] strong{color:#edf3ff;text-shadow:0 2px 2px #061125,0 0 18px rgba(104,151,255,.32)}.case-name[data-crest="moonlit-cathedral"] .case-motto{color:rgba(164,194,255,.8)}
+  .case-name[data-crest="thornbound-reliquary"]{width:min(540px,87%);aspect-ratio:1200/395}.case-name[data-crest="thornbound-reliquary"] .case-copy{left:21%;right:21%;top:49%}.case-name[data-crest="thornbound-reliquary"] small{color:rgba(206,194,188,.68)}.case-name[data-crest="thornbound-reliquary"] strong{color:#e8ddd3;text-shadow:0 2px 3px #000,0 0 16px rgba(151,26,52,.25)}.case-name[data-crest="thornbound-reliquary"] .case-motto{color:rgba(184,57,76,.86)}
+  .case-name[data-crest="dragons-oath"]{width:min(555px,89%);aspect-ratio:1200/401}.case-name[data-crest="dragons-oath"] .case-copy{left:29%;right:29%;top:51%}.case-name[data-crest="dragons-oath"] strong{color:#f0d49b}.case-name[data-crest="dragons-oath"] .case-motto{color:rgba(203,96,105,.82)}
+  .case-name[data-crest="founders-key"]{width:min(590px,94%);aspect-ratio:2048/767}.case-name[data-crest="founders-key"] .case-copy{left:24%;right:24%;top:56%}.case-name[data-crest="founders-key"] small{color:rgba(236,218,190,.78)}.case-name[data-crest="founders-key"] strong{color:#fff0c7;text-shadow:0 2px 3px #090306,0 0 13px rgba(218,173,85,.28)}.case-name[data-crest="founders-key"] .case-motto{color:rgba(211,170,91,.9)}
+  .case-name[data-crest="founders-key"] .crest-glass{display:block;z-index:0;left:17%;right:17%;top:28%;bottom:24%;border:0;background:radial-gradient(ellipse at 50% 52%,rgba(47,5,18,.42),rgba(17,5,10,.2) 48%,transparent 76%);filter:drop-shadow(0 7px 14px rgba(0,0,0,.18));transform:translate3d(var(--crest-copy-x),var(--crest-copy-y),10px);transition:transform .22s ease-out}
+  .case-name[data-crest="founders-key"] .crest-glass::before,.case-name[data-crest="founders-key"] .crest-glass::after{content:"";position:absolute;top:51%;width:22%;height:1px;background:linear-gradient(90deg,transparent,rgba(215,174,88,.48));box-shadow:0 0 7px rgba(215,174,88,.12)}.case-name[data-crest="founders-key"] .crest-glass::before{left:4%}.case-name[data-crest="founders-key"] .crest-glass::after{right:4%;transform:scaleX(-1)}
+  .case-name[data-crest="founders-key"] .crest-reflection{display:block;z-index:3;inset:4% 3% 8%;overflow:hidden;mix-blend-mode:screen;opacity:.34;background:linear-gradient(108deg,transparent 0 42%,rgba(255,239,196,.12) 47%,rgba(255,255,255,.025) 50%,transparent 56%);background-size:240% 100%;mask-image:linear-gradient(90deg,transparent 1%,#000 12% 88%,transparent 99%);animation:founderGlassDrift 9.5s ease-in-out infinite}
+  .case-name[data-crest="founders-key"] .case-copy::before,.case-name[data-crest="founders-key"] .case-copy::after{content:"";position:absolute;top:50%;width:14%;height:1px;background:linear-gradient(90deg,transparent,rgba(221,180,91,.48))}.case-name[data-crest="founders-key"] .case-copy::before{right:103%}.case-name[data-crest="founders-key"] .case-copy::after{left:103%;transform:scaleX(-1)}
+  @keyframes founderGlassDrift{0%,100%{background-position:120% 0;opacity:.24}48%{background-position:-70% 0;opacity:.52}}
+  @media(prefers-reduced-motion:reduce){.case-art,.case-copy,.crest-glass,.crest-reflection{transition:none!important;animation:none!important}}
+  .case-identity:hover .case-art{filter:drop-shadow(0 13px 10px rgba(0,0,0,.7)) brightness(1.035)}
   .founder-edition-bar{position:relative;z-index:8;width:min(340px,68%);margin:-2px auto 0;padding:.48em 2.2em .46em;border:1px solid rgba(229,194,116,.62);border-top-color:rgba(255,230,165,.85);border-radius:2px 2px 9px 9px;
     background:linear-gradient(90deg,#120a10,#2d101d 48%,#120a10);box-shadow:0 10px 20px rgba(0,0,0,.55),inset 0 1px rgba(255,255,255,.09),inset 0 0 0 3px rgba(3,2,3,.4);
     color:#dcae5e;font-size:.49rem;font-weight:800;letter-spacing:.16em;text-align:center;text-transform:uppercase;white-space:nowrap}
   .founder-edition-bar::before,.founder-edition-bar::after{position:absolute;top:50%;transform:translateY(-52%);color:#bd334f;font:1rem 'Fraunces'}
   .founder-edition-bar::before{content:"❦";left:10px}.founder-edition-bar::after{content:"❦";right:10px;transform:translateY(-52%) scaleX(-1)}
   .founder-edition-bar span{color:#fff0c5}
+  body[data-crest="founders-key"] .founder-edition-bar{width:max-content;min-width:168px;margin:-12px auto 0;padding:.55em 2.7em .52em;border-radius:3px 3px 13px 13px;border-color:rgba(213,170,83,.74);background:linear-gradient(105deg,#060607,#211a17 48%,#060607);color:#cfa34e;box-shadow:0 10px 22px rgba(0,0,0,.68),inset 0 1px rgba(255,255,255,.07),0 0 18px rgba(190,143,56,.08);transform:translateZ(70px)}
+  body[data-crest="founders-key"] .founder-edition-bar::before{content:"⚿";color:#cfa34e}body[data-crest="founders-key"] .founder-edition-bar::after{content:"⚿";color:#cfa34e;transform:translateY(-52%) scaleX(-1)}
   .case-flourish{display:none;position:absolute;inset:7px;z-index:3;border:1px solid rgba(232,197,116,.56);border-radius:10px;pointer-events:none}
   body[data-library-detail="gilded"] .case-flourish{display:block}
   body[data-library-detail="gilded"] .bookcase{box-shadow:0 38px 78px -30px rgba(0,0,0,.85),0 0 0 1px rgba(232,197,116,.45),0 0 45px rgba(232,197,116,.1),inset 0 2px rgba(255,255,255,.12)}
@@ -273,7 +289,7 @@
   .tbr-stack::after{content:"Open TBR";position:absolute;left:9px;right:9px;bottom:-14px;text-align:center;color:rgba(244,232,227,.52);font-size:.5rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
   @media(hover:hover) and (pointer:fine){.tbr-stack:hover{filter:drop-shadow(0 13px 15px rgba(0,0,0,.7)) brightness(1.06)}}
 
-  .library-rail{display:grid;gap:12px;padding-top:50px}
+  .library-rail{grid-column:2;grid-row:3;display:grid;gap:12px;padding-top:50px;transition:padding-top .18s ease-out}
   .rail-card{position:relative;overflow:hidden;border:1px solid rgba(225,185,107,.23);border-radius:18px;padding:17px;background:rgba(10,9,14,.72);backdrop-filter:blur(14px);box-shadow:0 18px 40px rgba(0,0,0,.28)}
   .rail-card::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(80% 60% at 100% 0%,rgba(213,179,106,.11),transparent 70%)}
   .rail-kicker{color:#d5b36a;font-size:.61rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
@@ -321,6 +337,11 @@
   .trial-mark{display:inline-flex!important;align-items:center;gap:4px;color:var(--amber)!important;font-weight:800!important}
   .trial-mark.active{color:#88d8af!important}
   .detailgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .crestgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .crestcard{position:relative;display:grid;grid-template-columns:132px 1fr;gap:11px;align-items:center;min-height:108px;padding:10px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);color:var(--cream);text-align:left;font-family:inherit;cursor:pointer;overflow:hidden;transition:transform .18s,border-color .18s,background .18s}
+  .crestcard:hover:not(:disabled){transform:translateY(-2px);border-color:rgba(231,199,126,.52);background:rgba(255,255,255,.045)}.crestcard.on{border-color:#e7c77e;box-shadow:0 0 0 1px rgba(231,199,126,.2),inset 0 0 22px rgba(172,104,54,.08)}.crestcard:disabled{cursor:not-allowed;opacity:.48}
+  .crest-preview{position:relative;height:84px;display:grid;place-items:center;perspective:500px}.crest-preview img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 7px 6px rgba(0,0,0,.58));transition:transform .22s}.crestcard:hover:not(:disabled) .crest-preview img{transform:rotateX(3deg) rotateY(-5deg) scale(1.03)}
+  .crest-copy-card strong,.crest-copy-card small,.crest-copy-card em{display:block}.crest-copy-card strong{font:600 .9rem 'Fraunces'}.crest-copy-card small{margin:3px 0 7px;color:var(--muted);font-size:.63rem;line-height:1.35}.crest-copy-card em{color:#d8b568;font-size:.55rem;font-style:normal;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
   .detailcard{border:1px solid var(--line);border-radius:13px;padding:11px;background:var(--ink-2);cursor:pointer;color:var(--cream);text-align:left}
   .detailcard:hover,.detailcard.on{border-color:var(--amber)}
   .detailcard span,.detailcard strong,.detailcard small{display:block}.detailcard span{font-size:1.15rem}.detailcard strong{font-size:.75rem;margin-top:4px}.detailcard small{font-size:.62rem;color:var(--amber);margin-top:2px}
@@ -385,61 +406,83 @@
   .mm-item.cancel{color:var(--muted)}
 
   /* ── IMMERSIVE SHELF WORLD ── */
-  .shelfview{position:fixed;inset:0;z-index:100;display:none;overflow:hidden;background:#06080f;color:var(--cream)}
+  .shelfview{--scene-x:0px;--scene-y:0px;--stage-x:0px;--stage-y:0px;--air-x:0px;--air-y:0px;--frame-x:0px;--frame-y:0px;--veil-x:0px;--veil-y:0px;--book-x:0px;--book-y:0px;position:fixed;inset:0;z-index:100;display:none;overflow:hidden;background:#06080f;color:var(--cream);perspective:1400px}
   .shelfview.open{display:block}
   .sv-backdrop{position:absolute;inset:0;z-index:0;background:center/cover no-repeat}
-  .sv-backdrop.world-moonlit{background-image:url('/themes/moonlit-reading-room/room-v1.jpg')}
+  .sv-backdrop.world-moonlit{overflow:hidden;background:#05070d}
+  .scene-layer{position:absolute;inset:-3%;z-index:0;background:center/cover no-repeat;opacity:0;transform:translate3d(var(--scene-x),var(--scene-y),0) scale(1.055);transition:opacity 1.25s ease,transform .7s cubic-bezier(.2,.7,.2,1);will-change:opacity,transform}
+  .scene-midnight{background-image:url('/themes/moonlit-reading-room/scenes/moonlit-midnight-wide-v3.jpg');opacity:1}
+  .scene-blue-hour{background-image:url('/themes/moonlit-reading-room/scenes/moonlit-blue-hour-wide-v3.jpg')}
+  .scene-dawn{background-image:url('/themes/moonlit-reading-room/scenes/moonlit-dawn-wide-v3.jpg')}
+  .shelfview.time-blue .scene-midnight,.shelfview.time-dawn .scene-midnight{opacity:0}.shelfview.time-blue .scene-blue-hour{opacity:1}.shelfview.time-dawn .scene-dawn{opacity:1}
   .sv-backdrop.world-boudoir{background:
     radial-gradient(55% 38% at 50% 28%,rgba(255,185,115,.22),transparent 68%),
     repeating-linear-gradient(88deg,#280b1b 0 28px,#3b1028 28px 58px)}
   .sv-backdrop.world-academia{background:
     radial-gradient(55% 44% at 50% 10%,rgba(210,170,105,.22),transparent 65%),
     linear-gradient(#21170f,#070605)}
-  .sv-backdrop::after{content:"";position:absolute;inset:0;pointer-events:none;background:
-    radial-gradient(85% 70% at 50% 46%,transparent 34%,rgba(3,5,10,.74) 100%),
-    linear-gradient(180deg,rgba(4,4,8,.14),rgba(4,4,8,.58))}
+  .sv-backdrop::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:
+    radial-gradient(88% 76% at 50% 44%,transparent 36%,rgba(3,5,10,.68) 100%),
+    linear-gradient(180deg,rgba(4,4,8,.08),rgba(4,4,8,.44))}
   .sv-light{position:absolute;inset:0;z-index:1;pointer-events:none;transition:background .45s,opacity .45s}
   .sv-light.light-candlelit{background:radial-gradient(55% 42% at 50% 82%,rgba(255,155,68,.42),transparent 70%)}
-  .sv-light.light-moonlit{background:radial-gradient(60% 58% at 50% 5%,rgba(110,155,255,.24),transparent 74%)}
-  .sv-light.light-dawn{background:linear-gradient(0deg,rgba(255,166,95,.34),rgba(255,100,130,.08))}
-  .sv-top{position:absolute;top:0;left:0;right:0;z-index:8;display:flex;align-items:center;justify-content:space-between;padding:14px;gap:10px}
+  .sv-light.light-moonlit{background:radial-gradient(60% 58% at 50% 5%,rgba(110,155,255,.08),transparent 74%)}
+  .sv-light.light-dawn{background:linear-gradient(0deg,rgba(255,166,95,.08),rgba(255,100,130,.025))}
+  .sv-top{position:absolute;top:0;left:0;right:0;z-index:8;display:flex;align-items:center;justify-content:flex-start;padding:14px;gap:10px}
   .sv-back,.sv-shopbtn{background:rgba(9,7,10,.58);backdrop-filter:blur(12px);border:1px solid rgba(244,232,227,.18);color:var(--cream);font-family:inherit;font-weight:700;border-radius:99px;cursor:pointer}
   .sv-back{width:42px;height:42px;font-size:1.1rem}
-  .sv-shopbtn{padding:.7em 1em}
-  .sv-label{text-align:center;font-family:'Fraunces';font-weight:600;font-size:1.08rem;text-shadow:0 2px 12px #000}
+  .sv-shopbtn{margin-left:auto;padding:.7em 1em}
+  .sv-label{text-align:left;font-family:'Fraunces';font-weight:600;font-size:1.08rem;text-shadow:0 2px 12px #000}
   .sv-label small{display:block;font-family:'Hanken Grotesk';font-size:.66rem;text-transform:uppercase;letter-spacing:.13em;color:var(--amber)}
   .sv-world{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;justify-content:flex-end;padding:84px 16px 62px}
-  .world-message{position:absolute;top:84px;left:50%;transform:translateX(-50%);max-width:420px;width:calc(100% - 40px);
-    padding:8px 12px;text-align:center;border-radius:99px;background:rgba(8,7,10,.46);backdrop-filter:blur(8px);
-    color:rgba(244,232,227,.82);font-size:.78rem;transition:opacity .2s}
-  .world-discovery{position:absolute;top:128px;left:50%;z-index:7;transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:.46em .72em;border:1px solid rgba(231,199,126,.22);border-radius:99px;background:rgba(6,8,16,.52);backdrop-filter:blur(9px);color:#e7c77e;font-size:.6rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
-  .world-discovery .secret-dots{display:flex;gap:4px}.world-discovery i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18);box-shadow:0 0 0 1px rgba(255,255,255,.08)}
-  .world-discovery i.on{background:#e7c77e;box-shadow:0 0 9px rgba(231,199,126,.7)}
-  .world-stage{position:relative;width:100%;max-width:1080px;height:min(68vh,620px);margin:0 auto}
-  .world-clock,.world-fairies,.world-candle{border:0;color:#fff;cursor:pointer;background-color:transparent;background-position:center;background-repeat:no-repeat;background-size:contain;
-    transition:transform .7s cubic-bezier(.2,.8,.2,1),filter .5s ease,opacity .4s ease}
-  .world-clock:focus-visible,.world-fairies:focus-visible,.world-candle:focus-visible{outline:2px solid var(--amber);outline-offset:-10px}
-  .world-clock{position:absolute;z-index:5;left:0;bottom:-8px;width:220px;height:440px;
-    background-image:url('/themes/moonlit-reading-room/addons/clock-v3.png');
-    filter:drop-shadow(0 20px 24px rgba(0,0,0,.62))}
-  .world-clock:hover{transform:translateY(-5px) scale(1.018);filter:drop-shadow(0 24px 30px rgba(0,0,0,.74)) brightness(1.08)}
-  .clock-hands{display:none}
-  .clock-time{position:absolute;left:50%;bottom:17px;transform:translateX(-50%);padding:.35em .7em;border:1px solid rgba(231,197,128,.24);border-radius:99px;
-    background:rgba(4,7,13,.68);backdrop-filter:blur(7px);font-size:.62rem;letter-spacing:.08em;white-space:nowrap;color:#e8c778;box-shadow:0 8px 20px rgba(0,0,0,.38)}
-  .world-fairies{position:absolute;z-index:5;right:2%;top:10%;width:245px;height:180px;
-    background-image:url('/themes/moonlit-reading-room/addons/fairies-v3.png');
-    opacity:.42;filter:drop-shadow(0 0 12px rgba(255,205,110,.14)) saturate(.72)}
-  .world-fairies:hover{transform:scale(1.025);opacity:.8;filter:drop-shadow(0 0 24px rgba(255,205,110,.34)) brightness(1.08)}
-  .fairy{display:none}
-  .fairy-label{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);padding:.38em .7em;border:1px solid rgba(231,197,128,.2);border-radius:99px;
-    background:rgba(4,7,13,.64);backdrop-filter:blur(7px);font-family:inherit;font-weight:700;font-size:.66rem;white-space:nowrap;color:rgba(244,232,227,.86)}
-  .sv-shelf{position:absolute;left:50%;bottom:48px;transform:translateX(-50%);z-index:4;width:min(58%,620px)}
+  .world-message{position:absolute;top:88px;left:18%;z-index:7;max-width:380px;width:32%;padding:5px 0;text-align:left;color:rgba(244,232,227,.78);font:italic 500 .76rem/1.5 'Fraunces';letter-spacing:.025em;text-shadow:0 2px 16px #000,0 0 25px rgba(0,0,0,.9);transition:opacity .2s}
+  .world-discovery{position:absolute;right:20px;bottom:20px;z-index:7;display:flex;align-items:center;gap:9px;color:#e7c77e}
+  .world-discovery>span:first-child{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .world-discovery .secret-dots{display:flex;gap:10px}.world-discovery i{width:10px;height:10px;transform:rotate(45deg);border:1px solid rgba(231,199,126,.3);background:rgba(6,8,16,.45);box-shadow:0 0 0 3px rgba(6,8,16,.32);transition:background .5s,box-shadow .5s,transform .5s}
+  .world-discovery i.on{background:#e7c77e;box-shadow:0 0 12px rgba(231,199,126,.75),0 0 0 3px rgba(6,8,16,.48);transform:rotate(135deg)}
+  .world-stage{position:relative;z-index:3;width:100%;max-width:none;height:min(68vh,620px);margin:0 auto;transform:translate3d(var(--stage-x),var(--stage-y),18px);transition:transform .75s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
+  .world-stage:not(.world-stage-moonlit) .world-clock,.world-stage:not(.world-stage-moonlit) .world-fairies,.world-stage:not(.world-stage-moonlit) .world-candle,.world-stage:not(.world-stage-moonlit) .world-window,.world-stage:not(.world-stage-moonlit) .world-bookmark,.world-stage:not(.world-stage-moonlit) .hidden-verse{display:none}
+  .scene-atmosphere{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;transform:translate3d(var(--air-x),var(--air-y),45px);transition:transform .8s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
+  .window-veil{position:absolute;left:25%;right:25%;top:2%;height:69%;z-index:1;opacity:.32;transform:translate3d(var(--veil-x),var(--veil-y),18px);background:radial-gradient(ellipse at 50% 36%,rgba(199,218,255,.22),rgba(89,116,181,.055) 44%,transparent 72%);filter:blur(12px);mix-blend-mode:screen;transition:transform .9s cubic-bezier(.2,.7,.2,1),opacity 1.1s}
+  .moonbeam-sweep{position:absolute;left:18%;top:-15%;z-index:3;width:16%;height:110%;opacity:0;transform:translate3d(-190%,0,40px) rotate(9deg);clip-path:polygon(40% 0,61% 0,100% 100%,0 100%);background:linear-gradient(180deg,rgba(228,237,255,.42),rgba(124,160,235,.035) 72%,transparent);filter:blur(12px);mix-blend-mode:screen}
+  .resting-drapes{position:absolute;inset:-5% 15% 0;z-index:2;transform:translate3d(var(--frame-x),var(--frame-y),62px);transition:transform .78s cubic-bezier(.2,.7,.2,1),filter .6s;filter:drop-shadow(0 18px 25px rgba(0,0,0,.5))}.resting-drape{position:absolute;top:0;bottom:0;width:35%;background:url('/themes/moonlit-reading-room/artifacts/tied-rose-velvet-drape-v1.png') center/100% 100% no-repeat}.resting-drape.left{left:0}.resting-drape.right{right:0;transform:scaleX(-1)}
+  .curtain-theatre{position:absolute;left:18%;right:18%;top:-5%;bottom:6%;z-index:4;overflow:hidden;transform:translate3d(var(--frame-x),var(--frame-y),74px);filter:drop-shadow(0 18px 24px rgba(0,0,0,.42));transition:transform .78s cubic-bezier(.2,.7,.2,1)}
+  .curtain-wing{position:absolute;top:0;bottom:0;width:52.5%;overflow:hidden;background:url('/themes/moonlit-reading-room/artifacts/rose-velvet-curtain-v1.png') center/100% 100% no-repeat;box-shadow:inset 0 0 48px rgba(0,0,0,.46);will-change:transform}
+  .curtain-wing::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(126,34,64,.08),transparent 30%,rgba(0,0,0,.3));mix-blend-mode:screen}
+  .curtain-left{left:0;transform:translateX(-88%)}
+  .curtain-right{right:0;transform:translateX(88%) scaleX(-1)}
+  .curtain-crest{position:absolute;left:50%;top:45%;z-index:2;width:clamp(84px,13vw,154px);aspect-ratio:2/3;opacity:0;transform:translate(-50%,-50%) translateZ(110px) scale(.76) rotateY(18deg);background:url('/themes/moonlit-reading-room/artifacts/moonbloom-sigil-v1.png') center/contain no-repeat;filter:drop-shadow(0 0 18px rgba(225,181,97,.26)) drop-shadow(0 15px 19px rgba(0,0,0,.64))}
+  .petal-depth{position:absolute;inset:0;z-index:5;transform:translate3d(var(--frame-x),var(--frame-y),110px)}.petal-depth i{position:absolute;left:50%;top:35%;width:8px;height:13px;border-radius:90% 10% 75% 25%;opacity:0;background:linear-gradient(145deg,#a72d50,#3d0a1d);box-shadow:0 0 8px rgba(187,47,86,.35)}
+  .petal-depth i:nth-child(1){--petal-x:-170px;--petal-y:230px}.petal-depth i:nth-child(2){--petal-x:145px;--petal-y:255px}.petal-depth i:nth-child(3){--petal-x:-82px;--petal-y:310px}.petal-depth i:nth-child(4){--petal-x:205px;--petal-y:195px}.petal-depth i:nth-child(5){--petal-x:-235px;--petal-y:170px}.petal-depth i:nth-child(6){--petal-x:65px;--petal-y:285px}
+  .light-shaft{position:absolute;left:38%;top:-12%;width:24%;height:85%;opacity:.16;transform:perspective(600px) rotateX(8deg);clip-path:polygon(34% 0,66% 0,100% 100%,0 100%);background:linear-gradient(180deg,rgba(176,209,255,.44),rgba(111,156,226,.04) 76%,transparent);filter:blur(15px);mix-blend-mode:screen;animation:lightSway 12s ease-in-out infinite}
+  .depth-fog{position:absolute;left:16%;right:16%;bottom:-12%;height:34%;opacity:.22;background:radial-gradient(ellipse at 50% 90%,rgba(91,129,181,.5),transparent 68%);filter:blur(22px);animation:fogBreathe 9s ease-in-out infinite}
+  .oath-motes{position:absolute;inset:0;z-index:5}.oath-motes i{position:absolute;width:4px;height:4px;border-radius:50%;opacity:0;background:#f1cf84;box-shadow:0 0 11px currentColor}
+  .oath-motes i:nth-child(1){left:18%;top:35%}.oath-motes i:nth-child(2){left:29%;top:58%}.oath-motes i:nth-child(3){left:71%;top:32%}.oath-motes i:nth-child(4){left:82%;top:61%}.oath-motes i:nth-child(5){left:43%;top:25%}.oath-motes i:nth-child(6){left:62%;top:54%}
+  .shelfview.oath-thorn .oath-motes i{color:#c63358;background:#d74a6c;animation:oathPetal 8s ease-in-out infinite}.shelfview.oath-vow .oath-motes i{animation:oathGold 5.6s ease-in-out infinite}.shelfview.oath-moon .oath-motes i{color:#b9cbff;background:#dae4ff;animation:oathStar 6.4s ease-in-out infinite}
+  .oath-motes i:nth-child(2){animation-delay:1s!important}.oath-motes i:nth-child(3){animation-delay:2.1s!important}.oath-motes i:nth-child(4){animation-delay:3.2s!important}.oath-motes i:nth-child(5){animation-delay:4.1s!important}.oath-motes i:nth-child(6){animation-delay:5s!important}
+  .world-clock,.world-fairies,.world-candle{border:0;outline:0;color:#fff;cursor:pointer;background:transparent}
+  .object-cue{position:absolute;width:34px;height:34px;display:grid;place-items:center;border:1px solid rgba(232,201,133,.62);border-radius:50%;background:rgba(6,7,12,.34);backdrop-filter:blur(7px);color:#f1d48d;font:700 .8rem 'Fraunces';box-shadow:0 0 0 1px rgba(4,5,8,.65),0 0 24px rgba(231,199,126,.14);opacity:0;transform:scale(.78);transition:opacity .2s,transform .2s,box-shadow .2s;pointer-events:none}
+  .world-clock:hover .object-cue,.world-clock:focus-visible .object-cue,.world-fairies:hover .object-cue,.world-fairies:focus-visible .object-cue,.world-candle:hover .object-cue,.world-candle:focus-visible .object-cue{opacity:1;transform:scale(1)}
+  .world-clock:focus-visible .object-cue,.world-fairies:focus-visible .object-cue,.world-candle:focus-visible .object-cue{box-shadow:0 0 0 3px rgba(231,199,126,.32),0 0 28px rgba(231,199,126,.32)}
+  .world-clock{position:absolute;z-index:6;left:0;top:6%;width:18%;height:82%}.world-clock .object-cue{left:50%;top:26%;transform:translate(-50%,-50%) scale(.78)}.world-clock:hover .object-cue,.world-clock:focus-visible .object-cue{transform:translate(-50%,-50%) scale(1)}
+  .clock-bell{position:absolute;left:50%;top:40%;width:min(72%,96px);height:47%;transform:translateX(-50%);transform-origin:50% 5%;pointer-events:none;opacity:.92;background:url('/themes/moonlit-reading-room/artifacts/ornate-clock-pendulum-v1.png') center top/contain no-repeat;filter:drop-shadow(0 7px 7px rgba(0,0,0,.72)) drop-shadow(0 0 5px rgba(215,171,84,.14))}
+  .clock-time{position:absolute;left:50%;top:35%;transform:translateX(-50%) translateY(4px);font:800 .56rem 'Hanken Grotesk';letter-spacing:.11em;white-space:nowrap;color:#e8c778;text-shadow:0 2px 7px #000;opacity:0;transition:opacity .2s,transform .2s}.world-clock:hover .clock-time,.world-clock:focus-visible .clock-time{opacity:1;transform:translateX(-50%) translateY(0)}
+  .world-fairies{position:absolute;z-index:6;left:37%;top:5%;width:26%;height:50%}.world-fairies .object-cue{left:50%;top:34%;transform:translate(-50%,-50%) scale(.78)}.world-fairies:hover .object-cue,.world-fairies:focus-visible .object-cue{transform:translate(-50%,-50%) scale(1)}
+  .fairy{position:absolute;width:8px;height:8px;border-radius:50%;opacity:.12;background:#fff2ba;box-shadow:0 0 7px #ffd575,0 0 20px rgba(255,209,106,.75);pointer-events:none}.fairy::before,.fairy::after{content:"";position:absolute;top:-2px;width:7px;height:4px;border:1px solid rgba(255,235,178,.72);border-radius:100% 0;background:rgba(255,245,211,.22);filter:drop-shadow(0 0 3px #ffe5a0)}.fairy::before{right:5px;transform:rotate(28deg)}.fairy::after{left:5px;transform:scaleX(-1) rotate(28deg)}
+  .fairy:nth-child(1){left:24%;top:64%}.fairy:nth-child(2){left:54%;top:44%}.fairy:nth-child(3){left:75%;top:70%}
+  .fairy-label{position:absolute;left:50%;bottom:8px;transform:translateX(-50%) translateY(4px);font-family:inherit;font-weight:700;font-size:.61rem;letter-spacing:.06em;white-space:nowrap;color:rgba(244,232,227,.82);text-shadow:0 2px 8px #000;opacity:0;transition:opacity .2s,transform .2s}
+  .world-fairies:hover .fairy-label,.world-fairies:focus-visible .fairy-label{opacity:1;transform:translateX(-50%) translateY(0)}
+  .sv-shelf{position:absolute;left:50%;bottom:48px;transform:translateX(-50%) translate3d(var(--book-x),var(--book-y),18px);z-index:4;width:min(58%,620px);transition:transform .72s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
+  .world-stage-moonlit .sv-shelf::before,.world-stage-moonlit .sv-shelf::after{content:"";position:absolute;top:calc(100% - 3px);z-index:0;width:clamp(54px,7vw,76px);aspect-ratio:2/3;background:url('/themes/moonlit-reading-room/artifacts/rosewood-crescent-corbel-v1.png') center top/contain no-repeat;filter:drop-shadow(0 12px 11px rgba(0,0,0,.72));pointer-events:none}
+  .world-stage-moonlit .sv-shelf::before{left:11%}.world-stage-moonlit .sv-shelf::after{right:11%;transform:scaleX(-1)}
   .sv-shelf .books{justify-content:center;min-height:190px;overflow:visible;padding-right:4px;scroll-snap-type:none}
   .sv-shelf.page-next .books{animation:shelfPageNext .34s cubic-bezier(.2,.8,.2,1)}
   .sv-shelf.page-prev .books{animation:shelfPagePrev .34s cubic-bezier(.2,.8,.2,1)}
   .sv-shelf .book.face{width:104px}.sv-shelf .book.spine{width:44px}
   .sv-shelf .book.spine .spineinner{height:164px}.sv-shelf .book.spine .stitle{max-height:126px}
-  .sv-shelf .plank{height:15px;box-shadow:0 14px 22px rgba(0,0,0,.6)}
+  .sv-shelf .plank{height:18px;box-shadow:0 7px 9px rgba(0,0,0,.75),0 18px 24px rgba(0,0,0,.38)}
+  .world-stage-moonlit .sv-shelf .plank{border-color:rgba(211,163,88,.26);background:linear-gradient(180deg,rgba(225,181,104,.16),transparent 23%,rgba(0,0,0,.72)),repeating-linear-gradient(92deg,#16090a 0 42px,#301015 42px 86px,#120708 86px 128px);box-shadow:0 2px 0 rgba(215,171,89,.34),0 9px 10px rgba(0,0,0,.78),0 26px 34px rgba(0,0,0,.38),inset 0 2px rgba(255,255,255,.11)}
+  .world-stage-moonlit .sv-shelf .plank::after{content:"";position:absolute;left:2%;right:2%;top:100%;height:54px;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,.62),transparent 82%);filter:blur(10px);transform:perspective(340px) rotateX(-48deg);transform-origin:50% 0;pointer-events:none}
   .shelf-turn{position:absolute;z-index:8;bottom:112px;width:36px;height:64px;border:1px solid rgba(225,185,107,.32);border-radius:18px 18px 7px 7px;
     background:linear-gradient(90deg,#17100c,#704724,#1a100b);color:#f2d28c;font-family:'Fraunces';font-size:1.65rem;cursor:pointer;
     box-shadow:0 12px 24px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.12);transition:transform .18s,opacity .18s}
@@ -449,31 +492,76 @@
   .shelf-range{position:absolute;left:50%;top:calc(100% + 11px);transform:translateX(-50%);z-index:8;border:1px solid rgba(225,185,107,.28);border-radius:99px;
     padding:.42em .8em;background:rgba(6,7,12,.72);backdrop-filter:blur(8px);color:#e7c57f;font-family:inherit;font-weight:800;font-size:.66rem;white-space:nowrap;cursor:pointer}
   .shelf-range:hover{border-color:#e7c57f;background:rgba(24,17,14,.86)}
-  .world-candle{position:absolute;z-index:5;right:8%;bottom:14px;width:118px;height:215px;
-    background-image:url('/themes/moonlit-reading-room/addons/candle-v4.png');
-    filter:drop-shadow(0 0 20px rgba(255,163,64,.28))}
-  .world-candle:hover{transform:translateY(-3px) scale(1.035);filter:drop-shadow(0 0 28px rgba(255,163,64,.46)) brightness(1.08)}
-  .world-candle .wax,.world-candle .flame{display:none}
-  .candle-label{position:absolute;left:50%;bottom:2px;transform:translateX(-50%);padding:.38em .7em;border:1px solid rgba(231,197,128,.2);border-radius:99px;background:rgba(4,7,13,.7);backdrop-filter:blur(7px);font-family:inherit;font-weight:700;font-size:.6rem;white-space:nowrap;color:rgba(244,232,227,.86)}
+  .world-candle{position:absolute;z-index:6;right:0;top:8%;width:13%;height:49%}.world-candle .object-cue{left:54%;top:28%;transform:translate(-50%,-50%) scale(.78)}.world-candle:hover .object-cue,.world-candle:focus-visible .object-cue{transform:translate(-50%,-50%) scale(1)}
+  .world-candle .wax{display:none}.candle-flame-live{position:absolute;left:54%;top:18%;width:13px;height:24px;border-radius:60% 40% 55% 45%;background:radial-gradient(ellipse at 50% 72%,#fff8c7 0 18%,#ffd15d 32%,#ff7a24 62%,transparent 70%);filter:drop-shadow(0 0 7px #ffab40) drop-shadow(0 0 18px rgba(255,117,32,.65));transform:translate(-50%,-50%) rotate(3deg);transform-origin:50% 100%;animation:flameAlive 1.7s ease-in-out infinite alternate;transition:opacity .5s,filter .5s;pointer-events:none}
+  .world-candle::after{content:"";position:absolute;left:54%;top:22%;width:95px;height:95px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,157,66,.22),transparent 68%);filter:blur(7px);mix-blend-mode:screen;transition:opacity .5s;pointer-events:none}
+  .candle-label{position:absolute;left:54%;top:38%;transform:translateX(-50%) translateY(4px);font-family:inherit;font-weight:700;font-size:.58rem;letter-spacing:.06em;white-space:nowrap;color:rgba(244,232,227,.84);text-shadow:0 2px 8px #000;opacity:0;transition:opacity .2s,transform .2s}
+  .world-candle:hover .candle-label,.world-candle:focus-visible .candle-label{opacity:1;transform:translateX(-50%) translateY(0)}
+  .world-window{position:absolute;left:32%;top:0;z-index:5;width:36%;height:61%;padding:0;border:0;outline:0;background:transparent;cursor:pointer}.world-window::after{content:"Wake the moonbloom";position:absolute;left:50%;bottom:5%;padding:.45em .72em;border:1px solid rgba(224,194,132,.32);border-radius:99px;background:rgba(7,8,14,.36);backdrop-filter:blur(9px);color:rgba(244,232,227,.78);font:700 .56rem 'Hanken Grotesk';letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;opacity:0;transform:translate(-50%,5px);transition:opacity .2s,transform .2s}.world-window:hover::after,.world-window:focus-visible::after{opacity:1;transform:translate(-50%,0)}.world-window:focus-visible{box-shadow:inset 0 0 0 2px rgba(231,199,126,.35);border-radius:48% 48% 10% 10%}
+  .moonbloom-sigil{position:absolute;left:50%;top:45%;width:clamp(92px,15vw,178px);aspect-ratio:2/3;opacity:0;transform:translate(-50%,-50%) scale(.35) rotateY(42deg);transform-style:preserve-3d;background:url('/themes/moonlit-reading-room/artifacts/moonbloom-sigil-v1.png') center/contain no-repeat;filter:drop-shadow(0 0 18px rgba(179,203,255,.34)) drop-shadow(0 0 32px rgba(140,23,63,.16));pointer-events:none}
   .fairy-trail{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
   .fairy-trail span{position:absolute;width:5px;height:5px;border-radius:50%;background:#ffe7a0;opacity:0;box-shadow:0 0 6px #ffd16a,0 0 18px rgba(255,209,106,.75)}
   .fairy-trail span:nth-child(1){right:23%;top:29%}.fairy-trail span:nth-child(2){right:34%;top:37%}.fairy-trail span:nth-child(3){right:29%;top:47%}.fairy-trail span:nth-child(4){right:43%;top:31%}.fairy-trail span:nth-child(5){right:19%;top:43%}.fairy-trail span:nth-child(6){right:39%;top:51%}
-  .world-memory{position:absolute;left:50%;bottom:255px;transform:translateX(-50%) translateY(10px);width:min(86%,430px);z-index:6;
-    padding:16px 18px;border:1px solid rgba(244,232,227,.2);border-radius:16px;background:rgba(10,8,12,.76);backdrop-filter:blur(12px);
-    text-align:center;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s}
-  .world-memory.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .world-memory small{display:block;color:var(--amber);font-weight:800;text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px}
-  .world-memory strong{font-family:'Fraunces';font-weight:500}
-  .shelfview.fairies-awake .world-fairies{opacity:1;transform:scale(1.06);filter:drop-shadow(0 0 32px rgba(255,205,110,.5)) brightness(1.14);animation:fairyArrival .8s cubic-bezier(.2,.8,.2,1)}
+  .world-constellation{display:none}
+  .world-bookmark{position:absolute;z-index:7;left:calc(50% + 128px);bottom:58px;width:46px;height:142px;border:0;background:url('/themes/moonlit-reading-room/artifacts/gilded-bookmark-v2.png') center/contain no-repeat;opacity:0;transform:translateY(-65px) rotate(7deg) scale(.78);pointer-events:none;cursor:pointer;filter:drop-shadow(0 11px 9px rgba(0,0,0,.72));transition:opacity .5s,transform 1s cubic-bezier(.2,.8,.2,1)}
+  .shelfview.relic-fairies .world-bookmark{opacity:1;transform:translateY(0) rotate(2deg) scale(1);pointer-events:auto}
+  .hidden-verse{position:absolute;z-index:6;right:2%;top:44%;width:min(23%,250px);border:0;background:none;color:#d8c5d7;font:italic 500 clamp(.66rem,1.2vw,.86rem) 'Fraunces';letter-spacing:.045em;line-height:1.5;text-align:center;text-shadow:0 0 12px rgba(177,155,255,.55),0 2px 8px #000;opacity:0;pointer-events:none;cursor:pointer;transform:translateY(8px) rotate(-2deg);transition:opacity .55s,transform .55s}
+  .shelfview.relic-candle.candle-dim .hidden-verse{opacity:.76;pointer-events:auto;transform:translateY(0) rotate(-2deg)}
+  .world-letter{position:absolute;right:22%;left:auto;bottom:90px;z-index:9;width:min(31%,285px);padding:13px 48px 13px 18px;border:1px solid rgba(232,198,120,.46);border-radius:4px;background:linear-gradient(155deg,#e6d5ae,#b99965);color:#2b170e;text-align:left;box-shadow:0 18px 38px rgba(0,0,0,.65),inset 0 0 22px rgba(100,57,25,.18);opacity:0;pointer-events:none;transform:translateY(-45px) rotate(-7deg) scale(.88);cursor:pointer;font-family:inherit;transition:opacity .35s,transform .8s cubic-bezier(.2,.86,.2,1)}
+  .world-letter::before{content:"";position:absolute;inset:0;background:linear-gradient(25deg,transparent 49.5%,rgba(88,48,24,.17) 50%,transparent 50.5%);pointer-events:none}.world-letter::after{content:"✦";position:absolute;right:15px;top:50%;transform:translateY(-50%);width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:#6e1731;color:#e8bd69;box-shadow:inset 0 0 0 3px rgba(55,8,21,.3),0 3px 8px rgba(0,0,0,.35)}
+  .world-letter small,.world-letter strong{position:relative;display:block}.world-letter small{font-size:.52rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.world-letter strong{font:600 .96rem 'Fraunces';margin-top:2px}
+  .world-letter.show{opacity:1;pointer-events:auto;transform:translateY(0) rotate(-4deg) scale(1);animation:letterHover 3.8s ease-in-out infinite}
+  .world-oath-mark{position:absolute;right:22px;bottom:54px;z-index:8;display:none;width:62px;height:62px;padding:0;border:1px solid rgba(231,199,126,.58);border-radius:50%;background:radial-gradient(circle,#5f1830 0 38%,#1a0a13 42% 64%,#b9873d 66% 69%,#11080d 71%);color:#f0d18a;text-align:center;box-shadow:0 12px 28px rgba(0,0,0,.62),0 0 24px rgba(160,74,103,.17);cursor:pointer}
+  .world-oath-mark::before{content:"✦";font:600 1.1rem 'Fraunces'}.world-oath-mark.show{display:grid;place-items:center}.world-oath-mark small{display:none}.world-oath-mark strong{position:absolute;right:72px;bottom:2px;width:300px;padding:10px 13px;border:1px solid rgba(231,199,126,.27);border-radius:8px;background:rgba(8,6,12,.88);backdrop-filter:blur(11px);color:#f0d18a;font:600 .78rem/1.4 'Fraunces';opacity:0;pointer-events:none;transform:translateX(8px);transition:opacity .2s,transform .2s;box-shadow:0 12px 30px rgba(0,0,0,.5)}
+  .world-oath-mark:hover strong,.world-oath-mark:focus-visible strong{opacity:1;transform:translateX(0)}
+  .ritual-overlay{position:absolute;inset:0;z-index:24;display:grid;place-items:center;padding:70px 18px 24px;background:rgba(3,4,9,.76);backdrop-filter:blur(14px);opacity:0;pointer-events:none;transition:opacity .3s}
+  .ritual-overlay.open{opacity:1;pointer-events:auto}
+  .ritual-card{position:relative;width:min(100%,680px);max-height:100%;overflow:auto;border:1px solid rgba(231,199,126,.42);border-radius:26px;padding:clamp(24px,5vw,48px);background:radial-gradient(80% 45% at 50% 0%,rgba(119,40,70,.23),transparent 72%),linear-gradient(145deg,#171019,#09080e);box-shadow:0 35px 90px rgba(0,0,0,.76),inset 0 0 0 5px rgba(231,199,126,.035);text-align:center}
+  .ritual-close{position:absolute;right:15px;top:15px;width:36px;height:36px;border:1px solid rgba(244,232,227,.18);border-radius:50%;background:rgba(255,255,255,.04);color:#fff;cursor:pointer;font-size:1.1rem}
+  .ritual-kicker{color:#d8b568;font-size:.58rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase}.ritual-seal{width:58px;height:58px;display:grid;place-items:center;margin:12px auto;border:1px solid rgba(231,199,126,.5);border-radius:50%;background:radial-gradient(circle,#6e1731 0 52%,#2a0c18 54%);color:#f1cd79;box-shadow:0 0 30px rgba(147,34,70,.28);font:600 1.15rem 'Fraunces'}
+  .ritual-card h3{font:600 clamp(1.7rem,5vw,2.8rem) 'Fraunces';line-height:1.02;color:#fff4df}.ritual-copy{max-width:520px;margin:12px auto 20px;color:rgba(244,232,227,.7);font:italic 400 .94rem/1.65 'Fraunces'}
+  .oath-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.oath-choice{min-height:134px;padding:15px 12px;border:1px solid rgba(231,199,126,.2);border-radius:15px;background:rgba(255,255,255,.035);color:#f4e8e3;cursor:pointer;font-family:inherit;transition:transform .18s,border-color .18s,background .18s}
+  .oath-choice:hover{transform:translateY(-3px);border-color:#e7c77e;background:rgba(157,93,52,.13)}.oath-choice span,.oath-choice strong,.oath-choice small{display:block}.oath-choice span{color:#d8b568;font:600 1.2rem 'Fraunces'}.oath-choice strong{font:600 .84rem 'Fraunces';margin:7px 0}.oath-choice small{color:rgba(244,232,227,.53);font-size:.61rem;line-height:1.35}
+  .ritual-reward{display:none}.ritual-card.claimed .ritual-intro{display:none}.ritual-card.claimed .ritual-reward{display:block}.ritual-reward p{max-width:480px;margin:10px auto 18px;color:rgba(244,232,227,.66)}
+  .ritual-actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}.ritual-action{border:1px solid rgba(231,199,126,.32);border-radius:99px;padding:.7em 1em;background:rgba(255,255,255,.05);color:#f0d18a;font-family:inherit;font-weight:800;cursor:pointer}.ritual-action.primary{background:linear-gradient(100deg,#d9b76c,#9d692f);color:#1b1008}
+  .relic-card{position:absolute;z-index:18;left:50%;top:50%;transform:translate(-50%,-44%) scale(.96);width:min(88%,360px);padding:22px;border:1px solid rgba(231,199,126,.34);border-radius:20px;background:rgba(10,8,14,.94);backdrop-filter:blur(16px);box-shadow:0 26px 65px rgba(0,0,0,.68);text-align:center;opacity:0;pointer-events:none;transition:opacity .22s,transform .22s}
+  .relic-card.show{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}.relic-card .relic-glyph{width:48px;height:48px;display:grid;place-items:center;margin:0 auto 10px;border:1px solid #d8b568;border-radius:50%;color:#f0d18a;font:600 1rem 'Fraunces'}.relic-card h4{font:600 1.4rem 'Fraunces'}.relic-card p{margin:8px 0 16px;color:rgba(244,232,227,.64);font-size:.78rem;line-height:1.55}.relic-close{border:1px solid rgba(231,199,126,.3);border-radius:99px;padding:.58em 1em;background:none;color:#f0d18a;font-family:inherit;font-weight:800;cursor:pointer}
+  .shelfview.fairies-awake .fairy:nth-child(1){animation:fairyArcOne 4.8s cubic-bezier(.2,.8,.2,1) both}.shelfview.fairies-awake .fairy:nth-child(2){animation:fairyArcTwo 5.4s .35s cubic-bezier(.2,.8,.2,1) both}.shelfview.fairies-awake .fairy:nth-child(3){animation:fairyArcThree 5s .7s cubic-bezier(.2,.8,.2,1) both}
   .shelfview.fairies-awake .fairy-trail span{animation:fairyDust 3.8s ease-in-out infinite}
   .shelfview.fairies-awake .fairy-trail span:nth-child(2){animation-delay:.45s}.shelfview.fairies-awake .fairy-trail span:nth-child(3){animation-delay:.9s}.shelfview.fairies-awake .fairy-trail span:nth-child(4){animation-delay:1.35s}.shelfview.fairies-awake .fairy-trail span:nth-child(5){animation-delay:1.8s}.shelfview.fairies-awake .fairy-trail span:nth-child(6){animation-delay:2.25s}
-  .shelfview.candle-dim .world-candle{opacity:.23;filter:saturate(.35) brightness(.55)}
-  .shelfview.time-blue .world-clock{filter:drop-shadow(0 18px 28px rgba(0,0,0,.55)) brightness(1.1) saturate(.86)}
-  .shelfview.time-blue .sv-light{background:linear-gradient(0deg,rgba(108,128,220,.24),rgba(66,82,160,.1))}
-  .shelfview.time-dawn .world-clock{filter:drop-shadow(0 18px 28px rgba(0,0,0,.55)) brightness(1.2) sepia(.12)}
-  .shelfview.time-dawn .sv-light{background:linear-gradient(0deg,rgba(255,166,95,.38),rgba(255,110,145,.1))}
-  @keyframes fairyArrival{0%{opacity:0;transform:translate(80px,-28px) scale(.72)}65%{opacity:1}100%{transform:translate(0,0) scale(1.06)}}
+  .shelfview.candle-dim .candle-flame-live,.shelfview.candle-dim .world-candle::after{opacity:0}.shelfview.candle-dim .scene-layer{filter:brightness(.8) saturate(.88)}.shelfview.candle-dim .light-shaft{opacity:.27}
+  .shelfview.time-blue .sv-light{background:linear-gradient(0deg,rgba(82,108,192,.08),rgba(40,58,124,.02))}
+  .shelfview.time-dawn .sv-light{background:linear-gradient(0deg,rgba(255,166,95,.08),rgba(255,110,145,.02))}
+  .shelfview.oath-thorn .sv-light{background:radial-gradient(65% 55% at 50% 20%,rgba(142,24,61,.28),transparent 72%),linear-gradient(0deg,rgba(88,10,34,.24),rgba(28,8,23,.05))}
+  .shelfview.oath-vow .sv-light{background:radial-gradient(55% 48% at 50% 70%,rgba(255,169,88,.31),transparent 74%),linear-gradient(0deg,rgba(111,52,36,.18),rgba(28,8,23,.04))}
+  .shelfview.oath-moon .sv-light{background:radial-gradient(60% 58% at 50% 4%,rgba(126,152,255,.34),transparent 72%),linear-gradient(0deg,rgba(55,48,132,.22),rgba(12,11,31,.03))}
+  .shelfview.clock-strike .scene-layer{animation:sceneBreathe 1.25s ease both}
+  .shelfview.clock-ringing .clock-bell{animation:clockBellRing 2.15s cubic-bezier(.36,.02,.18,1) both}
+  .shelfview.curtain-ritual .resting-drapes{animation:restingDrapeYield 3.45s ease both}
+  .shelfview.curtain-ritual .curtain-left{animation:curtainCloseLeft 3.45s cubic-bezier(.7,0,.22,1) both}.shelfview.curtain-ritual .curtain-right{animation:curtainCloseRight 3.45s cubic-bezier(.7,0,.22,1) both}.shelfview.curtain-ritual .curtain-crest{animation:curtainCrest 3.45s ease both}.shelfview.curtain-ritual .moonbeam-sweep{animation:moonbeamReveal 3.45s ease both}.shelfview.curtain-ritual .world-stage{animation:stageVeil 3.45s ease both}
+  .shelfview.moonbloom-awake .moonbloom-sigil{animation:moonbloomWake 5.8s cubic-bezier(.2,.8,.2,1) both}.shelfview.moonbloom-awake .window-veil{animation:veilPulse 5.8s ease both}.shelfview.moonbloom-awake .petal-depth i{animation:moonPetal 4.3s ease-out both}.shelfview.moonbloom-awake .petal-depth i:nth-child(2){animation-delay:.18s}.shelfview.moonbloom-awake .petal-depth i:nth-child(3){animation-delay:.38s}.shelfview.moonbloom-awake .petal-depth i:nth-child(4){animation-delay:.56s}.shelfview.moonbloom-awake .petal-depth i:nth-child(5){animation-delay:.72s}.shelfview.moonbloom-awake .petal-depth i:nth-child(6){animation-delay:.9s}
+  @keyframes fairyArcOne{0%{opacity:0;transform:translate(110px,-30px) scale(.45)}30%{opacity:1}100%{opacity:.62;transform:translate(-70px,36px) scale(.8)}}
+  @keyframes fairyArcTwo{0%{opacity:0;transform:translate(130px,20px) scale(.4)}32%{opacity:1}100%{opacity:.52;transform:translate(22px,-54px) scale(.72)}}
+  @keyframes fairyArcThree{0%{opacity:0;transform:translate(160px,-50px) scale(.35)}28%{opacity:1}100%{opacity:.68;transform:translate(-25px,18px) scale(.82)}}
   @keyframes fairyDust{0%,100%{opacity:0;transform:translate(0,8px) scale(.6)}35%{opacity:1}70%{opacity:.35;transform:translate(-24px,-30px) scale(1.25)}}
+  @keyframes sceneBreathe{0%,100%{filter:brightness(1)}45%{filter:brightness(1.14)}}
+  @keyframes clockBellRing{0%{transform:translateX(-50%) rotate(0)}10%{transform:translateX(-50%) rotate(13deg)}24%{transform:translateX(-50%) rotate(-11deg)}39%{transform:translateX(-50%) rotate(8deg)}54%{transform:translateX(-50%) rotate(-6deg)}68%{transform:translateX(-50%) rotate(4deg)}82%{transform:translateX(-50%) rotate(-2deg)}100%{transform:translateX(-50%) rotate(0)}}
+  @keyframes restingDrapeYield{0%,100%{filter:brightness(1) drop-shadow(0 18px 25px rgba(0,0,0,.5))}28%,62%{filter:brightness(.62) drop-shadow(0 18px 25px rgba(0,0,0,.66))}}
+  @keyframes curtainCloseLeft{0%,8%{transform:translateX(-88%)}29%,61%{transform:translateX(0)}100%{transform:translateX(-88%)}}
+  @keyframes curtainCloseRight{0%,8%{transform:translateX(88%) scaleX(-1)}29%,61%{transform:translateX(0) scaleX(-1)}100%{transform:translateX(88%) scaleX(-1)}}
+  @keyframes curtainCrest{0%,25%,68%,100%{opacity:0;transform:translate(-50%,-50%) translateZ(110px) scale(.72) rotateY(18deg)}37%,56%{opacity:.92;transform:translate(-50%,-50%) translateZ(110px) scale(1) rotateY(0)}}
+  @keyframes moonbeamReveal{0%,60%{opacity:0;transform:translate3d(-190%,0,40px) rotate(9deg)}72%{opacity:.42}100%{opacity:0;transform:translate3d(470%,0,40px) rotate(9deg)}}
+  @keyframes stageVeil{0%,18%,100%{filter:brightness(1)}34%,58%{filter:brightness(.42)}}
+  @keyframes moonbloomWake{0%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotateY(48deg)}18%{opacity:.18}38%,72%{opacity:.74;transform:translate(-50%,-50%) scale(1) rotateY(0)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.08) rotateY(-9deg)}}
+  @keyframes veilPulse{0%,100%{opacity:.32;filter:blur(12px)}40%,70%{opacity:.74;filter:blur(5px)}}
+  @keyframes moonPetal{0%{opacity:0;transform:translate3d(0,0,0) rotate(0) scale(.5)}28%{opacity:.8}100%{opacity:0;transform:translate3d(var(--petal-x,90px),var(--petal-y,260px),80px) rotate(310deg) scale(1.15)}}
+  @keyframes lightSway{0%,100%{opacity:.1;transform:perspective(600px) rotateX(8deg) translateX(-2%)}50%{opacity:.21;transform:perspective(600px) rotateX(8deg) translateX(3%)}}
+  @keyframes fogBreathe{0%,100%{opacity:.14;transform:scaleX(.94)}50%{opacity:.27;transform:scaleX(1.06)}}
+  @keyframes flameAlive{from{transform:translate(-50%,-50%) rotate(-4deg) scale(.92,1.06)}to{transform:translate(-50%,-50%) rotate(5deg) scale(1.06,.94)}}
+  @keyframes oathPetal{0%{opacity:0;transform:translateY(-8px) rotate(0) scale(.7)}35%{opacity:.8}100%{opacity:0;transform:translate(-28px,90px) rotate(220deg) scale(1.15)}}
+  @keyframes oathGold{0%,100%{opacity:0;transform:translateY(8px) scale(.6)}45%{opacity:.85;transform:translateY(-24px) scale(1.1)}}
+  @keyframes oathStar{0%,100%{opacity:.08;transform:scale(.5)}50%{opacity:.95;transform:scale(1.5)}}
+  @keyframes letterHover{0%,100%{margin-bottom:0}50%{margin-bottom:5px}}
   .sv-dots{position:absolute;left:0;right:0;bottom:16px;z-index:7;display:flex;gap:7px;justify-content:center}
   .sv-dots button{width:9px;height:9px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;box-shadow:0 0 0 5px transparent}
   .sv-dots button.on{background:var(--accent);box-shadow:0 0 8px var(--accent)}
@@ -531,20 +619,24 @@
   .founder-note strong{font-family:'Fraunces';font-size:.96rem}
   .founder-note small{color:var(--muted);font-size:.7rem}
   .founder-state{flex:0 0 auto;color:#e7c77e;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
-  @media(prefers-reduced-motion:reduce){.world-clock,.world-fairies,.world-candle{transition:none}.sv-shelf.page-next .books,.sv-shelf.page-prev .books{animation:none}}
+  @media(orientation:portrait){.scene-midnight{background-image:url('/themes/moonlit-reading-room/scenes/moonlit-midnight-portrait-v3.jpg')}.scene-blue-hour{background-image:url('/themes/moonlit-reading-room/scenes/moonlit-blue-hour-portrait-v3.jpg')}.scene-dawn{background-image:url('/themes/moonlit-reading-room/scenes/moonlit-dawn-portrait-v3.jpg')}}
+  @media(prefers-reduced-motion:reduce){.scene-layer,.world-clock,.world-fairies,.world-candle,.world-letter,.light-shaft,.depth-fog,.candle-flame-live,.oath-motes i,.fairy,.curtain-wing,.curtain-crest,.resting-drapes,.clock-bell,.moonbloom-sigil,.moonbeam-sweep,.petal-depth i{transition:none;animation:none!important}.sv-shelf.page-next .books,.sv-shelf.page-prev .books{animation:none}}
   @keyframes shelfPageNext{from{opacity:.15;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
   @keyframes shelfPagePrev{from{opacity:.15;transform:translateX(-24px)}to{opacity:1;transform:translateX(0)}}
   @media(max-width:620px){
     .sv-world{padding-left:10px;padding-right:10px}
-    .world-discovery{top:139px;font-size:.53rem}
+    .world-message{left:50%;width:calc(100% - 104px);max-width:360px;top:82px;transform:translateX(-50%);text-align:center;font-size:.68rem}.world-discovery{right:14px;bottom:15px}.world-discovery .secret-dots{gap:8px}.world-discovery i{width:8px;height:8px}
     .world-stage{height:min(70vh,580px)}
-    .world-clock{left:-18px;bottom:-4px;width:135px;height:300px}
-    .clock-time{bottom:9px;font-size:.54rem}
-    .world-fairies{right:-12px;top:20%;width:145px;height:112px}
-    .fairy-label{bottom:2px;font-size:.58rem}
-    .world-candle{right:10px;bottom:12px;width:78px;height:152px}
-    .candle-label{font-size:.54rem}
-    .sv-shelf{width:62%}.sv-shelf .book.face{width:82px}.sv-shelf .book.spine{width:34px}
+    .world-clock{left:0;top:18%;width:27%;height:68%}.world-clock .object-cue{top:29%}.clock-time{top:39%;font-size:.5rem}
+    .clock-bell{top:38%;width:min(72%,82px);height:45%}
+    .world-fairies{left:29%;top:3%;width:42%;height:48%}.fairy-label{bottom:2px;font-size:.58rem}
+    .resting-drapes{inset:-3% 25% 0}.resting-drape{width:52%}.curtain-theatre{left:9%;right:9%;top:-2%;bottom:9%}.world-window{left:22%;width:56%;height:57%}.moonbloom-sigil{width:112px}.window-veil{left:17%;right:17%;height:62%}
+    .world-candle{right:0;top:24%;width:23%;height:44%}.world-candle .object-cue{left:48%;top:32%}.candle-flame-live{left:48%;top:22%;width:10px;height:19px}.world-candle::after{left:48%;top:25%;width:70px;height:70px}.candle-label{left:48%;top:44%;font-size:.52rem}
+    .world-bookmark{left:calc(50% + 70px);bottom:52px;width:34px;height:110px}.hidden-verse{left:50%;right:auto;top:auto;bottom:225px;width:62%;font-size:.65rem;transform:translate(-50%,8px) rotate(-2deg)}.shelfview.relic-candle.candle-dim .hidden-verse{transform:translate(-50%,0) rotate(-2deg)}
+    .world-letter{left:50%;right:auto;bottom:205px;width:min(78%,270px);transform:translate(-50%,-45px) rotate(-7deg) scale(.88)}.world-letter.show{transform:translate(-50%,0) rotate(-4deg) scale(1)}.world-oath-mark{right:14px;bottom:42px;width:54px;height:54px}.world-oath-mark strong{right:62px;width:225px}
+    .ritual-overlay{padding:62px 10px 14px}.ritual-card{padding:26px 16px 20px;border-radius:19px}.oath-grid{grid-template-columns:1fr}.oath-choice{min-height:0;padding:11px 12px}.oath-choice small{display:none}.oath-choice strong{margin:3px 0}
+    .sv-shelf{width:min(90%,430px)}.sv-shelf .book.face{width:82px}.sv-shelf .book.spine{width:34px}
+    .world-stage-moonlit .sv-shelf::before,.world-stage-moonlit .sv-shelf::after{width:56px}.world-stage-moonlit .sv-shelf::before{left:9%}.world-stage-moonlit .sv-shelf::after{right:9%}
     .sv-shelf .book.spine .spineinner{height:138px}.sv-shelf .book.spine .stitle{max-height:104px}
     .shelf-turn{bottom:112px;width:30px;height:52px;font-size:1.35rem}
     .shelf-turn.prev{left:max(3px,calc(13% - 35px))}.shelf-turn.next{right:max(3px,calc(13% - 35px))}
@@ -556,6 +648,7 @@
     .themegrid{grid-template-columns:repeat(2,1fr)}
     .cabinetgrid{grid-template-columns:repeat(2,1fr)}
     .detailgrid{grid-template-columns:repeat(2,1fr)}
+    .crestgrid{grid-template-columns:1fr}.crestcard{grid-template-columns:118px 1fr;min-height:96px}.crest-preview{height:74px}
     .openbook{width:96vw}
     .book-spread{grid-template-columns:40% 60%;min-height:430px}
     .book-spread::after{left:40%;width:22px}
@@ -601,7 +694,8 @@
   }
   @media(max-width:900px){
     .library-layout{grid-template-columns:minmax(0,650px);justify-content:center}
-    .library-rail{grid-template-columns:repeat(2,minmax(0,1fr));padding-top:0}
+    .library-main{grid-column:1;grid-row:3}
+    .library-rail{grid-column:1;grid-row:4;grid-template-columns:repeat(2,minmax(0,1fr));padding-top:0}
   }
   @media(max-width:620px){
     .stage{padding-left:9px;padding-right:9px}
@@ -681,6 +775,8 @@
     <div class="cabinetgrid" id="cabinetgrid"></div>
     <h4 class="atelier-title">Choose the finish</h4>
     <div class="themegrid" id="themegrid"></div>
+    <h4 class="atelier-title">Choose your library crest</h4>
+    <div class="crestgrid" id="crestgrid"></div>
     <h4 class="atelier-title">Collected details</h4>
     <div class="detailgrid" id="detailgrid"></div>
   </div>
@@ -729,7 +825,16 @@
     {id:'boudoir', name:'Rosewood Velvet',  color:'#7e3656', premium:true,desc:'Deep berry wood with golden warmth.'},
     {id:'faerie',  name:'Enchanted Ash',    color:'#3a6a4e', premium:true,desc:'Forest green grain and fae-gold labels.'},
     {id:'academia',name:'Rainbound Oak',     color:'#7a4a32', premium:true,desc:'Dark academia, tobacco oak and brass.'},
+    {id:'warbound',name:'Warbound Obsidian',color:'#16151a', premium:true,desc:'Soot-black grain, cold iron and a restrained blood-red glow.'},
   ];
+  const CREST_STYLES=[
+    {key:'enchanted-rose',name:'Enchanted Rose',src:'/themes/bookcase/romantasy-plaque-v2.webp',eyebrow:'The enchanted library of',motto:'Love · Death · Ever After',desc:'Painterly roses, relic gold and dangerous romance.',premium:true},
+    {key:'moonlit-cathedral',name:'Moonlit Cathedral',src:'/themes/bookcase/crests/moonlit-cathedral-v1.webp',eyebrow:'The moonlit library of',motto:'Dream · Desire · Destiny',desc:'Silver tracery, moonflowers and cathedral-blue lacquer.',premium:true},
+    {key:'thornbound-reliquary',name:'Thornbound Reliquary',src:'/themes/bookcase/crests/thornbound-reliquary-v1.webp',eyebrow:'The warbound library of',motto:'Love · War · No Mercy',desc:'Black iron, raven wings and a scarred ebony heart.',premium:true},
+    {key:'dragons-oath',name:'Dragon’s Oath',src:'/themes/bookcase/crests/dragons-oath-v1.webp',eyebrow:'The oathbound library of',motto:'Desire · Fire · Devotion',desc:'Folded wings, burgundy leather and ember-cut gems.',premium:true},
+    {key:'founders-key',name:'Founder’s Key',src:'/themes/bookcase/crests/founders-key-romantasy-v3.webp',eyebrow:'The founding library of',motto:'First Edition · Forever Kept',desc:'Openwork thorn-gold, dark roses and a garnet heart-key reserved for the Original 100.',premium:false,founderOnly:true},
+  ];
+  const CREST_STORAGE_KEY='sh_library_crest_v1';
   const LIBRARY_DETAILS=[
     {key:'plaque',icon:'✒',name:'Ex Libris Plaque',premium:false},
     {key:'gilded',icon:'❧',name:'Gilded Vine Trim',premium:true},
@@ -773,23 +878,34 @@
   let VIEW_UID=null;
   const TRIAL_KEY='sh_bookcase_trials_v1', TRIAL_MS=24*60*60*1000;
   let sb=null, user=null, shelf=[], spiceMap={}, theme='walnut', isPremium=false, readerName='Your', founderNumber=null;
-  let libraryDetail='', cabinetStyle='grand-heirloom';
+  let libraryDetail='', cabinetStyle='grand-heirloom', crestStyle='enchanted-rose';
+  try{ const savedCrest=localStorage.getItem(CREST_STORAGE_KEY); if(CREST_STYLES.some(c=>c.key===savedCrest)) crestStyle=savedCrest; }catch(_){}
   let custom={};
   let ownedProducts=new Set(), accountTrials={};
   let shelfIndex=0, selectedProp=null, drawerTab='worlds', previewWorld=null;
   let shelfPages={reading:0,want:0,read:0,dnf:0}, pageDirection=0, collectionOpen=false, collectionQuery='';
-  const freshWorldState=()=>({time:0,fairies:false,candleDim:false,memory:false,discovered:{clock:false,fairies:false,candle:false}});
+  const WORLD_PROGRESS_KEY='sh_moonlit_progress_v2';
+  const freshWorldState=(saved={})=>{
+    const base={time:0,fairies:false,candleDim:false,memory:false,discovered:{clock:false,fairies:false,candle:false},relicOpen:null,letterOpen:false,oath:null};
+    return {...base,...saved,discovered:{...base.discovered,...(saved.discovered||{})},relicOpen:null,letterOpen:false};
+  };
   let worldState=freshWorldState();
+  let worldMemories=(()=>{try{return JSON.parse(localStorage.getItem(WORLD_PROGRESS_KEY)||'{}')||{};}catch(_){return {};}})();
 
   const $=id=>document.getElementById(id);
   const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1700);}
   const hash=s=>{let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;};
   const labelOf=st=>(SHELVES.find(s=>s[0]===st)||[,st])[1];
+  function activeCrest(){
+    const crest=CREST_STYLES.find(c=>c.key===crestStyle)||CREST_STYLES[0];
+    return crest.founderOnly&&!founderNumber&&!REVIEW_MODE?CREST_STYLES[0]:crest;
+  }
   function founderEditionHTML(){
-    if(founderNumber) return '<div class="founder-edition-bar">✦ Founder’s Edition · <span>Key No. '+String(founderNumber).padStart(3,'0')+'</span> ✦</div>';
-    if(REVIEW_MODE) return '<div class="founder-edition-bar">✦ Founder’s Edition · <span>001</span> ✦</div>';
-    return '';
+    const number=founderNumber?String(founderNumber).padStart(3,'0'):(REVIEW_MODE?'001':null);
+    if(!number) return '';
+    if(activeCrest().key==='founders-key') return '<div class="founder-edition-bar">Founding Key · <span>'+number+'</span></div>';
+    return '<div class="founder-edition-bar">✦ Founder’s Edition · <span>Key No. '+number+'</span> ✦</div>';
   }
   function syncScrollLock(){
     const locked=['sheetbg','shelfview','themesheetbg','upsell'].some(id=>{
@@ -809,6 +925,7 @@
       spiceMap={'demo-1':4,'demo-2':5,'demo-4':5,'demo-7':3};
       setTheme('founder',true);
       document.body.dataset.cabinet=cabinetStyle;
+      document.body.dataset.crest=crestStyle;
       renderRoom(); buildThemeSheet(); $('themepill').classList.add('show');
       return;
     }
@@ -818,6 +935,8 @@
     const profile=e.detail.profile||{};
     const parsedFounder=Number(profile.founder_number);
     founderNumber=Number.isInteger(parsedFounder)&&parsedFounder>=1&&parsedFounder<=100?parsedFounder:null;
+    if(crestStyle==='founders-key'&&!founderNumber) crestStyle='enchanted-rose';
+    document.body.dataset.crest=crestStyle;
     const rawName=profile.display_name||profile.username||(user.email||'').split('@')[0];
     readerName=rawName ? rawName.charAt(0).toUpperCase()+rawName.slice(1) : 'Your';
     if(e.detail.profile && e.detail.profile.theme){
@@ -933,7 +1052,7 @@
     shelfIndex=0;
     previewWorld='moonlit';
     collectionOpen=false; collectionQuery='';
-    worldState=freshWorldState();
+    worldState=restoreWorldProgress(SHELVES[shelfIndex][0]);
     renderShelfView();
     $('shelfview').classList.add('open');
     syncScrollLock();
@@ -982,17 +1101,20 @@
   function renderRoom(){
     const ordered=[...shelf].sort(shelfCmp);
     const total=shelf.length;
+    const crest=activeCrest();
+    document.body.dataset.crest=crest.key;
     $('roomwrap').classList.add('library-mode');
     document.querySelector('.roomhead h1').innerHTML='Your <em>Reading Sanctuary</em>';
     $('sub').textContent = total ? 'The calm before each reading world. Choose a shelf, open a book, or make the library unmistakably yours.' : "Empty shelves… for now. Go find some trouble.";
     const visible=SHELVES;
     const counts=Object.fromEntries(SHELVES.map(([st])=>[st,ordered.filter(b=>b.status===st).length]));
-    $('stage').innerHTML = '<div class="library-layout"><div class="library-main">'
+    $('stage').innerHTML = '<div class="library-layout">'
       + '<div class="library-stats"><span class="library-stat"><strong>'+counts.reading+'</strong> reading now</span>'
       + '<span class="library-stat"><strong>'+counts.want+'</strong> waiting in TBR</span><span class="library-stat"><strong>'+counts.read+'</strong> finished</span>'
       + '<span class="library-stat"><strong>'+counts.dnf+'</strong> laid to rest</span></div>'
-      + '<button class="world-ribbon" id="openLiveWorld"><span class="moon-seal" aria-hidden="true">✦</span><span class="world-ribbon-copy"><small>Live premium world · 3 secrets to awaken</small><strong>The Moonlit Reading Room</strong><span class="world-ribbon-desc">Your books, a working clock, candlelight and visitors that leave something behind.</span></span><b>Enter world →</b></button>'
-      + '<div class="case-identity"><span class="plaque-chain left" aria-hidden="true"></span><span class="plaque-chain right" aria-hidden="true"></span><div class="case-name"><img class="case-art" src="/themes/bookcase/romantasy-plaque-v2.webp" alt="" aria-hidden="true" decoding="async"><div class="case-copy"><small>The enchanted library of</small><strong>'+esc(readerName)+'</strong><span class="case-motto">Love · Death · Ever After</span></div></div>'+founderEditionHTML()+'</div>'
+      + '<button class="world-ribbon" id="openLiveWorld"><span class="moon-seal" aria-hidden="true">✦</span><span class="world-ribbon-copy"><small>Live premium world · 3 relics to awaken</small><strong>The Moonlit Reading Room</strong><span class="world-ribbon-desc">Your books, a working clock, candlelight and visitors that leave something behind.</span></span><b>Enter world →</b></button>'
+      + '<div class="library-main">'
+      + '<div class="case-identity"><span class="plaque-chain left" aria-hidden="true"></span><span class="plaque-chain right" aria-hidden="true"></span><div class="case-name" data-crest="'+esc(crest.key)+'"><span class="crest-glass" aria-hidden="true"></span><span class="crest-reflection" aria-hidden="true"></span><img class="case-art" src="'+esc(crest.src)+'" alt="" aria-hidden="true" decoding="async"><div class="case-copy"><small>'+esc(crest.eyebrow)+'</small><strong>'+esc(readerName)+'</strong><span class="case-motto">'+esc(crest.motto)+'</span></div></div>'+founderEditionHTML()+'</div>'
       + '<div class="bookcase"><span class="cabinet-crest"></span><span class="cabinet-pilaster left"></span><span class="cabinet-pilaster right"></span><span class="case-flourish"></span><div class="interior">'
       + visible.map(([st,label])=>{
           const items=ordered.filter(b=>b.status===st);
@@ -1021,10 +1143,30 @@
       + '<a class="rail-link" href="/import/">Import your library →</a></section>'
       + '</aside></div>';
     attachRoom();
+    requestAnimationFrame(alignLibraryRail);
+  }
+
+  function alignLibraryRail(){
+    const layout=document.querySelector('.library-layout'), rail=document.querySelector('.library-rail'), bookcase=document.querySelector('.bookcase');
+    if(!layout||!rail||!bookcase) return;
+    if(window.matchMedia('(max-width:900px)').matches){ rail.style.paddingTop='0px'; return; }
+    rail.style.paddingTop='';
+    const cabinetTop=bookcase.getBoundingClientRect().top-rail.getBoundingClientRect().top-11;
+    rail.style.paddingTop=Math.max(0,Math.round(cabinetTop))+'px';
   }
 
   function attachRoom(){
     attachDnD();
+    const crestEl=document.querySelector('.case-identity');
+    if(crestEl&&window.matchMedia('(hover:hover) and (pointer:fine)').matches&&!window.matchMedia('(prefers-reduced-motion:reduce)').matches){
+      crestEl.onpointermove=e=>{
+        const box=crestEl.getBoundingClientRect(), x=(e.clientX-box.left)/box.width-.5, y=(e.clientY-box.top)/box.height-.5;
+        crestEl.style.setProperty('--crest-rx',(-y*5).toFixed(2)+'deg'); crestEl.style.setProperty('--crest-ry',(x*7).toFixed(2)+'deg');
+        crestEl.style.setProperty('--crest-x',(x*5).toFixed(2)+'px'); crestEl.style.setProperty('--crest-y',(y*3).toFixed(2)+'px');
+        crestEl.style.setProperty('--crest-copy-x',(-x*3).toFixed(2)+'px'); crestEl.style.setProperty('--crest-copy-y',(-y*2).toFixed(2)+'px');
+      };
+      crestEl.onpointerleave=()=>['crest-rx','crest-ry','crest-x','crest-y','crest-copy-x','crest-copy-y'].forEach((key,i)=>crestEl.style.setProperty('--'+key,i<2?'0deg':'0px'));
+    }
     const atelier=$('openAtelier'); if(atelier) atelier.onclick=()=>{ buildThemeSheet(); $('themesheetbg').classList.add('open'); syncScrollLock(); };
     const readingWorld=$('openReadingWorld'); if(readingWorld) readingWorld.onclick=()=>enterShelf('reading');
     const liveWorld=$('openLiveWorld'); if(liveWorld) liveWorld.onclick=()=>enterShelf('reading');
@@ -1237,6 +1379,22 @@
     const apply=()=>applyCabinetStyle(key);
     if(item.premium) requestCollectorPiece('cabinet:'+key,item.name,apply); else apply();
   }
+  function applyCrestStyle(key){
+    const item=CREST_STYLES.find(c=>c.key===key); if(!item) return;
+    if(item.founderOnly&&!founderNumber&&!REVIEW_MODE){ toast('Founder’s Key is reserved for the Original 100.'); return; }
+    crestStyle=key;
+    document.body.dataset.crest=key;
+    try{localStorage.setItem(CREST_STORAGE_KEY,key);}catch(_){}
+    renderRoom();
+    buildThemeSheet();
+    toast(item.name+' now marks your library ✦');
+  }
+  function setCrestStyle(key){
+    const item=CREST_STYLES.find(c=>c.key===key); if(!item) return;
+    if(item.founderOnly){ applyCrestStyle(key); return; }
+    const apply=()=>applyCrestStyle(key);
+    if(REVIEW_MODE||hasAccess('crest:'+key,item.premium)) apply(); else requestCollectorPiece('crest:'+key,item.name,apply);
+  }
   function buildThemeSheet(){
     $('cabinetgrid').innerHTML=CABINET_STYLES.map(c=>
       '<button class="cabinetcard '+(cabinetStyle===c.key?'on':'')+'" data-cabinet="'+c.key+'">'
@@ -1248,6 +1406,12 @@
       + '<span class="dot" style="background:'+t.color+'"></span>'
       + '<div><div class="tn">'+t.name+'</div><div class="tdesc">'+t.desc+'</div><div class="lock trial-mark '+(trialExpiry('theme:'+t.id)>Date.now()?'active':'')+'">'+trialLabel('theme:'+t.id,t.premium)+'</div></div></div>'
     ).join('');
+    $('crestgrid').innerHTML=CREST_STYLES.map(c=>{
+      const founderLocked=c.founderOnly&&!founderNumber&&!REVIEW_MODE;
+      const accessLabel=c.founderOnly?(founderLocked?'Original 100 only':'◆ Original 100 unlocked'):trialLabel('crest:'+c.key,c.premium);
+      return '<button class="crestcard '+(crestStyle===c.key?'on':'')+'" data-crest-style="'+c.key+'" '+(founderLocked?'disabled':'')+'>'
+        +'<span class="crest-preview"><img src="'+c.src+'" alt="" aria-hidden="true" loading="lazy"></span><span class="crest-copy-card"><strong>'+c.name+'</strong><small>'+c.desc+'</small><em>'+accessLabel+'</em></span></button>';
+    }).join('');
     $('detailgrid').innerHTML=LIBRARY_DETAILS.map(d=>'<button class="detailcard '+(libraryDetail===d.key?'on':'')+'" data-library-detail="'+d.key+'">'
       +'<span>'+d.icon+'</span><strong>'+d.name+'</strong><small class="trial-mark '+(trialExpiry('detail:'+d.key)>Date.now()?'active':'')+'">'+trialLabel('detail:'+d.key,d.premium)+'</small></button>').join('');
     document.querySelectorAll('#cabinetgrid [data-cabinet]').forEach(c=>c.onclick=()=>setCabinetStyle(c.dataset.cabinet));
@@ -1258,6 +1422,7 @@
       if(prem){ requestCollectorPiece('theme:'+id,item?item.name:'This finish',apply); return; }
       apply();
     });
+    document.querySelectorAll('#crestgrid [data-crest-style]').forEach(c=>c.onclick=()=>setCrestStyle(c.dataset.crestStyle));
     document.querySelectorAll('#detailgrid [data-library-detail]').forEach(c=>c.onclick=()=>{
       const key=c.dataset.libraryDetail, item=LIBRARY_DETAILS.find(d=>d.key===key);
       const apply=()=>{
@@ -1287,18 +1452,40 @@
   function closeUpsell(){ $('upsell').classList.remove('open'); syncScrollLock(); }
 
   // ── IMMERSIVE SHELF WORLD ──
+  const OATHS={
+    thorn:{name:'The Thornbound',line:'I choose the dangerous ending.',message:'The room answers in crimson. Every perilous ending will know your name.'},
+    vow:{name:'The Vowkeeper',line:'I guard the stories that undo me.',message:'The room answers in gold. What moves you will never be forgotten here.'},
+    moon:{name:'The Nightwanderer',line:'I follow the moon beyond the last page.',message:'The room answers in blue. Every unknown door now opens a little wider.'}
+  };
+  const RELICS={
+    clock:{glyph:'I',name:'The Hour Key',copy:'The clock now remembers the hour you chose. Leave the room, return tomorrow, and its light will still be waiting.'},
+    fairies:{glyph:'II',name:'The Gilded Bookmark',copy:'The visitors left a mark among your books. It remains on this shelf even after their lights retreat.'},
+    candle:{glyph:'III',name:'The Ashen Verse',copy:'Words written in smoke appear only when the candle yields to moonlight. The room has decided you may read them.'}
+  };
+  function worldProgressKey(status){ return (user&&user.id?user.id:'guest')+':'+status+':'+activeWorld(status); }
+  function restoreWorldProgress(status){ return freshWorldState(worldMemories[worldProgressKey(status)]||{}); }
+  function persistWorldProgress(){
+    const status=SHELVES[shelfIndex][0];
+    worldMemories[worldProgressKey(status)]={...worldState,relicOpen:null,letterOpen:false};
+    try{localStorage.setItem(WORLD_PROGRESS_KEY,JSON.stringify(worldMemories));}catch(_){}
+  }
+  function resetWorldRitual(status){
+    delete worldMemories[worldProgressKey(status)];
+    try{localStorage.setItem(WORLD_PROGRESS_KEY,JSON.stringify(worldMemories));}catch(_){}
+    worldState=freshWorldState(); renderShelfView(); worldMessage('The room falls quiet. Its three relics are waiting for you again.');
+  }
   function enterShelf(status){
     shelfIndex=Math.max(0, SHELVES.findIndex(([s])=>s===status));
     const saved=(custom[status]&&custom[status].world_key)||'moonlit';
     const product=(catalog().products||[]).find(p=>p.worldKey===saved);
     previewWorld=product&&!owns(product.key)?saved:null;
     collectionOpen=false; collectionQuery='';
-    worldState=freshWorldState();
+    worldState=restoreWorldProgress(status);
     renderShelfView();
     $('shelfview').classList.add('open');
     syncScrollLock();
   }
-  function exitShelf(){ collectionOpen=false; $('shelfview').classList.remove('open'); syncScrollLock(); }
+  function exitShelf(){ persistWorldProgress(); collectionOpen=false; $('shelfview').classList.remove('open'); syncScrollLock(); }
   function activeWorld(status){
     const saved=(custom[status]&&custom[status].world_key)||'moonlit';
     return previewWorld||saved;
@@ -1315,19 +1502,38 @@
     sv.classList.toggle('candle-dim',worldState.candleDim);
     sv.classList.toggle('time-blue',worldState.time===1);
     sv.classList.toggle('time-dawn',worldState.time===2);
+    ['clock','fairies','candle'].forEach(key=>sv.classList.toggle('relic-'+key,!!worldState.discovered[key]));
+    Object.keys(OATHS).forEach(key=>sv.classList.toggle('oath-'+key,worldState.oath===key));
     const discovered=Object.values(worldState.discovered).filter(Boolean).length;
-    const count=$('secretCount'); if(count) count.textContent=discovered+'/3 secrets awakened';
+    const count=$('secretCount'); if(count) count.textContent=worldState.oath?OATHS[worldState.oath].name:discovered+'/3 relics awakened';
     document.querySelectorAll('#shelfview [data-secret]').forEach(dot=>dot.classList.toggle('on',!!worldState.discovered[dot.dataset.secret]));
-    const memory=$('worldMemory'); if(memory) memory.classList.toggle('show',worldState.memory);
+    const letter=$('worldLetter'); if(letter) letter.classList.toggle('show',worldState.memory&&!worldState.oath);
+    const mark=$('worldOathMark'); if(mark){ mark.classList.toggle('show',!!worldState.oath); if(worldState.oath) mark.querySelector('strong').textContent=OATHS[worldState.oath].name+' · '+OATHS[worldState.oath].line; }
+    const ritual=$('ritualOverlay'); if(ritual) ritual.classList.toggle('open',worldState.letterOpen);
+    const ritualCard=$('ritualCard'); if(ritualCard) ritualCard.classList.toggle('claimed',!!worldState.oath);
+    const ritualName=$('ritualOathName'); if(ritualName&&worldState.oath) ritualName.textContent=OATHS[worldState.oath].name;
+    const ritualLine=$('ritualOathLine'); if(ritualLine&&worldState.oath) ritualLine.textContent=OATHS[worldState.oath].message;
+    const relicCard=$('worldRelicCard'), relic=RELICS[worldState.relicOpen];
+    if(relicCard){
+      relicCard.classList.toggle('show',!!relic);
+      if(relic){ relicCard.querySelector('.relic-glyph').textContent=relic.glyph; relicCard.querySelector('h4').textContent=relic.name; relicCard.querySelector('p').textContent=relic.copy; }
+    }
   }
   function discoverWorldSecret(key){
+    const wasComplete=Object.values(worldState.discovered).every(Boolean);
+    const wasNew=!worldState.discovered[key];
     worldState.discovered[key]=true;
-    if(Object.values(worldState.discovered).every(Boolean)) worldState.memory=true;
+    if(wasNew) worldState.relicOpen=key;
+    const complete=Object.values(worldState.discovered).every(Boolean);
+    if(complete){ worldState.memory=true; worldState.relicOpen=null; }
+    persistWorldProgress();
     syncWorldClasses();
+    if(wasNew&&!complete){ const close=$('relicClose'); if(close) close.focus(); }
+    return complete&&!wasComplete;
   }
 
   let lastRenderedPageSize=null, shelfResizeTimer=null;
-  const shelfPageSize=()=>window.matchMedia('(max-width:620px)').matches?5:10;
+  const shelfPageSize=()=>window.matchMedia('(max-width:620px)').matches?4:10;
   function shelfItems(status){
     return [...(user?shelf:DEMO_SHELF)].sort(shelfCmp).filter(b=>b.status===status);
   }
@@ -1359,6 +1565,28 @@
       +'<input class="collection-search" id="collectionSearch" type="search" placeholder="Search this shelf" value="'+esc(collectionQuery)+'" aria-label="Search this shelf">'
       +'<div class="collection-list" id="collectionList">'+collectionListHTML(status,items,size)+'</div></aside>';
   }
+  function sceneBackdropHTML(world){
+    if(world!=='moonlit') return '<div class="sv-backdrop world-'+world+'"></div>';
+    return '<div class="sv-backdrop world-moonlit"><div class="scene-layer scene-midnight"></div><div class="scene-layer scene-blue-hour"></div><div class="scene-layer scene-dawn"></div></div>';
+  }
+  function sceneAtmosphereHTML(){
+    return '<div class="scene-atmosphere" aria-hidden="true"><div class="window-veil"></div><div class="light-shaft"></div><div class="depth-fog"></div><div class="moonbeam-sweep"></div>'
+      +'<div class="resting-drapes"><div class="resting-drape left"></div><div class="resting-drape right"></div></div>'
+      +'<div class="curtain-theatre"><div class="curtain-wing curtain-left"></div><div class="curtain-wing curtain-right"></div><div class="curtain-crest"></div></div>'
+      +'<div class="petal-depth"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="oath-motes"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>';
+  }
+  function ritualHTML(){
+    return '<div class="ritual-overlay'+(worldState.letterOpen?' open':'')+'" id="ritualOverlay" role="dialog" aria-modal="true" aria-label="The Moonlit Letter">'
+      +'<section class="ritual-card'+(worldState.oath?' claimed':'')+'" id="ritualCard">'
+      +'<button class="ritual-close" id="ritualClose" aria-label="Close the Moonlit Letter">×</button>'
+      +'<div class="ritual-intro"><div class="ritual-kicker">The three relics have answered</div><div class="ritual-seal">✦</div><h3>The Moonlit Letter</h3>'
+      +'<p class="ritual-copy">“A room becomes yours only when it knows what you seek inside a story. Speak once. The shelves will remember.”</p>'
+      +'<div class="oath-grid"><button class="oath-choice" data-oath="thorn"><span>❦</span><strong>I choose the dangerous ending.</strong><small>Crimson light · The Thornbound</small></button>'
+      +'<button class="oath-choice" data-oath="vow"><span>◇</span><strong>I guard the stories that undo me.</strong><small>Golden light · The Vowkeeper</small></button>'
+      +'<button class="oath-choice" data-oath="moon"><span>☾</span><strong>I follow the moon beyond the last page.</strong><small>Blue hour · The Nightwanderer</small></button></div></div>'
+      +'<div class="ritual-reward"><div class="ritual-kicker">Your shelf world remembers</div><div class="ritual-seal">✦</div><h3 id="ritualOathName">'+(worldState.oath?OATHS[worldState.oath].name:'')+'</h3><p id="ritualOathLine">'+(worldState.oath?OATHS[worldState.oath].message:'')+'</p>'
+      +'<div class="ritual-actions"><button class="ritual-action primary" id="ritualReturn">Return to your changed room</button><button class="ritual-action" id="ritualReset">Replay the ritual</button></div></div></section></div>';
+  }
 
   function renderShelfView(){
     const [status,label]=SHELVES[shelfIndex];
@@ -1372,26 +1600,33 @@
     const pageClass=pageDirection>0?' page-next':(pageDirection<0?' page-prev':'');
     const times=[['11:47 PM','light-moonlit'],['3:18 AM','light-moonlit'],['6:02 AM','light-dawn']];
     const discovered=Object.values(worldState.discovered).filter(Boolean).length;
+    const openingMessage=worldState.oath?OATHS[worldState.oath].message:(worldState.memory?'The relics are assembled. Your sealed letter is waiting.':'The shelf is listening. Touch something and let the room answer.');
     $('shelfview').innerHTML =
-      '<div class="sv-backdrop world-'+world+'"></div>'
+      sceneBackdropHTML(world)
       + '<div class="sv-light '+(world==='boudoir'?'light-candlelit':times[worldState.time][1])+'"></div>'
       + '<div class="sv-top"><button class="sv-back" id="svback" aria-label="Back to bookcase">←</button>'
       + '<div class="sv-label"><small>'+esc(worldContext)+(worldContext!==label?' · '+esc(label):'')+'</small>'+esc(worldTitle(world))+'</div>'
       + '<button class="sv-shopbtn" id="svshop">✨ Shop &amp; decorate</button></div>'
-      + '<div class="sv-world"><div class="world-message" id="worldMessage">The shelf is listening. Touch something and let the room answer.</div>'
-      + '<div class="world-discovery"><span id="secretCount">'+discovered+'/3 secrets awakened</span><span class="secret-dots"><i data-secret="clock"></i><i data-secret="fairies"></i><i data-secret="candle"></i></span></div>'
-      + '<div class="world-stage">'
+      + '<div class="sv-world">'+(world==='moonlit'?sceneAtmosphereHTML():'')+'<div class="world-message" id="worldMessage">'+esc(openingMessage)+'</div>'
+      + '<div class="world-discovery"><span id="secretCount">'+(worldState.oath?esc(OATHS[worldState.oath].name):discovered+'/3 relics awakened')+'</span><span class="secret-dots"><i data-secret="clock"></i><i data-secret="fairies"></i><i data-secret="candle"></i></span></div>'
+      + '<div class="world-stage world-stage-'+world+'">'
       + '<div class="fairy-trail" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>'
-      + '<button class="world-clock" id="worldClock" aria-label="Turn the clock to another hour"><span class="clock-hands"></span><span class="clock-time">'+times[worldState.time][0]+'</span></button>'
-      + '<button class="world-fairies" id="worldFairies" aria-label="Call the fairies"><span class="fairy"></span><span class="fairy"></span><span class="fairy"></span><span class="fairy-label">'+(worldState.fairies?'Settle fairies':'Call fairies')+'</span></button>'
-      + '<button class="world-candle" id="worldCandle" aria-label="'+(worldState.candleDim?'Relight':'Dim')+' the candle"><span class="flame"></span><span class="wax"></span><span class="candle-label">'+(worldState.candleDim?'Relight candle':'Dim candle')+'</span></button>'
+      + '<div class="world-constellation" aria-hidden="true"></div>'
+      + '<button class="world-clock" id="worldClock" aria-label="Ring the clock and turn to another hour"><span class="object-cue">↻</span><span class="clock-time">'+times[worldState.time][0]+'</span><span class="clock-bell" aria-hidden="true"></span></button>'
+      + '<button class="world-fairies" id="worldFairies" aria-label="Call the hidden lights"><span class="fairy"></span><span class="fairy"></span><span class="fairy"></span><span class="object-cue">✦</span><span class="fairy-label">'+(worldState.fairies?'Settle lights':'Wake hidden lights')+'</span></button>'
+      + '<button class="world-candle" id="worldCandle" aria-label="'+(worldState.candleDim?'Relight':'Dim')+' the candle"><span class="object-cue">◇</span><span class="candle-flame-live"></span><span class="wax"></span><span class="candle-label">'+(worldState.candleDim?'Relight candle':'Dim candle')+'</span></button>'
+      + '<button class="world-window" id="worldWindow" aria-label="Wake the moonbloom in the stained glass"><span class="moonbloom-sigil" aria-hidden="true"></span></button>'
+      + '<button class="world-bookmark" id="worldBookmark" aria-label="Inspect the Gilded Bookmark"></button>'
+      + '<button class="hidden-verse" id="hiddenVerse">What the flame conceals, the faithful dark remembers.</button>'
       + '<button class="shelf-turn prev" id="shelfPrev" aria-label="Previous shelf section" '+(info.page===0?'disabled':'')+'>‹</button>'
       + '<div class="sv-shelf'+pageClass+'">'
       + '<div class="books" data-status="'+status+'">'+books+'</div><div class="plank"></div>'
       + '<button class="shelf-range" id="shelfRange" aria-label="View all '+info.items.length+' books">'+range+' · View all</button></div>'
       + '<button class="shelf-turn next" id="shelfNext" aria-label="Next shelf section" '+(info.page>=info.pageCount-1?'disabled':'')+'>›</button>'
-      + '<div class="world-memory'+(worldState.memory?' show':'')+'" id="worldMemory"><small>Moonlit seal awakened</small><strong>You found all three secrets. The room is fully awake.</strong></div>'
-      + '</div></div>'
+      + '<button class="world-letter'+(worldState.memory&&!worldState.oath?' show':'')+'" id="worldLetter"><small>Delivered by the room</small><strong>Open the Moonlit Letter</strong></button>'
+      + '<button class="world-oath-mark'+(worldState.oath?' show':'')+'" id="worldOathMark"><small>Your moonlit oath</small><strong>'+(worldState.oath?esc(OATHS[worldState.oath].name+' · '+OATHS[worldState.oath].line):'')+'</strong></button>'
+      + '<aside class="relic-card'+(worldState.relicOpen?' show':'')+'" id="worldRelicCard" aria-live="polite"><div class="relic-glyph"></div><h4></h4><p></p><button class="relic-close" id="relicClose">Keep it in the room</button></aside>'
+      + '</div>'+ritualHTML()+'</div>'
       + '<div class="sv-dots">'+SHELVES.map((s,i)=>'<button data-shelf-index="'+i+'" class="'+(i===shelfIndex?'on':'')+'" aria-label="Open '+esc(s[1])+'" title="'+esc(s[1])+'"></button>').join('')+'</div>'
       + '<div class="sv-drawer" id="svdrawer"></div>'
       + collectionDrawerHTML(status,label,info.items,info.size);
@@ -1413,23 +1648,62 @@
     document.querySelectorAll('#shelfview [data-shelf-index]').forEach(el=>el.onclick=()=>switchShelfTo(Number(el.dataset.shelfIndex)));
     $('worldClock').onclick=()=>{
       const times=['11:47 PM','3:18 AM','6:02 AM'];
-      const messages=['The clock returns the room to midnight.','Blue hour settles over the shelves. Something is almost awake.','Dawn enters the window and warms every book spine.'];
-      worldState.time=(worldState.time+1)%times.length;
-      discoverWorldSecret('clock');
-      $('worldClock').querySelector('.clock-time').textContent=times[worldState.time];
-      worldMessage(messages[worldState.time]);
+      const messages=['The moon completes its circuit and midnight returns.','The hands turn. The moon slips behind the tracery and blue hour deepens.','The moon passes beyond the glass. First light reaches the shelves.'];
+      const sv=$('shelfview');
+      if(sv.classList.contains('curtain-ritual')) return;
+      const reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+      sv.classList.add('clock-ringing','curtain-ritual');
+      $('worldClock').setAttribute('aria-busy','true');
+      setTimeout(()=>{
+        if(!sv.classList.contains('open')||!$('worldClock')) return;
+        worldState.time=(worldState.time+1)%times.length;
+        const complete=discoverWorldSecret('clock');
+        $('worldClock').querySelector('.clock-time').textContent=times[worldState.time];
+        sv.classList.remove('clock-strike'); void sv.offsetWidth; sv.classList.add('clock-strike');
+        worldMessage(complete?'The three relics answer one another. A sealed letter descends between the shelves.':messages[worldState.time]);
+      },reduce?0:1050);
+      setTimeout(()=>{
+        sv.classList.remove('clock-ringing','curtain-ritual','clock-strike');
+        const clock=$('worldClock'); if(clock) clock.removeAttribute('aria-busy');
+      },reduce?80:3550);
     };
     $('worldFairies').onclick=()=>{
-      worldState.fairies=!worldState.fairies; discoverWorldSecret('fairies');
-      $('worldFairies').querySelector('.fairy-label').textContent=worldState.fairies?'Settle fairies':'Call fairies';
-      worldMessage(worldState.fairies?'The visitors cross the moonlight and leave a gold bookmark behind.':'The visitors return to the upper gallery. Their bookmark remains.');
+      worldState.fairies=!worldState.fairies; const complete=discoverWorldSecret('fairies');
+      $('worldFairies').querySelector('.fairy-label').textContent=worldState.fairies?'Settle lights':'Wake hidden lights';
+      worldMessage(complete?'The three relics answer one another. A sealed letter descends between the shelves.':(worldState.fairies?'Three hidden lights wake in the ivy. One leaves a rose-gilded bookmark among your books.':'The hidden lights settle back into the architecture. Their bookmark remains.'));
     };
     $('worldCandle').onclick=()=>{
-      worldState.candleDim=!worldState.candleDim; discoverWorldSecret('candle');
+      worldState.candleDim=!worldState.candleDim; const complete=discoverWorldSecret('candle');
       $('worldCandle').querySelector('.candle-label').textContent=worldState.candleDim?'Relight candle':'Dim candle';
       $('worldCandle').setAttribute('aria-label',(worldState.candleDim?'Relight':'Dim')+' the candle');
-      worldMessage(worldState.candleDim?'The candle dims. Moonlight takes over the shelf.':'Warm candlelight returns.');
+      worldMessage(complete?'The three relics answer one another. A sealed letter descends between the shelves.':(worldState.candleDim?'The candle dims. Moonlight takes over the shelf. A verse appears in the dark.':'Warm candlelight returns. The verse waits beneath it.'));
     };
+    $('worldWindow').onclick=()=>{
+      const sv=$('shelfview');
+      sv.classList.remove('moonbloom-awake'); void sv.offsetWidth; sv.classList.add('moonbloom-awake');
+      worldMessage(worldState.oath?'The glass remembers your oath. Thorn, rose, and moon bloom together in its light.':'A moonbloom opens in the glass—love protected by thorns, waiting for an oath.');
+      setTimeout(()=>sv.classList.remove('moonbloom-awake'),5900);
+    };
+    $('worldBookmark').onclick=()=>{ worldState.relicOpen='fairies'; syncWorldClasses(); $('relicClose').focus(); };
+    $('hiddenVerse').onclick=()=>{ worldState.relicOpen='candle'; syncWorldClasses(); $('relicClose').focus(); };
+    $('worldLetter').onclick=()=>{ worldState.letterOpen=true; persistWorldProgress(); syncWorldClasses(); document.querySelector('#shelfview [data-oath]').focus(); };
+    $('worldOathMark').onclick=()=>{ worldState.letterOpen=true; syncWorldClasses(); $('ritualReturn').focus(); };
+    $('ritualClose').onclick=()=>{ worldState.letterOpen=false; persistWorldProgress(); syncWorldClasses(); };
+    document.querySelectorAll('#shelfview [data-oath]').forEach(el=>el.onclick=()=>{
+      worldState.oath=el.dataset.oath;
+      worldState.letterOpen=true;
+      persistWorldProgress();
+      syncWorldClasses();
+      $('ritualReturn').focus();
+    });
+    $('ritualReturn').onclick=()=>{
+      worldState.letterOpen=false;
+      persistWorldProgress();
+      syncWorldClasses();
+      worldMessage(OATHS[worldState.oath].message);
+    };
+    $('ritualReset').onclick=()=>resetWorldRitual(status);
+    $('relicClose').onclick=()=>{ worldState.relicOpen=null; syncWorldClasses(); };
     document.querySelectorAll('#shelfview .book').forEach(el=>{
       el.addEventListener('click',()=>openBook(el.dataset.key));
     });
@@ -1512,7 +1786,8 @@
   function findProduct(key){ return (catalog().products||[]).find(p=>p.key===key); }
   function previewProduct(key,status){
     const p=findProduct(key); if(!p||p.availability!=='live') return;
-    if(p.worldKey) previewWorld=p.worldKey;
+    persistWorldProgress();
+    if(p.worldKey){ previewWorld=p.worldKey; worldState=restoreWorldProgress(status); }
     renderShelfView(); openWorldStore(status);
     worldMessage('Previewing '+p.name+' in your shelf.');
   }
@@ -1524,7 +1799,9 @@
     }
     if(owns(key)){
       if(p.worldKey){
+        persistWorldProgress();
         previewWorld=null; ensure(status).world_key=p.worldKey; saveCustom(status);
+        worldState=restoreWorldProgress(status);
         renderShelfView(); openWorldStore(status); toast(p.name+' applied ✨');
       } else {
         toast(p.name+' is ready in this world ✨');
@@ -1557,10 +1834,25 @@
   }
 
   (function(){
-    const sv=$('shelfview'); let tsx=null, tsy=null, swipeBlocked=false;
+    const sv=$('shelfview'); let tsx=null, tsy=null, swipeBlocked=false, parallaxFrame=0;
+    const resetParallax=()=>{['scene-x','scene-y','stage-x','stage-y','air-x','air-y','frame-x','frame-y','veil-x','veil-y','book-x','book-y'].forEach(key=>sv.style.setProperty('--'+key,'0px'));};
+    sv.addEventListener('pointermove',e=>{
+      if(e.pointerType==='touch'||window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+      cancelAnimationFrame(parallaxFrame);
+      parallaxFrame=requestAnimationFrame(()=>{
+        const x=e.clientX/window.innerWidth-.5, y=e.clientY/window.innerHeight-.5;
+        sv.style.setProperty('--scene-x',(-x*14).toFixed(2)+'px'); sv.style.setProperty('--scene-y',(-y*9).toFixed(2)+'px');
+        sv.style.setProperty('--veil-x',(-x*5).toFixed(2)+'px'); sv.style.setProperty('--veil-y',(-y*3).toFixed(2)+'px');
+        sv.style.setProperty('--stage-x',(x*7).toFixed(2)+'px'); sv.style.setProperty('--stage-y',(y*5).toFixed(2)+'px');
+        sv.style.setProperty('--book-x',(x*7).toFixed(2)+'px'); sv.style.setProperty('--book-y',(y*4).toFixed(2)+'px');
+        sv.style.setProperty('--air-x',(x*15).toFixed(2)+'px'); sv.style.setProperty('--air-y',(y*10).toFixed(2)+'px');
+        sv.style.setProperty('--frame-x',(x*22).toFixed(2)+'px'); sv.style.setProperty('--frame-y',(y*13).toFixed(2)+'px');
+      });
+    });
+    sv.addEventListener('pointerleave',resetParallax);
     sv.addEventListener('touchstart', e=>{
       tsx=e.touches[0].clientX; tsy=e.touches[0].clientY;
-      swipeBlocked=!!e.target.closest('button,.book,input,.sv-drawer,.sv-library');
+      swipeBlocked=!!e.target.closest('button,.book,input,.sv-drawer,.sv-library,.ritual-overlay,.relic-card');
     }, {passive:true});
     sv.addEventListener('touchend', e=>{
       if(tsx==null) return; const dx=e.changedTouches[0].clientX-tsx, dy=e.changedTouches[0].clientY-tsy; tsx=null;
@@ -1578,8 +1870,10 @@
       if(e.key==='Escape'&&$('themesheetbg').classList.contains('open')){ closeThemeSheet(); return; }
       if(!sv.classList.contains('open')) return;
       if(e.key==='Escape'){
-        const library=$('svLibrary'), drawer=$('svdrawer');
-        if(library&&library.classList.contains('open')) closeCollection();
+        const library=$('svLibrary'), drawer=$('svdrawer'), ritual=$('ritualOverlay'), relic=$('worldRelicCard');
+        if(ritual&&ritual.classList.contains('open')){ worldState.letterOpen=false; persistWorldProgress(); syncWorldClasses(); }
+        else if(relic&&relic.classList.contains('show')){ worldState.relicOpen=null; syncWorldClasses(); }
+        else if(library&&library.classList.contains('open')) closeCollection();
         else if(drawer&&drawer.classList.contains('open')) drawer.classList.remove('open');
         else exitShelf();
         return;
@@ -1597,12 +1891,14 @@
     switchShelfTo(Math.min(SHELVES.length-1,Math.max(0,shelfIndex+dir)));
   }
   function switchShelfTo(index){
+    persistWorldProgress();
     shelfIndex=Math.min(SHELVES.length-1,Math.max(0,index));
     collectionOpen=false; collectionQuery=''; pageDirection=0;
-    previewWorld=null; worldState=freshWorldState();
+    previewWorld=null; worldState=restoreWorldProgress(SHELVES[shelfIndex][0]);
     renderShelfView();
   }
   window.addEventListener('resize',()=>{
+    alignLibraryRail();
     clearTimeout(shelfResizeTimer);
     shelfResizeTimer=setTimeout(()=>{
       if(!$('shelfview').classList.contains('open')) return;
