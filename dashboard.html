@@ -109,6 +109,14 @@
   .pubshelf .ps-url:hover{color:var(--amber)}
   .pubshelf .ps-copy{font-size:.74rem;font-weight:700;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:8px;padding:.35em .7em;cursor:pointer;transition:color .2s,border-color .2s}
   .pubshelf .ps-copy:hover{color:var(--cream);border-color:#43222c}
+  .finder{max-width:440px}
+  .finder input{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--cream);font-family:inherit;font-size:.95rem;outline:none;transition:border-color .2s}
+  .finder input:focus{border-color:#43222c}
+  .find-results{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+  .find-results a{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--cream);padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--ink-2);font-weight:600;font-size:.9rem;transition:border-color .2s}
+  .find-results a:hover{border-color:#43222c}
+  .find-results .av{width:24px;height:24px;border-radius:50%;background:var(--grad);color:#1a0c10;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;flex:0 0 auto}
+  .find-results .empty{color:var(--muted);font-size:.85rem;padding:4px 2px}
   .follows{display:flex;gap:10px;flex-wrap:wrap}
   .follow-chip{display:inline-flex;align-items:center;gap:9px;text-decoration:none;padding:8px 15px 8px 9px;border:1px solid var(--line);border-radius:99px;background:var(--ink-2);color:var(--cream);font-weight:600;font-size:.88rem;transition:border-color .2s,transform .15s}
   .follow-chip:hover{border-color:#43222c;transform:translateY(-1px)}
@@ -269,6 +277,15 @@
     <span class="shc-cameo-arrow" aria-hidden="true">→</span>
   </a>
 
+  <!-- FIND A READER -->
+  <section id="findSec" hidden>
+    <div class="sechead"><div><h2>🔎 Find a bookshelf <span class="note">search by username</span></h2></div></div>
+    <div class="finder">
+      <input id="findInput" type="text" placeholder="Type a username…" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Find a reader by username">
+      <div class="find-results" id="findResults"></div>
+    </div>
+  </section>
+
   <!-- FOLLOWING -->
   <section id="followingSec" hidden>
     <div class="sechead">
@@ -395,6 +412,32 @@
   const $ = id => document.getElementById(id);
   function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1700); }
   function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  // Find a bookshelf by username — searches the public_profiles view (only
+  // opted-in public users are ever returned), debounced, results link to /u/.
+  (function setupFinder(){
+    const input=$('findInput'), results=$('findResults'); if(!input) return;
+    let timer=null;
+    const render = html => { results.innerHTML = html; };
+    input.addEventListener('input', ()=>{
+      clearTimeout(timer);
+      const raw = input.value.trim();
+      if (raw.length < 2){ render(''); return; }
+      timer = setTimeout(async ()=>{
+        const client = window.SH && SH.sb;
+        if (!client){ return; }
+        const term = raw.replace(/[%_,()]/g,'');            // keep the ilike pattern clean
+        if (!term){ render(''); return; }
+        const myName = (window.SH && SH.profile && SH.profile.username) || '';
+        const { data, error } = await client.from('public_profiles').select('username').ilike('username','%'+term+'%').limit(8);
+        if (error){ render('<div class="empty">Search unavailable right now.</div>'); return; }
+        const rows = (data||[]).filter(p=>p.username && p.username.toLowerCase()!==myName.toLowerCase());
+        if (!rows.length){ render('<div class="empty">No public bookshelf matches “'+esc(raw)+'”.</div>'); return; }
+        render(rows.map(p=>'<a href="/u/?h='+encodeURIComponent(p.username)+'"><span class="av">'+esc(p.username.charAt(0).toUpperCase())+'</span>@'+esc(p.username)+'</a>').join(''));
+      }, 220);
+    });
+    input.addEventListener('keydown', e=>{ if (e.key==='Enter'){ const q=input.value.trim(); if (q) location.href='/u/?h='+encodeURIComponent(q.toLowerCase()); } });
+  })();
+
   // Bookshelves you follow → chips linking to each person's public shelf viewer.
   async function loadFollowing(myId){
     const sec = $('followingSec'), list = $('followsList');
@@ -524,7 +567,8 @@
       } else if (box){ box.hidden = true; }
     }
 
-    // ── Bookshelves you follow ────────────────────────────────────────────
+    // ── Find a reader + bookshelves you follow ────────────────────────────
+    $('findSec').hidden = !user;
     if (user && sb) loadFollowing(user.id); else $('followingSec').hidden = true;
 
     if (!user){
