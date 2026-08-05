@@ -889,6 +889,7 @@
 
   async function shelveBook(key, status, book){
     const payload = { book_key:key, status };
+    if(status==='read') payload.finished_at = new Date().toISOString();   // powers dashboard pace/"read this year"
     if(book){ payload.title=book.title||null; payload.author=(book.author_name&&book.author_name[0])||null; payload.cover_i=book.cover_i||null; payload.cover_url=book.cover_url||null; }
     let { error } = await sb.from('shelf').upsert(payload,{onConflict:'user_id,book_key'});
     if(error && /cover_url/i.test(error.message)){ delete payload.cover_url; ({ error } = await sb.from('shelf').upsert(payload,{onConflict:'user_id,book_key'})); }

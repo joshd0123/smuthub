@@ -1121,7 +1121,7 @@
       +'<div class="book-meta"><div class="meta-cell"><small>Current shelf</small><strong>'+esc(labelOf(b.status))+'</strong></div>'
       +'<div class="meta-cell"><small>Added</small><strong>'+esc(added)+'</strong></div></div>'
       +'<div class="rate-label">'+(VIEW_MODE?esc(readerName)+' spice rating':'Your spice rating')+'</div><div class="rate" id="srate"'+(VIEW_MODE?'':' onclick="rate(event,\''+esc(key)+'\')"')+'>'+chilis+'</div>'
-      +'<div class="acts">'+viewBtn+moves+(VIEW_MODE?'':'<button class="pillbtn rec" onclick="recommend(\''+esc(key)+'\')">↗ Recommend</button>'
+      +'<div class="acts">'+viewBtn+moves+(VIEW_MODE?'':'<button class="pillbtn fav'+(b.favourite?' on':'')+'" onclick="toggleFav(\''+esc(key)+'\')">'+(b.favourite?'★ Favourited':'☆ Favourite')+'</button><button class="pillbtn rec" onclick="recommend(\''+esc(key)+'\')">↗ Recommend</button>'
       +'<button class="pillbtn rm" onclick="removeBook(\''+esc(key)+'\')">Remove</button>')+'</div></section></div></article>';
     $('sheetbg').classList.add('open');
     syncScrollLock();
@@ -1131,8 +1131,19 @@
   async function setStatus(key,status){
     const row=shelf.find(b=>b.book_key===key); if(row) row.status=status;
     closeSheet(); refreshViews();
-    if(!REVIEW_MODE&&!VIEW_MODE&&sb&&user) await sb.from('shelf').update({status}).eq('book_key',key);
+    // Stamp finished_at the first time a book lands on Read → powers the
+    // dashboard reading-pace + "read this year". Cleared when it leaves Read.
+    if(!REVIEW_MODE&&!VIEW_MODE&&sb&&user) await sb.from('shelf').update({status, finished_at: status==='read'? new Date().toISOString() : null}).eq('book_key',key);
     toast("Moved to "+labelOf(status));
+  }
+  // ⭐ Favourite toggle — feeds the dashboard "Your favourites" section.
+  async function toggleFav(key){
+    const row=shelf.find(b=>b.book_key===key); if(!row) return;
+    row.favourite=!row.favourite;
+    const btn=document.querySelector('.openbook .pillbtn.fav');
+    if(btn){ btn.textContent=row.favourite?'★ Favourited':'☆ Favourite'; btn.classList.toggle('on',row.favourite); }
+    if(!REVIEW_MODE&&!VIEW_MODE&&sb&&user){ const {error}=await sb.from('shelf').update({favourite:row.favourite}).eq('book_key',key); if(error){ row.favourite=!row.favourite; toast("Couldn't update: "+error.message); return; } }
+    toast(row.favourite?'Added to favourites ⭐':'Removed from favourites');
   }
   async function removeBook(key){
     shelf=shelf.filter(b=>b.book_key!==key); closeSheet(); refreshViews();
