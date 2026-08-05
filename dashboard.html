@@ -217,6 +217,87 @@
 
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink-2);border:1px solid var(--rose);color:var(--cream);padding:.7em 1.2em;border-radius:99px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:90}
   .toast.show{opacity:1}
+
+  /* ══ REDESIGNED DASHBOARD STATS ══ */
+  body.guest .dstats, body.guest .dtwo, body.guest #paceSec, body.guest #raceSec{display:none}
+  .card{background:var(--ink-2);border:1px solid var(--line);border-radius:18px;padding:18px 20px}
+  .empty-line{color:var(--muted);font-size:.88rem;padding:14px 2px}
+  .dtwo{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.dtwo{grid-template-columns:1fr}}
+  .subline{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);color:var(--muted);font-size:.84rem}
+  .subline b{color:var(--cream)}
+  /* stat tiles */
+  .dstats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:18px 0 4px}
+  @media(max-width:820px){.dstats{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:460px){.dstats{grid-template-columns:repeat(2,1fr)}}
+  .dstat{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:15px 14px}
+  .dstat .dn{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:600;line-height:1}
+  .dstat .dn.grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .dstat .dl{color:var(--muted);font-size:.76rem;font-weight:600;margin-top:6px}
+  .dstat .dsub{color:var(--green);font-size:.7rem;margin-top:2px}
+  /* taste */
+  .trope{display:flex;align-items:center;gap:10px;margin:9px 0}
+  .trope .tl{width:150px;font-weight:600;font-size:.86rem}
+  .tbar{flex:1;height:9px;border-radius:99px;background:#241318;overflow:hidden}
+  .tbar span{display:block;height:100%;background:var(--grad);border-radius:99px}
+  .tn{width:26px;text-align:right;color:var(--muted);font-weight:700;font-size:.82rem}
+  /* spice */
+  .spice-wrap{display:grid;grid-template-columns:190px 1fr;gap:24px;align-items:stretch}
+  @media(max-width:640px){.spice-wrap{grid-template-columns:1fr;gap:16px}}
+  .spice-id{border-right:1px solid var(--line);padding-right:18px;display:flex;flex-direction:column;justify-content:center}
+  @media(max-width:640px){.spice-id{border-right:0;border-bottom:1px solid var(--line);padding:0 0 14px}}
+  .spice-big{font-family:'Fraunces',serif;font-size:3.2rem;font-weight:600;line-height:.9;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .spice-id .lean{font-size:.9rem;color:var(--muted);margin-top:6px}.spice-id .lean b{color:var(--cream)}
+  .spice-id .pct{margin-top:12px;font-size:.82rem;color:var(--muted)}.spice-id .pct b{color:var(--amber);font-family:'Fraunces',serif;font-size:1.05rem}
+  .dist{display:flex;align-items:flex-end;gap:12px;height:150px}
+  .scol{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:8px}
+  .scol .scnt{font-family:'Fraunces',serif;font-weight:600;font-size:.95rem}
+  .scol .sfill{width:100%;border-radius:8px 8px 3px 3px;background:var(--grad);min-height:4px}
+  .scol .scap{color:var(--muted);font-size:.8rem;white-space:nowrap}
+  .scol.peak .scnt{color:var(--amber)}
+  .scol.peak .sfill{box-shadow:0 -6px 20px -8px rgba(255,61,118,.55)}
+  /* pace */
+  .pace-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+  .pace-head .tot{font-family:'Fraunces',serif;font-size:1.02rem}.pace-head .tot b{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .pace-head .best{color:var(--muted);font-size:.82rem}.pace-head .best b{color:var(--cream)}
+  .pace{display:flex;align-items:flex-end;gap:12px;height:160px;border-bottom:1px solid var(--line);padding-bottom:2px}
+  .pcol{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:7px}
+  .pcol .pv{font-size:.8rem;font-weight:800;color:var(--cream)}
+  .pcol .pf{width:62%;border-radius:6px 6px 0 0;background:linear-gradient(180deg,#ffab40,#ff7a4d 55%,#ff3d76);min-height:4px}
+  .pcol.peak .pf{box-shadow:0 0 24px -4px rgba(255,171,64,.5)}
+  .pcol.peak .pv{color:var(--amber)}
+  .months{display:flex;gap:12px;margin-top:8px}.months span{flex:1;text-align:center;color:var(--muted);font-size:.76rem}
+  /* read race */
+  .race-row{display:flex;align-items:center;gap:13px;padding:9px 6px;border-radius:10px;cursor:default}
+  .race-row + .race-row{border-top:1px solid var(--line)}
+  .race-row[data-h]{cursor:pointer}.race-row[data-h]:hover{background:rgba(255,61,118,.06)}
+  .race-row .rank{width:20px;color:var(--muted);font-weight:800;font-family:'Fraunces',serif}
+  .race-row .av{width:32px;height:32px;border-radius:50%;background:var(--grad);color:#1a0c10;display:flex;align-items:center;justify-content:center;font-weight:800;flex:0 0 auto}
+  .race-row .av.hidden-id{background:#2a1d22;color:var(--muted)}
+  .race-row .reveal{min-width:118px;color:var(--muted);font-size:.82rem;font-style:italic}
+  .race-row .reveal b{color:var(--cream);font-style:normal}
+  .race-row .bar{flex:1;height:12px;border-radius:99px;background:#241318;overflow:hidden}
+  .race-row .bar span{display:block;height:100%;background:var(--grad);border-radius:99px}
+  .race-row .race-n{font-family:'Fraunces',serif;font-weight:600;font-size:1.1rem;width:40px;text-align:right}
+  .race-row.you{background:linear-gradient(90deg,rgba(255,61,118,.10),transparent)}
+  .race-row.you .reveal{color:var(--cream);font-style:normal;font-weight:700}
+  .racehint{color:var(--muted);font-size:.76rem;margin-top:10px}
+  /* series */
+  .series{display:flex;align-items:center;gap:12px;margin:10px 0}
+  .series .sname{width:180px;font-weight:600;font-size:.86rem}
+  .series .track{flex:1;height:10px;border-radius:99px;background:#241318;overflow:hidden}
+  .series .track span{display:block;height:100%;background:var(--grad)}
+  .series .frac{color:var(--muted);font-size:.8rem;font-weight:700;width:44px;text-align:right}
+  .series.caught{display:block;padding:10px 12px;border:1px dashed var(--line);border-radius:12px;background:rgba(255,171,64,.04)}
+  .series.caught .cname{font-weight:700;font-size:.9rem;display:block}
+  .series.caught .caught-line{color:var(--amber);font-size:.8rem}
+  .completed-link{display:inline-block;margin-top:12px;color:var(--cream);text-decoration:none;font-weight:700;font-size:.85rem;border:1px solid var(--line);border-radius:10px;padding:8px 14px;background:transparent;cursor:pointer;font-family:inherit}
+  .completed-link b{color:var(--amber)}.completed-link:hover{border-color:#43222c}
+  .completed-list{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+  .completed-list .cdone{font-size:.86rem;color:var(--cream)}
+  /* favourites row (reuses .tile/.cov/.cap) */
+  #favRow .tile{position:relative}
+  #favRow .fav-star{position:absolute;top:6px;right:6px;font-size:.9rem;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6));z-index:2}
 </style>
 </head>
 <body>
@@ -262,7 +343,6 @@
       <button class="iconbtn" id="quipRefresh" title="Another one">↻</button>
       <button class="iconbtn" id="quipHide" title="Hide">✕</button>
     </div>
-    <div class="pills" id="pills"></div>
     <div class="pubshelf" id="pubshelf" hidden>
       <label class="ps-toggle"><input type="checkbox" id="psPublic"><span class="ps-track"></span><span class="ps-lbl">Show my bookshelf publicly</span></label>
       <span class="ps-state" id="psState"></span>
@@ -277,31 +357,26 @@
     <span class="shc-cameo-arrow" aria-hidden="true">→</span>
   </a>
 
-  <!-- FIND A READER -->
-  <section id="findSec" hidden>
-    <div class="sechead"><div><h2>🔎 Find a bookshelf <span class="note">search by username</span></h2></div></div>
-    <div class="finder">
-      <input id="findInput" type="text" placeholder="Type a username…" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Find a reader by username">
-      <div class="find-results" id="findResults"></div>
-    </div>
-  </section>
+  <!-- STAT TILES -->
+  <section class="dstats" id="statTiles"></section>
 
-  <!-- FOLLOWING -->
-  <section id="followingSec" hidden>
-    <div class="sechead">
-      <div><h2>👥 Bookshelves you follow <span class="note">tap through to browse their shelf</span></h2></div>
-    </div>
-    <div class="follows" id="followsList"></div>
-  </section>
+  <!-- TASTE + SPICE -->
+  <div class="dtwo">
+    <section><div class="sechead"><div><h2>🧭 Your taste <span class="note">from the tropes you shelve</span></h2></div></div><div class="card" id="tasteCard"></div></section>
+    <section><div class="sechead"><div><h2>🌶️ Your spice profile <span class="note">how you like it</span></h2></div></div><div class="card" id="spiceCard"></div></section>
+  </div>
 
-  <!-- YOUR READING -->
-  <section>
-    <div class="sechead">
-      <div><h2>📖 Your reading <span class="note">pick up where you left off</span></h2></div>
-      <a href="/bookshelf/">My bookshelf →</a>
-    </div>
-    <div class="row6" id="reading"></div>
-  </section>
+  <!-- READING PACE -->
+  <section id="paceSec"><div class="sechead"><div><h2>📈 Your reading pace <span class="note">books finished per month</span></h2></div></div><div class="card" id="paceCard"></div></section>
+
+  <!-- READ RACE -->
+  <section id="raceSec" hidden><div class="sechead"><div><h2>🏁 The Read Race <span class="note">you vs the shelves you follow · tap a racer to reveal</span></h2></div></div><div class="card" id="raceCard"></div></section>
+
+  <!-- FAVOURITES + SERIES -->
+  <div class="dtwo">
+    <section id="favSec" hidden><div class="sechead"><div><h2>⭐ Your favourites <span class="note">the ones you starred</span></h2></div></div><div class="row6" id="favRow"></div></section>
+    <section id="seriesSec" hidden><div class="sechead"><div><h2>📚 Series <span class="note">how far you've gotten</span></h2></div></div><div class="card" id="seriesCard"></div></section>
+  </div>
 
   <!-- TRENDING -->
   <section>
@@ -310,6 +385,16 @@
       <a href="/books/">See more →</a>
     </div>
     <div class="row6" id="trending"></div>
+  </section>
+
+  <!-- COMMUNITY -->
+  <section id="commSec" hidden>
+    <div class="sechead"><div><h2>🤝 Your community <span class="note">find readers, follow shelves</span></h2></div></div>
+    <div class="finder">
+      <input id="findInput" type="text" placeholder="🔎 Find a bookshelf by username…" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Find a reader by username">
+      <div class="find-results" id="findResults"></div>
+    </div>
+    <div class="follows" id="followsList" style="margin-top:14px"></div>
   </section>
 
   <!-- ROOMS -->
@@ -440,21 +525,19 @@
 
   // Bookshelves you follow → chips linking to each person's public shelf viewer.
   async function loadFollowing(myId){
-    const sec = $('followingSec'), list = $('followsList');
-    if (!sec || !list || !sb) return;
+    const list = $('followsList');
+    if (!list || !sb) return;
     try {
       const { data: edges } = await sb.from('follows').select('following_id').eq('follower_id', myId);
       const ids = (edges||[]).map(e=>e.following_id);
-      if (!ids.length){ sec.hidden = true; return; }
+      if (!ids.length){ list.innerHTML=''; return; }
       // Resolve to usernames via the public view — anyone who has since gone
       // private simply drops off the list (view only returns public profiles).
       const { data: people } = await sb.from('public_profiles').select('id,username').in('id', ids);
       const rows = (people||[]).filter(p=>p.username);
-      if (!rows.length){ sec.hidden = true; return; }
       list.innerHTML = rows.map(p=>'<a class="follow-chip" href="/u/?h='+encodeURIComponent(p.username)
         +'"><span class="av">'+esc(p.username.charAt(0).toUpperCase())+'</span>@'+esc(p.username)+'</a>').join('');
-      sec.hidden = false;
-    } catch(_) { sec.hidden = true; }
+    } catch(_) { list.innerHTML=''; }
   }
   function coverUrl(cover_i){ return cover_i ? `https://covers.openlibrary.org/b/id/${cover_i}-L.jpg` : null; }
   const coverSrc=b=>b.cover_url||coverUrl(b.cover_i);
@@ -567,14 +650,17 @@
       } else if (box){ box.hidden = true; }
     }
 
-    // ── Find a reader + bookshelves you follow ────────────────────────────
-    $('findSec').hidden = !user;
-    if (user && sb) loadFollowing(user.id); else $('followingSec').hidden = true;
+    // ── Community (find readers, follow shelves) — logged-in only ─────────
+    $('commSec').hidden = !user;
 
     if (!user){
       $('demobar').classList.add('show');
-      await loadDemoReading();
-    } else if (sb){
+      setStatsVisible(false);        // personal stats need your data
+      loadTrending();
+      return;
+    }
+
+    if (sb){
       try{
         const [{data:s},{data:t}] = await Promise.all([
           sb.from('shelf').select('*'),
@@ -585,56 +671,161 @@
       }catch(err){ console.warn('shelf load', err); myShelf = []; mySpice = {}; }
     }
 
-    renderPills();
-    // Load the catalog index BEFORE the first render so "Your reading" tiles
-    // resolve their /books/<slug>/ links on the very first paint rather than
-    // rendering as un-linked tiles and needing a repaint.
-    await getCatalogIndex();
-    renderReading();
+    await getCatalogIndex();          // full catalog + trope labels + series meta
+    loadFollowing(user.id);           // community follows chips
+    renderStats();                    // all the stat sections
+    loadRace(user.id);                // async — fills the read race when ready
     loadTrending();
   });
 
   // safety net for un-configured local opens
-  setTimeout(async ()=>{ if(!myShelf.length && !user){ $('demobar').classList.add('show'); await loadDemoReading(); renderPills(); await getCatalogIndex(); renderReading(); loadTrending(); } }, 2800);
+  setTimeout(async ()=>{ if(!myShelf.length && !user){ $('demobar').classList.add('show'); setStatsVisible(false); loadTrending(); } }, 2800);
 
-  // ── pills ─────────────────────────────────────────────
-  function renderPills(){
-    const total = myShelf.length;
+  // ══════════════════════════════════════════════════════════════════════
+  //  READING STATS ENGINE — the redesigned dashboard's heart.
+  //  Computes from myShelf + mySpice + the catalog (tropes, page_count, series)
+  //  + finished_at, and renders each stat section. Degrades gracefully when a
+  //  section has no data yet.
+  // ══════════════════════════════════════════════════════════════════════
+  const prettySlug = s => String(s||'').replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  const sameMonth = (dstr,now)=>{ const d=new Date(dstr); return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth(); };
+  // Resolve a shelf row to its full catalog book row (direct slug, else title+author).
+  function resolveCat(row){
+    if(_catalogBySlug && _catalogBySlug.has(row.book_key)) return _catalogBySlug.get(row.book_key);
+    const hit = catalogHit(row.title, row.author);
+    return (hit && _catalogBySlug) ? _catalogBySlug.get(hit.slug) : null;
+  }
+  function setStatsVisible(v){ document.body.classList.toggle('guest', !v); }
+
+  function renderStats(){
+    setStatsVisible(true);
+    const shelf = myShelf || [];
+    const by = st => shelf.filter(b=>b.status===st);
+    const read = by('read'), reading = by('reading'), want = by('want');
     const spices = Object.values(mySpice);
-    const avg = spices.length ? (spices.reduce((a,b)=>a+b,0)/spices.length).toFixed(1) : '—';
-    $('pills').innerHTML = `
-      <span class="pill a">📚 ${total} ON YOUR SHELF</span>
-      <span class="pill b">🌶️ AVG SPICE ${avg}</span>
-      <span class="pill c">🔥 ROMANTASY READER</span>`;
+    const avg = spices.length ? spices.reduce((a,b)=>a+b,0)/spices.length : 0;
+    const now = new Date();
+    const thisMonth = read.filter(b=>b.finished_at && sameMonth(b.finished_at, now)).length;
+    const thisYear = read.filter(b=>b.finished_at && new Date(b.finished_at).getFullYear()===now.getFullYear()).length;
+    let pages = 0; for(const b of read){ const c=resolveCat(b); if(c&&c.page_count) pages+=c.page_count; }
+
+    const tile=(n,l,sub,grad)=>`<div class="dstat"><div class="dn${grad?' grad':''}">${n}</div><div class="dl">${l}</div>${sub?`<div class="dsub">${sub}</div>`:''}</div>`;
+    $('statTiles').innerHTML =
+        tile(read.length,'Books read', thisMonth?('+'+thisMonth+' this month'):'', true)
+      + tile(reading.length,'Reading now')
+      + tile(want.length,'TBR')
+      + tile(avg?avg.toFixed(1):'—','Avg spice 🌶️')
+      + tile(pages?pages.toLocaleString():'—','Pages read')
+      + tile(thisYear,'Read this year');
+
+    renderTaste(shelf); renderSpice(spices, avg); renderPace(read);
+    renderFavourites(shelf); renderSeries(shelf);
   }
 
-  // ── your reading ──────────────────────────────────────
-  function readingTileHTML(b){
-    const status = b.status || 'want';
-    const spice = mySpice[b.key] || mySpice[b.book_key] || b.spice;
-    const cov = coverSrc(b);
-    const inner = `<div class="cov">${tileCover(cov, b.title)}
-        <span class="badge status ${status}">${STATUS_LABELS[status]||status}</span>
-        ${spice?`<span class="spice">🌶️${spice}</span>`:''}
-      </div>
-      <div class="cap"><div class="ct">${esc(b.title)}</div>${b.author?`<div class="ca">${esc(b.author)}</div>`:''}</div>`;
-    // Anything we carry goes straight to its plot page as a real link — so it
-    // middle-clicks, previews on hover, and needs no login (plot pages are
-    // public). Only books with no page of their own keep the old JS fallback.
-    const slug = shelfSlug(b);
-    return slug
-      ? `<a class="tile ${status==='dnf'?'dnf':''}" href="${bookPath(slug)}">${inner}</a>`
-      : `<div class="tile ${status==='dnf'?'dnf':''}" onclick="openBook('${esc(b.key||b.book_key)}')">${inner}</div>`;
+  function renderTaste(shelf){
+    const tropes={}, authors={}, subs={};
+    for(const b of shelf){
+      if(b.author) authors[b.author]=(authors[b.author]||0)+1;
+      const c=resolveCat(b); if(!c) continue;
+      if(c.subgenre) subs[c.subgenre]=(subs[c.subgenre]||0)+1;
+      for(const t of (c.tag_ids||[])) if(t.indexOf('trope:')===0){ const s=t.slice(6); tropes[s]=(tropes[s]||0)+1; }
+    }
+    const top = Object.entries(tropes).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const el=$('tasteCard');
+    if(!top.length){ el.innerHTML='<div class="empty-line">Shelve a few catalog books and your taste profile appears here.</div>'; return; }
+    const max=top[0][1];
+    const rows=top.map(([slug,n])=>`<div class="trope"><span class="tl">${esc(_tropeLabel.get(slug)||prettySlug(slug))}</span><span class="tbar"><span style="width:${Math.round(n/max*100)}%"></span></span><span class="tn">${n}</span></div>`).join('');
+    const ta=Object.entries(authors).sort((a,b)=>b[1]-a[1])[0];
+    const ts=Object.entries(subs).sort((a,b)=>b[1]-a[1])[0];
+    const sub=[ ta?`Top author <b>${esc(ta[0])}</b>`:'', ts?`Most-shelved <b>${esc(prettySlug(ts[0]))}</b>`:'' ].filter(Boolean).join(' · ');
+    el.innerHTML = rows + (sub?`<div class="subline">${sub}</div>`:'');
   }
-  function renderReading(){
-    // 4 books + the Next Read tile = 5, one clean row at the new larger tile
-    // size (5 across). Was 5 books + Next Read = 6, which fit the old 6-col grid.
-    const slots = [...myShelf].slice(0,4);
-    const slotsHTML = slots.map(readingTileHTML).join('');
-    const nextTile = `<div class="tile empty" onclick="goAddNext()">
-      <div><div class="plus">+</div><div class="lab">Next Read</div><div class="sub">add to TBR</div></div>
-    </div>`;
-    $('reading').innerHTML = slotsHTML + nextTile;
+
+  function renderSpice(spices, avg){
+    const el=$('spiceCard');
+    if(!spices.length){ el.innerHTML='<div class="empty-line">Rate your reads on the bookshelf and your spice profile fills in.</div>'; return; }
+    const dist=[0,0,0,0,0]; spices.forEach(s=>{ if(s>=1&&s<=5) dist[s-1]++; });
+    const max=Math.max(...dist,1), peak=dist.indexOf(Math.max(...dist));
+    const hot=Math.round((dist[3]+dist[4])/spices.length*100);
+    const lean = avg>=4?'hot 🔥':avg>=3?'warm':avg>=2?'mild':'sweet';
+    const cols=dist.map((n,i)=>`<div class="scol${i===peak&&n>0?' peak':''}"><span class="scnt">${n}</span><div class="sfill" style="height:${Math.round(n/max*100)}%"></div><span class="scap">${i+1}🌶️</span></div>`).join('');
+    el.innerHTML=`<div class="spice-wrap"><div class="spice-id"><div class="spice-big">${avg.toFixed(1)}</div><div class="lean">avg heat — you lean <b>${lean}</b></div><div class="pct"><b>${hot}%</b> of your reads sit at 4–5 spice</div></div><div class="dist">${cols}</div></div>`;
+  }
+
+  function renderPace(read){
+    const el=$('paceCard'); const dated=read.filter(b=>b.finished_at);
+    if(!dated.length){ el.innerHTML='<div class="empty-line">As you mark books “Read”, your monthly pace charts here.</div>'; return; }
+    const now=new Date(), months=[];
+    for(let i=5;i>=0;i--){ const d=new Date(now.getFullYear(), now.getMonth()-i, 1); months.push({y:d.getFullYear(),m:d.getMonth(),label:d.toLocaleString('en',{month:'short'}),n:0}); }
+    dated.forEach(b=>{ const d=new Date(b.finished_at); const h=months.find(x=>x.y===d.getFullYear()&&x.m===d.getMonth()); if(h) h.n++; });
+    const peakN=Math.max(...months.map(x=>x.n)), max=Math.max(peakN,1);
+    const peakMonth=months.slice().reverse().find(x=>x.n===peakN), tot=months.reduce((a,x)=>a+x.n,0);
+    const bars=months.map(x=>`<div class="pcol${x.n===peakN&&peakN>0?' peak':''}"><span class="pv">${x.n}</span><div class="pf" style="height:${Math.round(x.n/max*100)}%"></div></div>`).join('');
+    el.innerHTML=`<div class="pace-head"><span class="tot"><b>${tot}</b> books in the last 6 months</span>${peakN>0?`<span class="best">Busiest <b>${peakMonth.label} · ${peakN}</b></span>`:''}</div><div class="pace">${bars}</div><div class="months">${months.map(x=>`<span>${x.label}</span>`).join('')}</div>`;
+  }
+
+  function renderFavourites(shelf){
+    const favs=shelf.filter(b=>b.favourite);
+    $('favSec').hidden = !favs.length;
+    if(!favs.length) return;
+    $('favRow').innerHTML=favs.slice(0,6).map(b=>{
+      const c=resolveCat(b); const slug=c?c.slug:((_catalogSlugs&&_catalogSlugs.has(b.book_key))?b.book_key:null);
+      const cov=(c&&c.cover_url)||b.cover_url||null;
+      const inner=`<div class="cov">${tileCover(cov,b.title)}<span class="fav-star">⭐</span></div><div class="cap"><div class="ct">${esc(b.title)}</div>${b.author?`<div class="ca">${esc(b.author)}</div>`:''}</div>`;
+      return slug?`<a class="tile" href="${bookPath(slug)}">${inner}</a>`:`<div class="tile">${inner}</div>`;
+    }).join('');
+  }
+
+  function renderSeries(shelf){
+    const map={};
+    for(const b of shelf){ const c=resolveCat(b); if(c&&c.series){ (map[c.series]=map[c.series]||{read:0,slugs:new Set()}); map[c.series].slugs.add(c.slug); if(b.status==='read') map[c.series].read++; } }
+    const catalogCount={}; if(_catalogBySlug) for(const b of _catalogBySlug.values()) if(b.series) catalogCount[b.series]=(catalogCount[b.series]||0)+1;
+    const inProgress=[], caughtUp=[], completed=[];
+    for(const [name,info] of Object.entries(map)){
+      const meta=_seriesMeta.get(name)||{};
+      const total = meta.total_books || catalogCount[name] || info.slugs.size;
+      if(info.read>=total){ (meta.is_complete?completed:caughtUp).push(name); }
+      else inProgress.push({name,readN:info.read,total});
+    }
+    const el=$('seriesCard');
+    if(!inProgress.length && !caughtUp.length && !completed.length){ $('seriesSec').hidden=true; return; }
+    $('seriesSec').hidden=false;
+    let html = inProgress.sort((a,b)=>(b.readN/b.total)-(a.readN/a.total)).slice(0,6)
+      .map(s=>`<div class="series"><span class="sname">${esc(s.name)}</span><span class="track"><span style="width:${Math.round(s.readN/s.total*100)}%"></span></span><span class="frac">${s.readN}/${s.total}</span></div>`).join('');
+    html += caughtUp.map(n=>`<div class="series caught"><span class="cname">${esc(n)}</span><span class="caught-line">✓ Caught up — waiting for your next adventure</span></div>`).join('');
+    if(completed.length){
+      html += `<button class="completed-link" type="button" onclick="var l=this.nextElementSibling;l.hidden=!l.hidden">🏆 Completed series <b>${completed.length}</b> · view →</button>`;
+      html += `<div class="completed-list" hidden>${completed.map(n=>`<div class="cdone">🏆 ${esc(n)}</div>`).join('')}</div>`;
+    }
+    el.innerHTML=html;
+  }
+
+  // ── The Read Race — you vs the shelves you follow, names hidden ─────────
+  async function loadRace(myId){
+    if(!sb){ $('raceSec').hidden=true; return; }
+    let edges=[];
+    try{ const r=await sb.from('follows').select('following_id').eq('follower_id',myId); edges=r.data||[]; }catch(_){}
+    if(!edges.length){ $('raceSec').hidden=true; return; }   // no one to race yet
+    const myRead=(myShelf||[]).filter(b=>b.status==='read').length;
+    const racers=[{me:true, handle:(SH.profile&&SH.profile.username)||'you', n:myRead}];
+    for(const e of edges){
+      let n=0; try{ const { count }=await sb.from('shelf').select('*',{count:'exact',head:true}).eq('user_id',e.following_id).eq('status','read'); n=count||0; }catch(_){}
+      racers.push({id:e.following_id, n});
+    }
+    const ids=racers.filter(r=>r.id).map(r=>r.id);
+    if(ids.length){ try{ const {data}=await sb.from('public_profiles').select('id,username').in('id',ids); const m=new Map((data||[]).map(p=>[p.id,p.username])); racers.forEach(r=>{ if(r.id) r.handle=m.get(r.id)||''; }); }catch(_){} }
+    racers.sort((a,b)=>b.n-a.n);
+    const max=Math.max(...racers.map(r=>r.n),1);
+    $('raceSec').hidden=false;
+    $('raceCard').innerHTML = racers.map((r,i)=>{
+      const pct=Math.round(r.n/max*100);
+      if(r.me) return `<div class="race-row you"><span class="rank">${i+1}</span><span class="av">${esc((r.handle||'Y').charAt(0).toUpperCase())}</span><span class="reveal">You · @${esc(r.handle)}</span><span class="bar"><span style="width:${pct}%"></span></span><span class="race-n">${r.n}</span></div>`;
+      return `<div class="race-row"${r.handle?` data-h="${esc(r.handle)}"`:''}><span class="rank">${i+1}</span><span class="av hidden-id">?</span><span class="reveal">${r.handle?'Tap to reveal':'A reader'}</span><span class="bar"><span style="width:${pct}%"></span></span><span class="race-n">${r.n}</span></div>`;
+    }).join('') + `<div class="racehint">Names stay hidden until you tap — a friendly race, not a public leaderboard.</div>`;
+    // First tap reveals the name; second tap opens their shelf.
+    $('raceCard').onclick = (ev)=>{ const row=ev.target.closest('.race-row[data-h]'); if(!row) return; const h=row.dataset.h;
+      if(row.dataset.shown){ location.href='/u/?h='+encodeURIComponent(h); }
+      else { row.querySelector('.reveal').innerHTML='<b>@'+esc(h)+'</b>'; const av=row.querySelector('.av'); av.textContent=h.charAt(0).toUpperCase(); av.classList.remove('hidden-id'); row.dataset.shown='1'; } };
   }
   function openBook(key){
     if (!user){ if (window.SH) SH.openAuth(); return; }
@@ -658,18 +849,27 @@
   // book still has a published plot page and must still be reachable.
   let _catalogIndex = null;
   let _catalogSlugs = null;    // Set<slug> — confirms a shelf key is a real page
+  let _catalogBySlug = null;   // Map<slug, full book row> — for stats
+  let _tropeLabel = null;      // Map<trope-slug, label>
+  let _seriesMeta = null;      // Map<series name, {is_complete, total_books}>
   async function getCatalogIndex(){
     if(_catalogIndex) return _catalogIndex;
-    _catalogIndex = new Map(); _catalogSlugs = new Set();
+    _catalogIndex = new Map(); _catalogSlugs = new Set(); _catalogBySlug = new Map(); _tropeLabel = new Map(); _seriesMeta = new Map();
     try{
       const _sb = window.SH && window.SH.sb;
       if(_sb){
-        const { data } = await _sb.from('books').select('slug,title,author,cover_url').eq('status','live');
-        for(const b of (data||[])){
-          _catalogSlugs.add(b.slug);
+        const [bk, tg, sr] = await Promise.all([
+          _sb.from('books').select('slug,title,author,cover_url,spice_level,page_count,tag_ids,series,series_number,subgenre').eq('status','live'),
+          _sb.from('tags').select('slug,label').eq('category','trope'),
+          _sb.from('series').select('name,is_complete,total_books')
+        ]);
+        for(const b of (bk.data||[])){
+          _catalogSlugs.add(b.slug); _catalogBySlug.set(b.slug, b);
           const k = covNorm(b.title);
           if(k && !_catalogIndex.has(k)) _catalogIndex.set(k, { slug:b.slug, url:b.cover_url||null, surname:covSurname(b.author) });
         }
+        for(const t of (tg.data||[])) _tropeLabel.set(t.slug, t.label);
+        for(const s of (sr.data||[])) _seriesMeta.set(s.name, { is_complete:!!s.is_complete, total_books:s.total_books });
       }
     }catch(_){}
     return _catalogIndex;
