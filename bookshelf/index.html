@@ -111,13 +111,13 @@
   .roomwrap.library-mode .roomhead{padding-top:28px}
   .roomwrap.library-mode .roomhead h1{font-size:clamp(1.85rem,5vw,3.2rem);color:#fff6e8}
   .roomwrap.library-mode .roomhead .sub{max-width:620px;margin:6px auto 0;color:rgba(244,232,227,.66)}
-  .library-layout{width:min(100%,1080px);display:grid;grid-template-columns:minmax(0,700px) 290px;align-items:start;gap:26px}
-  .library-main{min-width:0}
-  .library-stats{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+  .library-layout{width:min(100%,1080px);display:grid;grid-template-columns:minmax(0,700px) 290px;justify-content:center;align-items:start;column-gap:26px;row-gap:0}
+  .library-main{min-width:0;grid-column:1;grid-row:3}
+  .library-stats{grid-column:1/-1;display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-bottom:14px}
   .library-stat{display:flex;align-items:center;gap:6px;padding:.48em .8em;border:1px solid rgba(225,185,107,.2);border-radius:99px;
     background:rgba(8,8,13,.54);backdrop-filter:blur(9px);color:rgba(244,232,227,.72);font-size:.7rem;font-weight:700}
   .library-stat strong{color:#e8c77e;font-size:.82rem}
-  .world-ribbon{position:relative;isolation:isolate;overflow:hidden;width:100%;margin:0 0 18px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;text-align:left;
+  .world-ribbon{grid-column:1/-1;justify-self:center;position:relative;isolation:isolate;overflow:hidden;width:100%;max-width:700px;margin:0 0 18px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;text-align:left;
     border:1px solid rgba(136,166,231,.34);border-radius:16px;background:linear-gradient(105deg,rgba(9,17,36,.93),rgba(20,15,25,.92));color:var(--cream);cursor:pointer;
     box-shadow:0 18px 36px rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.05)}
   .world-ribbon::before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(7,11,24,.95) 12%,rgba(7,11,24,.8) 56%,rgba(7,11,24,.25)),url('/themes/moonlit-reading-room/room-v1.jpg') center 31%/cover;opacity:.82}
@@ -289,7 +289,7 @@
   .tbr-stack::after{content:"Open TBR";position:absolute;left:9px;right:9px;bottom:-14px;text-align:center;color:rgba(244,232,227,.52);font-size:.5rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
   @media(hover:hover) and (pointer:fine){.tbr-stack:hover{filter:drop-shadow(0 13px 15px rgba(0,0,0,.7)) brightness(1.06)}}
 
-  .library-rail{display:grid;gap:12px;padding-top:50px;transition:padding-top .18s ease-out}
+  .library-rail{grid-column:2;grid-row:3;display:grid;gap:12px;padding-top:50px;transition:padding-top .18s ease-out}
   .rail-card{position:relative;overflow:hidden;border:1px solid rgba(225,185,107,.23);border-radius:18px;padding:17px;background:rgba(10,9,14,.72);backdrop-filter:blur(14px);box-shadow:0 18px 40px rgba(0,0,0,.28)}
   .rail-card::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(80% 60% at 100% 0%,rgba(213,179,106,.11),transparent 70%)}
   .rail-kicker{color:#d5b36a;font-size:.61rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
@@ -694,7 +694,8 @@
   }
   @media(max-width:900px){
     .library-layout{grid-template-columns:minmax(0,650px);justify-content:center}
-    .library-rail{grid-template-columns:repeat(2,minmax(0,1fr));padding-top:0}
+    .library-main{grid-column:1;grid-row:3}
+    .library-rail{grid-column:1;grid-row:4;grid-template-columns:repeat(2,minmax(0,1fr));padding-top:0}
   }
   @media(max-width:620px){
     .stage{padding-left:9px;padding-right:9px}
@@ -1051,11 +1052,12 @@
     $('sub').textContent = total ? 'The calm before each reading world. Choose a shelf, open a book, or make the library unmistakably yours.' : "Empty shelves… for now. Go find some trouble.";
     const visible=SHELVES;
     const counts=Object.fromEntries(SHELVES.map(([st])=>[st,ordered.filter(b=>b.status===st).length]));
-    $('stage').innerHTML = '<div class="library-layout"><div class="library-main">'
+    $('stage').innerHTML = '<div class="library-layout">'
       + '<div class="library-stats"><span class="library-stat"><strong>'+counts.reading+'</strong> reading now</span>'
       + '<span class="library-stat"><strong>'+counts.want+'</strong> waiting in TBR</span><span class="library-stat"><strong>'+counts.read+'</strong> finished</span>'
       + '<span class="library-stat"><strong>'+counts.dnf+'</strong> laid to rest</span></div>'
       + '<button class="world-ribbon" id="openLiveWorld"><span class="moon-seal" aria-hidden="true">✦</span><span class="world-ribbon-copy"><small>Live premium world · 3 relics to awaken</small><strong>The Moonlit Reading Room</strong><span class="world-ribbon-desc">Your books, a working clock, candlelight and visitors that leave something behind.</span></span><b>Enter world →</b></button>'
+      + '<div class="library-main">'
       + '<div class="case-identity"><span class="plaque-chain left" aria-hidden="true"></span><span class="plaque-chain right" aria-hidden="true"></span><div class="case-name" data-crest="'+esc(crest.key)+'"><span class="crest-glass" aria-hidden="true"></span><span class="crest-reflection" aria-hidden="true"></span><img class="case-art" src="'+esc(crest.src)+'" alt="" aria-hidden="true" decoding="async"><div class="case-copy"><small>'+esc(crest.eyebrow)+'</small><strong>'+esc(readerName)+'</strong><span class="case-motto">'+esc(crest.motto)+'</span></div></div>'+founderEditionHTML()+'</div>'
       + '<div class="bookcase"><span class="cabinet-crest"></span><span class="cabinet-pilaster left"></span><span class="cabinet-pilaster right"></span><span class="case-flourish"></span><div class="interior">'
       + visible.map(([st,label])=>{
@@ -1093,7 +1095,7 @@
     if(!layout||!rail||!bookcase) return;
     if(window.matchMedia('(max-width:900px)').matches){ rail.style.paddingTop='0px'; return; }
     rail.style.paddingTop='';
-    const cabinetTop=bookcase.getBoundingClientRect().top-layout.getBoundingClientRect().top-11;
+    const cabinetTop=bookcase.getBoundingClientRect().top-rail.getBoundingClientRect().top-11;
     rail.style.paddingTop=Math.max(0,Math.round(cabinetTop))+'px';
   }
 
