@@ -793,7 +793,7 @@
 
   function addControlHTML(key, id, on){
     const cur = shelfStatus[key]||'';
-    const opts = [['want','Want to Read'],['reading','Currently Reading'],['read','Read'],['dnf','DNF']]
+    const opts = [['want','TBR'],['reading','Currently Reading'],['read','Read'],['dnf','DNF']]
       .map(([v,l])=>`<option value="${v}" ${cur===v?'selected':''}>${l}</option>`).join('');
     if(on){
       return `<div class="addrow">

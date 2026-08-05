@@ -391,7 +391,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <button class="shelfbtn" id="shelfBtn" data-act="want">＋ Add to shelf</button>
         <select class="statussel" id="shelfSel" aria-label="Add to shelf">
           <option value="" selected>Shelf as…</option>
-          <option value="want">Want to Read</option>
+          <option value="want">TBR</option>
           <option value="reading">Currently Reading</option>
           <option value="read">Read</option>
           <option value="dnf">DNF</option>
@@ -554,7 +554,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   // title/author/cover snapshot.
   (function(){
     var BOOK = {"key":"these-hollow-vows-ryan","title":"These Hollow Vows","author":"Lexi Ryan","cover_url":"https://covers.smuthub.ca/these-hollow-vows-ryan.jpg"};
-    var LABEL = { want:'Want to Read', reading:'Currently Reading', read:'Read', dnf:'DNF' };
+    var LABEL = { want:'TBR', reading:'Currently Reading', read:'Read', dnf:'DNF' };
     var btn = document.getElementById('shelfBtn');
     var sel = document.getElementById('shelfSel');
     var note = document.getElementById('shelfNote');
@@ -575,6 +575,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     async function shelve(status){
       if (!user){ note.innerHTML='<a href="/dashboard.html">Log in</a> to build your shelf'; return; }
       var payload = { book_key:BOOK.key, status:status, title:BOOK.title, author:BOOK.author, cover_url:BOOK.cover_url };
+      if (status==='read') payload.finished_at = new Date().toISOString();   // powers dashboard pace/"read this year"
       var res = await sb.from('shelf').upsert(payload, { onConflict:'user_id,book_key' });
       if (res.error && /cover_url/i.test(res.error.message||'')){ delete payload.cover_url; res = await sb.from('shelf').upsert(payload, { onConflict:'user_id,book_key' }); }
       if (res.error){ note.textContent='Save failed'; console.error('shelf save', res.error); return; }
