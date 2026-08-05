@@ -626,6 +626,17 @@
     body[data-cabinet="moon-arch"] .interior{border-radius:54px 54px 8px 8px}
   }
   @media(min-width:1100px){ .bookcase{max-width:700px} }
+  /* Read-only "viewing someone else's shelf" mode: hide every owner-only and
+     monetization affordance. Editing paths are also disabled in JS; this is the
+     visual guard. */
+  body.view-mode .themepill,
+  body.view-mode .shc-cameo,
+  body.view-mode .ghost,
+  body.view-mode .world-ribbon,
+  body.view-mode .library-rail,
+  body.view-mode .shelf-door,
+  body.view-mode .hint{ display:none !important; }
+  body.view-mode .book{ cursor:pointer; }
 </style>
 </head>
 <body class="theme-walnut">
@@ -755,6 +766,11 @@
   const THEME_ART=false;
 
   const REVIEW_MODE=new URLSearchParams(location.search).get('prototype')==='bookcase-v2';
+  // Read-only "view someone else's shelf" mode: /bookshelf/?u=<username>.
+  // Renders another reader's PUBLIC shelf (RLS-gated) with all editing removed.
+  const VIEW_HANDLE=(new URLSearchParams(location.search).get('u')||'').trim().toLowerCase();
+  const VIEW_MODE=!!VIEW_HANDLE;
+  let VIEW_UID=null;
   const TRIAL_KEY='sh_bookcase_trials_v1', TRIAL_MS=24*60*60*1000;
   let sb=null, user=null, shelf=[], spiceMap={}, theme='walnut', isPremium=false, readerName='Your', founderNumber=null;
   let libraryDetail='', cabinetStyle='grand-heirloom';
@@ -796,6 +812,7 @@
       renderRoom(); buildThemeSheet(); $('themepill').classList.add('show');
       return;
     }
+    if(VIEW_MODE){ await enterViewMode(); return; }
     if(!user){ renderGate(); $('themepill').classList.remove('show'); return; }
     isPremium = !!(e.detail.profile && e.detail.profile.is_premium);
     const profile=e.detail.profile||{};
@@ -823,9 +840,14 @@
   }
 
   async function loadAll(){
+    // In view mode, scope shelf + ratings to the viewed user (RLS lets us read
+    // them only because that profile is public). The customization / entitlement
+    // / trial tables stay owner-only, so they return [] for a viewed user — the
+    // shelf renders in the default world, which is the right read-only behaviour.
+    const scoped = q => VIEW_UID ? q.eq('user_id', VIEW_UID) : q;
     const [r1,r2,r3,r4,r5]=await Promise.all([
-      sb.from('shelf').select('*'),
-      sb.from('book_tags').select('book_key,spice'),
+      scoped(sb.from('shelf').select('*')),
+      scoped(sb.from('book_tags').select('book_key,spice')),
       sb.from('shelf_customization').select('*'),
       sb.from('user_bookcase_entitlements').select('product_key'),
       sb.from('user_bookcase_trials').select('product_key,expires_at')
@@ -859,6 +881,40 @@
     } else if(!/user_bookcase_trials|relation|schema cache/i.test(r5.error.message||'')){
       console.warn('bookcase trials failed',r5.error);
     }
+  }
+
+  // Read-only view of another reader's public shelf (?u=<username>).
+  async function enterViewMode(){
+    try{
+      const { data:prof, error } = await sb.from('public_profiles').select('id,username').eq('username',VIEW_HANDLE).maybeSingle();
+      if(error) throw error;
+      if(!prof){ renderViewMissing(); return; }
+      VIEW_UID=prof.id;
+      readerName=prof.username.charAt(0).toUpperCase()+prof.username.slice(1);
+      setTheme('walnut',true);                    // sets body.className, so add the
+      document.body.classList.add('view-mode');   // view-mode class AFTER it, not before
+      document.body.dataset.cabinet=cabinetStyle;
+      await loadAll();
+      renderRoom(); buildThemeSheet();
+      // renderRoom writes the owner's heading/sub — override them for the viewer.
+      document.querySelector('.roomhead h1').innerHTML=esc(readerName)+' <em>Bookshelf</em>';
+      $('sub').textContent='A public bookshelf — tap any book to open its page.';
+      $('themepill').classList.remove('show');
+    }catch(err){
+      console.error('view load failed:', err);
+      $('stage').innerHTML='<div style="background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:24px;text-align:center;max-width:440px"><h2 style="font-family:Fraunces">Couldn’t open this bookshelf</h2><p style="color:#ff9aa8">'+esc((err&&err.message)||err)+'</p></div>';
+    }
+  }
+  function renderViewMissing(){
+    $('roomwrap').classList.remove('library-mode');
+    document.querySelector('.roomhead h1').innerHTML='Bookshelf <em>not found</em>';
+    $('sub').textContent='';
+    $('stage').innerHTML='<section class="gate-card"><div class="gate-eyebrow">Nothing here</div>'
+      +'<h2>This bookshelf isn’t available.</h2>'
+      +'<p>It may be set to private, or the name is misspelled.</p>'
+      +'<div class="gate-actions"><a class="primary" href="/books/">Browse books</a>'
+      +'<a class="secondary" href="/bookshelf/">Your bookshelf</a></div></section>';
+    $('themepill').classList.remove('show');
   }
 
   function renderGate(){
@@ -906,14 +962,14 @@
       const cov=src
         ? '<img class="bcov" src="'+src+'" style="height:'+H+'px" alt="'+esc(b.title)+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="ph" style="height:'+H+'px;display:none">'+esc(b.title)+'</div>'
         : '<div class="ph" style="height:'+H+'px">'+esc(b.title)+'</div>';
-      return '<div class="book face'+(dnf?' dnf':'')+'" draggable="true" data-key="'+esc(b.book_key)+'">'+cov+badges+'</div>';
+      return '<div class="book face'+(dnf?' dnf':'')+'" draggable="'+(VIEW_MODE?'false':'true')+'" data-key="'+esc(b.book_key)+'">'+cov+badges+'</div>';
     }
     const bookHash=hash(b.book_key), color=SPINES[bookHash%SPINES.length], spineArt=b.spine_url||coverSrc(b);
     const spinePosition=b.spine_url?(Number.isFinite(+b.spine_position)?+b.spine_position:50):(20+(bookHash%61));
     const spineLean=((bookHash%5)-2)*.34, spineSit=Math.floor(bookHash/5)%3;
     const spineStyle='--spine:'+color+';--book-w:'+(34+(bookHash%15))+'px;--book-h:'+(132+((bookHash>>3)%15))+'px;--spine-pos:'+Math.max(0,Math.min(100,spinePosition))+'%;--lean:'+spineLean+'deg;--sit:'+spineSit+'px;'
       +(spineArt?'--spine-art:url(&quot;'+esc(spineArt)+'&quot;);':'');
-    return '<div class="book spine'+(dnf?' dnf':'')+'" draggable="true" data-key="'+esc(b.book_key)+'" style="--book-w:'+(34+(bookHash%15))+'px">'
+    return '<div class="book spine'+(dnf?' dnf':'')+'" draggable="'+(VIEW_MODE?'false':'true')+'" data-key="'+esc(b.book_key)+'" style="--book-w:'+(34+(bookHash%15))+'px">'
       + '<div class="spineinner" style="'+spineStyle+'"><span class="stitle">'+esc(b.title||'Untitled')+'</span></div>'
       + badges + '</div>';
   }
@@ -940,7 +996,7 @@
       + '<div class="bookcase"><span class="cabinet-crest"></span><span class="cabinet-pilaster left"></span><span class="cabinet-pilaster right"></span><span class="case-flourish"></span><div class="interior">'
       + visible.map(([st,label])=>{
           const items=ordered.filter(b=>b.status===st);
-          const inner = (st==='want'&&items.length?tbrStackHTML(items.length):'')+(items.length ? items.map((b,i)=>bookHTML(b,i===0)).join('') : ghostHTML);
+          const inner = (st==='want'&&items.length?tbrStackHTML(items.length):'')+(items.length ? items.map((b,i)=>bookHTML(b,i===0)).join('') : (VIEW_MODE?'':ghostHTML));
           const overflow=items.length>7;
           const displayLabel=st==='want'?'TBR':st==='dnf'?'DNF':label;
           const shelfSub=st==='want'?'<span class="shelf-sub">Want to Read</span>':st==='dnf'?'<span class="shelf-sub">Laid to Rest</span>':'';
@@ -1033,6 +1089,7 @@
   }
   async function persistOrder(changed){
     if(REVIEW_MODE){ toast("Prototype order updated ✨"); return; }
+    if(VIEW_MODE) return;
     if(!sb||!user) return;
     for(const row of changed){
       const { error } = await sb.from('shelf').update({ sort_order: row.sort_order, status: row.status }).eq('book_key', row.book_key);
@@ -1050,7 +1107,7 @@
       ? '<img src="'+_src+'" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="ph" style="display:none">'+esc(b.title)+'</div>'
       : '<div class="ph">'+esc(b.title)+'</div>';
     const chilis=[1,2,3,4,5].map(n=>'<span data-n="'+n+'" class="'+(sp>=n?'on':'')+'">🌶️</span>').join('');
-    const moves=SHELVES.filter(([s])=>s!==b.status).map(([s,l])=>'<button class="pillbtn" onclick="setStatus(\''+esc(key)+'\',\''+s+'\')">→ '+l+'</button>').join('');
+    const moves=VIEW_MODE?'':SHELVES.filter(([s])=>s!==b.status).map(([s,l])=>'<button class="pillbtn" onclick="setStatus(\''+esc(key)+'\',\''+s+'\')">→ '+l+'</button>').join('');
     // Catalog books (book_key === slug; not a Google "gb:"/OpenLibrary "/works/"/demo key)
     // get a link to their plot page. External shelf entries don't have one.
     const slug=(key && key.indexOf('gb:')!==0 && key.indexOf('import:')!==0 && key.indexOf('/')<0 && key.indexOf('demo-')!==0) ? key : null;
@@ -1059,13 +1116,13 @@
     $('sheetbg').innerHTML = '<article class="openbook" role="dialog" aria-modal="true" aria-labelledby="openBookTitle">'
       +'<button class="book-close" onclick="closeSheet()" aria-label="Close book">×</button><div class="book-spread">'
       +'<section class="book-page cover-page"><div class="open-cover">'+cov+'</div><div class="edition-mark">From '+esc(readerName)+' Library</div></section>'
-      +'<section class="book-page detail-page"><div class="detail-kicker">A book from your shelf</div>'
+      +'<section class="book-page detail-page"><div class="detail-kicker">'+(VIEW_MODE?'From '+esc(readerName)+' shelf':'A book from your shelf')+'</div>'
       +'<h2 id="openBookTitle">'+esc(b.title||'Untitled')+'</h2><div class="au">by '+esc(b.author||'Unknown')+'</div><div class="book-rule"></div>'
       +'<div class="book-meta"><div class="meta-cell"><small>Current shelf</small><strong>'+esc(labelOf(b.status))+'</strong></div>'
       +'<div class="meta-cell"><small>Added</small><strong>'+esc(added)+'</strong></div></div>'
-      +'<div class="rate-label">Your spice rating</div><div class="rate" id="srate" onclick="rate(event,\''+esc(key)+'\')">'+chilis+'</div>'
-      +'<div class="acts">'+viewBtn+moves+'<button class="pillbtn rec" onclick="recommend(\''+esc(key)+'\')">↗ Recommend</button>'
-      +'<button class="pillbtn rm" onclick="removeBook(\''+esc(key)+'\')">Remove</button></div></section></div></article>';
+      +'<div class="rate-label">'+(VIEW_MODE?esc(readerName)+' spice rating':'Your spice rating')+'</div><div class="rate" id="srate"'+(VIEW_MODE?'':' onclick="rate(event,\''+esc(key)+'\')"')+'>'+chilis+'</div>'
+      +'<div class="acts">'+viewBtn+moves+(VIEW_MODE?'':'<button class="pillbtn rec" onclick="recommend(\''+esc(key)+'\')">↗ Recommend</button>'
+      +'<button class="pillbtn rm" onclick="removeBook(\''+esc(key)+'\')">Remove</button>')+'</div></section></div></article>';
     $('sheetbg').classList.add('open');
     syncScrollLock();
   }
@@ -1074,19 +1131,19 @@
   async function setStatus(key,status){
     const row=shelf.find(b=>b.book_key===key); if(row) row.status=status;
     closeSheet(); refreshViews();
-    if(!REVIEW_MODE&&sb&&user) await sb.from('shelf').update({status}).eq('book_key',key);
+    if(!REVIEW_MODE&&!VIEW_MODE&&sb&&user) await sb.from('shelf').update({status}).eq('book_key',key);
     toast("Moved to "+labelOf(status));
   }
   async function removeBook(key){
     shelf=shelf.filter(b=>b.book_key!==key); closeSheet(); refreshViews();
-    if(!REVIEW_MODE&&sb&&user) await sb.from('shelf').delete().eq('book_key',key);
+    if(!REVIEW_MODE&&!VIEW_MODE&&sb&&user) await sb.from('shelf').delete().eq('book_key',key);
     toast("Removed from your bookshelf");
   }
   async function rate(e,key){
     const span=e.target.closest('span[data-n]'); if(!span) return;
     const n=+span.dataset.n; spiceMap[key]=n;
     document.querySelectorAll('#srate span').forEach(s=>s.classList.toggle('on',+s.dataset.n<=n));
-    if(!REVIEW_MODE&&sb&&user) await sb.from('book_tags').upsert({book_key:key,spice:n},{onConflict:'user_id,book_key'});
+    if(!REVIEW_MODE&&!VIEW_MODE&&sb&&user) await sb.from('book_tags').upsert({book_key:key,spice:n},{onConflict:'user_id,book_key'});
     toast("Saved "+"🌶️".repeat(n));
   }
   function recommend(key){
@@ -1299,7 +1356,7 @@
     const isWorldPreview=!!(worldProduct&&!owns(worldProduct.key));
     const worldContext=isWorldPreview?'Live premium preview':(isPremium?'Founder’s collection':label);
     const info=shelfPageInfo(status);
-    const books=info.pageItems.length?info.pageItems.map((b,i)=>bookHTML(b,i===0)).join(''):ghostHTML;
+    const books=info.pageItems.length?info.pageItems.map((b,i)=>bookHTML(b,i===0)).join(''):(VIEW_MODE?'':ghostHTML);
     const range=info.items.length?(info.start+1)+'–'+info.end+' of '+info.items.length:'Empty shelf';
     const pageClass=pageDirection>0?' page-next':(pageDirection<0?' page-prev':'');
     const times=[['11:47 PM','light-moonlit'],['3:18 AM','light-moonlit'],['6:02 AM','light-dawn']];

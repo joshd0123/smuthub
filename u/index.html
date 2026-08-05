@@ -47,6 +47,8 @@
   .hero p{color:var(--muted);max-width:60ch}
   .stat{display:inline-flex;gap:6px;align-items:baseline;color:var(--muted);font-size:.9rem;margin-top:10px}
   .stat b{color:var(--cream);font-weight:700}
+  .bookcaselink{color:var(--amber);text-decoration:none;font-weight:700}
+  .bookcaselink:hover{text-decoration:underline}
   .followbtn{margin-top:16px;display:none;align-items:center;gap:8px;font-weight:800;font-size:.9rem;border:0;border-radius:99px;padding:11px 22px;cursor:pointer;background:var(--grad);color:#1a0c10;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
   .followbtn.following{background:var(--panel);color:var(--cream);border:1px solid var(--line);box-shadow:none}
 
@@ -191,7 +193,8 @@
       + '<section class="hero"><div class="eyebrow">A reader’s bookshelf</div>'
       + '<h1>'+esc(poss)+' <em>Bookshelf</em></h1>'
       + '<p>A public bookshelf of romantasy and spicy romance books. Tap any cover to read its spice rating, tropes, and content notes.</p>'
-      + '<div class="stat"><b>'+rows.length+'</b> books&nbsp;·&nbsp;<b>'+byStatus.read.length+'</b> read</div>'
+      + '<div class="stat"><b>'+rows.length+'</b> books&nbsp;·&nbsp;<b>'+byStatus.read.length+'</b> read'
+      + '&nbsp;·&nbsp;<a class="bookcaselink" href="/bookshelf/?u='+encodeURIComponent(prof.username)+'">✦ View as bookcase →</a></div>'
       + '<button class="followbtn" id="followbtn" data-uid="'+esc(prof.id)+'">+ Follow</button>'
       + '</section>'
       + STATUS_META.map(groupHTML).join('');
