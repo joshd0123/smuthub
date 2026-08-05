@@ -1328,14 +1328,28 @@
   }
 
   // ── THEME SHEET + 24-HOUR COLLECTOR TRIALS ──
-  function readTrials(){
-    if(!REVIEW_MODE) return accountTrials;
+  function readLocalTrials(){
     try{
       const parsed=JSON.parse(localStorage.getItem(TRIAL_KEY)||'{}'), now=Date.now(), active={};
       Object.keys(parsed).forEach(k=>{ if(+parsed[k]>now) active[k]=+parsed[k]; });
       if(Object.keys(active).length!==Object.keys(parsed).length) localStorage.setItem(TRIAL_KEY,JSON.stringify(active));
       return active;
     }catch(_){ return {}; }
+  }
+  function writeLocalTrial(productKey){
+    try{
+      const parsed=JSON.parse(localStorage.getItem(TRIAL_KEY)||'{}');
+      parsed[productKey]=Date.now()+TRIAL_MS;
+      localStorage.setItem(TRIAL_KEY,JSON.stringify(parsed));
+    }catch(_){}
+  }
+  function readTrials(){
+    if(REVIEW_MODE) return readLocalTrials();
+    // Merge account (DB) trials with any local fallback trials started while the
+    // backend trial RPC isn't live yet. Whichever expiry is later wins.
+    const local=readLocalTrials(), merged={...accountTrials};
+    Object.keys(local).forEach(k=>{ if(local[k]>(merged[k]||0)) merged[k]=local[k]; });
+    return merged;
   }
   function trialExpiry(productKey){ return readTrials()[productKey]||0; }
   function hasAccess(productKey,premium){ return !premium||isPremium||trialExpiry(productKey)>Date.now(); }
@@ -1348,28 +1362,27 @@
   }
   async function beginTrial(productKey,name,onStart){
     if(REVIEW_MODE){
-      const trials=readTrials();
-      trials[productKey]=Date.now()+TRIAL_MS;
-      try{ localStorage.setItem(TRIAL_KEY,JSON.stringify(trials)); }catch(_){}
+      writeLocalTrial(productKey);
     } else {
       if(!user||!sb){
         toast('Log in to start a trial that follows your account.');
         if(window.SH) SH.openAuth();
         return;
       }
-      const {data,error}=await sb.rpc('start_bookcase_trial',{p_product_key:productKey});
-      if(error){
-        console.error('bookcase trial failed',error);
-        toast('Trials are still being prepared — nothing was charged.');
-        return;
-      }
-      const row=Array.isArray(data)?data[0]:data;
-      const expiry=Date.parse(row&&row.expires_at);
-      if(!Number.isFinite(expiry)){
-        toast('The trial could not be confirmed. Please try again.');
-        return;
-      }
-      accountTrials[productKey]=expiry;
+      let ok=false;
+      try{
+        const {data,error}=await sb.rpc('start_bookcase_trial',{p_product_key:productKey});
+        if(!error){
+          const row=Array.isArray(data)?data[0]:data;
+          const expiry=Date.parse(row&&row.expires_at);
+          if(Number.isFinite(expiry)){ accountTrials[productKey]=expiry; ok=true; }
+        } else {
+          console.warn('bookcase trial RPC unavailable, using local trial',error);
+        }
+      }catch(err){ console.warn('bookcase trial RPC threw, using local trial',err); }
+      // Backend trial isn't live yet → fall back to a device-local 24h trial so
+      // the free preview still works. No payment details, no charge either way.
+      if(!ok) writeLocalTrial(productKey);
     }
     if(onStart) onStart();
     buildThemeSheet();
