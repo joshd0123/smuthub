@@ -109,6 +109,10 @@
   .pubshelf .ps-url:hover{color:var(--amber)}
   .pubshelf .ps-copy{font-size:.74rem;font-weight:700;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:8px;padding:.35em .7em;cursor:pointer;transition:color .2s,border-color .2s}
   .pubshelf .ps-copy:hover{color:var(--cream);border-color:#43222c}
+  .follows{display:flex;gap:10px;flex-wrap:wrap}
+  .follow-chip{display:inline-flex;align-items:center;gap:9px;text-decoration:none;padding:8px 15px 8px 9px;border:1px solid var(--line);border-radius:99px;background:var(--ink-2);color:var(--cream);font-weight:600;font-size:.88rem;transition:border-color .2s,transform .15s}
+  .follow-chip:hover{border-color:#43222c;transform:translateY(-1px)}
+  .follow-chip .av{width:26px;height:26px;border-radius:50%;background:var(--grad);color:#1a0c10;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:.82rem}
 
   /* ── SECTIONS ── */
   section{padding:20px 0 4px}
@@ -265,6 +269,14 @@
     <span class="shc-cameo-arrow" aria-hidden="true">→</span>
   </a>
 
+  <!-- FOLLOWING -->
+  <section id="followingSec" hidden>
+    <div class="sechead">
+      <div><h2>👥 Bookshelves you follow <span class="note">tap through to browse their shelf</span></h2></div>
+    </div>
+    <div class="follows" id="followsList"></div>
+  </section>
+
   <!-- YOUR READING -->
   <section>
     <div class="sechead">
@@ -383,6 +395,24 @@
   const $ = id => document.getElementById(id);
   function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1700); }
   function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  // Bookshelves you follow → chips linking to each person's public shelf viewer.
+  async function loadFollowing(myId){
+    const sec = $('followingSec'), list = $('followsList');
+    if (!sec || !list || !sb) return;
+    try {
+      const { data: edges } = await sb.from('follows').select('following_id').eq('follower_id', myId);
+      const ids = (edges||[]).map(e=>e.following_id);
+      if (!ids.length){ sec.hidden = true; return; }
+      // Resolve to usernames via the public view — anyone who has since gone
+      // private simply drops off the list (view only returns public profiles).
+      const { data: people } = await sb.from('public_profiles').select('id,username').in('id', ids);
+      const rows = (people||[]).filter(p=>p.username);
+      if (!rows.length){ sec.hidden = true; return; }
+      list.innerHTML = rows.map(p=>'<a class="follow-chip" href="/u/?h='+encodeURIComponent(p.username)
+        +'"><span class="av">'+esc(p.username.charAt(0).toUpperCase())+'</span>@'+esc(p.username)+'</a>').join('');
+      sec.hidden = false;
+    } catch(_) { sec.hidden = true; }
+  }
   function coverUrl(cover_i){ return cover_i ? `https://covers.openlibrary.org/b/id/${cover_i}-L.jpg` : null; }
   const coverSrc=b=>b.cover_url||coverUrl(b.cover_i);
   // Uncropped cover for a tile: contained artwork over a blurred copy of itself
@@ -493,6 +523,9 @@
         box.hidden = false;
       } else if (box){ box.hidden = true; }
     }
+
+    // ── Bookshelves you follow ────────────────────────────────────────────
+    if (user && sb) loadFollowing(user.id); else $('followingSec').hidden = true;
 
     if (!user){
       $('demobar').classList.add('show');

@@ -196,20 +196,41 @@
       + '</section>'
       + STATUS_META.map(groupHTML).join('');
 
-    setupFollow(prof.id, prof.username);
+    OWNER = { id: prof.id, name: prof.username };
+    setupFollow();
   }
 
-  // Phase 2 hook: wire up in the follow step. Shown only to a logged-in viewer
-  // who isn't the owner. Kept minimal here; full follow UI lands with the graph.
-  async function setupFollow(ownerId, ownerName){
-    const btn = document.getElementById('followbtn'); if(!btn) return;
+  // Follow button: shown only to a logged-in viewer who isn't the owner.
+  // Re-runs on sh-auth so it appears once the session resolves after first paint.
+  let OWNER = null;
+  async function setupFollow(){
+    const btn = document.getElementById('followbtn'); if(!btn || !OWNER) return;
     const me = window.SH && SH.user;
-    if (!me || me.id === ownerId) return;          // hidden for guests + self
-    // (Phase 2) query follows for current state, toggle on click. Left dormant
-    // until the follow graph ships so we don't half-wire it now.
+    if (!me || me.id === OWNER.id){ btn.style.display = 'none'; return; }  // guests + self
+    const sb = SH.sb;
+    let following = false;
+    try {
+      const { data } = await sb.from('follows').select('follower_id')
+        .eq('follower_id', me.id).eq('following_id', OWNER.id).maybeSingle();
+      following = !!data;
+    } catch(_) {}
+    const paint = ()=>{ btn.textContent = following ? '✓ Following' : '+ Follow'; btn.classList.toggle('following', following); btn.style.display = 'inline-flex'; };
+    paint();
+    btn.onclick = async ()=>{
+      btn.disabled = true;
+      if (following){
+        const { error } = await sb.from('follows').delete().eq('follower_id', me.id).eq('following_id', OWNER.id);
+        if (!error){ following = false; if (window.SH) SH.track('unfollow'); }
+      } else {
+        const { error } = await sb.from('follows').insert({ follower_id: me.id, following_id: OWNER.id });
+        if (!error){ following = true; if (window.SH) SH.track('follow'); }
+        else console.warn('follow failed:', error.message);
+      }
+      btn.disabled = false; paint();
+    };
   }
 
-  window.addEventListener('sh-auth', ()=>{ /* re-run follow state once auth resolves */ });
+  window.addEventListener('sh-auth', setupFollow);
   main();
 </script>
 </body>
