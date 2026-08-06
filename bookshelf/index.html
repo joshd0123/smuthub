@@ -890,6 +890,10 @@
   let VIEW_UID=null;
   const TRIAL_KEY='sh_bookcase_trials_v1', TRIAL_MS=24*60*60*1000;
   let sb=null, user=null, shelf=[], spiceMap={}, theme='walnut', isPremium=false, readerName='Your', founderNumber=null;
+  // Mouse-follow parallax on the crest + immersive shelf made items appear to
+  // float and chase the cursor (2026-08-05). Disabled. Flip to true to restore
+  // it (numbers live in the crest onpointermove + shelfview pointermove handlers).
+  const POINTER_PARALLAX=false;
   let libraryDetail='', cabinetStyle='grand-heirloom', crestStyle='enchanted-rose';
   try{ const savedCrest=localStorage.getItem(CREST_STORAGE_KEY); if(CREST_STYLES.some(c=>c.key===savedCrest)) crestStyle=savedCrest; }catch(_){}
   let custom={};
@@ -1178,7 +1182,7 @@
   function attachRoom(){
     attachDnD();
     const crestEl=document.querySelector('.case-identity');
-    if(crestEl&&window.matchMedia('(hover:hover) and (pointer:fine)').matches&&!window.matchMedia('(prefers-reduced-motion:reduce)').matches){
+    if(POINTER_PARALLAX&&crestEl&&window.matchMedia('(hover:hover) and (pointer:fine)').matches&&!window.matchMedia('(prefers-reduced-motion:reduce)').matches){
       crestEl.onpointermove=e=>{
         const box=crestEl.getBoundingClientRect(), x=(e.clientX-box.left)/box.width-.5, y=(e.clientY-box.top)/box.height-.5;
         crestEl.style.setProperty('--crest-rx',(-y*5).toFixed(2)+'deg'); crestEl.style.setProperty('--crest-ry',(x*7).toFixed(2)+'deg');
@@ -1833,7 +1837,7 @@
     const sv=$('shelfview'); let tsx=null, tsy=null, swipeBlocked=false, parallaxFrame=0;
     const resetParallax=()=>{['scene-x','scene-y','stage-x','stage-y','air-x','air-y','frame-x','frame-y','veil-x','veil-y','book-x','book-y'].forEach(key=>sv.style.setProperty('--'+key,'0px'));};
     sv.addEventListener('pointermove',e=>{
-      if(e.pointerType==='touch'||window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+      if(!POINTER_PARALLAX||e.pointerType==='touch'||window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
       cancelAnimationFrame(parallaxFrame);
       parallaxFrame=requestAnimationFrame(()=>{
         const x=e.clientX/window.innerWidth-.5, y=e.clientY/window.innerHeight-.5;
