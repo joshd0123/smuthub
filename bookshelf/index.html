@@ -947,6 +947,13 @@
     const profile=e.detail.profile||{};
     const parsedFounder=Number(profile.founder_number);
     founderNumber=Number.isInteger(parsedFounder)&&parsedFounder>=1&&parsedFounder<=100?parsedFounder:null;
+    // Complimentary lifetime access (owner + wife): full premium + founder so
+    // every current AND future premium release is unlocked for these accounts.
+    // Keyed on the authenticated session email, so it can't be spoofed without
+    // controlling the account. Move to a DB entitlement once billing is live.
+    const COMP_ACCESS={'joshd0123@gmail.com':1,'martaantonczak@hotmail.ca':2};
+    const compKey=(user.email||'').trim().toLowerCase();
+    if(COMP_ACCESS[compKey]){ isPremium=true; if(!founderNumber) founderNumber=COMP_ACCESS[compKey]; }
     if(crestStyle==='founders-key'&&!founderNumber) crestStyle='enchanted-rose';
     document.body.dataset.crest=crestStyle;
     const rawName=profile.display_name||profile.username||(user.email||'').split('@')[0];
