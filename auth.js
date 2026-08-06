@@ -273,12 +273,22 @@
   }
 
   async function setUsername(){
-    const name = prompt("Pick a username (3–20 chars, letters/numbers/underscores):", (SH.profile&&SH.profile.username)||"");
+    // The username is a PERMANENT handle: it's the address of the user's public
+    // bookshelf (smuthub.ca/u/<handle>), so changing it would orphan any shared
+    // or bookmarked link. We let it be set once, then lock it. (Follows + shelf
+    // data are keyed by user id, so they're unaffected either way.) A separate
+    // changeable display name can be layered on later without touching the URL.
+    const existing = SH.profile && SH.profile.username;
+    if(existing){
+      alert("Your handle @"+existing+" is permanent — it's the web address of your public bookshelf (smuthub.ca/u/"+existing+"), so it can't be changed here. Need it changed? Email hello@smuthub.ca.");
+      return;
+    }
+    const name = prompt("Choose your permanent handle (3–20 chars · letters, numbers, underscores).\n\nThis becomes your public bookshelf address:\nsmuthub.ca/u/yourhandle\n\nIt can't be changed later, so pick one you'll be happy with.", "");
     if(name===null) return;
     const clean = name.trim();
     if(!/^[a-zA-Z0-9_]{3,20}$/.test(clean)){ alert("3–20 characters, letters/numbers/underscores only."); return; }
     const { error } = await SH.sb.from('profiles').upsert({ id: SH.user.id, username: clean });
-    if(error){ alert(/duplicate|unique/i.test(error.message) ? "That username is taken — try another!" : "Error: "+error.message); return; }
+    if(error){ alert(/duplicate|unique/i.test(error.message) ? "That handle is taken — try another!" : "Error: "+error.message); return; }
     SH.profile = Object.assign(SH.profile||{}, { username: clean });
     renderAuthbox();
   }
