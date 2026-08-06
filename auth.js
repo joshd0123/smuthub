@@ -140,6 +140,27 @@
     }catch(e){ console.warn('profile load', e); return null; }
   }
 
+  // Handles nobody but us should be able to claim — brand names, roles that
+  // imply authority (impersonation risk), and the site's own route words. All
+  // lowercase; the check compares case-insensitively. To claim one of these for
+  // an official account, set it directly via SQL (bypasses this UI guard).
+  const RESERVED_HANDLES = new Set([
+    // brand
+    'smut','smuthub','smut_hub','smuthubapp','smuthubofficial','official','team','staff',
+    // authority / support (impersonation)
+    'admin','administrator','root','superuser','mod','mods','moderator','support','helpdesk',
+    'help','contact','info','hello','security','abuse','legal','privacy','billing','payments',
+    'sales','press','media','news','owner','founder','founders','ceo',
+    // system / generic
+    'api','www','mail','email','app','apps','web','home','index','null','undefined','none',
+    'anonymous','anon','deleted','guest','user','users','me','you','everyone','nobody',
+    'test','testing','demo','example','premium','vip','bot',
+    // site routes / sections
+    'books','book','bookshelf','bookcase','shelf','glossary','stores','store','dashboard',
+    'search','account','settings','profile','profiles','login','logout','signin','signup',
+    'register','follow','followers','following','u'
+  ]);
+
   // The name shown in the UI. A freely-changeable display_name wins; otherwise
   // the permanent @handle (username); otherwise the email. display_name is a
   // newer column, so this safely falls back when it's absent/empty.
@@ -294,6 +315,7 @@
     if(name===null) return;
     const clean = name.trim();
     if(!/^[a-zA-Z0-9_]{3,20}$/.test(clean)){ alert("3–20 characters, letters/numbers/underscores only."); return; }
+    if(RESERVED_HANDLES.has(clean.toLowerCase())){ alert("“"+clean+"” is reserved and can't be used as a handle. Please choose another."); return; }
     const { error } = await SH.sb.from('profiles').upsert({ id: SH.user.id, username: clean });
     if(error){ alert(/duplicate|unique/i.test(error.message) ? "That handle is taken — try another!" : "Error: "+error.message); return; }
     SH.profile = Object.assign(SH.profile||{}, { username: clean });
