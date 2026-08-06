@@ -781,7 +781,7 @@
 <div class="sheetbase" id="themesheetbg">
   <div class="bottomsheet">
     <div class="sheet-heading"><div><h3>The Library Atelier</h3>
-    <p class="note">Choose the architecture first, then make it yours with finishes and collected details. Diamond pieces can be tried in your library free for 24 hours.</p></div>
+    <p class="note">Change your bookshelf colour once a month, free. Preview any crest, cabinet or collected detail to see how it looks — full customization is coming soon.</p></div>
     <button class="sheet-close" onclick="closeThemeSheet()" aria-label="Close Library Atelier">×</button></div>
     <h4 class="atelier-title" style="margin-top:2px">Choose your bookcase</h4>
     <div class="cabinetgrid" id="cabinetgrid"></div>
@@ -791,17 +791,17 @@
     <div class="crestgrid" id="crestgrid"></div>
     <h4 class="atelier-title">Collected details</h4>
     <div class="detailgrid" id="detailgrid"></div>
+    <button type="button" id="atelierUnlock" onclick="openUnlockInfo()" style="display:none;width:100%;margin-top:16px;padding:.85em 1em;border:1px solid rgba(225,185,107,.4);border-radius:14px;background:linear-gradient(105deg,rgba(113,72,31,.34),rgba(27,18,22,.85));color:#e7c77e;font-family:inherit;font-weight:800;font-size:.9rem;letter-spacing:.02em;cursor:pointer">🔒 Unlock full customization — coming soon</button>
   </div>
 </div>
 
 <div class="modalbg" id="upsell">
   <div class="modalcard">
-    <div class="em">✨</div>
-    <h3 id="upsellTitle">Try this collector piece</h3>
-    <p id="upsellBody">Live with it in your library for 24 hours. No payment details and no automatic charge.</p>
+    <div class="em">✦</div>
+    <h3 id="upsellTitle">Full customization is coming</h3>
+    <p id="upsellBody">Free members get one bookshelf colour change a month. Soon you’ll be able to unlock every crest, cabinet and collected detail — and keep them for good. Pricing is on the way.</p>
     <div class="row">
-      <button class="ghostbtn" onclick="closeUpsell()">Maybe later</button>
-      <button class="btn" id="upsellGo">Start 24-hour trial ◆</button>
+      <button class="btn" onclick="closeUpsell()">Got it</button>
     </div>
   </div>
 </div>
@@ -960,7 +960,7 @@
     readerName=rawName ? rawName.charAt(0).toUpperCase()+rawName.slice(1) : 'Your';
     if(e.detail.profile && e.detail.profile.theme){
       const savedTheme=THEMES.find(t=>t.id===e.detail.profile.theme);
-      setTheme(savedTheme&&hasAccess('theme:'+savedTheme.id,savedTheme.premium)?savedTheme.id:'walnut', true);
+      setTheme(savedTheme?savedTheme.id:'walnut', true);
     }
     try{
       await loadAll(); renderRoom(); buildThemeSheet(); $('themepill').classList.add('show');
@@ -1334,153 +1334,116 @@
     m.querySelectorAll('.mm-item').forEach(it=>it.onclick=()=>{ const mv=it.dataset.move; m.classList.remove('open'); if(mv) setStatus(key,mv); });
   }
 
-  // ── THEME SHEET + 24-HOUR COLLECTOR TRIALS ──
-  function readLocalTrials(){
-    try{
-      const parsed=JSON.parse(localStorage.getItem(TRIAL_KEY)||'{}'), now=Date.now(), active={};
-      Object.keys(parsed).forEach(k=>{ if(+parsed[k]>now) active[k]=+parsed[k]; });
-      if(Object.keys(active).length!==Object.keys(parsed).length) localStorage.setItem(TRIAL_KEY,JSON.stringify(active));
-      return active;
-    }catch(_){ return {}; }
+  // ── THEME SHEET · FREE = 1 colour change / month · everything else preview ──
+  // Free (non-premium) accounts may SAVE one bookshelf colour (wood finish)
+  // change every 30 days. Crests, cabinets and collected details apply as a
+  // live preview only — they revert on reload until full customization is
+  // unlocked (pricing coming soon). isPremium (paid or comp) unlocks all, always.
+  const COLOUR_CHANGE_KEY='sh_bookcase_colour_change_v1';
+  const COLOUR_PERIOD_MS=30*24*60*60*1000;
+  function colourStamp(){
+    try{ const r=JSON.parse(localStorage.getItem(COLOUR_CHANGE_KEY)||'{}'); return +r[user&&user.id?user.id:'guest']||0; }catch(_){ return 0; }
   }
-  function writeLocalTrial(productKey){
-    try{
-      const parsed=JSON.parse(localStorage.getItem(TRIAL_KEY)||'{}');
-      parsed[productKey]=Date.now()+TRIAL_MS;
-      localStorage.setItem(TRIAL_KEY,JSON.stringify(parsed));
-    }catch(_){}
+  function markColourChange(){
+    if(isPremium) return;
+    try{ const r=JSON.parse(localStorage.getItem(COLOUR_CHANGE_KEY)||'{}'); r[user&&user.id?user.id:'guest']=Date.now(); localStorage.setItem(COLOUR_CHANGE_KEY,JSON.stringify(r)); }catch(_){}
   }
-  function readTrials(){
-    if(REVIEW_MODE) return readLocalTrials();
-    // Merge account (DB) trials with any local fallback trials started while the
-    // backend trial RPC isn't live yet. Whichever expiry is later wins.
-    const local=readLocalTrials(), merged={...accountTrials};
-    Object.keys(local).forEach(k=>{ if(local[k]>(merged[k]||0)) merged[k]=local[k]; });
-    return merged;
+  function colourChangeAvailable(){ const s=colourStamp(); return isPremium||REVIEW_MODE||s===0||(Date.now()-s)>=COLOUR_PERIOD_MS; }
+  function colourDaysLeft(){ return Math.max(1,Math.ceil((COLOUR_PERIOD_MS-(Date.now()-colourStamp()))/86400000)); }
+  // Label helpers for the atelier cards.
+  function themeAccessLabel(){
+    if(isPremium) return '✦ Included';
+    if(colourChangeAvailable()) return '✦ Your free colour change';
+    return '🔒 Preview · next change in '+colourDaysLeft()+'d';
   }
-  function trialExpiry(productKey){ return readTrials()[productKey]||0; }
-  function hasAccess(productKey,premium){ return !premium||isPremium||trialExpiry(productKey)>Date.now(); }
-  function trialLabel(productKey,premium){
+  function lockedAccessLabel(premium){
     if(!premium) return 'In your collection';
-    if(isPremium) return '◆ Included with Founder’s Key';
-    const left=trialExpiry(productKey)-Date.now();
-    if(left>0) return '◆ Trial · '+Math.max(1,Math.ceil(left/3600000))+'h left';
-    return '◆ Try free for 24 hours';
+    if(isPremium) return '✦ Included';
+    return '🔒 Preview · unlock coming soon';
   }
-  async function beginTrial(productKey,name,onStart){
-    if(REVIEW_MODE){
-      writeLocalTrial(productKey);
-    } else {
-      if(!user||!sb){
-        toast('Log in to start a trial that follows your account.');
-        if(window.SH) SH.openAuth();
-        return;
-      }
-      let ok=false;
-      try{
-        const {data,error}=await sb.rpc('start_bookcase_trial',{p_product_key:productKey});
-        if(!error){
-          const row=Array.isArray(data)?data[0]:data;
-          const expiry=Date.parse(row&&row.expires_at);
-          if(Number.isFinite(expiry)){ accountTrials[productKey]=expiry; ok=true; }
-        } else {
-          console.warn('bookcase trial RPC unavailable, using local trial',error);
-        }
-      }catch(err){ console.warn('bookcase trial RPC threw, using local trial',err); }
-      // Backend trial isn't live yet → fall back to a device-local 24h trial so
-      // the free preview still works. No payment details, no charge either way.
-      if(!ok) writeLocalTrial(productKey);
-    }
-    if(onStart) onStart();
-    buildThemeSheet();
-    toast(name+' is yours to try for 24 hours ◆');
-  }
-  function requestCollectorPiece(productKey,name,onStart){
-    if(hasAccess(productKey,true)){ onStart(); return; }
-    showUpsell(name,()=>beginTrial(productKey,name,onStart));
-  }
-  function applyCabinetStyle(key){
+  function applyCabinetStyle(key, preview){
     cabinetStyle=key;
     document.body.dataset.cabinet=key;
     document.querySelectorAll('#cabinetgrid .cabinetcard').forEach(c=>c.classList.toggle('on',c.dataset.cabinet===key));
     const item=CABINET_STYLES.find(c=>c.key===key);
-    toast('Styled with '+(item?item.name:'bookcase')+' ✨');
+    toast(preview?'Preview only — unlock coming soon ✦':'Styled with '+(item?item.name:'bookcase')+' ✨');
   }
   function setCabinetStyle(key){
     const item=CABINET_STYLES.find(c=>c.key===key); if(!item) return;
-    const apply=()=>applyCabinetStyle(key);
-    if(item.premium) requestCollectorPiece('cabinet:'+key,item.name,apply); else apply();
+    applyCabinetStyle(key, !!(item.premium&&!isPremium&&!REVIEW_MODE));
   }
-  function applyCrestStyle(key){
+  function applyCrestStyle(key, preview){
     const item=CREST_STYLES.find(c=>c.key===key); if(!item) return;
     if(item.founderOnly&&!founderNumber&&!REVIEW_MODE){ toast('Founder’s Key is reserved for the Original 100.'); return; }
     crestStyle=key;
     document.body.dataset.crest=key;
-    try{localStorage.setItem(CREST_STORAGE_KEY,key);}catch(_){}
+    if(!preview){ try{localStorage.setItem(CREST_STORAGE_KEY,key);}catch(_){} }
     renderRoom();
     buildThemeSheet();
-    toast(item.name+' now marks your library ✦');
+    toast(preview?item.name+' — preview only. Unlock coming soon ✦':item.name+' now marks your library ✦');
   }
   function setCrestStyle(key){
     const item=CREST_STYLES.find(c=>c.key===key); if(!item) return;
-    if(item.founderOnly){ applyCrestStyle(key); return; }
-    const apply=()=>applyCrestStyle(key);
-    if(REVIEW_MODE||hasAccess('crest:'+key,item.premium)) apply(); else requestCollectorPiece('crest:'+key,item.name,apply);
+    if(item.founderOnly){ applyCrestStyle(key,false); return; }
+    applyCrestStyle(key, !(REVIEW_MODE||isPremium));
   }
   function buildThemeSheet(){
     $('cabinetgrid').innerHTML=CABINET_STYLES.map(c=>
       '<button class="cabinetcard '+(cabinetStyle===c.key?'on':'')+'" data-cabinet="'+c.key+'">'
       +'<span class="cabinet-shape '+c.shape+'" style="--cab:'+THEMES.find(t=>t.id===theme).color+'"></span>'
-      +'<strong>'+c.name+'</strong><small>'+c.desc+'</small><small class="cab-price trial-mark '+(trialExpiry('cabinet:'+c.key)>Date.now()?'active':'')+'">'+trialLabel('cabinet:'+c.key,c.premium)+'</small></button>'
+      +'<strong>'+c.name+'</strong><small>'+c.desc+'</small><small class="cab-price trial-mark">'+lockedAccessLabel(c.premium)+'</small></button>'
     ).join('');
     $('themegrid').innerHTML = THEMES.map(t=>
-      '<div class="themecard '+(t.id===theme?'on':'')+'" data-t="'+t.id+'" data-prem="'+(t.premium?1:0)+'">'
+      '<div class="themecard '+(t.id===theme?'on':'')+'" data-t="'+t.id+'">'
       + '<span class="dot" style="background:'+t.color+'"></span>'
-      + '<div><div class="tn">'+t.name+'</div><div class="tdesc">'+t.desc+'</div><div class="lock trial-mark '+(trialExpiry('theme:'+t.id)>Date.now()?'active':'')+'">'+trialLabel('theme:'+t.id,t.premium)+'</div></div></div>'
+      + '<div><div class="tn">'+t.name+'</div><div class="tdesc">'+t.desc+'</div><div class="lock trial-mark">'+themeAccessLabel()+'</div></div></div>'
     ).join('');
     $('crestgrid').innerHTML=CREST_STYLES.map(c=>{
       const founderLocked=c.founderOnly&&!founderNumber&&!REVIEW_MODE;
-      const accessLabel=c.founderOnly?(founderLocked?'Original 100 only':'◆ Original 100 unlocked'):trialLabel('crest:'+c.key,c.premium);
+      const accessLabel=c.founderOnly?(founderLocked?'Original 100 only':'✦ Original 100 unlocked'):lockedAccessLabel(c.premium);
       return '<button class="crestcard '+(crestStyle===c.key?'on':'')+'" data-crest-style="'+c.key+'" '+(founderLocked?'disabled':'')+'>'
         +'<span class="crest-preview"><img src="'+c.src+'" alt="" aria-hidden="true" loading="lazy"></span><span class="crest-copy-card"><strong>'+c.name+'</strong><small>'+c.desc+'</small><em>'+accessLabel+'</em></span></button>';
     }).join('');
     $('detailgrid').innerHTML=LIBRARY_DETAILS.map(d=>'<button class="detailcard '+(libraryDetail===d.key?'on':'')+'" data-library-detail="'+d.key+'">'
-      +'<span>'+d.icon+'</span><strong>'+d.name+'</strong><small class="trial-mark '+(trialExpiry('detail:'+d.key)>Date.now()?'active':'')+'">'+trialLabel('detail:'+d.key,d.premium)+'</small></button>').join('');
+      +'<span>'+d.icon+'</span><strong>'+d.name+'</strong><small class="trial-mark">'+lockedAccessLabel(d.premium)+'</small></button>').join('');
+    const unlockBtn=$('atelierUnlock'); if(unlockBtn) unlockBtn.style.display=(isPremium||REVIEW_MODE)?'none':'block';
     document.querySelectorAll('#cabinetgrid [data-cabinet]').forEach(c=>c.onclick=()=>setCabinetStyle(c.dataset.cabinet));
     document.querySelectorAll('#themegrid .themecard').forEach(c=>c.onclick=()=>{
-      const id=c.dataset.t, prem=c.dataset.prem==='1';
-      const item=THEMES.find(t=>t.id===id);
-      const apply=()=>{ setTheme(id); closeThemeSheet(); };
-      if(prem){ requestCollectorPiece('theme:'+id,item?item.name:'This finish',apply); return; }
-      apply();
+      const id=c.dataset.t;
+      if(id===theme){ return; }                              // already applied — no-op
+      if(isPremium||REVIEW_MODE){ setTheme(id); closeThemeSheet(); return; }
+      if(colourChangeAvailable()){
+        setTheme(id,true);                                    // apply without the generic toast
+        if(window.SH&&SH.user) SH.saveTheme(id);              // persist this month's colour change
+        markColourChange();
+        buildThemeSheet();
+        toast('Colour saved — that’s your free change this month ✦');
+        closeThemeSheet();
+      } else {
+        setTheme(id,true);                                    // preview only, not saved
+        buildThemeSheet();
+        toast('Preview only — your next free colour change is in '+colourDaysLeft()+' days');
+      }
     });
     document.querySelectorAll('#crestgrid [data-crest-style]').forEach(c=>c.onclick=()=>setCrestStyle(c.dataset.crestStyle));
     document.querySelectorAll('#detailgrid [data-library-detail]').forEach(c=>c.onclick=()=>{
       const key=c.dataset.libraryDetail, item=LIBRARY_DETAILS.find(d=>d.key===key);
-      const apply=()=>{
-        libraryDetail=key;
-        if(libraryDetail==='collector'){
-          setTheme('academia',true);
-          document.body.dataset.libraryDetail='gilded';
-        } else {
-          document.body.dataset.libraryDetail=libraryDetail;
-        }
-        document.querySelectorAll('#detailgrid .detailcard').forEach(x=>x.classList.toggle('on',x===c));
-        toast('Added '+(item?item.name:'library detail')+' ✨');
-      };
-      if(item&&item.premium) requestCollectorPiece('detail:'+key,item.name,apply); else apply();
+      const preview=!!(item&&item.premium&&!isPremium&&!REVIEW_MODE);
+      libraryDetail=key;
+      if(libraryDetail==='collector'){
+        setTheme('academia',true);
+        document.body.dataset.libraryDetail='gilded';
+      } else {
+        document.body.dataset.libraryDetail=libraryDetail;
+      }
+      document.querySelectorAll('#detailgrid .detailcard').forEach(x=>x.classList.toggle('on',x===c));
+      toast(preview?'Preview only — unlock coming soon ✦':'Added '+(item?item.name:'library detail')+' ✨');
     });
   }
   $('themepill').onclick=()=>{ buildThemeSheet(); $('themesheetbg').classList.add('open'); syncScrollLock(); };
   $('themesheetbg').onclick=(e)=>{ if(e.target===$('themesheetbg')) closeThemeSheet(); };
   function closeThemeSheet(){ $('themesheetbg').classList.remove('open'); syncScrollLock(); }
-
-  function showUpsell(title, onGo){
-    $('upsellTitle').textContent=title;
-    $('upsell').classList.add('open');
-    syncScrollLock();
-    $('upsellGo').onclick=()=>{ closeUpsell(); if(onGo) onGo(); };
-  }
+  function openUnlockInfo(){ $('upsell').classList.add('open'); syncScrollLock(); }
   function closeUpsell(){ $('upsell').classList.remove('open'); syncScrollLock(); }
 
   // ── IMMERSIVE SHELF WORLD ──
