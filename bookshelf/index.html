@@ -1024,11 +1024,12 @@
   // Read-only view of another reader's public shelf (?u=<username>).
   async function enterViewMode(){
     try{
-      const { data:prof, error } = await sb.from('public_profiles').select('id,username').eq('username',VIEW_HANDLE).maybeSingle();
+      const { data:prof, error } = await sb.from('public_profiles').select('*').eq('username',VIEW_HANDLE).maybeSingle();
       if(error) throw error;
       if(!prof){ renderViewMissing(); return; }
       VIEW_UID=prof.id;
-      readerName=prof.username.charAt(0).toUpperCase()+prof.username.slice(1);
+      const dn=(prof.display_name||'').trim();
+      readerName=dn||(prof.username.charAt(0).toUpperCase()+prof.username.slice(1));
       setTheme('walnut',true);                    // sets body.className, so add the
       document.body.classList.add('view-mode');   // view-mode class AFTER it, not before
       document.body.dataset.cabinet=cabinetStyle;

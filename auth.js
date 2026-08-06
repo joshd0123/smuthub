@@ -140,9 +140,14 @@
     }catch(e){ console.warn('profile load', e); return null; }
   }
 
+  // The name shown in the UI. A freely-changeable display_name wins; otherwise
+  // the permanent @handle (username); otherwise the email. display_name is a
+  // newer column, so this safely falls back when it's absent/empty.
   function displayName(){
-    return (SH.profile && SH.profile.username) ? SH.profile.username : (SH.user ? SH.user.email : '');
+    const p = SH.profile || {};
+    return p.display_name || p.username || (SH.user ? SH.user.email : '');
   }
+  function accountHandle(){ return (SH.profile && SH.profile.username) || ''; }
 
   // ── shared primary navigation ───────────────────────────────────────────
   // Every public page carries a lightweight static fallback, but this is the
@@ -210,15 +215,16 @@
     wrap.id = 'shNavAccount';
     wrap.className = 'sh-nav-account';
     if(SH.user){
-      const name = displayName();
+      const name = displayName(), handle = accountHandle();
       wrap.innerHTML = `
-        <div class="sh-nav-acct-hd">Signed in as<br><b>${esc(name)}</b></div>
+        <div class="sh-nav-acct-hd">Signed in as<br><b>${esc(name)}</b>${handle?`<br><span style="opacity:.75">@${esc(handle)}</span>`:''}</div>
         <a href="/dashboard">📊 Dashboard</a>
         <a href="/import/">↗ Import library</a>
-        <button type="button" data-act="username">✏️ Set username</button>
+        <button type="button" data-act="display">✏️ Edit display name</button>
+        ${handle?'':'<button type="button" data-act="handle">＠ Claim your handle</button>'}
         <button type="button" data-act="logout">👋 Log out</button>`;
       wrap.querySelectorAll('button[data-act]').forEach(b=>{
-        b.onclick = ()=> b.dataset.act==='logout' ? logout() : setUsername();
+        b.onclick = ()=> accountAction(b.dataset.act);
       });
     } else {
       wrap.innerHTML = `<button type="button" class="sh-nav-login" onclick="SH.openAuth()">Log in / Sign up</button>`;
@@ -231,16 +237,17 @@
     const box = document.getElementById('authbox');
     if(!box) return;
     if (SH.user) {
-      const name = displayName();
+      const name = displayName(), handle = accountHandle();
       const initial = ((name||'?').trim().charAt(0) || '?').toUpperCase();
       box.innerHTML = `
         <div style="position:relative">
           <button id="shUserBtn" class="sh-avatar" title="${esc(name)}" aria-label="Account menu" aria-haspopup="menu" aria-expanded="false">${esc(initial)}</button>
           <div id="shMenu" class="sh-account-menu" role="menu" style="display:none;position:absolute;right:0;top:125%;z-index:95;background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:14px;min-width:220px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.5)">
-            <div style="padding:.7em 1.1em;border-bottom:1px solid var(--line,#2a1d22);color:#b69089;font-size:.78rem">Signed in as<br><b style="color:var(--amber,#ffab40);font-size:.92rem">${esc(name)}</b></div>
+            <div style="padding:.7em 1.1em;border-bottom:1px solid var(--line,#2a1d22);color:#b69089;font-size:.78rem">Signed in as<br><b style="color:var(--amber,#ffab40);font-size:.92rem">${esc(name)}</b>${handle?`<br><span style="color:#8a6d66">@${esc(handle)}</span>`:''}</div>
             <a class="sh-menu-link" role="menuitem" href="/dashboard">📊 Dashboard</a>
             <a class="sh-menu-link" role="menuitem" href="/import/">↗ Import library</a>
-            <button type="button" class="shMenuItem" role="menuitem" data-act="username">✏️ Set username</button>
+            <button type="button" class="shMenuItem" role="menuitem" data-act="display">✏️ Edit display name</button>
+            ${handle?'':'<button type="button" class="shMenuItem" role="menuitem" data-act="handle">＠ Claim your handle</button>'}
             <button type="button" class="shMenuItem" role="menuitem" data-act="logout">👋 Log out</button>
           </div>
         </div>`;
@@ -263,7 +270,7 @@
         mi.style.cssText = 'display:block;width:100%;text-align:left;background:none;border:0;color:#f4e8e3;font-family:inherit;font-size:.88rem;font-weight:600;padding:.75em 1.1em;cursor:pointer';
         mi.onmouseenter = ()=> mi.style.background='#1c1316';
         mi.onmouseleave = ()=> mi.style.background='none';
-        mi.onclick = ()=> mi.dataset.act==='logout' ? logout() : setUsername();
+        mi.onclick = ()=> accountAction(mi.dataset.act);
       });
       renderNavAccount();
     } else {
@@ -291,6 +298,32 @@
     if(error){ alert(/duplicate|unique/i.test(error.message) ? "That handle is taken — try another!" : "Error: "+error.message); return; }
     SH.profile = Object.assign(SH.profile||{}, { username: clean });
     renderAuthbox();
+  }
+
+  // Freely-changeable display name (the nickname shown on your shelf). Unlike
+  // the @handle, this never appears in a URL, so it can be changed anytime.
+  async function setDisplayName(){
+    const cur = (SH.profile && SH.profile.display_name) || '';
+    const name = prompt("Your display name — the nickname shown on your bookshelf.\n\nYou can change this anytime; it doesn't affect your bookshelf link.", cur);
+    if(name===null) return;
+    const clean = name.trim().replace(/\s+/g,' ');
+    if(clean.length>40){ alert("Please keep your display name under 40 characters."); return; }
+    const { error } = await SH.sb.from('profiles').upsert({ id: SH.user.id, display_name: clean || null });
+    if(error){
+      alert(/column|display_name|schema|does not exist/i.test(error.message)
+        ? "Display names aren't switched on yet — the database needs a quick one-time update."
+        : "Error: "+error.message);
+      return;
+    }
+    SH.profile = Object.assign(SH.profile||{}, { display_name: clean || null });
+    renderAuthbox();
+  }
+
+  // Shared dispatcher for the account-menu buttons (avatar dropdown + drawer).
+  function accountAction(act){
+    if(act==='logout') return logout();
+    if(act==='handle') return setUsername();
+    if(act==='display') return setDisplayName();
   }
 
   async function saveTheme(theme){

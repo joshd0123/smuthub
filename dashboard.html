@@ -513,11 +513,15 @@
         const term = raw.replace(/[%_,()]/g,'');            // keep the ilike pattern clean
         if (!term){ render(''); return; }
         const myName = (window.SH && SH.profile && SH.profile.username) || '';
-        const { data, error } = await client.from('public_profiles').select('username').ilike('username','%'+term+'%').limit(8);
+        const { data, error } = await client.from('public_profiles').select('*').ilike('username','%'+term+'%').limit(8);
         if (error){ render('<div class="empty">Search unavailable right now.</div>'); return; }
         const rows = (data||[]).filter(p=>p.username && p.username.toLowerCase()!==myName.toLowerCase());
         if (!rows.length){ render('<div class="empty">No public bookshelf matches “'+esc(raw)+'”.</div>'); return; }
-        render(rows.map(p=>'<a href="/u/?h='+encodeURIComponent(p.username)+'"><span class="av">'+esc(p.username.charAt(0).toUpperCase())+'</span>@'+esc(p.username)+'</a>').join(''));
+        render(rows.map(p=>{
+          const dn=(p.display_name||'').trim();
+          const label = dn ? esc(dn)+' (@'+esc(p.username)+')' : '@'+esc(p.username);
+          return '<a href="/u/?h='+encodeURIComponent(p.username)+'"><span class="av">'+esc((dn||p.username).charAt(0).toUpperCase())+'</span>'+label+'</a>';
+        }).join(''));
       }, 220);
     });
     input.addEventListener('keydown', e=>{ if (e.key==='Enter'){ const q=input.value.trim(); if (q) location.href='/u/?h='+encodeURIComponent(q.toLowerCase()); } });
@@ -533,10 +537,13 @@
       if (!ids.length){ list.innerHTML=''; return; }
       // Resolve to usernames via the public view — anyone who has since gone
       // private simply drops off the list (view only returns public profiles).
-      const { data: people } = await sb.from('public_profiles').select('id,username').in('id', ids);
+      const { data: people } = await sb.from('public_profiles').select('*').in('id', ids);
       const rows = (people||[]).filter(p=>p.username);
-      list.innerHTML = rows.map(p=>'<a class="follow-chip" href="/u/?h='+encodeURIComponent(p.username)
-        +'"><span class="av">'+esc(p.username.charAt(0).toUpperCase())+'</span>@'+esc(p.username)+'</a>').join('');
+      list.innerHTML = rows.map(p=>{
+        const dn=(p.display_name||'').trim();
+        return '<a class="follow-chip" href="/u/?h='+encodeURIComponent(p.username)
+          +'"><span class="av">'+esc((dn||p.username).charAt(0).toUpperCase())+'</span>'+esc(dn||('@'+p.username))+'</a>';
+      }).join('');
     } catch(_) { list.innerHTML=''; }
   }
   function coverUrl(cover_i){ return cover_i ? `https://covers.openlibrary.org/b/id/${cover_i}-L.jpg` : null; }
@@ -607,7 +614,8 @@
   window.addEventListener('sh-auth', async (e)=>{
     sb = window.SH ? window.SH.sb : null;
     user = e.detail.user;
-    const display = user ? ((e.detail.profile && e.detail.profile.username) || user.email.split('@')[0]) : 'friend';
+    const prof0 = e.detail.profile || {};
+    const display = user ? (prof0.display_name || prof0.username || user.email.split('@')[0]) : 'friend';
     $('hellName').textContent = display;
 
     // ── Public bookshelf: opt-in toggle + share link ─────────────────────
@@ -807,25 +815,25 @@
     try{ const r=await sb.from('follows').select('following_id').eq('follower_id',myId); edges=r.data||[]; }catch(_){}
     if(!edges.length){ $('raceSec').hidden=true; return; }   // no one to race yet
     const myRead=(myShelf||[]).filter(b=>b.status==='read').length;
-    const racers=[{me:true, handle:(SH.profile&&SH.profile.username)||'you', n:myRead}];
+    const racers=[{me:true, handle:(SH.profile&&SH.profile.username)||'you', dn:(SH.profile&&SH.profile.display_name)||'', n:myRead}];
     for(const e of edges){
       let n=0; try{ const { count }=await sb.from('shelf').select('*',{count:'exact',head:true}).eq('user_id',e.following_id).eq('status','read'); n=count||0; }catch(_){}
       racers.push({id:e.following_id, n});
     }
     const ids=racers.filter(r=>r.id).map(r=>r.id);
-    if(ids.length){ try{ const {data}=await sb.from('public_profiles').select('id,username').in('id',ids); const m=new Map((data||[]).map(p=>[p.id,p.username])); racers.forEach(r=>{ if(r.id) r.handle=m.get(r.id)||''; }); }catch(_){} }
+    if(ids.length){ try{ const {data}=await sb.from('public_profiles').select('*').in('id',ids); const m=new Map((data||[]).map(p=>[p.id,p])); racers.forEach(r=>{ if(r.id){ const p=m.get(r.id); r.handle=p?p.username:''; r.dn=(p&&p.display_name)||''; } }); }catch(_){} }
     racers.sort((a,b)=>b.n-a.n);
     const max=Math.max(...racers.map(r=>r.n),1);
     $('raceSec').hidden=false;
     $('raceCard').innerHTML = racers.map((r,i)=>{
       const pct=Math.round(r.n/max*100);
-      if(r.me) return `<div class="race-row you"><span class="rank">${i+1}</span><span class="av">${esc((r.handle||'Y').charAt(0).toUpperCase())}</span><span class="reveal">You · @${esc(r.handle)}</span><span class="bar"><span style="width:${pct}%"></span></span><span class="race-n">${r.n}</span></div>`;
-      return `<div class="race-row"${r.handle?` data-h="${esc(r.handle)}"`:''}><span class="rank">${i+1}</span><span class="av hidden-id">?</span><span class="reveal">${r.handle?'Tap to reveal':'A reader'}</span><span class="bar"><span style="width:${pct}%"></span></span><span class="race-n">${r.n}</span></div>`;
+      if(r.me) return `<div class="race-row you"><span class="rank">${i+1}</span><span class="av">${esc((r.dn||r.handle||'Y').charAt(0).toUpperCase())}</span><span class="reveal">You · ${r.dn?esc(r.dn):'@'+esc(r.handle)}</span><span class="bar"><span style="width:${pct}%"></span></span><span class="race-n">${r.n}</span></div>`;
+      return `<div class="race-row"${r.handle?` data-h="${esc(r.handle)}" data-name="${esc(r.dn||('@'+r.handle))}"`:''}><span class="rank">${i+1}</span><span class="av hidden-id">?</span><span class="reveal">${r.handle?'Tap to reveal':'A reader'}</span><span class="bar"><span style="width:${pct}%"></span></span><span class="race-n">${r.n}</span></div>`;
     }).join('') + `<div class="racehint">Names stay hidden until you tap — a friendly race, not a public leaderboard.</div>`;
     // First tap reveals the name; second tap opens their shelf.
     $('raceCard').onclick = (ev)=>{ const row=ev.target.closest('.race-row[data-h]'); if(!row) return; const h=row.dataset.h;
       if(row.dataset.shown){ location.href='/u/?h='+encodeURIComponent(h); }
-      else { row.querySelector('.reveal').innerHTML='<b>@'+esc(h)+'</b>'; const av=row.querySelector('.av'); av.textContent=h.charAt(0).toUpperCase(); av.classList.remove('hidden-id'); row.dataset.shown='1'; } };
+      else { const nm=row.dataset.name||('@'+h); row.querySelector('.reveal').innerHTML='<b>'+esc(nm)+'</b>'; const av=row.querySelector('.av'); av.textContent=nm.charAt(0).toUpperCase(); av.classList.remove('hidden-id'); row.dataset.shown='1'; } };
   }
   function openBook(key){
     if (!user){ if (window.SH) SH.openAuth(); return; }

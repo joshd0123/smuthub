@@ -134,7 +134,9 @@
     const sb = SH.sb;
 
     // 1) resolve the public profile (view returns only public users' safe columns)
-    const { data: prof, error: pErr } = await sb.from('public_profiles').select('id,username,created_at').eq('username', handle).maybeSingle();
+    // select('*') so this picks up display_name automatically once the view
+    // exposes it, without 400-ing on installs where the column isn't there yet.
+    const { data: prof, error: pErr } = await sb.from('public_profiles').select('*').eq('username', handle).maybeSingle();
     if (pErr){ showState('<h2>Couldn’t load this bookshelf</h2><p>'+esc(pErr.message)+'</p>'); return; }
     if (!prof){ showState('<h2>This bookshelf isn’t available</h2><p>It may be private, or the name is wrong. <a href="/">Go home</a>.</p>'); return; }
 
@@ -185,7 +187,9 @@
       return '<section class="group"><h2><span class="ico">'+m.icon+'</span> '+m.label+' <span class="count">'+g.length+'</span></h2>'+grid+'</section>';
     };
 
-    const name = prof.username.charAt(0).toUpperCase()+prof.username.slice(1);
+    // Prefer the changeable display name; fall back to the @handle.
+    const dn = (prof.display_name||'').trim();
+    const name = dn || (prof.username.charAt(0).toUpperCase()+prof.username.slice(1));
     const poss = /s$/i.test(name) ? name+'’' : name+'’s';
     document.title = poss+' Bookshelf | smutHub';
     $main.innerHTML =
@@ -199,7 +203,7 @@
       + '</section>'
       + STATUS_META.map(groupHTML).join('');
 
-    OWNER = { id: prof.id, name: prof.username };
+    OWNER = { id: prof.id, name: name };
     setupFollow();
   }
 
