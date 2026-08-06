@@ -519,8 +519,9 @@
         if (!rows.length){ render('<div class="empty">No public bookshelf matches “'+esc(raw)+'”.</div>'); return; }
         render(rows.map(p=>{
           const dn=(p.display_name||'').trim();
-          const label = dn ? esc(dn)+' (@'+esc(p.username)+')' : '@'+esc(p.username);
-          return '<a href="/u/?h='+encodeURIComponent(p.username)+'"><span class="av">'+esc((dn||p.username).charAt(0).toUpperCase())+'</span>'+label+'</a>';
+          const uname = p.username.toLowerCase();          // handles display + link lowercase
+          const label = dn ? esc(dn)+' (@'+esc(uname)+')' : '@'+esc(uname);
+          return '<a href="/u/?h='+encodeURIComponent(uname)+'"><span class="av">'+esc((dn||uname).charAt(0).toUpperCase())+'</span>'+label+'</a>';
         }).join(''));
       }, 220);
     });
@@ -541,8 +542,9 @@
       const rows = (people||[]).filter(p=>p.username);
       list.innerHTML = rows.map(p=>{
         const dn=(p.display_name||'').trim();
-        return '<a class="follow-chip" href="/u/?h='+encodeURIComponent(p.username)
-          +'"><span class="av">'+esc((dn||p.username).charAt(0).toUpperCase())+'</span>'+esc(dn||('@'+p.username))+'</a>';
+        const uname=p.username.toLowerCase();
+        return '<a class="follow-chip" href="/u/?h='+encodeURIComponent(uname)
+          +'"><span class="av">'+esc((dn||uname).charAt(0).toUpperCase())+'</span>'+esc(dn||('@'+uname))+'</a>';
       }).join('');
     } catch(_) { list.innerHTML=''; }
   }
@@ -815,13 +817,13 @@
     try{ const r=await sb.from('follows').select('following_id').eq('follower_id',myId); edges=r.data||[]; }catch(_){}
     if(!edges.length){ $('raceSec').hidden=true; return; }   // no one to race yet
     const myRead=(myShelf||[]).filter(b=>b.status==='read').length;
-    const racers=[{me:true, handle:(SH.profile&&SH.profile.username)||'you', dn:(SH.profile&&SH.profile.display_name)||'', n:myRead}];
+    const racers=[{me:true, handle:((SH.profile&&SH.profile.username)||'you').toLowerCase(), dn:(SH.profile&&SH.profile.display_name)||'', n:myRead}];
     for(const e of edges){
       let n=0; try{ const { count }=await sb.from('shelf').select('*',{count:'exact',head:true}).eq('user_id',e.following_id).eq('status','read'); n=count||0; }catch(_){}
       racers.push({id:e.following_id, n});
     }
     const ids=racers.filter(r=>r.id).map(r=>r.id);
-    if(ids.length){ try{ const {data}=await sb.from('public_profiles').select('*').in('id',ids); const m=new Map((data||[]).map(p=>[p.id,p])); racers.forEach(r=>{ if(r.id){ const p=m.get(r.id); r.handle=p?p.username:''; r.dn=(p&&p.display_name)||''; } }); }catch(_){} }
+    if(ids.length){ try{ const {data}=await sb.from('public_profiles').select('*').in('id',ids); const m=new Map((data||[]).map(p=>[p.id,p])); racers.forEach(r=>{ if(r.id){ const p=m.get(r.id); r.handle=p?p.username.toLowerCase():''; r.dn=(p&&p.display_name)||''; } }); }catch(_){} }
     racers.sort((a,b)=>b.n-a.n);
     const max=Math.max(...racers.map(r=>r.n),1);
     $('raceSec').hidden=false;
