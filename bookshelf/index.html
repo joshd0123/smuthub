@@ -1028,8 +1028,11 @@
   // Read-only view of another reader's public shelf (?u=<username>).
   async function enterViewMode(){
     try{
-      const { data:prof, error } = await sb.from('public_profiles').select('*').eq('username',VIEW_HANDLE).maybeSingle();
+      // Case-insensitive handle match (see /u/index.html) — handles may be
+      // stored with any casing but VIEW_HANDLE arrives lowercased.
+      const { data:vrows, error } = await sb.from('public_profiles').select('*').ilike('username',VIEW_HANDLE);
       if(error) throw error;
+      const prof=(vrows||[]).find(r=>(r.username||'').toLowerCase()===VIEW_HANDLE)||null;
       if(!prof){ renderViewMissing(); return; }
       VIEW_UID=prof.id;
       const dn=(prof.display_name||'').trim();

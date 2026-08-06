@@ -313,9 +313,13 @@
     }
     const name = prompt("Choose your permanent handle (3–20 chars · letters, numbers, underscores).\n\nThis becomes your public bookshelf address:\nsmuthub.ca/u/yourhandle\n\nIt can't be changed later, so pick one you'll be happy with.", "");
     if(name===null) return;
-    const clean = name.trim();
-    if(!/^[a-zA-Z0-9_]{3,20}$/.test(clean)){ alert("3–20 characters, letters/numbers/underscores only."); return; }
-    if(RESERVED_HANDLES.has(clean.toLowerCase())){ alert("“"+clean+"” is reserved and can't be used as a handle. Please choose another."); return; }
+    // Canonicalize to lowercase so handles are case-insensitive-unique and every
+    // /u/<handle> URL resolves regardless of how it was typed. Display name keeps
+    // the pretty casing. (Existing mixed-case handles still resolve — the viewers
+    // match case-insensitively — but new ones are always lowercase.)
+    const clean = name.trim().toLowerCase();
+    if(!/^[a-z0-9_]{3,20}$/.test(clean)){ alert("3–20 characters, letters/numbers/underscores only."); return; }
+    if(RESERVED_HANDLES.has(clean)){ alert("“"+clean+"” is reserved and can't be used as a handle. Please choose another."); return; }
     const { error } = await SH.sb.from('profiles').upsert({ id: SH.user.id, username: clean });
     if(error){ alert(/duplicate|unique/i.test(error.message) ? "That handle is taken — try another!" : "Error: "+error.message); return; }
     SH.profile = Object.assign(SH.profile||{}, { username: clean });

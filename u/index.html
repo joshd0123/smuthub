@@ -136,8 +136,12 @@
     // 1) resolve the public profile (view returns only public users' safe columns)
     // select('*') so this picks up display_name automatically once the view
     // exposes it, without 400-ing on installs where the column isn't there yet.
-    const { data: prof, error: pErr } = await sb.from('public_profiles').select('*').eq('username', handle).maybeSingle();
+    // Case-insensitive match: handles may be stored with any casing (e.g. "Aelin")
+    // but the handle arrives lowercased. ilike ignores case; the JS find guards
+    // against LIKE's `_` wildcard by requiring an exact (lowercased) equality.
+    const { data: profRows, error: pErr } = await sb.from('public_profiles').select('*').ilike('username', handle);
     if (pErr){ showState('<h2>Couldn’t load this bookshelf</h2><p>'+esc(pErr.message)+'</p>'); return; }
+    const prof = (profRows||[]).find(r => (r.username||'').toLowerCase() === handle) || null;
     if (!prof){ showState('<h2>This bookshelf isn’t available</h2><p>It may be private, or the name is wrong. <a href="/">Go home</a>.</p>'); return; }
 
     // 2) shelf + spice + catalog (all public reads)
