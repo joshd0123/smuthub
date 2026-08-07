@@ -460,6 +460,11 @@
       @media (max-width: 768px){
         input, textarea { font-size: 16px !important; }
       }
+      /* Auto-hide header: slides away on scroll-down, returns on scroll-up, so
+         search + nav are a flick away without the bar covering content. */
+      header{transition:transform .28s cubic-bezier(.4,0,.2,1);will-change:transform}
+      header.sh-header-hidden{transform:translateY(-100%)}
+      @media(prefers-reduced-motion:reduce){header{transition:none}}
       .sh-totop{position:fixed;right:16px;bottom:16px;z-index:60;width:46px;height:46px;border-radius:50%;
         background:var(--grad,linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40));color:#1a0c10;border:0;cursor:pointer;
         font-size:1.25rem;font-weight:800;line-height:1;font-family:inherit;
@@ -709,7 +714,29 @@
     window.addEventListener('scroll', onScroll, {passive:true});
     onScroll();
   }
-  function initShUI(){ injectHeaderCSS(); renderSharedNavigation(); enhanceHeader(); mountUmami(); mountBackToTop(); /* mountFeedbackButton(); ← disabled */ }
+  // Auto-hide the sticky header on scroll-down, reveal it on scroll-up. Near the
+  // very top it's always shown, and it never hides while a header menu is open.
+  function mountHideOnScroll(){
+    const header=document.querySelector('header'); if(!header) return;
+    let lastY=window.scrollY||0, ticking=false;
+    const TOP=80, DELTA=6;
+    const anyMenuOpen=()=>!!(
+      document.querySelector('header .navlinks.sh-open') ||
+      document.querySelector('header .sh-guides[open]') ||
+      document.querySelector('.sh-search-panel.open') ||
+      (()=>{ const m=document.getElementById('shMenu'); return m && m.style.display==='block'; })()
+    );
+    const update=()=>{
+      ticking=false;
+      const y=window.scrollY||0;
+      if(y<=TOP || anyMenuOpen()){ header.classList.remove('sh-header-hidden'); lastY=y; return; }
+      if(Math.abs(y-lastY)<DELTA) return;
+      header.classList.toggle('sh-header-hidden', y>lastY);   // down → hide, up → show
+      lastY=y;
+    };
+    window.addEventListener('scroll',()=>{ if(!ticking){ ticking=true; requestAnimationFrame(update); } },{passive:true});
+  }
+  function initShUI(){ injectHeaderCSS(); renderSharedNavigation(); enhanceHeader(); mountUmami(); mountBackToTop(); mountHideOnScroll(); /* mountFeedbackButton(); ← disabled */ }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', initShUI);
   else initShUI();
 })();
