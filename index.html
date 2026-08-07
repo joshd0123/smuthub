@@ -485,18 +485,18 @@
 <script src="config.js"></script>
 <script defer src="auth.js"></script>
 <script>
-  // Usher logged-in visitors to their immersive bookshelf — the crest library —
-  // ONLY on a cold arrival at the homepage (typed URL or external link). It's the
-  // better first impression; the dashboard stays one click away in the account
-  // menu. Internal navigation — e.g. clicking the smutHub logo from any page —
-  // keeps you here, so the logo always leads home.
+  // Usher logged-in visitors to their dashboard — so they land on their stats —
+  // ONLY on a cold arrival at the homepage (typed URL or external link). Internal
+  // navigation — e.g. clicking the smutHub logo from any page — keeps you here, so
+  // the logo always leads home. (Searching a reader still opens their bookshelf at
+  // /u/?h=…, not the dashboard.)
   window.addEventListener('sh-auth', (e)=>{
     if (!(e.detail && e.detail.user)) return;
     const onHome = location.pathname === '/' || location.pathname.endsWith('/index.html');
     if (!onHome) return;
     let internal = false;
     try { internal = !!document.referrer && new URL(document.referrer).origin === location.origin; } catch(_) {}
-    if (!internal) location.replace('/bookshelf/');
+    if (!internal) location.replace('dashboard.html');
   });
 </script>
 </body>
