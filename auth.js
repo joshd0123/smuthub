@@ -228,33 +228,11 @@
   // at the foot of the hamburger drawer. Re-rendered whenever auth changes.
   // No-op visually on desktop (kept display:none), where #authbox owns it.
   function renderNavAccount(){
-    const nav = document.querySelector('header .navlinks');
-    if(!nav) return;
+    // The account now lives in the header avatar dropdown at every screen size
+    // (rightmost), so the hamburger drawer is nav-only. This just clears any
+    // stale account block; callers can still invoke it harmlessly.
     const old = document.getElementById('shNavAccount');
     if(old) old.remove();
-    const wrap = document.createElement('div');
-    wrap.id = 'shNavAccount';
-    wrap.className = 'sh-nav-account';
-    if(SH.user){
-      const name = displayName(), handle = accountHandle();
-      const initial = ((name||'?').trim().charAt(0)||'?').toUpperCase();
-      wrap.innerHTML = `
-        <div class="sh-nav-acct-hd">
-          <span class="sh-nav-av">${esc(initial)}</span>
-          <span class="sh-nav-who"><span class="sh-nav-name">${esc(name)}</span>${handle?`<span class="sh-nav-at">@${esc(handle)}</span>`:''}</span>
-        </div>
-        <a href="/dashboard"><span class="sh-ico">📊</span><span>Dashboard</span></a>
-        <a href="/import/"><span class="sh-ico">📥</span><span>Import library</span></a>
-        <button type="button" data-act="display"><span class="sh-ico">✏️</span><span>Edit display name</span></button>
-        ${handle?'':'<button type="button" data-act="handle"><span class="sh-ico">🏷️</span><span>Claim your handle</span></button>'}
-        <button type="button" data-act="logout"><span class="sh-ico">👋</span><span>Log out</span></button>`;
-      wrap.querySelectorAll('button[data-act]').forEach(b=>{
-        b.onclick = ()=> accountAction(b.dataset.act);
-      });
-    } else {
-      wrap.innerHTML = `<button type="button" class="sh-nav-login" onclick="SH.openAuth()">Log in / Sign up</button>`;
-    }
-    nav.appendChild(wrap);
   }
 
   // ── header widget ──
@@ -609,10 +587,8 @@
         header .sh-guides-menu b{font-size:.86rem}
         header .sh-guides-menu small{font-size:.72rem}
         header .sh-search-btn{width:38px;height:38px;border-radius:11px}
-        /* On mobile the account moves into the hamburger drawer, so the header
-           avatar / login button is hidden and the drawer account block shows. */
-        header #authbox{display:none}
-        #shNavAccount{display:block;border-top:1px solid var(--line,#2a1d22);margin-top:8px;padding-top:11px}
+        /* Account lives in the header avatar (rightmost) at every screen size, so
+           the hamburger drawer is nav-only — the drawer account stays hidden. */
       }`;
     document.head.appendChild(st);
   }
@@ -640,9 +616,12 @@
     search.className='sh-search-btn'; search.href='/books/';
     search.setAttribute('aria-label','Search books'); search.setAttribute('title','Search books');
     search.innerHTML='<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg>';
+    // Order (left→right): search · menu · avatar. The account avatar sits in the
+    // rightmost "account corner" (convention); search + the nav menu group to its
+    // left. authbox stays the last child so the avatar is always rightmost.
     const authbox=document.getElementById('authbox');
-    if(authbox) nav.insertBefore(search, authbox); else nav.appendChild(search);
-    nav.appendChild(burger);   // far right
+    if(authbox){ nav.insertBefore(search, authbox); nav.insertBefore(burger, authbox); }
+    else { nav.appendChild(search); nav.appendChild(burger); }
     if(SH.configured) mountSearch(nav, search);
   }
 
