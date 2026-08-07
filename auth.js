@@ -237,13 +237,17 @@
     wrap.className = 'sh-nav-account';
     if(SH.user){
       const name = displayName(), handle = accountHandle();
+      const initial = ((name||'?').trim().charAt(0)||'?').toUpperCase();
       wrap.innerHTML = `
-        <div class="sh-nav-acct-hd">Signed in as<br><b>${esc(name)}</b>${handle?`<br><span style="opacity:.75">@${esc(handle)}</span>`:''}</div>
-        <a href="/dashboard">📊 Dashboard</a>
-        <a href="/import/">↗ Import library</a>
-        <button type="button" data-act="display">✏️ Edit display name</button>
-        ${handle?'':'<button type="button" data-act="handle">＠ Claim your handle</button>'}
-        <button type="button" data-act="logout">👋 Log out</button>`;
+        <div class="sh-nav-acct-hd">
+          <span class="sh-nav-av">${esc(initial)}</span>
+          <span class="sh-nav-who"><span class="sh-nav-name">${esc(name)}</span>${handle?`<span class="sh-nav-at">@${esc(handle)}</span>`:''}</span>
+        </div>
+        <a href="/dashboard"><span class="sh-ico">📊</span><span>Dashboard</span></a>
+        <a href="/import/"><span class="sh-ico">📥</span><span>Import library</span></a>
+        <button type="button" data-act="display"><span class="sh-ico">✏️</span><span>Edit display name</span></button>
+        ${handle?'':'<button type="button" data-act="handle"><span class="sh-ico">🏷️</span><span>Claim your handle</span></button>'}
+        <button type="button" data-act="logout"><span class="sh-ico">👋</span><span>Log out</span></button>`;
       wrap.querySelectorAll('button[data-act]').forEach(b=>{
         b.onclick = ()=> accountAction(b.dataset.act);
       });
@@ -265,11 +269,11 @@
           <button id="shUserBtn" class="sh-avatar" title="${esc(name)}" aria-label="Account menu" aria-haspopup="menu" aria-expanded="false">${esc(initial)}</button>
           <div id="shMenu" class="sh-account-menu" role="menu" style="display:none;position:absolute;right:0;top:125%;z-index:95;background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:14px;min-width:220px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.5)">
             <div style="padding:.7em 1.1em;border-bottom:1px solid var(--line,#2a1d22);color:#b69089;font-size:.78rem">Signed in as<br><b style="color:var(--amber,#ffab40);font-size:.92rem">${esc(name)}</b>${handle?`<br><span style="color:#8a6d66">@${esc(handle)}</span>`:''}</div>
-            <a class="sh-menu-link" role="menuitem" href="/dashboard">📊 Dashboard</a>
-            <a class="sh-menu-link" role="menuitem" href="/import/">↗ Import library</a>
-            <button type="button" class="shMenuItem" role="menuitem" data-act="display">✏️ Edit display name</button>
-            ${handle?'':'<button type="button" class="shMenuItem" role="menuitem" data-act="handle">＠ Claim your handle</button>'}
-            <button type="button" class="shMenuItem" role="menuitem" data-act="logout">👋 Log out</button>
+            <a class="sh-menu-link" role="menuitem" href="/dashboard"><span class="sh-ico">📊</span><span>Dashboard</span></a>
+            <a class="sh-menu-link" role="menuitem" href="/import/"><span class="sh-ico">📥</span><span>Import library</span></a>
+            <button type="button" class="shMenuItem" role="menuitem" data-act="display"><span class="sh-ico">✏️</span><span>Edit display name</span></button>
+            ${handle?'':'<button type="button" class="shMenuItem" role="menuitem" data-act="handle"><span class="sh-ico">🏷️</span><span>Claim your handle</span></button>'}
+            <button type="button" class="shMenuItem" role="menuitem" data-act="logout"><span class="sh-ico">👋</span><span>Log out</span></button>
           </div>
         </div>`;
       const btn = document.getElementById('shUserBtn'), menu = document.getElementById('shMenu');
@@ -288,10 +292,7 @@
       // listen for another menu opening → close this one
       window.addEventListener('sh-menu-open', (ev)=>{ if(ev.detail && ev.detail.id!=='shMenu') setMenuOpen(false); });
       menu.querySelectorAll('.shMenuItem').forEach(mi=>{
-        mi.style.cssText = 'display:block;width:100%;text-align:left;background:none;border:0;color:#f4e8e3;font-family:inherit;font-size:.88rem;font-weight:600;padding:.75em 1.1em;cursor:pointer';
-        mi.onmouseenter = ()=> mi.style.background='#1c1316';
-        mi.onmouseleave = ()=> mi.style.background='none';
-        mi.onclick = ()=> accountAction(mi.dataset.act);
+        mi.onclick = ()=> accountAction(mi.dataset.act);   // styling + hover via CSS (.sh-account-menu .shMenuItem)
       });
       renderNavAccount();
     } else {
@@ -512,10 +513,11 @@
       header .sh-guides-menu a{display:block;padding:10px 12px;border-radius:10px;color:var(--cream,#f4e8e3);text-decoration:none}
       header .sh-guides-menu b{display:block;font-size:.9rem;line-height:1.2}
       header .sh-guides-menu small{display:block;margin-top:3px;color:var(--muted,#b69089);font-size:.76rem;font-weight:400;line-height:1.25}
-      .sh-account-menu .sh-menu-link,.sh-account-menu .shMenuItem{display:block;width:100%;box-sizing:border-box;text-align:left;
-        background:none;border:0;color:#f4e8e3;font-family:inherit;font-size:.88rem;font-weight:600;padding:.75em 1.1em;
+      .sh-account-menu .sh-menu-link,.sh-account-menu .shMenuItem{display:flex;align-items:center;gap:10px;width:100%;box-sizing:border-box;text-align:left;
+        background:none;border:0;color:#f4e8e3;font-family:inherit;font-size:.9rem;font-weight:600;padding:.62em 1.05em;
         cursor:pointer;text-decoration:none}
       .sh-account-menu .sh-menu-link:hover,.sh-account-menu .shMenuItem:hover{background:#1c1316}
+      .sh-account-menu .sh-ico,.sh-nav-account .sh-ico{width:1.25em;text-align:center;font-size:1rem;line-height:1;flex:0 0 auto}
       .sh-login-short{display:none}
       /* Persistent global search shortcut — always-visible icon in the header
          bar so readers can jump straight to the catalog without opening the
@@ -551,14 +553,19 @@
          header avatar on small screens). Hidden on desktop, where the avatar
          in #authbox stays. */
       #shNavAccount{display:none}
-      .sh-nav-account>a,.sh-nav-account>button{display:block;width:100%;box-sizing:border-box;text-align:left;background:none;
-        border:0;color:var(--cream,#f4e8e3);font-family:inherit;font-size:.95rem;font-weight:600;padding:.68em .85em;border-radius:10px;
+      .sh-nav-account{display:flex;flex-direction:column;gap:1px}
+      .sh-nav-acct-hd{display:flex;align-items:center;justify-content:center;gap:11px;padding:2px 10px 11px}
+      .sh-nav-av{width:36px;height:36px;border-radius:50%;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;
+        background:var(--grad,linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40));color:#1a0c10;font-weight:800;font-size:1rem}
+      .sh-nav-who{display:flex;flex-direction:column;line-height:1.25}
+      .sh-nav-who .sh-nav-name{color:var(--cream,#f4e8e3);font-size:.98rem;font-weight:700}
+      .sh-nav-who .sh-nav-at{color:var(--muted,#b69089);font-size:.8rem}
+      .sh-nav-account>a,.sh-nav-account>button{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;box-sizing:border-box;
+        background:none;border:0;color:var(--cream,#f4e8e3);font-family:inherit;font-size:.95rem;font-weight:600;padding:.62em .85em;border-radius:10px;
         cursor:pointer;text-decoration:none}
       .sh-nav-account>a:hover,.sh-nav-account>button:hover{background:#1c1316}
-      .sh-nav-acct-hd{padding:.6em .85em .35em;color:var(--muted,#b69089);font-size:.78rem;line-height:1.35}
-      .sh-nav-acct-hd b{color:var(--amber,#ffab40);font-size:.9rem}
-      .sh-nav-account .sh-nav-login{background:linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40);color:#1a0c10;text-align:center;
-        font-weight:800;border-radius:99px;margin-top:4px}
+      .sh-nav-account .sh-nav-login{background:linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40);color:#1a0c10;
+        font-weight:800;border-radius:99px;margin-top:8px;padding:.72em .85em}
       .sh-nav-account .sh-nav-login:hover{background:linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40)}
       @media(min-width:881px){
         header .navlinks>a:hover,header .sh-guides>summary:hover{color:var(--cream,#f4e8e3)}
@@ -605,7 +612,7 @@
         /* On mobile the account moves into the hamburger drawer, so the header
            avatar / login button is hidden and the drawer account block shows. */
         header #authbox{display:none}
-        #shNavAccount{display:block;border-top:1px solid var(--line,#2a1d22);margin-top:5px;padding-top:5px}
+        #shNavAccount{display:block;border-top:1px solid var(--line,#2a1d22);margin-top:8px;padding-top:11px}
       }`;
     document.head.appendChild(st);
   }
