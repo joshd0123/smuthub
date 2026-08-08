@@ -121,6 +121,10 @@
   .follow-chip{display:inline-flex;align-items:center;gap:9px;text-decoration:none;padding:8px 15px 8px 9px;border:1px solid var(--line);border-radius:99px;background:var(--ink-2);color:var(--cream);font-weight:600;font-size:.88rem;transition:border-color .2s,transform .15s}
   .follow-chip:hover{border-color:#43222c;transform:translateY(-1px)}
   .follow-chip .av{width:26px;height:26px;border-radius:50%;background:var(--grad);color:#1a0c10;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:.82rem}
+  .follows-toggle{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:.5em .95em;border:1px solid var(--line);border-radius:99px;background:var(--ink-2);color:var(--muted);font-family:inherit;font-weight:600;font-size:.84rem;cursor:pointer;transition:border-color .2s,color .2s}
+  .follows-toggle:hover{border-color:#43222c;color:var(--cream)}
+  .follows-toggle .chev{transition:transform .2s;opacity:.7}
+  .follows-toggle[aria-expanded="true"] .chev{transform:rotate(180deg)}
 
   /* ── SECTIONS ── */
   section{padding:20px 0 4px}
@@ -394,7 +398,13 @@
       <input id="findInput" type="text" placeholder="🔎 Find a bookshelf by username…" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Find a reader by username">
       <div class="find-results" id="findResults"></div>
     </div>
-    <div class="follows" id="followsList" style="margin-top:14px"></div>
+    <div id="followsWrap" hidden>
+      <button class="follows-toggle" id="followsToggle" type="button" aria-expanded="false" aria-controls="followsList">
+        <span id="followsToggleLabel">Shelves you follow</span>
+        <svg class="chev" width="11" height="7" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.25 6 6.25 11 1.25" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="follows" id="followsList" hidden style="margin-top:12px"></div>
+    </div>
   </section>
 
   <!-- ROOMS -->
@@ -528,25 +538,34 @@
     input.addEventListener('keydown', e=>{ if (e.key==='Enter'){ const q=input.value.trim(); if (q) location.href='/u/?h='+encodeURIComponent(q.toLowerCase()); } });
   })();
 
-  // Bookshelves you follow → chips linking to each person's public shelf viewer.
+  // Bookshelves you follow → kept behind a click so it never dominates the
+  // dashboard. A subtle "N shelves you follow" toggle expands the chips.
   async function loadFollowing(myId){
-    const list = $('followsList');
-    if (!list || !sb) return;
+    const wrap=$('followsWrap'), list=$('followsList'), toggle=$('followsToggle'), label=$('followsToggleLabel');
+    if (!wrap || !list || !sb) return;
     try {
       const { data: edges } = await sb.from('follows').select('following_id').eq('follower_id', myId);
       const ids = (edges||[]).map(e=>e.following_id);
-      if (!ids.length){ list.innerHTML=''; return; }
+      if (!ids.length){ wrap.hidden=true; return; }
       // Resolve to usernames via the public view — anyone who has since gone
       // private simply drops off the list (view only returns public profiles).
       const { data: people } = await sb.from('public_profiles').select('*').in('id', ids);
       const rows = (people||[]).filter(p=>p.username);
+      if (!rows.length){ wrap.hidden=true; return; }
       list.innerHTML = rows.map(p=>{
         const dn=(p.display_name||'').trim();
         const uname=p.username.toLowerCase();
         return '<a class="follow-chip" href="/u/?h='+encodeURIComponent(uname)
           +'"><span class="av">'+esc((dn||uname).charAt(0).toUpperCase())+'</span>'+esc(dn||('@'+uname))+'</a>';
       }).join('');
-    } catch(_) { list.innerHTML=''; }
+      label.textContent = rows.length===1 ? '1 shelf you follow' : rows.length+' shelves you follow';
+      wrap.hidden=false;
+      list.hidden=true; toggle.setAttribute('aria-expanded','false');   // collapsed on load
+      if(!toggle._wired){
+        toggle._wired=true;
+        toggle.onclick=()=>{ const open=list.hidden; list.hidden=!open; toggle.setAttribute('aria-expanded', open?'true':'false'); };
+      }
+    } catch(_) { wrap.hidden=true; }
   }
   function coverUrl(cover_i){ return cover_i ? `https://covers.openlibrary.org/b/id/${cover_i}-L.jpg` : null; }
   const coverSrc=b=>b.cover_url||coverUrl(b.cover_i);
