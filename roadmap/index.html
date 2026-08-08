@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap | smutHub</title>
+<meta name="description" content="What's live, what's built, what's planned, and what's still just an idea. smutHub's roadmap, sorted by how real each thing actually is.">
+<link rel="canonical" href="https://smuthub.ca/roadmap/">
+<meta name="theme-color" content="#0c0708">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="smutHub">
+<meta property="og:title" content="Roadmap | smutHub">
+<meta property="og:description" content="What's live, what's built, what's planned, and what's still just an idea — sorted by how real each thing actually is.">
+<meta property="og:url" content="https://smuthub.ca/roadmap/">
+<meta property="og:image" content="https://smuthub.ca/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<script defer src="/auth.js"></script>
+<style>
+  :root{--ink:#0c0708;--ink-2:#150e10;--panel:#1c1316;--line:#2a1d22;--cream:#f4e8e3;--muted:#b69089;--rose:#ff3d76;--amber:#ffab40;--gold:#e5c274;--grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%);
+  --live:#7ee0a3;--built:#4fd1c5;--planned:#ffab40;--open:#9aa0a6;--gate:#ff6a52;--idea:#a58bff}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.6}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(900px 560px at 12% -6%,rgba(255,61,118,.12),transparent 60%),radial-gradient(760px 500px at 92% 4%,rgba(165,139,255,.09),transparent 62%)}
+  a{color:inherit}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+  .narrow{max-width:820px}
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap;max-width:1120px;margin:0 auto;padding:0 22px}
+  .navlinks{display:flex;gap:18px}
+  .navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none;transition:color .2s}
+  .navlinks a.on,.navlinks a:hover{color:var(--cream)}
+  @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
+  .crumb{padding:22px 0 0;color:var(--muted);font-size:.86rem}
+  .crumb a{color:var(--muted);text-decoration:none}.crumb a:hover{color:var(--cream)}
+
+  .head{padding:30px 0 8px}
+  .eyebrow{display:inline-flex;align-items:center;gap:.5em;font-size:.74rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--idea)}
+  h1{font-family:'Fraunces';font-weight:600;font-size:clamp(2.2rem,5.5vw,3.2rem);letter-spacing:-.02em;line-height:1.04;margin-top:12px}
+  h1 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .lead{font-size:1.12rem;margin-top:16px;color:#e6d6cf;max-width:64ch}
+
+  .legend{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:24px;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:var(--ink-2)}
+  .legend .li{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;color:#d8c4bd}
+  .legend .sw{width:11px;height:11px;border-radius:99px;flex:0 0 auto}
+
+  .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:38px 0 10px}
+  @media(max-width:900px){.cols{grid-template-columns:1fr 1fr}}
+  @media(max-width:620px){.cols{grid-template-columns:1fr}}
+  .col{border:1px solid var(--line);border-radius:18px;padding:6px;background:linear-gradient(180deg,var(--ink-2),rgba(15,9,10,.4))}
+  .col > h2{font-family:'Hanken Grotesk';font-weight:800;font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;padding:14px 14px 12px;display:flex;align-items:center;gap:9px}
+  .col > h2 .sw{width:10px;height:10px;border-radius:99px}
+  .col > h2 .ct{margin-left:auto;color:var(--muted);font-weight:700;letter-spacing:.04em;font-size:.72rem}
+  .rc{border:1px solid var(--line);border-radius:13px;padding:14px 15px;margin:6px;background:var(--ink);border-left:3px solid var(--line)}
+  .rc h3{font-family:'Fraunces';font-weight:500;font-size:1.02rem;line-height:1.25}
+  .rc p{font-size:.85rem;color:#c3aca5;margin-top:6px}
+  .rc .meta{margin-top:9px;font-size:.7rem;color:var(--muted);letter-spacing:.03em;text-transform:uppercase;font-weight:700}
+  .rc.live{border-left-color:var(--live)}
+  .rc.built{border-left-color:var(--built)}
+  .rc.planned{border-left-color:var(--planned)}
+  .rc.open{border-left-color:var(--open)}
+  .rc.gate{border-left-color:var(--gate)}
+  .rc.idea{border-left-color:var(--idea)}
+
+  .coltitle-live{color:var(--live)}.coltitle-built{color:var(--built)}.coltitle-planned{color:var(--planned)}
+  .coltitle-open{color:var(--open)}.coltitle-gate{color:var(--gate)}.coltitle-idea{color:var(--idea)}
+
+  .note{margin-top:34px;padding:20px 22px;border:1px solid var(--line);border-radius:16px;background:var(--ink-2);color:#d8c4bd;font-size:.95rem}
+  .note strong{color:var(--cream)}
+  .note a{color:var(--amber);text-decoration:none}.note a:hover{text-decoration:underline}
+
+  .band{margin-top:44px;border-top:1px solid var(--line);padding:48px 0}
+  .band .box{border:1px solid var(--line);border-radius:22px;padding:32px;text-align:center;background:radial-gradient(600px 300px at 50% -30%,rgba(255,61,118,.12),transparent 60%),var(--ink-2)}
+  .band h2{font-family:'Fraunces';font-weight:500;font-size:1.7rem}
+  .band h2 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .btn{display:inline-flex;align-items:center;gap:.4em;font-weight:800;font-size:.95rem;padding:13px 24px;border-radius:99px;text-decoration:none;transition:transform .15s}
+  .btn:hover{transform:scale(1.04)}
+  .btn.primary{background:var(--grad);color:#1a0c10}
+  .btn.ghost{background:var(--panel);border:1px solid var(--line);color:var(--cream)}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:22px}
+
+  footer{border-top:1px solid var(--line)}
+  .ft{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:26px 0;color:var(--muted);font-size:.88rem}
+  .ft a{color:var(--muted);text-decoration:none}.ft a:hover{color:var(--cream)}
+</style>
+</head><body>
+
+<header>
+  <div class="nav">
+    <a href="/" class="logo">smut<span class="box">Hub</span></a>
+    <nav class="navlinks">
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/books/">Browse Books</a>
+      <a href="/search">Add a Book</a>
+      <a href="/bookshelf/">My Bookshelf</a>
+      <a href="/glossary/">Glossary</a>
+      <a href="/stores.html">Find a Store</a>
+    </nav>
+    <div class="authbox" id="authbox"></div>
+  </div>
+</header>
+
+<nav class="crumb wrap"><a href="/">Home</a> / <span>Roadmap</span></nav>
+
+<main class="wrap">
+  <section class="head narrow">
+    <span class="eyebrow">◆ Where this is going</span>
+    <h1>The <em>roadmap</em>, sorted by what's real.</h1>
+    <p class="lead">No fake "coming soon" everywhere. These columns are sorted by how real each thing actually is — from live in production down to a note I haven't built yet. It's the honest version.</p>
+  </section>
+
+  <div class="legend narrow">
+    <span class="li"><span class="sw" style="background:var(--live)"></span> Live · shipped</span>
+    <span class="li"><span class="sw" style="background:var(--built)"></span> Built · validated</span>
+    <span class="li"><span class="sw" style="background:var(--planned)"></span> Planned · specified</span>
+    <span class="li"><span class="sw" style="background:var(--open)"></span> Open · unscoped</span>
+    <span class="li"><span class="sw" style="background:var(--idea)"></span> Ideas · the moat</span>
+  </div>
+
+  <div class="cols">
+
+    <!-- LIVE -->
+    <section class="col">
+      <h2 class="coltitle-live"><span class="sw" style="background:var(--live)"></span> Live · shipped <span class="ct">3</span></h2>
+      <div class="rc live"><h3>Bookshelf worlds</h3><p>Founder cabinet + shelves, live in production. Blackthorn Rosewood, Founder's Edition.</p><p class="meta">Shelf</p></div>
+      <div class="rc live"><h3>Glossary + Spice Guide</h3><p>356+ terms across 19 categories, each linked to real books, plus a clear 0–5 heat scale.</p><p class="meta">Content / SEO</p></div>
+      <div class="rc live"><h3>Updated dashboard</h3><p>More stats, favourites, taste and read-race — a reason to come back beyond the books.</p><p class="meta">Retention</p></div>
+    </section>
+
+    <!-- BUILT -->
+    <section class="col">
+      <h2 class="coltitle-built"><span class="sw" style="background:var(--built)"></span> Built · validated <span class="ct">4</span></h2>
+      <div class="rc built"><h3>Reading companion</h3><p>Aren · Nyra · Sable — core is merged. Parked on cost for now; returns as a trial.</p><p class="meta">Companion</p></div>
+      <div class="rc built"><h3>Onboarding taste quiz + recs</h3><p>"What are you craving?" → daily recommendations. Needs a data migration before deploy.</p><p class="meta">Discovery</p></div>
+      <div class="rc built"><h3>Library import</h3><p>Goodreads, StoryGraph, CSV, ISBN. Prototype working; shelf schema is the limit on richness.</p><p class="meta">Library</p></div>
+      <div class="rc built"><h3>Scan to shelf</h3><p>ISBN barcode camera. Prototype done; production auth + catalog wiring remain.</p><p class="meta">Library</p></div>
+    </section>
+
+    <!-- PLANNED -->
+    <section class="col">
+      <h2 class="coltitle-planned"><span class="sw" style="background:var(--planned)"></span> Planned · specified <span class="ct">7</span></h2>
+      <div class="rc planned"><h3>Metadata + reading-event data contract</h3><p>Content warnings, series status, editions — the foundation almost everything else depends on.</p><p class="meta">Foundation</p></div>
+      <div class="rc planned"><h3>"Craving" discovery</h3><p>Mood-first matching with explainable, honest filters — not just spice level.</p><p class="meta">Discovery</p></div>
+      <div class="rc planned"><h3>Answer-first book pages</h3><p>Ratings beyond spice, series and cliffhanger signals, a clean handoff to reading.</p><p class="meta">Content</p></div>
+      <div class="rc planned"><h3>Guides &amp; SEO</h3><p>Romantasy route, gift finder, spice-scale, vs-Goodreads, glossary tooltips, schema.</p><p class="meta">Content / SEO</p></div>
+      <div class="rc planned"><h3>Spice Wrap + newsletter</h3><p>Monthly and yearly reading wrap. Needs reliable data and a discreet inbox mode.</p><p class="meta">Retention</p></div>
+      <div class="rc planned"><h3>Decorate mode + wallpaper export</h3><p>One great theme to style and export before any of it becomes a marketplace.</p><p class="meta">Shelf</p></div>
+      <div class="rc planned"><h3>Founder's Key commerce</h3><p>The decision gate — a genuinely live world plus a checkout that's ready. <a href="/founders/" style="color:var(--amber);text-decoration:none">See the Key →</a></p><p class="meta">Commerce</p></div>
+    </section>
+
+    <!-- OPEN -->
+    <section class="col">
+      <h2 class="coltitle-open"><span class="sw" style="background:var(--open)"></span> Open · unscoped <span class="ct">4</span></h2>
+      <div class="rc open"><h3>Friends / add-a-friend</h3><p>A social layer — privacy and moderation model has to come first.</p><p class="meta">Social</p></div>
+      <div class="rc open"><h3>Community</h3><p>Circles, buddy reads, reactions — only once identity and moderation are solid.</p><p class="meta">Social</p></div>
+      <div class="rc open"><h3>Cover recognition</h3><p>Visual scan beyond ISBN — a later beta with low-confidence confirmation.</p><p class="meta">Library</p></div>
+      <div class="rc open"><h3>Immersive covers</h3><p>The cover blurred as an ambient backdrop with sharp copy on top — Netflix / Apple-Books atmosphere.</p><p class="meta">Shelf</p></div>
+    </section>
+
+    <!-- GATE -->
+    <section class="col">
+      <h2 class="coltitle-gate"><span class="sw" style="background:var(--gate)"></span> Launch gate <span class="ct">2</span></h2>
+      <div class="rc gate"><h3>Launch hardening</h3><p>Crawl-lift, OAuth + magic-link, SPF/DKIM/DMARC, security headers, canonical/sitemap, mobile QA.</p><p class="meta">Ops · P0</p></div>
+      <div class="rc gate"><h3>One canonical launch board</h3><p>Single owner, one branch, clear status and a proof link per item. No drift.</p><p class="meta">Ops · P0</p></div>
+    </section>
+
+    <!-- IDEAS / MOAT -->
+    <section class="col">
+      <h2 class="coltitle-idea"><span class="sw" style="background:var(--idea)"></span> Ideas · the moat <span class="ct">8</span></h2>
+      <div class="rc idea"><h3>People-powered discovery ⭐</h3><p>Public shelves, "shelves like yours", a co-shelving graph — the real moat. Kept beside metadata.</p><p class="meta">Discovery</p></div>
+      <div class="rc idea"><h3>Parody-hub brand + tip jar</h3><p>The humour is the differentiation — lean into it, and let people chip in.</p><p class="meta">Identity</p></div>
+      <div class="rc idea"><h3>Reaction bar</h3><p>Replaces stars with an owned behavioural signal that's actually yours.</p><p class="meta">Identity / Data</p></div>
+      <div class="rc idea"><h3>Reading Personality card</h3><p>Shareable, made-for-TikTok read on your taste.</p><p class="meta">Identity</p></div>
+      <div class="rc idea"><h3>Rituals</h3><p>Daily spin, streaks that celebrate (never shame), light community games.</p><p class="meta">Ritual</p></div>
+      <div class="rc idea"><h3>Native app</h3><p>Only when the scan feature genuinely needs it — not before.</p><p class="meta">Utility</p></div>
+      <div class="rc idea"><h3>Growth extras</h3><p>Status page, Reddit sentiment + Chrome extension, swipe-to-sort.</p><p class="meta">Growth</p></div>
+      <div class="rc idea"><h3>Small delights</h3><p>Annotations (10 free, one-time), custom spines, and a hidden message for Marta.</p><p class="meta">Delight</p></div>
+    </section>
+
+  </div>
+
+  <div class="note narrow" style="margin-left:auto;margin-right:auto">
+    <strong>How to read this:</strong> columns are evidence state, not a promise of dates. Something in <em>Planned</em> is specified and intended; something in <em>Ideas</em> is a direction I like, not a commitment. If it says <em>Live</em>, you can go touch it right now. The whole point of sorting it this way is that nothing on smutHub gets sold as delivered until it actually is.
+  </div>
+</main>
+
+<section class="band">
+  <div class="wrap">
+    <div class="box">
+      <h2>Want a hand in <em>which of these ships first?</em></h2>
+      <p style="color:#d8c4bd;max-width:56ch;margin:12px auto 0">Founders get first access as each one lands — and every purchase (or coffee) funds the move from AI art to real artists.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="/founders/">Become a founder →</a>
+        <a class="btn ghost" href="/bookshelf/">Preview the live world</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap ft">
+    <span>© 2026 smutHub · Romantasy, decoded.</span>
+    <span><a href="/founders/">Founders</a> · <a href="/roadmap/">Roadmap</a> · <a href="/about.html">About</a> · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/contact.html">Contact</a></span>
+  </div>
+</footer>
+
+</body></html>

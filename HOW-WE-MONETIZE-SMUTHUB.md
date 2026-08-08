@@ -11,8 +11,9 @@ The bookcase is the storefront. The immersive shelf worlds are the aspiration.
 ## Founder launch directive
 
 The first public paid offer is the **$29 Founder’s Key**, limited to the first
-100 paid founders. It promises every SmutHub-created bookshelf world, current
-and future.
+100 paid founders. It gives founders **8 immersive worlds free in their first
+year**, then **founder pricing on every release after**. All bookcase
+customization is free for every reader (revised 2026-08-07).
 
 That offer cannot open until the immutable honest gate in
 [`FOUNDERS-KEY-LAUNCH-GATE.md`](FOUNDERS-KEY-LAUNCH-GATE.md) passes. Moonlit

@@ -1675,7 +1675,7 @@ function renderBookIndex(allBooks){
   // a panel of every letter present, with its book count, jumping to that group.
   const railItems = groups.map(g => {
     const id = g.letter === '#' ? 'num' : g.letter;
-    return `<a href="#letter-${esc(id)}"><span class="lbl">${esc(g.letter)}</span><span class="ct">${g.items.length}</span></a>`;
+    return `<a href="#letter-${esc(id)}"><span class="lbl">${esc(g.letter)}</span></a>`;
   }).join('');
   const railHTML = `<aside class="sh-rail" id="shRail" tabindex="0" aria-label="Jump to a letter">
     <div class="sh-rail-strip" role="button" aria-expanded="false" aria-controls="shRailPanel" aria-label="Jump to a letter"><i></i><i></i><i></i><i></i><i></i></div>

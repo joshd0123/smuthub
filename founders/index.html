@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Founder's Key | smutHub</title>
+<meta name="description" content="Become one of the Original 100. The Founder's Key: eight immersive worlds free in year one, founder pricing for life, and every purchase funds real artists replacing the AI art, one draw at a time.">
+<link rel="canonical" href="https://smuthub.ca/founders/">
+<meta name="theme-color" content="#0c0708">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="smutHub">
+<meta property="og:title" content="The Founder's Key | smutHub">
+<meta property="og:description" content="Eight immersive worlds free in year one, then founder pricing for life. First 100 readers only. Every purchase funds real artists replacing the AI art.">
+<meta property="og:url" content="https://smuthub.ca/founders/">
+<meta property="og:image" content="https://smuthub.ca/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<script defer src="/auth.js"></script>
+<style>
+  :root{--ink:#0c0708;--ink-2:#150e10;--panel:#1c1316;--line:#2a1d22;--cream:#f4e8e3;--muted:#b69089;--rose:#ff3d76;--amber:#ffab40;--gold:#e5c274;--grad:linear-gradient(100deg,#ff3d76 0%,#ff7a4d 55%,#ffab40 100%);--gold-grad:linear-gradient(105deg,#e9cf87,#cfa34e 55%,#b98436)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--cream);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.6}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(900px 560px at 12% -6%,rgba(255,61,118,.13),transparent 60%),radial-gradient(760px 500px at 92% 4%,rgba(207,163,78,.10),transparent 62%)}
+  a{color:inherit}
+  .wrap{max-width:900px;margin:0 auto;padding:0 22px}
+  .wide{max-width:1120px}
+  .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
+  .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap;max-width:1120px;margin:0 auto;padding:0 22px}
+  .navlinks{display:flex;gap:18px}
+  .navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none;transition:color .2s}
+  .navlinks a.on,.navlinks a:hover{color:var(--cream)}
+  @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
+  .crumb{padding:22px 0 0;color:var(--muted);font-size:.86rem}
+  .crumb a{color:var(--muted);text-decoration:none}.crumb a:hover{color:var(--cream)}
+
+  /* shared */
+  .eyebrow{display:inline-flex;align-items:center;gap:.5em;font-size:.74rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+  h1{font-family:'Fraunces';font-weight:600;font-size:clamp(2.3rem,6vw,3.5rem);letter-spacing:-.02em;line-height:1.02;margin-top:14px}
+  h1 em{font-style:italic;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .lead{font-size:1.14rem;margin-top:18px;color:#e6d6cf;max-width:60ch}
+  h2{font-family:'Fraunces';font-weight:500;font-size:clamp(1.5rem,3.4vw,2rem);letter-spacing:-.01em}
+  h2 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .sec{padding:52px 0;border-top:1px solid var(--line)}
+  .sec .kicker{color:var(--muted);font-size:.8rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+  .sec p{color:#d8c4bd;margin-top:12px}
+  .sec p strong{color:var(--cream)}
+  .sec a.inline{color:var(--amber);text-decoration:none}.sec a.inline:hover{text-decoration:underline}
+
+  .hero{padding:40px 0 6px}
+  .status-pill{display:inline-flex;align-items:center;gap:.5em;margin-top:26px;padding:8px 15px;border:1px solid rgba(229,194,116,.4);border-radius:99px;background:linear-gradient(105deg,rgba(113,72,31,.24),rgba(27,18,22,.7));font-size:.82rem;color:#f0dcbf}
+  .status-pill .dot{width:8px;height:8px;border-radius:99px;background:#7ee0a3;box-shadow:0 0 10px #7ee0a3}
+
+  /* founder key card */
+  .keycard{position:relative;margin-top:34px;border:1px solid rgba(229,194,116,.34);border-radius:22px;padding:30px 30px 28px;background:linear-gradient(160deg,rgba(43,17,25,.6),rgba(15,9,10,.9));overflow:hidden}
+  .keycard::before{content:"";position:absolute;inset:0;background:radial-gradient(420px 220px at 84% -10%,rgba(207,163,78,.2),transparent 60%);pointer-events:none}
+  .keycard .kc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap;position:relative}
+  .keycard h3{font-family:'Fraunces';font-weight:600;font-size:1.5rem}
+  .keycard .promise{color:var(--gold);font-style:italic;font-family:'Fraunces';margin-top:4px;font-size:1.02rem}
+  .price{display:flex;align-items:baseline;gap:.16em;font-family:'Fraunces';line-height:1}
+  .price .cur{font-size:1.1rem;color:var(--muted);font-weight:500}
+  .price .amt{font-size:3rem;font-weight:600;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .price .per{font-size:.9rem;color:var(--muted)}
+  .cap{margin-top:6px;font-size:.8rem;color:var(--muted);text-align:right}
+  .incl{list-style:none;margin:24px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:10px 22px;position:relative}
+  @media(max-width:620px){.incl{grid-template-columns:1fr}}
+  .incl li{display:flex;gap:10px;font-size:.95rem;color:#e7d7d0}
+  .incl li::before{content:"✦";color:var(--gold);flex:0 0 auto}
+  .kc-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px;align-items:center;position:relative}
+  .btn{display:inline-flex;align-items:center;gap:.4em;font-weight:800;font-size:.95rem;padding:13px 24px;border-radius:99px;text-decoration:none;transition:transform .15s;cursor:pointer;border:0}
+  .btn:hover{transform:scale(1.04)}
+  .btn.gold{background:var(--gold-grad);color:#1c1206}
+  .btn.primary{background:var(--grad);color:#1a0c10}
+  .btn.ghost{background:var(--panel);border:1px solid var(--line);color:var(--cream)}
+  .btn.green{background:linear-gradient(105deg,#8ff0b6,#4fd1c5);color:#0c2a1c}
+  .keycard.free{border-color:rgba(126,224,163,.32)}
+  .keycard.free::before{background:radial-gradient(420px 220px at 84% -10%,rgba(126,224,163,.16),transparent 60%)}
+  .keycard.free .price .amt{background-image:linear-gradient(105deg,#8ff0b6,#4fd1c5)}
+  .keycard.free .promise{color:#8ff0b6}
+  .keycard.free .incl li::before{color:#8ff0b6}
+  .card-bridge{text-align:center;color:var(--muted);font-size:.86rem;margin:18px 0 -8px;font-style:italic}
+  .soon-note{font-size:.82rem;color:var(--muted)}
+  .soon-note b{color:#f0dcbf}
+
+  /* badges */
+  .badge{display:inline-flex;align-items:center;gap:.4em;font-size:.66rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;padding:3px 9px;border-radius:99px;border:1px solid var(--line)}
+  .badge.live{color:#8ff0b6;border-color:rgba(126,224,163,.4);background:rgba(126,224,163,.09)}
+  .badge.dev{color:#ffc98a;border-color:rgba(255,171,64,.38);background:rgba(255,171,64,.09)}
+  .badge.planned{color:var(--muted);background:rgba(182,144,137,.08)}
+
+  /* card grids */
+  .grid{display:grid;gap:14px;margin-top:26px}
+  .grid.g2{grid-template-columns:repeat(2,1fr)}
+  .grid.g3{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:760px){.grid.g3{grid-template-columns:1fr}.grid.g2{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);background:var(--ink-2);border-radius:16px;padding:20px}
+  .card .ico{font-size:1.4rem}
+  .card h4{font-family:'Fraunces';font-weight:500;font-size:1.12rem;margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .card p{font-size:.92rem;margin-top:8px;color:#cdb8b1}
+
+  /* why blockquote */
+  .why{border-left:3px solid;border-image:var(--gold-grad) 1;padding:4px 0 4px 20px;margin-top:22px}
+  .why p{font-size:1.05rem;color:#e7d7d0}
+
+  /* draw highlight */
+  .glow-panel{margin-top:26px;border:1px solid rgba(255,61,118,.28);border-radius:20px;padding:26px;background:radial-gradient(500px 260px at 100% 0,rgba(255,61,118,.12),transparent 60%),var(--ink-2)}
+  .draw-rules{list-style:none;margin:18px 0 0;display:grid;gap:12px}
+  .draw-rules li{display:flex;gap:12px;align-items:flex-start;color:#e0ccc5;font-size:.98rem}
+  .draw-rules .n{flex:0 0 auto;width:26px;height:26px;border-radius:99px;display:grid;place-items:center;font-size:.8rem;font-weight:800;background:var(--grad);color:#1a0c10}
+  .lucky{display:inline-flex;align-items:center;gap:.4em;margin-top:16px;padding:6px 13px;border-radius:99px;background:linear-gradient(105deg,rgba(113,72,31,.3),rgba(27,18,22,.8));border:1px solid rgba(229,194,116,.4);color:var(--gold);font-weight:800;font-size:.85rem;letter-spacing:.03em}
+
+  /* price ladder table */
+  .ladder{margin-top:24px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .lrow{display:grid;grid-template-columns:1.4fr 2fr auto;gap:14px;padding:15px 18px;border-top:1px solid var(--line);align-items:baseline}
+  .lrow:first-child{border-top:0}
+  .lrow .lt{font-family:'Fraunces';font-size:1.02rem}
+  .lrow .ld{font-size:.88rem;color:var(--muted)}
+  .lrow .lp{font-family:'Fraunces';font-weight:600;color:var(--gold);white-space:nowrap;text-align:right}
+  @media(max-width:640px){.lrow{grid-template-columns:1fr auto}.lrow .ld{grid-column:1/-1;order:3}}
+  .items{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-size:.8rem;padding:6px 12px;border-radius:99px;border:1px solid var(--line);background:var(--ink-2);color:#d8c4bd}
+  .chip b{color:var(--gold);font-weight:700;margin-left:.35em}
+
+  /* cta band */
+  .band{margin-top:12px;border-top:1px solid var(--line);padding:52px 0}
+  .band .box{border:1px solid var(--line);border-radius:22px;padding:34px;text-align:center;background:radial-gradient(600px 300px at 50% -30%,rgba(255,61,118,.13),transparent 60%),var(--ink-2)}
+  .band h2{margin-bottom:8px}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:22px}
+  .fineprint{margin-top:18px;font-size:.78rem;color:var(--muted);max-width:70ch;margin-left:auto;margin-right:auto}
+
+  footer{border-top:1px solid var(--line)}
+  .ft{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:26px 0;color:var(--muted);font-size:.88rem}
+  .ft a{color:var(--muted);text-decoration:none}.ft a:hover{color:var(--cream)}
+</style>
+</head><body>
+
+<header>
+  <div class="nav">
+    <a href="/" class="logo">smut<span class="box">Hub</span></a>
+    <nav class="navlinks">
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/books/">Browse Books</a>
+      <a href="/search">Add a Book</a>
+      <a href="/bookshelf/">My Bookshelf</a>
+      <a href="/glossary/">Glossary</a>
+      <a href="/stores.html">Find a Store</a>
+    </nav>
+    <div class="authbox" id="authbox"></div>
+  </div>
+</header>
+
+<nav class="crumb wrap"><a href="/">Home</a> / <span>Founders</span></nav>
+
+<main class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <span class="eyebrow">⚿ The Original 100</span>
+    <h1>The <em>Founder's Key</em>.</h1>
+    <p class="lead">Eight immersive worlds free in your first year, founder pricing for life after, and a numbered spot among the first hundred. It's for readers who want their library to feel unmistakably theirs — and who want the AI art on this site replaced with real human work.</p>
+    <span class="status-pill"><span class="dot"></span> Preview Moonlit free right now · unlock it for $4.99 when checkout opens</span>
+  </section>
+
+  <!-- FREE FOREVER CARD -->
+  <div class="keycard free">
+    <div class="kc-top">
+      <div>
+        <h3>Free Forever</h3>
+        <div class="promise">Everything you need to read — genuinely, on us.</div>
+      </div>
+      <div style="text-align:right">
+        <div class="price"><span class="amt">Free</span></div>
+        <div class="cap">No card required, ever</div>
+      </div>
+    </div>
+    <ul class="incl">
+      <li>Your whole library — unlimited shelves, no caps</li>
+      <li>Every bookcase finish, cabinet, crest &amp; trim</li>
+      <li>Preview Moonlit, the live premium world</li>
+      <li>Every book's heat, tropes &amp; warnings + full glossary</li>
+      <li>Public shelves, stats, quizzes &amp; games</li>
+      <li>Import &amp; export freely — no ads, no data sale</li>
+    </ul>
+    <div class="kc-actions">
+      <a class="btn green" href="/bookshelf/">Start your shelf, free →</a>
+      <span class="soon-note">Upgrade only if you ever want to step <b>into</b> a world.</span>
+    </div>
+  </div>
+
+  <p class="card-bridge">Here a lot and want more? The Founder's Key ↓</p>
+
+  <!-- THE KEY CARD -->
+  <div class="keycard">
+    <div class="kc-top">
+      <div>
+        <h3>Founder's Key</h3>
+        <div class="promise">Eight worlds on the house, then founder pricing — for life.</div>
+      </div>
+      <div style="text-align:right">
+        <div class="price"><span class="cur">$</span><span class="amt">29</span><span class="per">CAD · one-time</span></div>
+        <div class="cap">Limited to the first 100 founders</div>
+      </div>
+    </div>
+    <ul class="incl">
+      <li>8 immersive worlds free in your first year — Moonlit's live now</li>
+      <li>Founder pricing on every world &amp; release after that</li>
+      <li>Founder-only bookcase designs (all standard customization is free for everyone)</li>
+      <li>Your Founder crest + a numbered edition (1 of 100), plus a few more items still to be released</li>
+      <li>A <b style="color:var(--gold);font-weight:700">guaranteed</b> month of your art showcased, plus lucky 13 draw entries (details below)</li>
+      <li>Founder pricing on everything we sell later</li>
+    </ul>
+    <div class="kc-actions">
+      <a class="btn gold" href="/bookshelf/">Preview the live world →</a>
+      <span class="soon-note"><b>Not on sale yet.</b> We're finishing the checkout before we ask anyone to pay.</span>
+    </div>
+  </div>
+
+  <p style="text-align:center;color:var(--muted);font-size:.88rem;margin:22px 0 0"><span style="color:var(--gold)">✦</span> More extras to come — founders get first dibs on every one.</p>
+
+  <!-- FREE FOREVER -->
+  <section class="sec">
+    <div class="kicker" style="color:#8ff0b6">Every free perk, in full</div>
+    <h2 style="margin-top:10px">The free tier isn't a demo. It's <em>the whole thing.</em></h2>
+    <p>smutHub has to earn your <strong>time</strong> before it ever earns your money. So a free account isn't a crippled trial — it's the full reading experience. Build your library, make your bookcase yours, dig through the glossary, watch your stats stack up. If one day you catch yourself thinking <em>"I'm here a lot… I wouldn't mind chipping in"</em> — that's what the Founder's Key is for. Until then, enjoy it. Genuinely.</p>
+    <div class="grid g3">
+      <div class="card"><div class="ico">📚</div><h4>Your whole library</h4><p>Unlimited shelves — TBR, reading, read, DNF — with no caps on how much you track. Always free.</p></div>
+      <div class="card"><div class="ico">🎨</div><h4>A bookcase that's yours</h4><p>Every wood finish, cabinet, crest, trim, plaque and label. Decorate freely, and it saves to your account.</p></div>
+      <div class="card"><div class="ico">🌙</div><h4>Preview Moonlit</h4><p>Peek inside the live premium world — the moon window, the clock, the candlelight — free, even before you sign in. Full entry unlocks for a one-time $4.99.</p></div>
+      <div class="card"><div class="ico">🌶️</div><h4>Heat, tropes &amp; warnings</h4><p>Every book's spice level, tropes and content warnings, plus the full 356-term glossary.</p></div>
+      <div class="card"><div class="ico">📊</div><h4>Your reading, visualized</h4><p>Dashboard stats, your taste, favourites, the read-race, quizzes and games — all yours to play with.</p></div>
+      <div class="card"><div class="ico">🏛️</div><h4>Public shelves <span class="badge live">Live</span></h4><p>Share your library, follow readers with your taste, and find your next read from real people.</p></div>
+      <div class="card"><div class="ico">✍️</div><h4>Annotations, on the house</h4><p>Write your notes right on the book — your first 5 annotation books are free.</p></div>
+      <div class="card"><div class="ico">🔄</div><h4>Bring &amp; take your data</h4><p>Import from Goodreads, StoryGraph or CSV — and export or delete everything, anytime. No lock-in.</p></div>
+      <div class="card"><div class="ico">🚫</div><h4>No ads, no data sale</h4><p>Free doesn't mean you're the product. Your shelf is private and stays that way.</p></div>
+    </div>
+    <p style="margin-top:20px;font-size:.95rem"><strong>The only line:</strong> stepping <em>into</em> an immersive world is the paid part — Moonlit is the cheap way in at a one-time <strong>$4.99</strong>, and once it's open it's yours forever. Everything else above is free.</p>
+  </section>
+
+  <!-- WHAT'S INCLUDED -->
+  <section class="sec">
+    <div class="kicker">What you actually get</div>
+    <h2 style="margin-top:10px">Decorate free. The <em>worlds</em> are the treat.</h2>
+    <p>Everything you place <strong>on</strong> your bookcase — finishes, cabinets, crests, trim, plaques, labels — is <strong>free for every reader</strong>. The immersive worlds you step <strong>into</strong> are where the craft (and the cost) goes, so those are the paid layer — <strong>Moonlit opens the door at a one-time $4.99</strong>, the rest priced individually. <strong>Founders get 8 worlds free in year one</strong>, then founder pricing on every release after. Worlds are labelled honestly: <b>Live now</b> you can preview today, <b>In development</b> is being built, <b>Planned</b> is where we're headed.</p>
+    <div class="grid g2">
+      <div class="card">
+        <div class="ico">🌙</div>
+        <h4>Moonlit Reading Room <span class="badge live">Live · $4.99</span></h4>
+        <p>An arched moon window, a clock that answers when you touch it, candlelight, fairy visitors, and a shelf that remembers. Preview it free to see it's real, then unlock full entry forever for a one-time $4.99 — or get it free with the Key.</p>
+      </div>
+      <div class="card">
+        <div class="ico">🕯️</div>
+        <h4>Candlelit Boudoir <span class="badge dev">In development</span></h4>
+        <p>Deep rose velvet, warm brass, and a private midnight reading retreat. Golden-hour lighting and matching props.</p>
+      </div>
+      <div class="card">
+        <div class="ico">📖</div>
+        <h4>The Rainbound Archive <span class="badge planned">Planned</span></h4>
+        <p>A dark-academia library with rain on the windows and notes hidden in the margins.</p>
+      </div>
+      <div class="card">
+        <div class="ico">🐉</div>
+        <h4>The Dragon's Hoard <span class="badge planned">Planned</span></h4>
+        <p>A volcanic treasure room where a tiny dragon guards your five-star reads.</p>
+      </div>
+      <div class="card">
+        <div class="ico">🦊</div>
+        <h4>Familiar Companions <span class="badge planned">Planned</span></h4>
+        <p>Choose a raven, fox, or shadow cat that reacts when you finish a book.</p>
+      </div>
+      <div class="card">
+        <div class="ico">🏚️</div>
+        <h4>The Haunted Manor <span class="badge planned">Planned</span></h4>
+        <p>A seasonal gothic room with flickering portraits and a secret midnight visitor.</p>
+      </div>
+    </div>
+    <p style="margin-top:20px">Bookcase customization is <strong>free for everyone</strong> — every wood finish and theme, cabinet style, and collected detail, saved to your account. Founders get <strong>founder-only designs</strong> on top, the numbered Founder crest, and founder pricing on every world and single item we release down the road.</p>
+  </section>
+
+  <!-- WHY $29 -->
+  <section class="sec">
+    <div class="kicker">Why it's priced this way</div>
+    <h2 style="margin-top:10px">One key. One time. <em>No subscription.</em></h2>
+    <p>I pay for smutHub myself — the servers, the storage, the domains, the covers. Twenty-nine dollars isn't a number pulled from a pricing playbook; it's what lets one person keep the lights on without turning your library into an ad board or a monthly bill.</p>
+    <div class="why">
+      <p>The money isn't the point — it's the fuel. It keeps the site up, and it pays real artists to replace the AI work. That's the whole deal.</p>
+    </div>
+    <div class="grid g3" style="margin-top:24px">
+      <div class="card"><div class="ico">🔑</div><h4>Pay once</h4><p>A key, not a rental. No recurring charge, ever, for what a founder owns.</p></div>
+      <div class="card"><div class="ico">🛡️</div><h4>No ads, no data sale</h4><p>Your shelf stays yours. We never sell core reading features or your data.</p></div>
+      <div class="card"><div class="ico">🎨</div><h4>Funds human art</h4><p>Every dollar helps move the site off AI images and onto work by real artists.</p></div>
+    </div>
+  </section>
+
+  <!-- AI HONESTY + THE DRAW -->
+  <section class="sec">
+    <div class="kicker">The honest part</div>
+    <h2 style="margin-top:10px">Yes, AI helped build this. <em>The goal is to undo that.</em></h2>
+    <p>I'll say it plainly: AI helped me build smutHub, and it helped make the art you see. I'm not hiding that. But building it this way is how I finally got past the things I'd started and abandoned more times than I'd like to admit. It shipped. Now the job is to trade the AI work out for the real thing.</p>
+    <p>So here's the mechanism, and it's the reason anything on this site costs money at all:</p>
+
+    <div class="glow-panel">
+      <h2 style="font-size:1.35rem">The monthly art draw</h2>
+      <p style="margin-top:8px">Every month, one reader's artwork gets used to <strong>replace AI-generated images on the site</strong> — starting with book spines and covers. New winner, every month. Buy anything — the Founder's Key, a single item, the scan-to-add camera, even a coffee — and you're in that month's draw.</p>
+      <ul class="draw-rules">
+        <li><span class="n">1</span><span><b style="color:var(--cream)">Any purchase enters you.</b> One purchase in a month puts you in that month's draw.</span></li>
+        <li><span class="n">2</span><span><b style="color:var(--cream)">$1 = 1 chance.</b> Spend more and your odds go up — every dollar is another entry in the hat.</span></li>
+        <li><span class="n">3</span><span><b style="color:var(--cream)">Winners get an Artist Alley.</b> Your work goes on the site and we link straight out to your shop or store.</span></li>
+        <li><span class="n">4</span><span><b style="color:var(--cream)">It's pointed away from AI.</b> Every winner is one more piece of the site made by a person instead of a model.</span></li>
+      </ul>
+      <span class="lucky">⚿ Founders get lucky 13 — one guaranteed win + 13 free draws</span>
+      <p style="margin-top:14px;font-size:.9rem">Buy the Founder's Key and you're guaranteed a month with your art showcased when your number comes up, plus thirteen free draws on the house — a full year of monthly entries and a freebie on top. Spend beyond that and $1 = 1 more chance, same as everyone.</p>
+    </div>
+  </section>
+
+  <!-- ARTIST ALLEY -->
+  <section class="sec">
+    <div class="kicker">For the artists</div>
+    <h2 style="margin-top:10px">The <em>Artist Alley</em>.</h2>
+    <p>If you have a shop, a store, or a portfolio, a draw win gets you a spot in the Artist Alley — your name, your work on smutHub, and a link straight out to wherever you sell. It's a showcase, not a rights-grab: your art stays yours, and the Alley sends readers to you.</p>
+    <p><strong>How it works:</strong> once payment is received for any product, I'll reach out to the creator directly to collect design specs and set up their Artist Alley page. No forms to chase — a real message from a real person.</p>
+    <div class="grid g3" style="margin-top:22px">
+      <div class="card"><div class="ico">🔗</div><h4>Your links, front and centre</h4><p>Shop, socials, and commission status — open or closed — all on your Alley page, all pointing readers back to you.</p></div>
+      <div class="card"><div class="ico">📌</div><h4>Your page stays</h4><p>Your showcase month rotates, but your Alley page stays up — a permanent credit for the work you made.</p></div>
+      <div class="card"><div class="ico">🗳️</div><h4>Founders steer it</h4><p>Founders help pick the prompts and themes each month's art is drawn against.</p></div>
+    </div>
+    <p style="margin-top:16px;font-size:.9rem;color:var(--muted)">The Artist Alley opens with the first winners. Until then, this is the plan on the record.</p>
+  </section>
+
+  <!-- MORE FOR MEMBERS -->
+  <section class="sec">
+    <div class="kicker">Also in the works</div>
+    <h2 style="margin-top:10px">More for readers who chip in.</h2>
+    <p>These aren't all finished — labels tell you what's real. Founders get first access and founder pricing as each one lands.</p>
+    <div class="grid g3">
+      <div class="card"><div class="ico">✍️</div><h4>Annotations <span class="badge dev">In dev</span></h4><p>Write your notes right on the book, online. 5 books free, then $1.99 for 20 more, or $5.99 for unlimited — one-time.</p></div>
+      <div class="card"><div class="ico">📷</div><h4>Scan to add <span class="badge dev">In dev</span></h4><p>Point the camera at a cover or barcode and it's on your shelf. Sold on its own or bundled into the Key.</p></div>
+      <div class="card"><div class="ico">🪄</div><h4>Reading companion <span class="badge planned">On hold</span></h4><p>An AI read-along buddy that can search your library and the site. Parked for now — it's expensive to run, so it'll return as a trial.</p></div>
+      <div class="card"><div class="ico">🃏</div><h4>Reading Personality card <span class="badge planned">Planned</span></h4><p>A shareable card that reads your taste back to you. Made to be posted.</p></div>
+      <div class="card"><div class="ico">💞</div><h4>Reactions, not just stars <span class="badge planned">Planned</span></h4><p>React to books the way you actually feel about them — a signal that's yours, not a five-star average.</p></div>
+      <div class="card"><div class="ico">🌶️</div><h4>Spice Wrap + rituals <span class="badge planned">Planned</span></h4><p>A monthly and yearly wrap of your reading, plus daily spins and streaks that celebrate — never shame.</p></div>
+      <div class="card"><div class="ico">💬</div><h4>Community <span class="badge planned">Planned</span></h4><p>A Discord to share books, fan art, your bookcase, tattoos, events, and cons — once identity and moderation are solid.</p></div>
+      <div class="card"><div class="ico">🖼️</div><h4>Decorate mode <span class="badge planned">Planned</span></h4><p>Style your shelf and export it as wallpaper — one great theme before any of it becomes a marketplace.</p></div>
+    </div>
+  </section>
+
+  <!-- WHAT COSTS MONEY -->
+  <section class="sec">
+    <div class="kicker">So what actually costs money?</div>
+    <h2 style="margin-top:10px">Just the <em>immersive worlds.</em></h2>
+    <p>Only two things are ever paid: the <strong>immersive worlds</strong> you step into and the extras that live inside them. <strong>Moonlit is your way in at a one-time $4.99</strong> — a deliberate discount so the door is cheap and, once open, yours forever. Founders get 8 worlds free in year one; everyone else buys them individually. <strong>Everything else on smutHub is free</strong> — the whole list is up above.</p>
+    <div class="ladder">
+      <div class="lrow"><span class="lt">Moonlit Reading Room</span><span class="ld">The live world — your discounted first key in</span><span class="lp">$4.99</span></div>
+      <div class="lrow"><span class="lt">Atmosphere &amp; ambience</span><span class="ld">Weather, lighting, particles, ambient sound</span><span class="lp">$2.99–$3.99</span></div>
+      <div class="lrow"><span class="lt">Interactive add-ons</span><span class="ld">Fairies, clocks, familiars, hidden interactions</span><span class="lp">$2.99–$4.99</span></div>
+      <div class="lrow"><span class="lt">Shelf worlds</span><span class="ld">A complete immersive room</span><span class="lp">$6.99–$8.99</span></div>
+      <div class="lrow"><span class="lt">Bundles</span><span class="ld">A world plus matching interactions and details</span><span class="lp">$9.99–$12.99</span></div>
+    </div>
+    <div class="items">
+      <span class="chip">Moonlit — your way in <b>$4.99</b></span>
+      <span class="chip">Rainy Ambience <b>$2.99</b></span>
+      <span class="chip">Fairy Visitors <b>$2.99</b></span>
+      <span class="chip">The Witching Hour <b>$2.99</b></span>
+      <span class="chip">Candlelit Boudoir <b>$7.99</b></span>
+      <span class="chip">Founder's Sanctuary bundle <b>$9.99</b></span>
+    </div>
+    <p style="margin-top:16px;font-size:.86rem;color:var(--muted)">Prices are planned and may move before checkout opens. Everything is in Canadian dollars, nothing is priced under $1.99, and nothing here is for sale yet — a purchase never happens until we're certain it works and the world is genuinely live.</p>
+  </section>
+
+</main>
+
+<!-- COFFEE / SUPPORT BAND -->
+<section class="band" id="coffee">
+  <div class="wrap">
+    <div class="box">
+      <span class="eyebrow" style="justify-content:center">☕ Support today</span>
+      <h2 style="margin-top:12px">Not ready for the Key? <em>What about a coffee?</em></h2>
+      <p style="color:#d8c4bd;max-width:58ch;margin:12px auto 0">Checkout isn't open yet, but a coffee keeps the servers running right now — and it counts as a purchase, so it opens you up to the monthly art draw all the same.* $1 = 1 chance.</p>
+      <p style="color:#8ff0b6;max-width:58ch;margin:10px auto 0;font-size:.86rem">*A coffee is a purchase like any other — it enters you in the monthly draw to get your own art added to the site.</p>
+      <p style="color:#b69089;max-width:58ch;margin:12px auto 0;font-size:.9rem">Quick heads-up: the amounts load in high — the presets start around $5 or $10 and I can't set the default any lower on my end. Don't let that stop you. Pick whatever you like; even $1 genuinely helps.</p>
+      <div class="cta-row">
+        <a class="btn gold" href="https://www.buymeacoffee.com/smuthub" target="_blank" rel="noopener">☕ Buy me a coffee</a>
+        <a class="btn ghost" href="/roadmap/">See the roadmap →</a>
+      </div>
+      <p class="fineprint">smutHub is independent and reader-first. The Founder's Key opens once checkout is finished and verified — one live premium world is the minimum before anyone is charged. Until then, everything above is the plan on the record, honestly labelled.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap ft">
+    <span>© 2026 smutHub · Romantasy, decoded.</span>
+    <span><a href="/founders/">Founders</a> · <a href="/roadmap/">Roadmap</a> · <a href="/about.html">About</a> · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/contact.html">Contact</a></span>
+  </div>
+</footer>
+
+</body></html>

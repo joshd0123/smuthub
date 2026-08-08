@@ -8,7 +8,11 @@ window.SMUTHUB_BOOKCASE_CATALOG = {
     priceCents: 2900,
     capacity: 100,
     remaining: null,
-    promise: "Every SmutHub-created bookshelf world, current and future.",
+    // Model (revised 2026-08-07): 8 immersive worlds free in year one, then
+    // founder pricing on every release after. All bookcase customization is
+    // free for everyone. Supersedes the old "every world, current and future".
+    promise: "Eight immersive worlds free in your first year, then founder pricing for life.",
+    foundersFreeWorlds: 8,
     liveProofProductKey: "world_moonlit_reading_room"
   },
   products: [
@@ -18,8 +22,11 @@ window.SMUTHUB_BOOKCASE_CATALOG = {
       name: "Moonlit Reading Room",
       eyebrow: "The live Founder’s Key proof",
       description: "A finished premium world with an arched moon window, responsive clock, candlelight, fairy visitors and a shelf that remembers.",
-      priceCents: null,
-      badge: "LIVE WORLD",
+      // Preview free (logged-out); full entry is a one-time $4.99 unlock (intro
+      // loss-leader) or free with the Founder's Key. Set 2026-08-07.
+      priceCents: 499,
+      introDiscount: true,
+      badge: "LIVE · $4.99",
       availability: "live",
       includedWithFoundersKey: true,
       worldKey: "moonlit",

@@ -3,7 +3,7 @@
 ## The immutable rule
 
 > At least one genuinely premium themed bookshelf world must be live and
-> touchable before SmutHub charges $29 for the Founder’s Key.
+> publicly previewable before SmutHub charges $29 for the Founder’s Key.
 
 If the rule is not true, checkout remains closed. We either delay the Key or
 sell a smaller offer whose delivered value is already live.
@@ -11,15 +11,20 @@ sell a smaller offer whose delivered value is already live.
 ## The launch proof
 
 **The Moonlit Reading Room** is the first premium world and the proof behind
-the Founder’s Key promise.
+the Founder’s Key promise. Access model (2026-08-07): a free logged-out
+**preview** proves the world is real; **full entry is a one-time $4.99 unlock**
+(a deliberate loss-leader), or free with the Founder’s Key / admin comp.
 
 It counts as live only while all of the following remain true:
 
-- A logged-out visitor can enter it without creating an account.
-- The clock, fairies, and candle each respond visibly when touched.
+- A logged-out visitor can **preview** it without creating an account — they can
+  see the real room and watch its interactions before paying.
+- The clock, fairies, and candle each respond visibly when touched — demonstrated
+  in the preview, so the world is provably real, not a screenshot.
 - Shelf sections, collection search, and book opening work.
 - The experience works on current phone and desktop breakpoints.
-- A signed-in reader can apply and save access they own or are trialling.
+- A reader who owns Moonlit (bought the $4.99 unlock or holds the Key) can enter
+  and save it; a free reader sees the preview and a clear unlock CTA.
 - The purchase page links directly to the working preview.
 
 A cabinet colour, static screenshot, concept card, CSS-only placeholder, or
@@ -46,12 +51,17 @@ unchecked.
 
 ## Promise language
 
-The durable promise is:
+The durable promise (revised 2026-08-07) is:
 
-> Every SmutHub-created bookshelf world, current and future.
+> Eight SmutHub-created immersive worlds free in a Founder’s first year, then
+> founder pricing on every world and release after. All bookcase customization
+> is free for every reader.
 
-“SmutHub-created” keeps licensed collaborations and third-party goods outside
-an unlimited obligation unless SmutHub explicitly includes them.
+This replaces the earlier “every world, current and future” language, which
+committed to an unbounded free obligation. Founders still come first on every
+release and hold founder pricing for life. “SmutHub-created” keeps licensed
+collaborations and third-party goods outside any obligation unless SmutHub
+explicitly includes them.
 
 Roadmap concepts must always be separated from delivered products:
 
