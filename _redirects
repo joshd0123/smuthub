@@ -5,9 +5,6 @@
 # Limits: 2,000 static + 100 dynamic rules. Query strings on the incoming
 # request are preserved and re-appended to the destination automatically,
 # so /smuthub-app.html?q=Powerless lands on /search?q=Powerless.
-/scan  /scan.html  200
-/scan/  /scan.html  200
-
 #
 # The search page was renamed smuthub-app.html -> search.html (serving at
 # /search) before launch. These 301s keep every previously-shared link,

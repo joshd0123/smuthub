@@ -653,3 +653,4 @@ $("#unlockButton").addEventListener("click", () => {
 document.addEventListener("visibilitychange", () => { if (document.hidden) stopCamera(); });
 updateQuotaUi();
 renderRecent();
+
