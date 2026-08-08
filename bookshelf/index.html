@@ -132,7 +132,7 @@
   .case-identity{--crest-rx:0deg;--crest-ry:0deg;--crest-x:0px;--crest-y:0px;--crest-copy-x:0px;--crest-copy-y:0px;position:relative;z-index:8;width:min(620px,94%);margin:0 auto -18px;filter:drop-shadow(0 14px 18px rgba(0,0,0,.5));perspective:900px;transform-style:preserve-3d}
   .plaque-chain{display:none}
   .case-name{position:relative;isolation:isolate;transform-style:preserve-3d;width:min(520px,84%);aspect-ratio:3/1;margin:0 auto;color:#f1d596;font-family:'Fraunces';text-transform:uppercase;text-align:center}
-  .crest-glass,.crest-reflection{display:none;position:absolute;pointer-events:none}
+  .crest-glass,.crest-reflection,.crest-heart,.founder-socket{display:none;position:absolute;pointer-events:none}
   .case-art{position:absolute;z-index:2;inset:0;width:100%;height:100%;object-fit:contain;transform:translate3d(var(--crest-x),var(--crest-y),28px) rotateX(var(--crest-rx)) rotateY(var(--crest-ry));filter:drop-shadow(0 9px 7px rgba(0,0,0,.62));transition:transform .18s ease-out,filter .3s;pointer-events:none;user-select:none;will-change:transform}
   .case-copy{position:absolute;z-index:4;left:24%;right:24%;top:49%;transform:translate3d(var(--crest-copy-x),calc(-10% + var(--crest-copy-y)),58px);transition:transform .2s ease-out;will-change:transform}
   .case-name small,.case-name strong,.case-motto{display:block}
@@ -142,13 +142,17 @@
   .case-name[data-crest="moonlit-cathedral"]{width:min(500px,82%);aspect-ratio:1089/520}.case-name[data-crest="moonlit-cathedral"] .case-copy{left:24%;right:24%;top:57%}.case-name[data-crest="moonlit-cathedral"] small{color:rgba(215,228,255,.75)}.case-name[data-crest="moonlit-cathedral"] strong{color:#edf3ff;text-shadow:0 2px 2px #061125,0 0 18px rgba(104,151,255,.32)}.case-name[data-crest="moonlit-cathedral"] .case-motto{color:rgba(164,194,255,.8)}
   .case-name[data-crest="thornbound-reliquary"]{width:min(540px,87%);aspect-ratio:1200/395}.case-name[data-crest="thornbound-reliquary"] .case-copy{left:21%;right:21%;top:49%}.case-name[data-crest="thornbound-reliquary"] small{color:rgba(206,194,188,.68)}.case-name[data-crest="thornbound-reliquary"] strong{color:#e8ddd3;text-shadow:0 2px 3px #000,0 0 16px rgba(151,26,52,.25)}.case-name[data-crest="thornbound-reliquary"] .case-motto{color:rgba(184,57,76,.86)}
   .case-name[data-crest="dragons-oath"]{width:min(555px,89%);aspect-ratio:1200/401}.case-name[data-crest="dragons-oath"] .case-copy{left:29%;right:29%;top:51%}.case-name[data-crest="dragons-oath"] strong{color:#f0d49b}.case-name[data-crest="dragons-oath"] .case-motto{color:rgba(203,96,105,.82)}
-  .case-name[data-crest="founders-key"]{width:min(590px,94%);aspect-ratio:2048/767}.case-name[data-crest="founders-key"] .case-copy{left:24%;right:24%;top:56%}.case-name[data-crest="founders-key"] small{color:rgba(236,218,190,.78)}.case-name[data-crest="founders-key"] strong{color:#fff0c7;text-shadow:0 2px 3px #090306,0 0 13px rgba(218,173,85,.28)}.case-name[data-crest="founders-key"] .case-motto{color:rgba(211,170,91,.9)}
-  .case-name[data-crest="founders-key"] .crest-glass{display:block;z-index:0;left:17%;right:17%;top:28%;bottom:24%;border:0;background:radial-gradient(ellipse at 50% 52%,rgba(47,5,18,.42),rgba(17,5,10,.2) 48%,transparent 76%);filter:drop-shadow(0 7px 14px rgba(0,0,0,.18));transform:translate3d(var(--crest-copy-x),var(--crest-copy-y),10px);transition:transform .22s ease-out}
+  .case-name[data-crest="founders-key"]{width:min(610px,96%);aspect-ratio:2169/725}.case-name[data-crest="founders-key"] .case-copy{left:23%;right:23%;top:49%}.case-name[data-crest="founders-key"] small{color:rgba(236,218,190,.82)}.case-name[data-crest="founders-key"] strong{font-size:1.28rem;color:#fff0c7;text-shadow:0 2px 3px #090306,0 0 16px rgba(218,173,85,.3)}.case-name[data-crest="founders-key"] .case-motto{color:rgba(211,170,91,.92)}
+  .case-name[data-crest="founders-key"] .crest-glass{display:block;z-index:0;left:18%;right:18%;top:31%;bottom:20%;border:0;background:radial-gradient(ellipse at 50% 50%,rgba(53,5,20,.44),rgba(17,5,10,.18) 48%,transparent 76%);filter:drop-shadow(0 7px 14px rgba(0,0,0,.18));transform:translate3d(var(--crest-copy-x),var(--crest-copy-y),10px);transition:transform .22s ease-out;animation:founderAura 6.8s ease-in-out infinite}
   .case-name[data-crest="founders-key"] .crest-glass::before,.case-name[data-crest="founders-key"] .crest-glass::after{content:"";position:absolute;top:51%;width:22%;height:1px;background:linear-gradient(90deg,transparent,rgba(215,174,88,.48));box-shadow:0 0 7px rgba(215,174,88,.12)}.case-name[data-crest="founders-key"] .crest-glass::before{left:4%}.case-name[data-crest="founders-key"] .crest-glass::after{right:4%;transform:scaleX(-1)}
-  .case-name[data-crest="founders-key"] .crest-reflection{display:block;z-index:3;inset:4% 3% 8%;overflow:hidden;mix-blend-mode:screen;opacity:.34;background:linear-gradient(108deg,transparent 0 42%,rgba(255,239,196,.12) 47%,rgba(255,255,255,.025) 50%,transparent 56%);background-size:240% 100%;mask-image:linear-gradient(90deg,transparent 1%,#000 12% 88%,transparent 99%);animation:founderGlassDrift 9.5s ease-in-out infinite}
+  .case-name[data-crest="founders-key"] .crest-reflection{display:block;z-index:3;inset:3% 2% 7%;overflow:hidden;mix-blend-mode:screen;opacity:.32;background:linear-gradient(108deg,transparent 0 42%,rgba(255,239,196,.13) 47%,rgba(255,255,255,.025) 50%,transparent 56%);background-size:240% 100%;mask-image:linear-gradient(90deg,transparent 1%,#000 12% 88%,transparent 99%);animation:founderGlassDrift 9.5s ease-in-out infinite}
+  .case-name[data-crest="founders-key"] .crest-heart{display:block;z-index:5;inset:0;background:url('/themes/bookcase/crests/founders-key-living-relic-v5.webp') center/contain no-repeat;clip-path:polygon(42% 0,58% 0,58% 43%,42% 43%);transform:translate3d(var(--crest-copy-x),var(--crest-copy-y),76px) scale(1.012);filter:drop-shadow(0 4px 6px rgba(0,0,0,.7)) drop-shadow(0 0 9px rgba(150,18,45,.15));transition:transform .2s ease-out;animation:founderHeartPulse 5.8s ease-in-out infinite}
+  .case-name[data-crest="founders-key"] .founder-socket{display:grid;z-index:7;left:50%;top:86%;width:30px;height:20px;place-items:center;border:1px solid rgba(222,180,85,.7);border-radius:50%;background:radial-gradient(circle at 42% 32%,#2e1820,#080608 68%);box-shadow:inset 0 1px rgba(255,234,180,.16),0 0 9px rgba(172,116,45,.14);transform:translate3d(calc(-50% + var(--crest-copy-x)),var(--crest-copy-y),82px);color:#efd080;font:900 .34rem 'Hanken Grotesk';letter-spacing:.04em;text-shadow:0 1px 2px #000;transition:transform .2s ease-out}
   .case-name[data-crest="founders-key"] .case-copy::before,.case-name[data-crest="founders-key"] .case-copy::after{content:"";position:absolute;top:50%;width:14%;height:1px;background:linear-gradient(90deg,transparent,rgba(221,180,91,.48))}.case-name[data-crest="founders-key"] .case-copy::before{right:103%}.case-name[data-crest="founders-key"] .case-copy::after{left:103%;transform:scaleX(-1)}
-  @keyframes founderGlassDrift{0%,100%{background-position:120% 0;opacity:.24}48%{background-position:-70% 0;opacity:.52}}
-  @media(prefers-reduced-motion:reduce){.case-art,.case-copy,.crest-glass,.crest-reflection{transition:none!important;animation:none!important}}
+  @keyframes founderGlassDrift{0%,100%{background-position:120% 0;opacity:.22}48%{background-position:-70% 0;opacity:.48}}
+  @keyframes founderAura{0%,100%{opacity:.82;filter:drop-shadow(0 7px 14px rgba(0,0,0,.18))}50%{opacity:1;filter:drop-shadow(0 8px 18px rgba(103,14,40,.22))}}
+  @keyframes founderHeartPulse{0%,100%{filter:drop-shadow(0 4px 6px rgba(0,0,0,.7)) drop-shadow(0 0 8px rgba(150,18,45,.12))}50%{filter:drop-shadow(0 5px 8px rgba(0,0,0,.76)) drop-shadow(0 0 15px rgba(177,26,57,.28))}}
+  @media(prefers-reduced-motion:reduce){.case-art,.case-copy,.crest-glass,.crest-reflection,.crest-heart,.founder-socket{transition:none!important;animation:none!important}}
   .case-identity:hover .case-art{filter:drop-shadow(0 13px 10px rgba(0,0,0,.7)) brightness(1.035)}
   .founder-edition-bar{position:relative;z-index:8;width:min(340px,68%);margin:-2px auto 0;padding:.48em 2.2em .46em;border:1px solid rgba(229,194,116,.62);border-top-color:rgba(255,230,165,.85);border-radius:2px 2px 9px 9px;
     background:linear-gradient(90deg,#120a10,#2d101d 48%,#120a10);box-shadow:0 10px 20px rgba(0,0,0,.55),inset 0 1px rgba(255,255,255,.09),inset 0 0 0 3px rgba(3,2,3,.4);
@@ -156,7 +160,7 @@
   .founder-edition-bar::before,.founder-edition-bar::after{position:absolute;top:50%;transform:translateY(-52%);color:#bd334f;font:1rem 'Fraunces'}
   .founder-edition-bar::before{content:"❦";left:10px}.founder-edition-bar::after{content:"❦";right:10px;transform:translateY(-52%) scaleX(-1)}
   .founder-edition-bar span{color:#fff0c5}
-  body[data-crest="founders-key"] .founder-edition-bar{width:max-content;min-width:168px;margin:-12px auto 0;padding:.55em 2.7em .52em;border-radius:3px 3px 13px 13px;border-color:rgba(213,170,83,.74);background:linear-gradient(105deg,#060607,#211a17 48%,#060607);color:#cfa34e;box-shadow:0 10px 22px rgba(0,0,0,.68),inset 0 1px rgba(255,255,255,.07),0 0 18px rgba(190,143,56,.08);transform:translateZ(70px)}
+  body[data-crest="founders-key"] .founder-edition-bar{display:none}
   body[data-crest="founders-key"] .founder-edition-bar::before{content:"⚿";color:#cfa34e}body[data-crest="founders-key"] .founder-edition-bar::after{content:"⚿";color:#cfa34e;transform:translateY(-52%) scaleX(-1)}
   .case-flourish{display:none;position:absolute;inset:7px;z-index:3;border:1px solid rgba(232,197,116,.56);border-radius:10px;pointer-events:none}
   body[data-library-detail="gilded"] .case-flourish{display:block}
@@ -844,7 +848,7 @@
     {key:'moonlit-cathedral',name:'Moonlit Cathedral',src:'/themes/bookcase/crests/moonlit-cathedral-v1.webp',eyebrow:'The moonlit library of',motto:'Dream · Desire · Destiny',desc:'Silver tracery, moonflowers and cathedral-blue lacquer.',premium:true},
     {key:'thornbound-reliquary',name:'Thornbound Reliquary',src:'/themes/bookcase/crests/thornbound-reliquary-v1.webp',eyebrow:'The warbound library of',motto:'Love · War · No Mercy',desc:'Black iron, raven wings and a scarred ebony heart.',premium:true},
     {key:'dragons-oath',name:'Dragon’s Oath',src:'/themes/bookcase/crests/dragons-oath-v1.webp',eyebrow:'The oathbound library of',motto:'Desire · Fire · Devotion',desc:'Folded wings, burgundy leather and ember-cut gems.',premium:true},
-    {key:'founders-key',name:'Founder’s Key',src:'/themes/bookcase/crests/founders-key-romantasy-v3.webp',eyebrow:'The founding library of',motto:'First Edition · Forever Kept',desc:'Openwork thorn-gold, dark roses and a garnet heart-key reserved for the Original 100.',premium:false,founderOnly:true},
+    {key:'founders-key',name:'Founder’s Key',src:'/themes/bookcase/crests/founders-key-living-relic-v5.webp',eyebrow:'The founding library of',motto:'First Edition · Forever Kept',desc:'A living thorn-gold relic with a ruby heart-key, layered depth and an integrated founder seal.',premium:false,founderOnly:true},
   ];
   const CREST_STORAGE_KEY='sh_library_crest_v1';
   const LIBRARY_DETAILS=[
@@ -920,8 +924,12 @@
   function founderEditionHTML(){
     const number=founderNumber?String(founderNumber).padStart(3,'0'):(REVIEW_MODE?'001':null);
     if(!number) return '';
-    if(activeCrest().key==='founders-key') return '<div class="founder-edition-bar">Founding Key · <span>'+number+'</span></div>';
+    if(activeCrest().key==='founders-key') return '';
     return '<div class="founder-edition-bar">✦ Founder’s Edition · <span>Key No. '+number+'</span> ✦</div>';
+  }
+  function founderSocketHTML(){
+    const number=founderNumber?String(founderNumber).padStart(3,'0'):(REVIEW_MODE?'001':null);
+    return number&&activeCrest().key==='founders-key'?'<span class="founder-socket" aria-label="Founding Key '+number+'">'+number+'</span>':'';
   }
   function syncScrollLock(){
     const locked=['sheetbg','shelfview','themesheetbg','upsell'].some(id=>{
@@ -1141,7 +1149,7 @@
       + '<span class="library-stat"><strong>'+counts.dnf+'</strong> laid to rest</span></div>'
       + '<button class="world-ribbon" id="openLiveWorld"><span class="moon-seal" aria-hidden="true">✦</span><span class="world-ribbon-copy"><small>Live premium world · 3 relics to awaken</small><strong>The Moonlit Reading Room</strong><span class="world-ribbon-desc">Your books, a working clock, candlelight and visitors that leave something behind.</span></span><b>Enter world →</b></button>'
       + '<div class="library-main">'
-      + '<div class="case-identity"><span class="plaque-chain left" aria-hidden="true"></span><span class="plaque-chain right" aria-hidden="true"></span><div class="case-name" data-crest="'+esc(crest.key)+'"><span class="crest-glass" aria-hidden="true"></span><span class="crest-reflection" aria-hidden="true"></span><img class="case-art" src="'+esc(crest.src)+'" alt="" aria-hidden="true" decoding="async"><div class="case-copy"><small>'+esc(crest.eyebrow)+'</small><strong>'+esc(readerName)+'</strong><span class="case-motto">'+esc(crest.motto)+'</span></div></div>'+founderEditionHTML()+'</div>'
+      + '<div class="case-identity"><span class="plaque-chain left" aria-hidden="true"></span><span class="plaque-chain right" aria-hidden="true"></span><div class="case-name" data-crest="'+esc(crest.key)+'"><span class="crest-glass" aria-hidden="true"></span><span class="crest-reflection" aria-hidden="true"></span><img class="case-art" src="'+esc(crest.src)+'" alt="" aria-hidden="true" decoding="async"><span class="crest-heart" aria-hidden="true"></span><div class="case-copy"><small>'+esc(crest.eyebrow)+'</small><strong>'+esc(readerName)+'</strong><span class="case-motto">'+esc(crest.motto)+'</span></div>'+founderSocketHTML()+'</div>'+founderEditionHTML()+'</div>'
       + '<div class="bookcase"><span class="cabinet-crest"></span><span class="cabinet-pilaster left"></span><span class="cabinet-pilaster right"></span><span class="case-flourish"></span><div class="interior">'
       + visible.map(([st,label])=>{
           const items=ordered.filter(b=>b.status===st);

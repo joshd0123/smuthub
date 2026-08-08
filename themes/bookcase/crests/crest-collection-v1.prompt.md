@@ -54,3 +54,13 @@ a crescent and pinprick stars, plus a garnet heart whose point becomes the key.
 The entire center and every opening between the vines are true transparency.
 Live personalized words sit over the ornament with only a translucent wine-dark
 reading shadow behind them; no opaque plaque or simulated glass is baked in.
+
+### Living relic v5
+
+The heart-key was rebuilt as a compact upper seal: its ward ends immediately
+beneath the heart instead of crossing the live typography. The ruby heart is larger, faint
+shadow-vines enter only from the outer thirds, and the bottom flourish contains
+an open number socket. In the page, the heart is duplicated and clipped onto a
+separate CSS depth plane, while the live founder number occupies the lower
+socket. This keeps the art motion-ready without baking names or membership
+numbers into a video or image.
