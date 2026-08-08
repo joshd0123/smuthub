@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0809" />
+    <meta name="description" content="Scan a book and instantly check your SmutHub reading history, shelves and ratings." />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="canonical" href="https://smuthub.ca/scan" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <title>Scan a Book | SmutHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/config.js"></script>
+    <script defer src="/auth.js"></script>
+    <link rel="stylesheet" href="/scan.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header>
+        <div class="nav wrap">
+          <a href="/" class="logo" aria-label="SmutHub home">smut<span class="box">Hub</span></a>
+          <nav class="navlinks" aria-label="Primary navigation">
+            <a href="/books/">Browse Books</a>
+            <a href="/guides/">Guides</a>
+            <a href="/bookshelf">My Bookshelf</a>
+            <a href="/stores">Find a Store</a>
+            <a href="/search">Add a Book</a>
+          </nav>
+          <div class="authbox" id="authbox"></div>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero">
+          <p class="eyebrow">Your reading memory</p>
+          <h1>Know the book<br /><em>before you buy it.</em></h1>
+          <p class="hero-copy">Scan an ISBN or cover. We’ll tell you if you’ve read it, saved it, rated it—or if your friends are already obsessed.</p>
+        </section>
+
+        <section class="scanner-card" aria-labelledby="scan-title">
+          <div class="scanner-heading">
+            <div>
+              <span class="live-dot"></span>
+              <span id="scan-title">Ready to scan</span>
+            </div>
+            <div class="scanner-tools">
+              <span class="quota-chip" id="quotaChip">5 free scans</span>
+              <button class="help-button" id="helpButton" aria-label="How scanning works">?</button>
+            </div>
+          </div>
+
+          <div class="camera-stage" id="cameraStage">
+            <video id="cameraVideo" playsinline muted></video>
+            <div class="camera-placeholder" id="cameraPlaceholder">
+              <div class="book-mark" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <strong>Point at the ISBN barcode</strong>
+              <small>Usually on the back cover</small>
+            </div>
+            <div class="scan-frame" aria-hidden="true"><span></span></div>
+            <div class="scan-feedback" id="scanFeedback" role="status" aria-live="polite"></div>
+          </div>
+
+          <div class="mode-switch" role="tablist" aria-label="Scan type">
+            <button class="mode active" data-mode="isbn" role="tab" aria-selected="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5v14M7 5v14M11 5v14M14 5v14M16.5 5v14M20 5v14"/></svg>
+              ISBN
+              <span>Most accurate</span>
+            </button>
+            <button class="mode" data-mode="cover" role="tab" aria-selected="false" disabled aria-disabled="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h11a3 3 0 0 1 3 3v15H7a2 2 0 0 1-2-2V3Zm2 14h12M9 7h6"/></svg>
+              Cover
+              <span>Phase 2 next</span>
+            </button>
+          </div>
+
+          <button class="primary-button" id="cameraButton">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3v12H4V7Zm8 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg>
+            <span>Open camera</span>
+          </button>
+
+          <div class="secondary-actions">
+            <button class="text-action" id="photoButton">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4V5Zm0 11 5-5 4 4 2-2 5 5M16 9h.01"/></svg>
+              Choose a photo
+            </button>
+            <input id="imageInput" type="file" accept="image/*" capture="environment" hidden />
+            <span></span>
+            <button class="text-action" id="manualButton">Type ISBN</button>
+          </div>
+
+          <button class="demo-link" id="demoButton">No book nearby? Try a demo scan →</button>
+        </section>
+
+        <section class="recent-section" id="recentSection" hidden>
+          <div class="section-heading">
+            <div><p class="eyebrow">Your trail</p><h2>Recently scanned</h2></div>
+            <button id="clearRecentButton">Clear</button>
+          </div>
+          <div class="recent-list" id="recentList"></div>
+        </section>
+
+        <section class="why-section">
+          <p class="eyebrow">One scan. Zero second-guessing.</p>
+          <div class="benefit-row">
+            <article><span>01</span><strong>Remember</strong><p>Read status, your rating, notes & spice.</p></article>
+            <article><span>02</span><strong>Discover</strong><p>See which friends read or saved it.</p></article>
+            <article><span>03</span><strong>Decide</strong><p>Add it to a shelf in one quick tap.</p></article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">Part of <a href="/">SmutHub</a> · Dragons optional. Pining mandatory.</footer>
+    </div>
+
+    <dialog class="sheet" id="manualDialog">
+      <form method="dialog" id="isbnForm">
+        <div class="sheet-handle"></div>
+        <button class="close-button" id="closeManual" type="button" aria-label="Close">×</button>
+        <p class="eyebrow">Can’t get a clear scan?</p>
+        <h2>Enter the ISBN</h2>
+        <p>Type the 10 or 13 digit number printed above the barcode.</p>
+        <label for="isbnInput">ISBN</label>
+        <input id="isbnInput" inputmode="numeric" autocomplete="off" placeholder="978 1 64937 404 2" />
+        <p class="field-error" id="isbnError" aria-live="polite"></p>
+        <button class="primary-button" type="submit" value="default">Find this book</button>
+      </form>
+    </dialog>
+
+    <dialog class="result-sheet" id="resultDialog">
+      <div class="result-scroll">
+        <div class="sheet-handle"></div>
+        <button class="close-button" id="closeResult" aria-label="Close">×</button>
+        <div class="match-pill"><span>✓</span> Book found</div>
+        <section class="book-summary">
+          <div class="cover-wrap"><img id="resultCover" alt="" /><span id="spiceBadge">🌶 3</span></div>
+          <div class="book-copy">
+            <p id="resultSeries"></p>
+            <h2 id="resultTitle"></h2>
+            <p class="author" id="resultAuthor"></p>
+            <div class="community-rating"><span>★</span> <strong id="resultRating"></strong> <small id="ratingCount"></small></div>
+          </div>
+        </section>
+
+        <section class="edition-notice" id="editionNotice">
+          <span>↗</span>
+          <div><strong id="editionHeadline"></strong><p id="editionDetail"></p></div>
+        </section>
+
+        <section class="memory-card" id="memoryCard">
+          <div class="memory-icon" id="memoryIcon">✓</div>
+          <div><p id="memoryLabel">You’ve read this</p><strong id="memoryDetail"></strong></div>
+          <button id="notesButton">View notes</button>
+        </section>
+        <section class="context-grid" aria-label="Your book context">
+          <article><span>Reading</span><strong id="readingState">—</strong></article>
+          <article><span>Ownership</span><strong id="ownershipState">—</strong></article>
+          <article><span>Shelf</span><strong id="shelfState">—</strong></article>
+        </section>
+
+        <section class="friend-strip" id="friendStrip">
+          <div class="avatar-stack"><span>AM</span><span>SK</span><span>JL</span></div>
+          <p><strong id="friendHeadline"></strong><br /><span id="friendDetail"></span></p>
+          <button aria-label="View friend activity">›</button>
+        </section>
+
+        <div class="result-actions">
+          <button class="primary-button" id="shelfButton">Add to want to read</button>
+          <button class="outline-button" id="detailsButton">View book details</button>
+        </div>
+        <p class="isbn-meta" id="isbnMeta"></p>
+      </div>
+    </dialog>
+
+    <dialog class="sheet info-sheet" id="helpDialog">
+      <div class="sheet-handle"></div>
+      <button class="close-button" id="closeHelp" aria-label="Close">×</button>
+      <p class="eyebrow">How it works</p>
+      <h2>From cover to context</h2>
+      <ol>
+        <li><span>1</span><div><strong>Scan</strong><p>ISBN is fastest and most exact. Cover matching is useful when the barcode isn’t visible.</p></div></li>
+        <li><span>2</span><div><strong>Match</strong><p>We identify the edition, then connect it to the main book record.</p></div></li>
+        <li><span>3</span><div><strong>Remember</strong><p>Your shelves, history, rating, notes, spice and friend activity appear together.</p></div></li>
+      </ol>
+      <div class="prototype-tools">
+        <p>Prototype controls</p>
+        <button class="outline-button" id="previewPaywallButton">Preview 5-scan limit</button>
+        <button class="text-action" id="resetPrototypeButton">Reset prototype data</button>
+      </div>
+    </dialog>
+
+    <dialog class="sheet paywall-sheet" id="paywallDialog">
+      <div class="sheet-handle"></div>
+      <button class="close-button" id="closePaywall" aria-label="Close">×</button>
+      <div class="unlock-mark">∞</div>
+      <p class="eyebrow">Keep your book memory handy</p>
+      <h2>You’ve used your 5 free scans.</h2>
+      <p>Unlock ISBN and cover scanning forever. One payment, no subscription.</p>
+      <div class="price-lockup"><strong>$9</strong><span>one time<br />lifetime access</span></div>
+      <ul>
+        <li>Unlimited ISBN and cover scans</li>
+        <li>Instant shelf and reading-history checks</li>
+        <li>Your ratings, spice, notes and friend activity</li>
+      </ul>
+      <button class="primary-button" id="unlockButton">Preview lifetime unlock · no charge</button>
+      <small>Prototype checkout — no payment will be taken.</small>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@zxing/browser@0.2.1/umd/zxing-browser.min.js"></script>
+    <script src="/scan-app.js"></script>
+  </body>
+</html>
