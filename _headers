@@ -12,8 +12,8 @@
   Referrer-Policy: strict-origin-when-cross-origin
   # Clickjacking protection (CSP frame-ancestors below is the modern equivalent).
   X-Frame-Options: SAMEORIGIN
-  # Turn off powerful features we don't use; geolocation stays on (same-origin) for the store map.
-  Permissions-Policy: geolocation=(self), camera=(), microphone=(), payment=(), usb=(), browsing-topics=()
+  # Camera is same-origin only for the /scan field-test page; every use still requires a browser permission prompt.
+  Permissions-Policy: geolocation=(self), camera=(self), microphone=(), payment=(), usb=(), browsing-topics=()
   # Content Security Policy — REPORT-ONLY: logs violations to the console, blocks nothing.
   # To enforce, rename this header to "Content-Security-Policy". 'unsafe-inline' is
   # required by the inline scripts/styles/handlers; the rest is a tight host allow-list.
