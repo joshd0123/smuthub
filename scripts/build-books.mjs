@@ -1596,11 +1596,11 @@ const INDEX_CSS = `<style>
   .sh-rail-strip i{display:block;width:22px;height:2px;background:var(--muted);border-radius:1px;transition:background .15s,width .15s}
   .sh-rail:hover .sh-rail-strip i,.sh-rail.open .sh-rail-strip i{background:var(--amber)}
   .sh-rail-strip i:nth-child(odd){width:16px}
-  .sh-rail-panel{position:absolute;left:100%;top:50%;transform:translate(-12px,-50%);background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:14px;width:min(240px,calc(100vw - 54px));max-height:80vh;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;box-shadow:0 22px 50px rgba(0,0,0,.55);margin-left:8px}
+  .sh-rail-panel{position:absolute;left:100%;top:50%;transform:translate(-12px,-50%);background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:12px 6px;width:56px;max-height:82vh;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;box-shadow:0 22px 50px rgba(0,0,0,.55);margin-left:8px}
   .sh-rail-panel::before{content:"";position:absolute;left:-16px;top:0;bottom:0;width:16px}
   .sh-rail.open .sh-rail-panel,.sh-rail:focus-within .sh-rail-panel{opacity:1;pointer-events:auto;transform:translate(0,-50%)}
-  .sh-rail-panel h3{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding:0 8px}
-  .sh-rail-panel a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 11px;border-radius:9px;color:var(--cream);text-decoration:none;font-size:.93rem;line-height:1.2}
+  .sh-rail-panel h3{font-size:.52rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding:0;text-align:center;line-height:1.35}
+  .sh-rail-panel a{display:flex;justify-content:center;align-items:center;padding:5px 0;border-radius:8px;color:var(--cream);text-decoration:none;font-size:.95rem;line-height:1.1}
   .sh-rail-panel a:hover{background:var(--panel)}
   .sh-rail-panel a .lbl{font-weight:800}
   .sh-rail-panel a .ct{color:var(--muted);font-size:.78rem;font-variant-numeric:tabular-nums}
