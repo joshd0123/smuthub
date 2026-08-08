@@ -1589,6 +1589,21 @@ const INDEX_CSS = `<style>
   .bmeta .bs{font-size:.72rem;letter-spacing:.04em;margin-left:auto}
   .bmeta .bs .off{filter:grayscale(1);opacity:.28}
   .noresults{color:var(--muted);font-style:italic;padding:24px 0 40px}
+  /* Left-edge A–Z jump rail — the same component as the glossary sidebar. */
+  .sh-rail{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:45;display:flex;align-items:center}
+  .sh-rail-strip{display:flex;flex-direction:column;gap:6px;padding:14px 9px;background:rgba(28,19,22,.92);border:1px solid var(--line);border-left:0;border-radius:0 12px 12px 0;backdrop-filter:blur(8px);cursor:pointer;transition:background .15s}
+  .sh-rail:hover .sh-rail-strip,.sh-rail.open .sh-rail-strip{background:rgba(40,28,32,.96)}
+  .sh-rail-strip i{display:block;width:22px;height:2px;background:var(--muted);border-radius:1px;transition:background .15s,width .15s}
+  .sh-rail:hover .sh-rail-strip i,.sh-rail.open .sh-rail-strip i{background:var(--amber)}
+  .sh-rail-strip i:nth-child(odd){width:16px}
+  .sh-rail-panel{position:absolute;left:100%;top:50%;transform:translate(-12px,-50%);background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:14px;width:min(240px,calc(100vw - 54px));max-height:80vh;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;box-shadow:0 22px 50px rgba(0,0,0,.55);margin-left:8px}
+  .sh-rail-panel::before{content:"";position:absolute;left:-16px;top:0;bottom:0;width:16px}
+  .sh-rail.open .sh-rail-panel,.sh-rail:focus-within .sh-rail-panel{opacity:1;pointer-events:auto;transform:translate(0,-50%)}
+  .sh-rail-panel h3{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding:0 8px}
+  .sh-rail-panel a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 11px;border-radius:9px;color:var(--cream);text-decoration:none;font-size:.93rem;line-height:1.2}
+  .sh-rail-panel a:hover{background:var(--panel)}
+  .sh-rail-panel a .lbl{font-weight:800}
+  .sh-rail-panel a .ct{color:var(--muted);font-size:.78rem;font-variant-numeric:tabular-nums}
 </style>`;
 
 function renderBookIndex(allBooks){
@@ -1656,7 +1671,37 @@ function renderBookIndex(allBooks){
       <h2>${esc(g.letter)}</h2>
       <div class="bgrid">${g.items.map(cardFor).join('')}</div>
     </section>`).join('');
-  const azHTML = groups.map(g => `<a href="#letter-${esc(g.letter === '#' ? 'num' : g.letter)}">${esc(g.letter)}</a>`).join('');
+  // Left-edge A–Z jump rail (matches the glossary sidebar): a strip that opens
+  // a panel of every letter present, with its book count, jumping to that group.
+  const railItems = groups.map(g => {
+    const id = g.letter === '#' ? 'num' : g.letter;
+    return `<a href="#letter-${esc(id)}"><span class="lbl">${esc(g.letter)}</span><span class="ct">${g.items.length}</span></a>`;
+  }).join('');
+  const railHTML = `<aside class="sh-rail" id="shRail" tabindex="0" aria-label="Jump to a letter">
+    <div class="sh-rail-strip" role="button" aria-expanded="false" aria-controls="shRailPanel" aria-label="Jump to a letter"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="sh-rail-panel" id="shRailPanel"><h3>Jump to</h3>${railItems}</div>
+  </aside>`;
+  const railScript = `<script>(function(){
+    var rail=document.getElementById('shRail'); if(!rail) return;
+    var strip=rail.querySelector('.sh-rail-strip'); var openT,closeT;
+    function setOpen(on){ rail.classList.toggle('open',on); strip.setAttribute('aria-expanded',on?'true':'false'); }
+    function hoverOpen(){ clearTimeout(closeT); openT=setTimeout(function(){setOpen(true);},120); }
+    function hoverClose(){ clearTimeout(openT); closeT=setTimeout(function(){setOpen(false);},250); }
+    rail.addEventListener('mouseenter',hoverOpen);
+    rail.addEventListener('mouseleave',hoverClose);
+    strip.addEventListener('click',function(e){ e.stopPropagation(); clearTimeout(openT); clearTimeout(closeT); setOpen(!rail.classList.contains('open')); });
+    rail.addEventListener('focusin',function(){ clearTimeout(closeT); setOpen(true); });
+    rail.addEventListener('focusout',function(){ if(!rail.contains(document.activeElement)) setOpen(false); });
+    rail.addEventListener('keydown',function(e){ if(e.key==='Escape'){ setOpen(false); strip.focus(); } });
+    document.addEventListener('click',function(e){ if(!rail.contains(e.target)) setOpen(false); });
+    rail.querySelectorAll('.sh-rail-panel a').forEach(function(a){
+      a.addEventListener('click',function(ev){
+        var el=document.getElementById(a.getAttribute('href').slice(1));
+        if(el){ ev.preventDefault(); el.scrollIntoView({behavior:'smooth',block:'start'}); history.replaceState(null,'',a.getAttribute('href')); }
+        setOpen(false);
+      });
+    });
+  })();</script>`;
 
   const title = `All Books — Browse ${sorted.length} Romantasy Titles | smutHub`;
   const description = `Browse every romantasy and spicy fantasy book on smutHub — ${sorted.length} titles with spice ratings, tropes, and content warnings. Filter by trope, heat level, or search by title and author.`;
@@ -1685,6 +1730,7 @@ function renderBookIndex(allBooks){
 
   const body = `<body>
 ${sharedHeader('books')}
+${railHTML}
 
 <div class="wrap ihead">
   <nav class="crumb" style="padding:18px 0 0;color:var(--muted);font-size:.85rem"><a href="/" style="color:var(--muted);text-decoration:none">Home</a> / <span>All books</span></nav>
@@ -1702,8 +1748,7 @@ ${sharedHeader('books')}
     <button id="fClear" type="button">✕ Clear</button>
   </div>
   <div id="tagchip" class="tagchip" hidden></div>
-  <nav class="azbar" aria-label="Jump to letter">${azHTML}</nav>
-  <p class="meter" id="meter">${sorted.length} books · A–Z by title</p>
+  <p class="meter" id="meter">${sorted.length} books · A–Z by title · use the ⟨ letter rail on the left to jump</p>
 </div>
 
 <div class="wrap" id="results">
@@ -1711,6 +1756,7 @@ ${groupsHTML}
 <p class="noresults" id="noresults" style="display:none">No books match those filters yet — try fewer, or clear them.</p>
 </div>
 
+${railScript}
 <script>
   // Live filtering — pure DOM, same approach as the glossary index. Every card
   // is already in the HTML (good for crawlers and for no-JS readers); this only
