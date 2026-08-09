@@ -282,8 +282,10 @@ const ASK_CSS = `
     .af-byline{font-size:.9rem}
     .af-pulse{margin:9px 0 0;padding:0;border:0}
     .af-pulse b{font-size:1.12rem}
-    .af-facts{clear:both;margin-top:16px}
-    .af-ask{clear:both}
+    /* Facts move into the anchored "Every recorded detail" section (#06) on
+       mobile, so the top grid is hidden to reclaim the space. */
+    .af-facts{display:none}
+    .af-ask{clear:both;margin-top:6px}
   }
   .af-facts>div{padding:15px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
   .af-facts dt,.af-facts small{display:block;color:var(--muted);font-size:.64rem;text-transform:uppercase;letter-spacing:.1em}
@@ -347,6 +349,25 @@ const ASK_CSS = `
   .af-more summary{cursor:pointer;color:var(--muted);font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:10px 0}
   .af-more summary::-webkit-details-marker{display:none}
   .af-more summary:hover{color:var(--cream)}
+
+  /* ── Spoiler-gated ending (#05) — hidden until the reader opts in ── */
+  .af-ending{margin-top:16px}
+  .af-reveal{display:inline-flex;align-items:center;gap:8px;padding:.7em 1.1em;border-radius:10px;cursor:pointer;
+    background:var(--ink-2);border:1px dashed var(--line);color:var(--cream);font-family:inherit;font-weight:800;font-size:.8rem;letter-spacing:.02em}
+  .af-reveal:hover{border-color:var(--rose)}
+  .af-reveal[aria-expanded="true"]{border-style:solid;border-color:var(--rose)}
+  .af-ending-body{margin-top:14px}
+  .af-ending-verdict{margin:0;font-family:'Fraunces',serif;font-weight:500;font-size:1.25rem;color:var(--cream)}
+  .af-detail-next{margin:0 0 14px;color:var(--muted);font-size:.9rem}
+  .af-detail-next b{color:var(--cream)}
+
+  /* ── Progressive reveal for the Ask list (mobile only, wired in JS) ── */
+  .af-snip{grid-column:1/-1;margin:-4px 0 10px;padding:0 22px}
+  .af-snip p{margin:0 0 8px;color:var(--muted);font-size:.92rem;line-height:1.5}
+  .af-snip button{background:none;border:0;padding:2px 0;color:var(--amber);font-family:inherit;font-weight:800;
+    font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+  .af-snip .af-snip-reveal{border:1px dashed var(--line);border-radius:9px;padding:.55em .9em;color:var(--cream)}
+  .af-snip .af-snip-reveal:hover{border-color:var(--rose)}
 
   /* ── series + related: one continuation flow, swipeable on mobile ── */
   .af-disc{padding:30px 0 6px;border-bottom:1px solid var(--line)}
@@ -418,9 +439,19 @@ const ASK_CSS = `
       background:rgba(12,7,8,.92);backdrop-filter:blur(14px);border-top:1px solid var(--line)
     }
     .af-dock button{font-family:inherit;font-weight:800;border-radius:12px;cursor:pointer;min-height:48px;padding:.7em 1em;font-size:.86rem;display:inline-flex;align-items:center;justify-content:center;gap:6px}
-    /* Want to Read = the one primary action (full gradient). */
-    .af-dock .af-dock-want{background:var(--grad);color:#1a0c10;border:0}
-    .af-dock .af-dock-want.on{background:var(--panel);color:var(--cream);border:1px solid var(--rose)}
+    /* Shelf = primary action; opens an upward menu with every status so "Read"
+       (and Reading/DNF) is one tap away, not buried in a select. */
+    .af-dock-shelfwrap{position:relative;display:flex}
+    .af-dock .af-dock-shelf{flex:1;background:var(--grad);color:#1a0c10;border:0}
+    .af-dock .af-dock-shelf.on{background:var(--panel);color:var(--cream);border:1px solid var(--rose)}
+    .af-dock-menu{position:absolute;left:0;right:0;bottom:calc(100% + 8px);z-index:41;display:flex;flex-direction:column;gap:2px;
+      padding:6px;background:#150e10;border:1px solid var(--line);border-radius:14px;box-shadow:0 -18px 40px rgba(0,0,0,.5)}
+    .af-dock-menu[hidden]{display:none}
+    .af-dock-menu button{width:100%;justify-content:flex-start;min-height:44px;background:none;border:0;border-radius:10px;
+      color:var(--cream);font-weight:700;font-size:.9rem;padding:.6em .9em}
+    .af-dock-menu button:hover,.af-dock-menu button.on{background:var(--ink-2)}
+    .af-dock-menu button.on{color:var(--amber)}
+    .af-dock-menu .af-dock-remove{color:#ff9a86;border-top:1px solid var(--line);border-radius:0 0 10px 10px;margin-top:2px}
     /* Review = secondary (outline). Share = tertiary, deliberately smaller so
        it never reads as equal to the two reader actions. */
     .af-dock .af-dock-review{background:var(--panel);color:var(--cream);border:1px solid var(--line)}
@@ -431,6 +462,10 @@ const ASK_CSS = `
 
     /* Reserve room so the dock never covers the last rail or the footer. */
     body{padding-bottom:calc(74px + env(safe-area-inset-bottom))}
+    /* Lift the global back-to-top FAB above the dock so it stops covering Share.
+       "body .sh-totop" out-specifies auth.js's own ".sh-totop{bottom:16px}",
+       which is injected later, so source order alone wouldn't win. */
+    body .sh-totop{bottom:calc(74px + env(safe-area-inset-bottom,0px))}
   }
 
   /* ── Review bottom sheet (mobile) — the relocated "Finished it?" spice rating.
@@ -640,7 +675,11 @@ function renderBlurbBody(blurb, tags){
 }
 
 // ── The Details grid (only rows with a value) ──────────────────────────────
-function detailsHTML(b){
+// `bare` returns just the grid (no <section>/<h2> wrapper) for embedding inside
+// an Ask-First answer section. Ending is intentionally omitted — it lives in its
+// own spoiler-gated "How does it end?" section so this always-scannable grid
+// never spoils the finish.
+function detailsHTML(b, bare = false){
   const rows = [];
   const add = (k, v) => { if (v != null && v !== '') rows.push([k, v]); };
   add('Series', b.series ? (b.series_number ? `${b.series} · Book ${b.series_number}` : b.series) : (b.standalone ? 'Standalone' : ''));
@@ -653,7 +692,6 @@ function detailsHTML(b){
   add('World', b.world_type ? humanize(b.world_type) : '');
   add('Setting', b.setting || '');
   add('Time period', b.time_period ? humanize(b.time_period) : '');
-  add('Ending', b.ending ? (ENDING[b.ending] || humanize(b.ending)) + (b.cliffhanger && b.ending !== 'cliffhanger' ? ' · cliffhanger' : '') : (b.cliffhanger ? 'Cliffhanger' : ''));
   add('Relationship', b.relationship_type ? (REL[b.relationship_type] || humanize(b.relationship_type)) : '');
   add('Who falls first', b.who_falls_first ? (WHO[b.who_falls_first] || humanize(b.who_falls_first)) : '');
   add('Age category', b.age_category || '');
@@ -661,12 +699,10 @@ function detailsHTML(b){
   add('Tense', b.tense ? (TENSE[b.tense] || humanize(b.tense)) : '');
   if (b.audiobook) add('Audiobook', 'Available');
   if (!rows.length) return '';
-  return `<section class="blk">
-    <h2>The details</h2>
-    <div class="dgrid">
+  const grid = `<div class="dgrid">
       ${rows.map(([k, v]) => `<div class="drow"><span class="dk">${esc(k)}</span><span class="dv">${esc(v)}</span></div>`).join('')}
-    </div>
-  </section>`;
+    </div>`;
+  return bare ? grid : `<section class="blk"><h2>The details</h2>${grid}</section>`;
 }
 
 // ── Duplicate-safe identity ────────────────────────────────────────────────
@@ -770,48 +806,10 @@ function afFacts(b){
   // mid-phrase ("First / person · / single") in the narrow hero column.
   if (b.pov) { const pv = POV[b.pov] || humanize(b.pov); const parts = pv.split(' · '); f.push(['POV', parts[0], parts[1] ? parts[1][0].toUpperCase() + parts[1].slice(1) + (/pov/i.test(parts[1]) ? '' : ' POV') : '']); }
   if (b.relationship_type) f.push(['Pairing', REL[b.relationship_type] || humanize(b.relationship_type), 'Central romance']);
-  // Short code as the value (HEA/HFN), full meaning is one tap away in the
-  // glossary; the long form "Happily Ever After (HEA)" wraps badly in a cell.
-  if (b.ending) f.push(['Ending', ({HEA:'HEA',HFN:'HFN'}[b.ending] || humanize(b.ending)), b.cliffhanger ? 'Cliffhanger' : 'No cliffhanger']);
-  else if (b.cliffhanger) f.push(['Ending', 'Cliffhanger', '']);
+  // Ending is intentionally NOT surfaced here — it's spoiler-gated in its own
+  // "How does it end?" section so the always-visible facts never give it away.
   if (b.pacing) f.push(['Pace', PACING[b.pacing] || humanize(b.pacing), '']);
   return f;
-}
-
-// "Is it for me?" — assembled from stored fields only. Each clause is traceable
-// to a column (spice_level, pacing, ending, cliffhanger, warning tags); nothing
-// is inferred about content the catalog doesn't record.
-function afFit(b, tags){
-  const lvl = Number(b.spice_level);
-  const forYou = [];
-  if (Number.isFinite(lvl) && lvl > 0){
-    forYou.push(lvl >= 4 ? 'you want the heat high'
-              : lvl === 3 ? 'you want real heat without it taking over'
-              : 'you want tension and yearning more than explicit heat');
-  }
-  if (b.pacing === 'slow-burn') forYou.push('a slow burn is the point, not a problem');
-  else if (b.pacing === 'fast') forYou.push('you want it to move quickly');
-  if (b.ending === 'HEA') forYou.push('you need the happy ending guaranteed');
-  else if (b.ending === 'HFN') forYou.push('hopeful-for-now is enough');
-
-  const warns = tags.filter(t => t.category === 'warning').map(t => t.label.toLowerCase());
-  const skip = [];
-  if (warns.length){
-    const list = warns.slice(0, 3).join(', ');
-    skip.push(`${list}${warns.length > 3 ? ` (and ${warns.length - 3} more flagged)` : ''} ${warns.length === 1 ? 'is' : 'are'} a hard no for you`);
-  }
-  if (b.cliffhanger) skip.push('you need this one to resolve on its own');
-  if (Number.isFinite(lvl) && lvl > 0 && lvl <= 2) skip.push('you want high heat straight away');
-
-  const headline = forYou.length
-    ? `Yes — if ${forYou.slice(0, 2).join(', and ')}.`
-    : 'Depends on what you want from it.';
-  const body = skip.length ? `Skip it if ${skip.slice(0, 2).join(', or ')}.` : '';
-  // Short teaser for the jump menu — a real verdict beats the old, content-free
-  // "quick fit check" label, and it mirrors the headline the reader lands on.
-  const chip = forYou.length ? (skip.length ? 'yes, with caveats' : 'likely yes')
-    : 'depends';
-  return { headline, body, chip };
 }
 
 // The next book in reading order — the design requires "next book is obvious".
@@ -944,7 +942,6 @@ function renderBookPage(book){
   const hasSpice  = Number.isFinite(spiceLvl) && spiceLvl > 0;
   const shortAns  = afShortAnswer(book.blurb);
   const facts     = afFacts(book);
-  const fit       = afFit(book, tags);
   const triggers  = (book.triggers_detail || '').trim();
   // The full series, current book included, in reading order — the design calls
   // for the current book to be identifiable and the next one obvious.
@@ -958,14 +955,16 @@ function renderBookPage(book){
   // renders (its answer section below says "not recorded"); an absent question
   // reads as "unknown", the opposite signal to the one we want.
   const doorWord = book.door ? (DOOR[book.door] || book.door).split(' ')[0].toLowerCase() : '';
+  const endingLabel = book.ending ? (ENDING[book.ending] || humanize(book.ending)) : (book.cliffhanger ? 'Cliffhanger' : '');
+  const detailGrid = detailsHTML(book, true);
+  // [href, question, summary, spoiler?] — same six on every book, fixed order.
   const askRows = [
     ['#af-plot', "What's it about?", (shortAns || book.blurb) ? '30-sec answer' : 'not recorded'],
     ['#af-spice', 'How spicy is it?', hasSpice ? `${spiceLvl} / 5${doorWord ? ` · ${doorWord}` : ''}` : (doorWord || 'not recorded')],
     ['#af-tropes', 'Which tropes?', tropeTags.length ? `${tropeTags.length} tagged` : 'none tagged'],
     ['#af-warnings', 'Any hard nos?', warnTags.length ? `${warnTags.length} warning${warnTags.length === 1 ? '' : 's'}` : triggers ? 'read first' : 'none recorded'],
-    ['#af-fit', 'Is it for me?', fit.chip],
-    ['#af-commitment', "What's the commitment?",
-      [book.page_count ? `${book.page_count} pp` : '', book.series_number ? `book ${book.series_number}` : (book.standalone ? 'standalone' : '')].filter(Boolean).join(' · ') || 'not recorded'],
+    ['#af-ending', 'How does it end?', endingLabel ? 'tap to reveal' : 'not recorded', true],
+    ['#af-detail', 'Every recorded detail', detailGrid ? 'the full record' : 'not recorded'],
   ];
 
   const body = `<body>
@@ -1027,7 +1026,7 @@ ${sharedHeader('books')}
         <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        ${askRows.map(([href, q, sum], i) => `<a href="${href}"><span class="af-qn">${String(i + 1).padStart(2, '0')}</span><span class="af-qa"><b>${esc(q)}</b><em>${esc(sum)}</em></span></a>`).join('')}
+        ${askRows.map(([href, q, sum, spoiler], i) => `<a href="${href}"${spoiler ? ' data-spoiler="1"' : ''}><span class="af-qn">${String(i + 1).padStart(2, '0')}</span><span class="af-qa"><b>${esc(q)}</b><em>${esc(sum)}</em></span></a>`).join('')}
       </nav>
     </aside>
   </section>
@@ -1080,24 +1079,24 @@ ${sharedHeader('books')}
     })}
 
     ${afSection({
-      id: 'af-fit', num: '05', label: 'Is it for me?',
-      headline: esc(fit.headline),
-      body: fit.body ? `<p>${esc(fit.body)}</p>` : '',
+      id: 'af-ending', num: '05', label: 'How does it end?',
+      headline: endingLabel ? 'Hidden to avoid spoilers.' : 'Not recorded yet.',
+      body: endingLabel ? `<div class="af-ending">
+          <button type="button" class="af-reveal" aria-expanded="false" aria-controls="af-ending-body">⚠ Reveal the ending</button>
+          <div class="af-ending-body" id="af-ending-body" hidden>
+            <p class="af-ending-verdict">${esc(endingLabel)}${book.cliffhanger && book.ending && book.ending !== 'cliffhanger' ? ' — ends on a cliffhanger' : ''}.</p>
+          </div>
+        </div>` : `<p class="af-empty-note">The ending isn't recorded yet.</p>`,
     })}
 
     ${afSection({
-      id: 'af-commitment', num: '06', label: "What's the commitment?",
-      headline: (book.page_count || book.series_number || book.ending || book.standalone) ? esc([
+      id: 'af-detail', num: '06', label: 'Every recorded detail',
+      headline: (book.page_count || book.series_number || book.standalone) ? esc([
         book.page_count ? `${book.page_count} pages` : '',
         book.series_number ? `book ${book.series_number} of the series` : (book.standalone ? 'a standalone' : ''),
-      ].filter(Boolean).join(', ') + '.') : 'Not recorded yet.',
-      body: (book.page_count || book.series_number || book.ending || book.standalone) ? `<div class="af-commit">
-          ${book.page_count ? `<div><span>Book length</span><b>${esc(book.page_count)} pages</b>${book.audiobook ? '<small>Audiobook available</small>' : ''}</div>` : ''}
-          ${book.series_number ? `<div><span>Series position</span><b>Book ${esc(book.series_number)}</b>${nextInSeries(fullSeries, book) ? `<small>Next: ${esc(nextInSeries(fullSeries, book).title)}</small>` : ''}</div>`
-            : (book.standalone ? `<div><span>Series position</span><b>Standalone</b><small>Reads on its own</small></div>` : '')}
-          ${book.ending ? `<div><span>Ending</span><b>${esc(ENDING[book.ending] || humanize(book.ending))}</b><small>${book.cliffhanger ? 'Ends on a cliffhanger' : 'No cliffhanger'}</small></div>` : ''}
-        </div>
-        ${detailsHTML(book) ? `<details class="af-more"><summary>Every recorded detail +</summary>${detailsHTML(book)}</details>` : ''}`
+      ].filter(Boolean).join(', ') + '.') : 'The essentials, all in one place.',
+      body: detailGrid
+        ? `${nextInSeries(fullSeries, book) ? `<p class="af-detail-next">Next in the series: <b>${esc(nextInSeries(fullSeries, book).title)}</b></p>` : ''}${detailGrid}`
         : `<p class="af-empty-note">Length and series details aren't recorded yet.</p>`,
     })}
 
@@ -1132,7 +1131,16 @@ ${sharedHeader('books')}
      in this template and nowhere else on the site. Buttons reuse the same shelf,
      rating and share routes as the desktop controls, so state can't diverge. -->
 <nav class="af-dock" aria-label="Book actions">
-  <button type="button" class="af-dock-want" id="afDockWant">＋ Want to read</button>
+  <div class="af-dock-shelfwrap">
+    <button type="button" class="af-dock-shelf" id="afDockShelf" aria-haspopup="true" aria-expanded="false">＋ Add to shelf</button>
+    <div class="af-dock-menu" id="afDockMenu" role="menu" hidden>
+      <button type="button" role="menuitem" data-st="want">TBR</button>
+      <button type="button" role="menuitem" data-st="reading">Currently reading</button>
+      <button type="button" role="menuitem" data-st="read">Read</button>
+      <button type="button" role="menuitem" data-st="dnf">DNF</button>
+      <button type="button" role="menuitem" class="af-dock-remove" data-st="__remove" hidden>Remove from shelf</button>
+    </div>
+  </div>
   <button type="button" class="af-dock-review" id="afDockReview">☆ Review</button>
   <button type="button" class="af-dock-share" id="afDockShare" aria-label="Share this book">↗</button>
 </nav>
@@ -1203,7 +1211,8 @@ ${sharedHeader('books')}
     var afShare = document.getElementById('afShare');
     // Mobile dock buttons — same three actions, kept in sync with the desktop
     // ones through paintAsk so their state can never diverge.
-    var dockWant = document.getElementById('afDockWant');
+    var dockShelf = document.getElementById('afDockShelf');
+    var dockMenu = document.getElementById('afDockMenu');
     var dockShare = document.getElementById('afDockShare');
     var dockNote = document.getElementById('afDockNote');
     function paintAsk(){
@@ -1222,10 +1231,16 @@ ${sharedHeader('books')}
         afRead.classList.toggle('on', isRead);
         afRead.setAttribute('aria-pressed', isRead ? 'true' : 'false');
       }
-      if (dockWant){
-        dockWant.textContent = current ? ('✓ ' + (LABEL[current] || 'Shelved')) : '＋ Want to read';
-        dockWant.classList.toggle('on', !!current);
-        dockWant.setAttribute('aria-pressed', current ? 'true' : 'false');
+      if (dockShelf){
+        dockShelf.textContent = current ? ('✓ ' + (LABEL[current] || 'Shelved')) : '＋ Add to shelf';
+        dockShelf.classList.toggle('on', !!current);
+      }
+      if (dockMenu){
+        dockMenu.querySelectorAll('button[data-st]').forEach(function(mi){
+          var st = mi.getAttribute('data-st');
+          if (st === '__remove'){ mi.hidden = !current; }
+          else { mi.classList.toggle('on', current === st); }
+        });
       }
     }
     var basePaint = paint;
@@ -1251,8 +1266,35 @@ ${sharedHeader('books')}
       else { shelve(st); dockToast(addedMsg); }
     }
     if (afWant) afWant.addEventListener('click', function(){ toggleStatus('want', 'Added to your shelf 📚'); });
-    if (dockWant) dockWant.addEventListener('click', toggleWant);
     if (afRead) afRead.addEventListener('click', function(){ toggleStatus('read', 'Marked as read ✓'); });
+
+    // Dock shelf menu (mobile): a status picker that opens upward. Selecting a
+    // status sets it; a Remove item clears the shelf. Same shelve()/remove()
+    // routes as every other control, so state can't diverge.
+    function setStatus(st){
+      if (!user){ note.innerHTML = '<a href="/dashboard.html">Log in</a> to build your shelf'; dockToast('<a href="/dashboard.html">Log in</a> to build your shelf'); return; }
+      if (current === st){ dockToast('Already on your ' + (LABEL[st] || st) + ' shelf'); return; }
+      shelve(st); dockToast('Shelved as ' + (LABEL[st] || st) + ' 📚');
+    }
+    function closeDockMenu(){ if (dockMenu) dockMenu.hidden = true; if (dockShelf) dockShelf.setAttribute('aria-expanded', 'false'); }
+    if (dockShelf && dockMenu){
+      dockShelf.addEventListener('click', function(e){
+        e.stopPropagation();
+        var opening = dockMenu.hidden;
+        dockMenu.hidden = !opening;
+        dockShelf.setAttribute('aria-expanded', opening ? 'true' : 'false');
+      });
+      dockMenu.querySelectorAll('button[data-st]').forEach(function(mi){
+        mi.addEventListener('click', function(){
+          var st = mi.getAttribute('data-st');
+          if (st === '__remove'){ if (current){ remove(); dockToast('Removed from shelf'); } }
+          else { setStatus(st); }
+          closeDockMenu();
+        });
+      });
+      document.addEventListener('click', function(e){ if (!dockMenu.hidden && !dockMenu.contains(e.target) && e.target !== dockShelf) closeDockMenu(); });
+      document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeDockMenu(); });
+    }
     async function doShare(){
       var url = location.href, title = BOOK.title;
       try {
@@ -1445,6 +1487,59 @@ ${sharedHeader('books')}
         }
       } catch(e){ /* anon — leave the prompt as-is */ }
     })();
+  })();
+</script>
+
+<script>
+  // ── Spoiler-gated ending — toggle the hidden verdict on tap ──────────────
+  (function(){
+    document.querySelectorAll('.af-reveal').forEach(function(btn){
+      var body = document.getElementById(btn.getAttribute('aria-controls'));
+      if (!body) return;
+      btn.addEventListener('click', function(){
+        var show = body.hidden;
+        body.hidden = !show;
+        btn.setAttribute('aria-expanded', show ? 'true' : 'false');
+        btn.textContent = show ? '× Hide the ending' : '⚠ Reveal the ending';
+        if (show && window.SH && SH.track) SH.track('ending-reveal', { where: 'book-page' });
+      });
+    });
+  })();
+</script>
+
+<script>
+  // ── Ask list, mobile: snippet-first, then scroll to the full answer ──────
+  // First tap on a question reveals a short snippet in place; "Read more"
+  // scrolls to the matching section and expands it. Desktop keeps the plain
+  // anchor jump (the layout is unchanged there).
+  (function(){
+    var nav = document.querySelector('.af-ask nav'); if (!nav) return;
+    var mq = window.matchMedia('(max-width:720px)');
+    function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+    function sectionOf(a){ var id = a.getAttribute('href'); return id && id.charAt(0) === '#' ? document.querySelector(id) : null; }
+    function gotoSection(sec){
+      if (!sec) return;
+      // Expand any collapsed detail in the target, but never auto-reveal a
+      // spoiler-gated ending — that stays behind its own explicit tap.
+      sec.querySelectorAll('details').forEach(function(d){ d.open = true; });
+      sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    nav.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(e){
+        if (!mq.matches) return;                       // desktop: normal jump
+        e.preventDefault();
+        var sec = sectionOf(a);
+        if (a.classList.contains('af-open')){ gotoSection(sec); return; }
+        var h2 = sec ? sec.querySelector('h2') : null;
+        var snip = document.createElement('div');
+        snip.className = 'af-snip';
+        snip.innerHTML = '<p>' + esc(h2 ? h2.textContent.trim() : '') + '</p>'
+          + '<button type="button" class="af-snip-more">Read more →</button>';
+        a.insertAdjacentElement('afterend', snip);
+        snip.querySelector('.af-snip-more').addEventListener('click', function(){ gotoSection(sec); });
+        a.classList.add('af-open');
+      });
+    });
   })();
 </script>
 

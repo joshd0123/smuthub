@@ -172,8 +172,10 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     .af-byline{font-size:.9rem}
     .af-pulse{margin:9px 0 0;padding:0;border:0}
     .af-pulse b{font-size:1.12rem}
-    .af-facts{clear:both;margin-top:16px}
-    .af-ask{clear:both}
+    /* Facts move into the anchored "Every recorded detail" section (#06) on
+       mobile, so the top grid is hidden to reclaim the space. */
+    .af-facts{display:none}
+    .af-ask{clear:both;margin-top:6px}
   }
   .af-facts>div{padding:15px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
   .af-facts dt,.af-facts small{display:block;color:var(--muted);font-size:.64rem;text-transform:uppercase;letter-spacing:.1em}
@@ -237,6 +239,25 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-more summary{cursor:pointer;color:var(--muted);font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:10px 0}
   .af-more summary::-webkit-details-marker{display:none}
   .af-more summary:hover{color:var(--cream)}
+
+  /* ── Spoiler-gated ending (#05) — hidden until the reader opts in ── */
+  .af-ending{margin-top:16px}
+  .af-reveal{display:inline-flex;align-items:center;gap:8px;padding:.7em 1.1em;border-radius:10px;cursor:pointer;
+    background:var(--ink-2);border:1px dashed var(--line);color:var(--cream);font-family:inherit;font-weight:800;font-size:.8rem;letter-spacing:.02em}
+  .af-reveal:hover{border-color:var(--rose)}
+  .af-reveal[aria-expanded="true"]{border-style:solid;border-color:var(--rose)}
+  .af-ending-body{margin-top:14px}
+  .af-ending-verdict{margin:0;font-family:'Fraunces',serif;font-weight:500;font-size:1.25rem;color:var(--cream)}
+  .af-detail-next{margin:0 0 14px;color:var(--muted);font-size:.9rem}
+  .af-detail-next b{color:var(--cream)}
+
+  /* ── Progressive reveal for the Ask list (mobile only, wired in JS) ── */
+  .af-snip{grid-column:1/-1;margin:-4px 0 10px;padding:0 22px}
+  .af-snip p{margin:0 0 8px;color:var(--muted);font-size:.92rem;line-height:1.5}
+  .af-snip button{background:none;border:0;padding:2px 0;color:var(--amber);font-family:inherit;font-weight:800;
+    font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+  .af-snip .af-snip-reveal{border:1px dashed var(--line);border-radius:9px;padding:.55em .9em;color:var(--cream)}
+  .af-snip .af-snip-reveal:hover{border-color:var(--rose)}
 
   /* ── series + related: one continuation flow, swipeable on mobile ── */
   .af-disc{padding:30px 0 6px;border-bottom:1px solid var(--line)}
@@ -308,9 +329,19 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       background:rgba(12,7,8,.92);backdrop-filter:blur(14px);border-top:1px solid var(--line)
     }
     .af-dock button{font-family:inherit;font-weight:800;border-radius:12px;cursor:pointer;min-height:48px;padding:.7em 1em;font-size:.86rem;display:inline-flex;align-items:center;justify-content:center;gap:6px}
-    /* Want to Read = the one primary action (full gradient). */
-    .af-dock .af-dock-want{background:var(--grad);color:#1a0c10;border:0}
-    .af-dock .af-dock-want.on{background:var(--panel);color:var(--cream);border:1px solid var(--rose)}
+    /* Shelf = primary action; opens an upward menu with every status so "Read"
+       (and Reading/DNF) is one tap away, not buried in a select. */
+    .af-dock-shelfwrap{position:relative;display:flex}
+    .af-dock .af-dock-shelf{flex:1;background:var(--grad);color:#1a0c10;border:0}
+    .af-dock .af-dock-shelf.on{background:var(--panel);color:var(--cream);border:1px solid var(--rose)}
+    .af-dock-menu{position:absolute;left:0;right:0;bottom:calc(100% + 8px);z-index:41;display:flex;flex-direction:column;gap:2px;
+      padding:6px;background:#150e10;border:1px solid var(--line);border-radius:14px;box-shadow:0 -18px 40px rgba(0,0,0,.5)}
+    .af-dock-menu[hidden]{display:none}
+    .af-dock-menu button{width:100%;justify-content:flex-start;min-height:44px;background:none;border:0;border-radius:10px;
+      color:var(--cream);font-weight:700;font-size:.9rem;padding:.6em .9em}
+    .af-dock-menu button:hover,.af-dock-menu button.on{background:var(--ink-2)}
+    .af-dock-menu button.on{color:var(--amber)}
+    .af-dock-menu .af-dock-remove{color:#ff9a86;border-top:1px solid var(--line);border-radius:0 0 10px 10px;margin-top:2px}
     /* Review = secondary (outline). Share = tertiary, deliberately smaller so
        it never reads as equal to the two reader actions. */
     .af-dock .af-dock-review{background:var(--panel);color:var(--cream);border:1px solid var(--line)}
@@ -321,6 +352,10 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
     /* Reserve room so the dock never covers the last rail or the footer. */
     body{padding-bottom:calc(74px + env(safe-area-inset-bottom))}
+    /* Lift the global back-to-top FAB above the dock so it stops covering Share.
+       "body .sh-totop" out-specifies auth.js's own ".sh-totop{bottom:16px}",
+       which is injected later, so source order alone wouldn't win. */
+    body .sh-totop{bottom:calc(74px + env(safe-area-inset-bottom,0px))}
   }
 
   /* ── Review bottom sheet (mobile) — the relocated "Finished it?" spice rating.
@@ -417,7 +452,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       </div>
 
       <dl class="af-facts" aria-label="Quick book facts">
-        <div><dt>Length</dt><dd>368 pages</dd><small>Audiobook too</small></div><div><dt>Series</dt><dd>Standalone</dd></div><div><dt>POV</dt><dd>Third person</dd><small>Single POV</small></div><div><dt>Pairing</dt><dd>M/F</dd><small>Central romance</small></div><div><dt>Ending</dt><dd>HEA</dd><small>No cliffhanger</small></div>
+        <div><dt>Length</dt><dd>368 pages</dd><small>Audiobook too</small></div><div><dt>Series</dt><dd>Standalone</dd></div><div><dt>POV</dt><dd>Third person</dd><small>Single POV</small></div><div><dt>Pairing</dt><dd>M/F</dd><small>Central romance</small></div>
       </dl>
     </div>
 
@@ -427,7 +462,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>1 / 5 · closed</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>4 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>none recorded</em></span></a><a href="#af-fit"><span class="af-qn">05</span><span class="af-qa"><b>Is it for me?</b><em>yes, with caveats</em></span></a><a href="#af-commitment"><span class="af-qn">06</span><span class="af-qa"><b>What&#39;s the commitment?</b><em>368 pp · standalone</em></span></a>
+        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>1 / 5 · closed</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>4 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>none recorded</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>tap to reveal</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
       </nav>
     </aside>
   </section>
@@ -464,24 +499,21 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <p class="af-empty-note">Nobody has flagged content warnings here yet. That's not a guarantee the book is warning-free — just that we don't have them recorded.</p></div>
   </section>
 
-    <section class="af-sec" id="af-fit">
+    <section class="af-sec" id="af-ending">
     <span class="af-num">05</span>
-    <div><p class="af-label">Is it for me?</p><h2>Yes — if you want tension and yearning more than explicit heat, and you need the happy ending guaranteed.</h2><p>Skip it if you want high heat straight away.</p></div>
+    <div><p class="af-label">How does it end?</p><h2>Hidden to avoid spoilers.</h2><div class="af-ending">
+          <button type="button" class="af-reveal" aria-expanded="false" aria-controls="af-ending-body">⚠ Reveal the ending</button>
+          <div class="af-ending-body" id="af-ending-body" hidden>
+            <p class="af-ending-verdict">Happily Ever After (HEA).</p>
+          </div>
+        </div></div>
   </section>
 
-    <section class="af-sec" id="af-commitment">
+    <section class="af-sec" id="af-detail">
     <span class="af-num">06</span>
-    <div><p class="af-label">What&#39;s the commitment?</p><h2>368 pages, a standalone.</h2><div class="af-commit">
-          <div><span>Book length</span><b>368 pages</b><small>Audiobook available</small></div>
-          <div><span>Series position</span><b>Standalone</b><small>Reads on its own</small></div>
-          <div><span>Ending</span><b>Happily Ever After (HEA)</b><small>No cliffhanger</small></div>
-        </div>
-        <details class="af-more"><summary>Every recorded detail +</summary><section class="blk">
-    <h2>The details</h2>
-    <div class="dgrid">
-      <div class="drow"><span class="dk">Series</span><span class="dv">Standalone</span></div><div class="drow"><span class="dk">POV</span><span class="dv">Third person · single</span></div><div class="drow"><span class="dk">Length</span><span class="dv">368 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">High Fantasy</span></div><div class="drow"><span class="dk">Ending</span><span class="dv">Happily Ever After (HEA)</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">YA</span></div><div class="drow"><span class="dk">Audiobook</span><span class="dv">Available</span></div>
-    </div>
-  </section></details></div>
+    <div><p class="af-label">Every recorded detail</p><h2>368 pages, a standalone.</h2><div class="dgrid">
+      <div class="drow"><span class="dk">Series</span><span class="dv">Standalone</span></div><div class="drow"><span class="dk">POV</span><span class="dv">Third person · single</span></div><div class="drow"><span class="dk">Length</span><span class="dv">368 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">High Fantasy</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">YA</span></div><div class="drow"><span class="dk">Audiobook</span><span class="dv">Available</span></div>
+    </div></div>
   </section>
 
     
@@ -518,7 +550,16 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
      in this template and nowhere else on the site. Buttons reuse the same shelf,
      rating and share routes as the desktop controls, so state can't diverge. -->
 <nav class="af-dock" aria-label="Book actions">
-  <button type="button" class="af-dock-want" id="afDockWant">＋ Want to read</button>
+  <div class="af-dock-shelfwrap">
+    <button type="button" class="af-dock-shelf" id="afDockShelf" aria-haspopup="true" aria-expanded="false">＋ Add to shelf</button>
+    <div class="af-dock-menu" id="afDockMenu" role="menu" hidden>
+      <button type="button" role="menuitem" data-st="want">TBR</button>
+      <button type="button" role="menuitem" data-st="reading">Currently reading</button>
+      <button type="button" role="menuitem" data-st="read">Read</button>
+      <button type="button" role="menuitem" data-st="dnf">DNF</button>
+      <button type="button" role="menuitem" class="af-dock-remove" data-st="__remove" hidden>Remove from shelf</button>
+    </div>
+  </div>
   <button type="button" class="af-dock-review" id="afDockReview">☆ Review</button>
   <button type="button" class="af-dock-share" id="afDockShare" aria-label="Share this book">↗</button>
 </nav>
@@ -585,7 +626,8 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     var afShare = document.getElementById('afShare');
     // Mobile dock buttons — same three actions, kept in sync with the desktop
     // ones through paintAsk so their state can never diverge.
-    var dockWant = document.getElementById('afDockWant');
+    var dockShelf = document.getElementById('afDockShelf');
+    var dockMenu = document.getElementById('afDockMenu');
     var dockShare = document.getElementById('afDockShare');
     var dockNote = document.getElementById('afDockNote');
     function paintAsk(){
@@ -604,10 +646,16 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         afRead.classList.toggle('on', isRead);
         afRead.setAttribute('aria-pressed', isRead ? 'true' : 'false');
       }
-      if (dockWant){
-        dockWant.textContent = current ? ('✓ ' + (LABEL[current] || 'Shelved')) : '＋ Want to read';
-        dockWant.classList.toggle('on', !!current);
-        dockWant.setAttribute('aria-pressed', current ? 'true' : 'false');
+      if (dockShelf){
+        dockShelf.textContent = current ? ('✓ ' + (LABEL[current] || 'Shelved')) : '＋ Add to shelf';
+        dockShelf.classList.toggle('on', !!current);
+      }
+      if (dockMenu){
+        dockMenu.querySelectorAll('button[data-st]').forEach(function(mi){
+          var st = mi.getAttribute('data-st');
+          if (st === '__remove'){ mi.hidden = !current; }
+          else { mi.classList.toggle('on', current === st); }
+        });
       }
     }
     var basePaint = paint;
@@ -633,8 +681,35 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       else { shelve(st); dockToast(addedMsg); }
     }
     if (afWant) afWant.addEventListener('click', function(){ toggleStatus('want', 'Added to your shelf 📚'); });
-    if (dockWant) dockWant.addEventListener('click', toggleWant);
     if (afRead) afRead.addEventListener('click', function(){ toggleStatus('read', 'Marked as read ✓'); });
+
+    // Dock shelf menu (mobile): a status picker that opens upward. Selecting a
+    // status sets it; a Remove item clears the shelf. Same shelve()/remove()
+    // routes as every other control, so state can't diverge.
+    function setStatus(st){
+      if (!user){ note.innerHTML = '<a href="/dashboard.html">Log in</a> to build your shelf'; dockToast('<a href="/dashboard.html">Log in</a> to build your shelf'); return; }
+      if (current === st){ dockToast('Already on your ' + (LABEL[st] || st) + ' shelf'); return; }
+      shelve(st); dockToast('Shelved as ' + (LABEL[st] || st) + ' 📚');
+    }
+    function closeDockMenu(){ if (dockMenu) dockMenu.hidden = true; if (dockShelf) dockShelf.setAttribute('aria-expanded', 'false'); }
+    if (dockShelf && dockMenu){
+      dockShelf.addEventListener('click', function(e){
+        e.stopPropagation();
+        var opening = dockMenu.hidden;
+        dockMenu.hidden = !opening;
+        dockShelf.setAttribute('aria-expanded', opening ? 'true' : 'false');
+      });
+      dockMenu.querySelectorAll('button[data-st]').forEach(function(mi){
+        mi.addEventListener('click', function(){
+          var st = mi.getAttribute('data-st');
+          if (st === '__remove'){ if (current){ remove(); dockToast('Removed from shelf'); } }
+          else { setStatus(st); }
+          closeDockMenu();
+        });
+      });
+      document.addEventListener('click', function(e){ if (!dockMenu.hidden && !dockMenu.contains(e.target) && e.target !== dockShelf) closeDockMenu(); });
+      document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeDockMenu(); });
+    }
     async function doShare(){
       var url = location.href, title = BOOK.title;
       try {
@@ -827,6 +902,59 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         }
       } catch(e){ /* anon — leave the prompt as-is */ }
     })();
+  })();
+</script>
+
+<script>
+  // ── Spoiler-gated ending — toggle the hidden verdict on tap ──────────────
+  (function(){
+    document.querySelectorAll('.af-reveal').forEach(function(btn){
+      var body = document.getElementById(btn.getAttribute('aria-controls'));
+      if (!body) return;
+      btn.addEventListener('click', function(){
+        var show = body.hidden;
+        body.hidden = !show;
+        btn.setAttribute('aria-expanded', show ? 'true' : 'false');
+        btn.textContent = show ? '× Hide the ending' : '⚠ Reveal the ending';
+        if (show && window.SH && SH.track) SH.track('ending-reveal', { where: 'book-page' });
+      });
+    });
+  })();
+</script>
+
+<script>
+  // ── Ask list, mobile: snippet-first, then scroll to the full answer ──────
+  // First tap on a question reveals a short snippet in place; "Read more"
+  // scrolls to the matching section and expands it. Desktop keeps the plain
+  // anchor jump (the layout is unchanged there).
+  (function(){
+    var nav = document.querySelector('.af-ask nav'); if (!nav) return;
+    var mq = window.matchMedia('(max-width:720px)');
+    function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+    function sectionOf(a){ var id = a.getAttribute('href'); return id && id.charAt(0) === '#' ? document.querySelector(id) : null; }
+    function gotoSection(sec){
+      if (!sec) return;
+      // Expand any collapsed detail in the target, but never auto-reveal a
+      // spoiler-gated ending — that stays behind its own explicit tap.
+      sec.querySelectorAll('details').forEach(function(d){ d.open = true; });
+      sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    nav.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(e){
+        if (!mq.matches) return;                       // desktop: normal jump
+        e.preventDefault();
+        var sec = sectionOf(a);
+        if (a.classList.contains('af-open')){ gotoSection(sec); return; }
+        var h2 = sec ? sec.querySelector('h2') : null;
+        var snip = document.createElement('div');
+        snip.className = 'af-snip';
+        snip.innerHTML = '<p>' + esc(h2 ? h2.textContent.trim() : '') + '</p>'
+          + '<button type="button" class="af-snip-more">Read more →</button>';
+        a.insertAdjacentElement('afterend', snip);
+        snip.querySelector('.af-snip-more').addEventListener('click', function(){ gotoSection(sec); });
+        a.classList.add('af-open');
+      });
+    });
   })();
 </script>
 
