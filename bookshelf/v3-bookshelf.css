@@ -1,4 +1,4 @@
-/* V3 Threshold Bookshelf — opt-in with ?v3=threshold. */
+/* V3 Founder Sanctuary — production bookshelf; ?v3=classic is the rollback. */
 body.v3-bookshelf{
   --v3-gold:#d9b56b;
   --v3-gold-hi:#f5d994;
@@ -413,3 +413,68 @@ body.v3-bookshelf .cabinetcard:not(.atelier-locked) .trial-mark,
 body.v3-bookshelf .themecard:not(.atelier-locked) .trial-mark,
 body.v3-bookshelf .crestcard:not(.atelier-locked) em{color:#73ddb6;text-transform:uppercase;letter-spacing:.08em}
 body.v3-bookshelf #atelierUnlock:disabled{cursor:default;opacity:.8;color:#d8bc7b}
+
+/* FREE CABINET / PREMIUM INTERIOR BOUNDARY
+   The heirloom shell and real books stay visible to every member. A fully
+   opaque, quiet lining covers the illustrated shelf worlds until the reader
+   owns Moonlit or has Premium access. */
+body.v3-bookshelf .world-ribbon-locked{border-color:rgba(211,170,91,.38);background:linear-gradient(105deg,rgba(39,24,28,.96),rgba(15,12,15,.98))}
+body.v3-bookshelf .world-ribbon-locked .moon-seal{filter:saturate(.35);opacity:.8}
+body.v3-bookshelf .world-ribbon-locked b{white-space:nowrap}
+body.v3-bookshelf .bookcase.worlds-locked .shelfrow{
+  overflow:hidden;
+  background:
+    linear-gradient(90deg,rgba(0,0,0,.58),transparent 12% 88%,rgba(0,0,0,.6)),
+    radial-gradient(80% 55% at 50% 8%,rgba(91,35,42,.16),transparent 72%),
+    repeating-linear-gradient(135deg,rgba(196,155,89,.018) 0 1px,transparent 1px 8px),
+    linear-gradient(180deg,#150d10,#080607 78%)!important;
+  box-shadow:inset 0 18px 27px -20px #000,inset 0 -18px 24px -17px #000,inset 0 0 0 1px rgba(195,150,78,.08)
+}
+body.v3-bookshelf .bookcase.worlds-locked .shelfrow::before{
+  content:"";display:block!important;position:absolute;z-index:0;inset:0;pointer-events:none;
+  background:linear-gradient(115deg,transparent 10%,rgba(255,255,255,.018) 44%,transparent 68%);
+  opacity:.75
+}
+body.v3-bookshelf .bookcase.worlds-locked .shelfrow::after{
+  display:none!important
+}
+body.v3-bookshelf .bookcase.worlds-locked .plank{
+  display:block!important;position:absolute;z-index:7!important;left:-1%;right:-1%;bottom:0;height:8.6%;margin:0;border:0;border-radius:0 0 3px 3px;overflow:visible;pointer-events:none;
+  background:
+    radial-gradient(circle at 2.1% 50%,#fff0ba 0 3px,#c79242 4px 6px,#402113 7px 8px,transparent 9px),
+    radial-gradient(circle at 97.9% 50%,#fff0ba 0 3px,#c79242 4px 6px,#402113 7px 8px,transparent 9px),
+    linear-gradient(180deg,#d6a55b 0 2px,#8d4038 3px,#6c2226 24%,#421318 56%,#22090d 78%,#090204 100%);
+  border-top:1px solid rgba(255,222,153,.72);border-bottom:2px solid #030102;
+  box-shadow:0 13px 17px rgba(0,0,0,.95),0 4px 0 rgba(185,119,45,.24),inset 0 3px rgba(255,231,177,.22),inset 0 -7px rgba(0,0,0,.78)
+}
+body.v3-bookshelf .bookcase.worlds-locked .plank::before{
+  content:"";position:absolute;left:.7%;right:.7%;top:-38%;height:40%;opacity:1;
+  background:linear-gradient(180deg,#6e3430,#351317 58%,#19080b);clip-path:polygon(1.2% 0,98.8% 0,100% 100%,0 100%);
+  border-top:1px solid rgba(243,202,120,.52);box-shadow:inset 0 2px rgba(255,229,171,.12),0 3px 5px rgba(0,0,0,.72)
+}
+body.v3-bookshelf .bookcase.worlds-locked .shelfrow .row{bottom:9.2%}
+body.v3-bookshelf .bookcase.worlds-locked .shelfrow .row,
+body.v3-bookshelf .bookcase.worlds-locked .shelfrow .plate,
+body.v3-bookshelf .bookcase.worlds-locked .shelfrow .plank{z-index:3}
+body.v3-bookshelf .bookcase.worlds-locked .shelf-door{border-color:rgba(218,176,91,.42);color:#d7bc7f;background:rgba(12,8,10,.9)}
+body.v3-bookshelf .bookcase.worlds-locked .shelf-door::before{content:"◇ ";font-size:.9em}
+body.v3-bookshelf .modalcard .btn:disabled{cursor:not-allowed;opacity:.48;filter:saturate(.4)}
+body.v3-bookshelf .modalcard.interior-offer{position:relative;max-width:520px;padding:30px 32px 24px;border-radius:14px;text-align:left;overflow:hidden;background:linear-gradient(145deg,#1b1014,#100a0c 62%,#0b080a);border-color:rgba(221,178,92,.34);box-shadow:0 28px 80px rgba(0,0,0,.72),inset 0 1px rgba(255,237,200,.06)}
+body.v3-bookshelf .modalcard.interior-offer::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 88% 5%,rgba(175,52,69,.16),transparent 32%),linear-gradient(110deg,transparent 58%,rgba(221,175,83,.035))}
+body.v3-bookshelf .interior-offer .em{position:relative;width:38px;height:38px;margin:0 0 14px;display:grid;place-items:center;border:1px solid rgba(226,184,95,.42);border-radius:9px;background:#1a0d12;color:#e4c06f;font-size:1.25rem;box-shadow:inset 0 0 16px rgba(148,42,56,.12)}
+body.v3-bookshelf .interior-offer h3{position:relative;margin:0 0 8px;font-size:1.55rem;line-height:1.12}
+body.v3-bookshelf .interior-offer p{position:relative;max-width:440px;margin:0 0 22px;color:#c9b7b1;font-size:.93rem;line-height:1.58}
+body.v3-bookshelf .interior-offer .row{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+body.v3-bookshelf .interior-offer .btn{min-height:50px;padding:.72em 1em;border-radius:8px;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;font-size:.82rem;line-height:1.25}
+body.v3-bookshelf .interior-offer .offer-primary{background:linear-gradient(110deg,#e9c274,#bd8036);color:#180b09;box-shadow:0 8px 20px rgba(150,91,32,.2)}
+body.v3-bookshelf .interior-offer .offer-secondary{flex-direction:column;gap:2px;border:1px solid rgba(224,182,97,.35);background:rgba(255,255,255,.025);color:#e8d2a1}
+body.v3-bookshelf .interior-offer .offer-secondary small{font-size:.64rem;color:#ad9690;font-weight:600}
+body.v3-bookshelf .interior-offer .offer-dismiss{grid-column:1/-1;min-height:34px;padding:.35em;border:0;background:transparent;color:#a9938d;font-weight:700}
+body.v3-bookshelf .interior-offer .offer-dismiss:hover{color:#f0ded8;background:rgba(255,255,255,.025)}
+
+@media(max-width:460px){
+  body.v3-bookshelf .world-ribbon-locked b{grid-column:2;justify-self:start;margin-top:2px;white-space:normal;font-size:.67rem}
+  body.v3-bookshelf .modalcard.interior-offer{padding:24px 20px 18px}
+  body.v3-bookshelf .interior-offer .row{grid-template-columns:1fr}
+  body.v3-bookshelf .interior-offer .offer-dismiss{grid-column:1}
+}

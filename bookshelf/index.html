@@ -27,7 +27,7 @@
 <script defer src="/auth.js"></script>
 <script src="/bookcase-catalog.js?v=founders-key-gate-1"></script>
 <link rel="stylesheet" href="/companion.css">
-<link rel="stylesheet" href="/bookshelf/v3-bookshelf.css?v=founder-sanctuary-live-1">
+<link rel="stylesheet" href="/bookshelf/v3-bookshelf.css?v=premium-interiors-1">
 <script defer src="/companion.js"></script>
 <style>
   :root{
@@ -801,11 +801,11 @@
 </div>
 
 <div class="modalbg" id="upsell">
-  <div class="modalcard">
+  <div class="modalcard" id="upsellCard">
     <div class="em">✦</div>
     <h3 id="upsellTitle">Full customization is coming</h3>
     <p id="upsellBody">Free members get one bookshelf colour change a month. Soon you’ll be able to unlock every crest, cabinet and collected detail — and keep them for good. Pricing is on the way.</p>
-    <div class="row">
+    <div class="row" id="upsellActions">
       <button class="btn" onclick="closeUpsell()">Got it</button>
     </div>
   </div>
@@ -892,6 +892,8 @@
   // V3 is now the production bookshelf. ?v3=classic remains as a temporary
   // rollback view while the new cabinet completes its launch soak.
   const V3_MODE=BOOKSHELF_PARAMS.get('v3')!=='classic';
+  const ACCESS_PREVIEW=BOOKSHELF_PARAMS.get('access');
+  const MOONLIT_PRODUCT_KEY='world_moonlit_reading_room';
   // Read-only "view someone else's shelf" mode: /bookshelf/?u=<username>.
   // Renders another reader's PUBLIC shelf (RLS-gated) with all editing removed.
   const VIEW_HANDLE=(new URLSearchParams(location.search).get('u')||'').trim().toLowerCase();
@@ -949,6 +951,7 @@
     if(window.SH && !window.SH.configured) $('setup').classList.add('show');
     if(REVIEW_MODE){
       user={id:'review-reader',email:'novarin@smuthub.ca'};
+      isPremium=ACCESS_PREVIEW!=='free';
       readerName='Novarin';
       shelf=DEMO_SHELF.map((b,i)=>({...b,sort_order:i,created_at:new Date(Date.now()-i*86400000).toISOString()}));
       spiceMap={'demo-1':4,'demo-2':5,'demo-4':5,'demo-7':3};
@@ -1163,7 +1166,7 @@
   }
 
   function v3RitualHTML(status){
-    if(!V3_MODE) return '';
+    if(!V3_MODE||!hasInteriorAccess()) return '';
     if(status==='want') return '<div class="v3-ritual v3-tbr-ritual" aria-hidden="true"><span class="v3-depth-glass"></span><span class="v3-mist one"></span><span class="v3-mist two"></span></div>';
     if(status==='read') return '<div class="v3-ritual v3-read-ritual" aria-hidden="true"><span class="v3-orrery-glow"></span><span class="v3-star-dust one"></span><span class="v3-star-dust two"></span></div>';
     if(status==='dnf') return '<div class="v3-ritual v3-dnf-ritual" aria-hidden="true"><span class="v3-lantern-bloom"></span><span class="v3-dnf-smoke one"></span><span class="v3-dnf-smoke two"></span></div>'
@@ -1174,6 +1177,7 @@
   function renderRoom(){
     const ordered=[...shelf].sort(shelfCmp);
     const total=shelf.length;
+    const interiorsUnlocked=hasInteriorAccess();
     const crest=activeCrest();
     document.body.dataset.crest=crest.key;
     $('roomwrap').classList.add('library-mode');
@@ -1181,26 +1185,29 @@
     $('sub').textContent = total ? 'The calm before each reading world. Choose a shelf, open a book, or make the library unmistakably yours.' : "Empty shelves… for now. Go find some trouble.";
     const visible=SHELVES;
     const counts=Object.fromEntries(SHELVES.map(([st])=>[st,ordered.filter(b=>b.status===st).length]));
+    const worldRibbon=interiorsUnlocked
+      ? '<button class="world-ribbon" id="openLiveWorld"><span class="moon-seal" aria-hidden="true">✦</span><span class="world-ribbon-copy"><small>Live premium world · 3 relics to awaken</small><strong>The Moonlit Reading Room</strong><span class="world-ribbon-desc">Your books, a working clock, candlelight and visitors that leave something behind.</span></span><b>Enter world →</b></button>'
+      : '<button class="world-ribbon world-ribbon-locked" data-unlock-interiors><span class="moon-seal" aria-hidden="true">◇</span><span class="world-ribbon-copy"><small>Premium shelf interiors</small><strong>Bring the inside of your cabinet to life</strong><span class="world-ribbon-desc">Keep this heirloom exterior free. Unlock Moonlit once for CA$4.99, or enter with Premium.</span></span><b>See access →</b></button>';
     $('stage').innerHTML = '<div class="library-layout">'
       + '<div class="library-stats"><span class="library-stat"><strong>'+counts.reading+'</strong> reading now</span>'
       + '<span class="library-stat"><strong>'+counts.want+'</strong> waiting in TBR</span><span class="library-stat"><strong>'+counts.read+'</strong> finished</span>'
       + '<span class="library-stat"><strong>'+counts.dnf+'</strong> laid to rest</span></div>'
-      + '<button class="world-ribbon" id="openLiveWorld"><span class="moon-seal" aria-hidden="true">✦</span><span class="world-ribbon-copy"><small>Live premium world · 3 relics to awaken</small><strong>The Moonlit Reading Room</strong><span class="world-ribbon-desc">Your books, a working clock, candlelight and visitors that leave something behind.</span></span><b>Enter world →</b></button>'
+      + worldRibbon
       + '<div class="library-main">'
       + '<div class="case-identity"><span class="plaque-chain left" aria-hidden="true"></span><span class="plaque-chain right" aria-hidden="true"></span><div class="case-name" data-crest="'+esc(crest.key)+'"><span class="crest-glass" aria-hidden="true"></span><span class="crest-reflection" aria-hidden="true"></span><img class="case-art" src="'+esc(crest.src)+'" alt="" aria-hidden="true" decoding="async"><span class="crest-heart" aria-hidden="true"></span><div class="case-copy"><small>'+esc(crest.eyebrow)+'</small><strong>'+esc(readerName)+'</strong><span class="case-motto">'+esc(crest.motto)+'</span></div>'+founderSocketHTML()+'</div>'+founderEditionHTML()+'</div>'
-      + '<div class="bookcase"><span class="cabinet-crest"><small>The founding library of</small><strong>'+esc(readerName)+'</strong><em>First edition · forever kept</em></span><span class="cabinet-pilaster left"></span><span class="cabinet-pilaster right"></span><span class="case-flourish"></span><div class="interior">'
+      + '<div class="bookcase '+(interiorsUnlocked?'worlds-unlocked':'worlds-locked')+'"><span class="cabinet-crest"><small>The founding library of</small><strong>'+esc(readerName)+'</strong><em>First edition · forever kept</em></span><span class="cabinet-pilaster left"></span><span class="cabinet-pilaster right"></span><span class="case-flourish"></span><div class="interior">'
       + visible.map(([st,label])=>{
           const items=ordered.filter(b=>b.status===st);
-          const inner = V3_MODE&&st==='reading'&&items.length
+          const inner = V3_MODE&&interiorsUnlocked&&st==='reading'&&items.length
             ? items.slice(1,3).map(b=>bookHTML(b,false)).join('')+v3ThresholdHTML(items[0])+'<span class="v3-world-slot" aria-hidden="true"></span>'+items.slice(3).map(b=>bookHTML(b,false)).join('')
-            : V3_MODE&&(st==='read'||st==='dnf')&&items.length
+            : V3_MODE&&interiorsUnlocked&&(st==='read'||st==='dnf')&&items.length
               ? items.map(b=>bookHTML(b,false)).join('')
             : (st==='want'&&items.length&&!V3_MODE?tbrStackHTML(items.length):'')+(items.length ? items.map((b,i)=>bookHTML(b,i===0)).join('') : (VIEW_MODE?'':ghostHTML));
           const overflow=items.length>7;
           const displayLabel=st==='want'?'TBR':st==='dnf'?'DNF':label;
           const shelfSub=st==='want'?'<span class="shelf-sub">Want to Read</span>':st==='dnf'?'<span class="shelf-sub">Laid to Rest</span>':'';
-          return '<div class="shelfrow'+(overflow?' has-overflow':'')+(V3_MODE&&items.length<=7?' is-curated':'')+(V3_MODE&&st==='dnf'&&dnfLightOn?' dnf-lit':'')+'" data-shelf-status="'+st+'" data-count="'+items.length+'"><div class="plate">'+displayLabel+' '+shelfSub+' <span class="ct">'+items.length+'</span>'
-            +'<button class="shelf-door" data-enter-shelf="'+st+'">Enter world ↗</button></div>'
+          return '<div class="shelfrow'+(overflow?' has-overflow':'')+(V3_MODE&&items.length<=7?' is-curated':'')+(V3_MODE&&interiorsUnlocked&&st==='dnf'&&dnfLightOn?' dnf-lit':'')+'" data-shelf-status="'+st+'" data-count="'+items.length+'"><div class="plate">'+displayLabel+' '+shelfSub+' <span class="ct">'+items.length+'</span>'
+            +'<button class="shelf-door" '+(interiorsUnlocked?'data-enter-shelf="'+st+'"':'data-unlock-interiors')+'>'+(interiorsUnlocked?'Enter world ↗':'Unlock interior')+'</button></div>'
             +v3RitualHTML(st)+'<div class="row"><div class="books" data-status="'+st+'" aria-label="'+esc(label)+', '+items.length+' books">'+inner+'</div></div><div class="plank"></div></div>';
         }).join('')
       + '</div></div>'
@@ -1209,9 +1216,9 @@
       + '<section class="rail-card"><div class="rail-kicker">The Library Atelier</div><h3>One heirloom is live. More are being forged.</h3>'
       + '<p>The Founder Heirloom is ready now. New cabinets, finishes, crests, and collected details will arrive one at a time — only when each one belongs in this world.</p>'
       + '<button class="rail-btn" id="openAtelier">Visit the Atelier</button></section>'
-      + '<section class="rail-card world-card"><span class="world-live">Live and touchable</span><div class="rail-kicker">The Moonlit Reading Room</div><h3>This is a world, not a skin.</h3>'
-      + '<p>Change the hour, wake hidden visitors, alter the light, and bring the books from this shelf with you.</p>'
-      + '<button class="rail-link" id="openReadingWorld">Enter the reading world →</button></section>'
+      + '<section class="rail-card world-card"><span class="world-live">'+(interiorsUnlocked?'Live and touchable':'Premium interior')+'</span><div class="rail-kicker">The Moonlit Reading Room</div><h3>This is a world, not a skin.</h3>'
+      + '<p>'+(interiorsUnlocked?'Change the hour, wake hidden visitors, alter the light, and bring the books from this shelf with you.':'Unlock the complete four-shelf Moonlit interior once for CA$4.99, or enter with Premium access.')+'</p>'
+      + '<button class="rail-link" '+(interiorsUnlocked?'id="openReadingWorld"':'data-unlock-interiors')+'>'+(interiorsUnlocked?'Enter the reading world →':'See Premium or CA$4.99 access →')+'</button></section>'
       + '<section class="rail-card tbr-card"><div class="rail-kicker">Your visual TBR</div><h3>Make anticipation part of the ritual.</h3>'
       + '<p>A beautiful to-be-read shelf should make choosing the next romance or fantasy book feel as satisfying as finishing one.</p>'
       + '<button class="rail-link" id="openTbrWorld">Open your TBR →</button></section>'
@@ -1247,6 +1254,7 @@
     const atelier=$('openAtelier'); if(atelier) atelier.onclick=()=>{ buildThemeSheet(); $('themesheetbg').classList.add('open'); syncScrollLock(); };
     const readingWorld=$('openReadingWorld'); if(readingWorld) readingWorld.onclick=()=>enterShelf('reading');
     const liveWorld=$('openLiveWorld'); if(liveWorld) liveWorld.onclick=()=>enterShelf('reading');
+    document.querySelectorAll('[data-unlock-interiors]').forEach(el=>el.onclick=e=>{e.stopPropagation();openInteriorOffer();});
     const tbrWorld=$('openTbrWorld'); if(tbrWorld) tbrWorld.onclick=()=>enterShelf('want');
     document.querySelectorAll('[data-open-tbr]').forEach(el=>el.onclick=()=>enterShelf('want'));
     document.querySelectorAll('[data-threshold-book]').forEach(el=>el.onclick=()=>{ if(el._suppress){el._suppress=false;return;} openBook(el.dataset.thresholdBook); });
@@ -1560,7 +1568,25 @@
   $('themepill').onclick=()=>{ buildThemeSheet(); $('themesheetbg').classList.add('open'); syncScrollLock(); };
   $('themesheetbg').onclick=(e)=>{ if(e.target===$('themesheetbg')) closeThemeSheet(); };
   function closeThemeSheet(){ $('themesheetbg').classList.remove('open'); syncScrollLock(); }
-  function openUnlockInfo(){ $('upsell').classList.add('open'); syncScrollLock(); }
+  function openUnlockInfo(){
+    $('upsellCard').classList.remove('interior-offer');
+    $('upsellTitle').textContent='Full customization is coming';
+    $('upsellBody').textContent='The Founder Heirloom is live now. New cabinets, finishes, crests and collected details will arrive one at a time when each is ready.';
+    $('upsellActions').innerHTML='<button class="btn" onclick="closeUpsell()">Got it</button>';
+    $('upsell').classList.add('open'); syncScrollLock();
+  }
+  function openInteriorOffer(){
+    const product=(catalog().products||[]).find(p=>p.key===MOONLIT_PRODUCT_KEY)||{};
+    const price=Number.isFinite(product.priceCents)?money(product.priceCents):'CA$4.99';
+    $('upsellCard').classList.add('interior-offer');
+    $('upsellTitle').textContent='Bring your shelves to life';
+    $('upsellBody').textContent='Your cabinet, books and shelf tools stay free. Premium opens every included living interior, or collect the Moonlit interior once for '+price+'.';
+    const buy=product.checkoutUrl
+      ? '<a class="btn offer-secondary" href="'+esc(product.checkoutUrl)+'"><span>Buy Moonlit once · '+price+'</span></a>'
+      : '<button class="btn offer-secondary" type="button" disabled aria-disabled="true"><span>Buy Moonlit once · '+price+'</span><small>Checkout opening soon</small></button>';
+    $('upsellActions').innerHTML='<a class="btn offer-primary" href="/founders/">Explore Premium</a>'+buy+'<button class="btn offer-dismiss" type="button" onclick="closeUpsell()">Not now</button>';
+    $('upsell').classList.add('open'); syncScrollLock();
+  }
   function closeUpsell(){ $('upsell').classList.remove('open'); syncScrollLock(); }
 
   // ── IMMERSIVE SHELF WORLD ──
@@ -1586,7 +1612,11 @@
     try{localStorage.setItem(WORLD_PROGRESS_KEY,JSON.stringify(worldMemories));}catch(_){}
     worldState=freshWorldState(); renderShelfView(); worldMessage('The room falls quiet. Its three relics are waiting for you again.');
   }
+  function hasInteriorAccess(){
+    return REVIEW_MODE ? ACCESS_PREVIEW!=='free' : isPremium||ownedProducts.has(MOONLIT_PRODUCT_KEY);
+  }
   function enterShelf(status){
+    if(V3_MODE&&!hasInteriorAccess()){ openInteriorOffer(); return; }
     shelfIndex=Math.max(0, SHELVES.findIndex(([s])=>s===status));
     const saved=(custom[status]&&custom[status].world_key)||'moonlit';
     const product=(catalog().products||[]).find(p=>p.worldKey===saved);
@@ -1864,8 +1894,8 @@
   }
   function productCard(p,status){
     const owned=owns(p.key), live=p.availability==='live', previewing=!!(p.worldKey&&previewWorld===p.worldKey);
-    const state=owned?(isPremium?'◆ Included with Key':'Collected'):(live?'Live premium preview':'◆ Included with Key');
-    const action=!live?'In development':(owned?'Use':(p.worldKey?'Key opens soon':'Try now'));
+    const state=owned?(isPremium?'◆ Included with Premium':'Collected'):(live?(p.priceCents!=null?money(p.priceCents)+' once · or Premium':'Premium access'):'Coming soon');
+    const action=!live?'In development':(owned?'Use':(p.worldKey&&p.priceCents!=null?'Buy '+money(p.priceCents):'Try now'));
     return '<article class="product-card'+(previewing?' previewing':'')+(live?' live':'')+'">'
       +'<span class="product-badge">'+esc(p.badge||p.type)+'</span>'
       +'<h4>'+esc(p.name)+'</h4><p>'+esc(p.description)+'</p>'
@@ -1874,7 +1904,7 @@
       +'<button class="mini-btn buy" data-buy="'+esc(p.key)+'">'+action+'</button></div></article>';
   }
   function releaseCard(r){
-    return '<article class="release-card"><div class="release-date">'+esc(r.release)+'</div><div><h4>'+esc(r.name)+'</h4><p>'+esc(r.description)+'</p></div><div class="release-price">◆ Key</div></article>';
+    return '<article class="release-card"><div class="release-date">'+esc(r.release)+'</div><div><h4>'+esc(r.name)+'</h4><p>'+esc(r.description)+'</p></div><div class="release-price">◆ Premium</div></article>';
   }
   function renderWorldStore(status){
     const all=catalog().products||[];
@@ -1883,10 +1913,10 @@
       ?'<div class="release-list">'+(catalog().releases||[]).map(releaseCard).join('')+'</div>'
       :'<div class="product-grid">'+products.map(p=>productCard(p,status)).join('')+'</div>';
     const key=catalog().foundersKey||{};
-    const founderState=key.status==='open'?'Founder’s Key · open now':'Founder’s Key · launch gate in progress';
+    const founderState=key.status==='open'?'Premium access · open now':'Premium checkout · being connected';
     $('svdrawer').innerHTML =
-      '<div class="store-head"><div><h3>The Founder’s Collection</h3><p>Moonlit is live and touchable now. Future SmutHub-created worlds are included with the Founder’s Key; concepts below are clearly marked until they ship.</p></div><button class="store-close" id="storeClose" aria-label="Close store">×</button></div>'
-      +'<div class="founder-note"><div><strong>Every SmutHub-created world, forever.</strong><small>No checkout opens until the live-world, entitlement and purchase-flow checks pass.</small></div><span class="founder-state">'+founderState+'</span></div>'
+      '<div class="store-head"><div><h3>The Living Interiors</h3><p>Collect a world once or enter through Premium access. Only finished, touchable interiors are ever offered for sale.</p></div><button class="store-close" id="storeClose" aria-label="Close store">×</button></div>'
+      +'<div class="founder-note"><div><strong>The cabinet stays yours. The worlds are the premium layer.</strong><small>Checkout remains closed until payment and entitlement delivery pass every release check.</small></div><span class="founder-state">'+founderState+'</span></div>'
       +'<div class="tabs"><button data-storetab="worlds" class="'+(drawerTab==='worlds'?'on':'')+'">Worlds</button>'
       +'<button data-storetab="interactions" class="'+(drawerTab==='interactions'?'on':'')+'">Interactions</button>'
       +'<button data-storetab="releases" class="'+(drawerTab==='releases'?'on':'')+'">Roadmap</button></div>'+body;
@@ -1926,8 +1956,9 @@
       if(control) control.click();
       return;
     }
-    // Billing stays fail-closed until the Founder’s Key launch gate passes.
-    toast('Founder’s Key checkout opens only after every launch check passes.');
+    if(p.worldKey){ $('svdrawer').classList.remove('open'); openInteriorOffer(); return; }
+    // Billing stays fail-closed until the purchase grants a tested entitlement.
+    toast('Checkout opens only after payment and entitlement delivery pass every launch check.');
   }
   function ensure(status){
     if(!custom[status]) custom[status]={world_key:'moonlit',backdrop_key:null,lighting_key:null,props:[]};
