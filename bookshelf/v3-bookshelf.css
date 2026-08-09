@@ -1,0 +1,415 @@
+/* V3 Threshold Bookshelf — opt-in with ?v3=threshold. */
+body.v3-bookshelf{
+  --v3-gold:#d9b56b;
+  --v3-gold-hi:#f5d994;
+  --v3-oxblood:#351014;
+  --v3-wood:#170a09;
+}
+
+body.v3-bookshelf .library-layout{width:min(100%,1180px);grid-template-columns:minmax(0,790px)}
+body.v3-bookshelf .world-ribbon{max-width:790px}
+body.v3-bookshelf .library-main{width:100%}
+
+/* The crest belongs to the cabinet crown instead of hovering above it. */
+body.v3-bookshelf .case-identity{width:min(735px,94%);margin-bottom:-7px;filter:drop-shadow(0 18px 22px rgba(0,0,0,.64))}
+body.v3-bookshelf .case-identity::before{
+  content:"";position:absolute;z-index:-2;left:-5%;right:-5%;top:18%;bottom:-10%;
+  clip-path:polygon(0 100%,4% 57%,13% 52%,17% 25%,31% 22%,50% 0,69% 22%,83% 25%,87% 52%,96% 57%,100% 100%);
+  border:1px solid rgba(232,196,116,.2);
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.07),transparent 13% 86%,rgba(0,0,0,.46)),
+    var(--wood-surface),
+    radial-gradient(95% 150% at 50% 0%,#5a1a1e 0,#260c0d 48%,#100606 100%);
+  background-size:auto,520px auto,auto;background-blend-mode:soft-light,soft-light,normal;
+  box-shadow:inset 0 1px rgba(255,236,191,.13),inset 0 -11px 16px rgba(0,0,0,.56),0 13px 19px rgba(0,0,0,.62)
+}
+body.v3-bookshelf .case-identity::after{
+  content:"";position:absolute;z-index:-1;left:4%;right:4%;bottom:-7%;height:31%;pointer-events:none;
+  background:
+    radial-gradient(circle at 7% 55%,var(--v3-gold-hi) 0 1px,transparent 2px),
+    radial-gradient(circle at 93% 55%,var(--v3-gold-hi) 0 1px,transparent 2px),
+    linear-gradient(90deg,transparent,var(--v3-gold) 18%,transparent 34% 66%,var(--v3-gold) 82%,transparent) center 53%/100% 1px no-repeat;
+  opacity:.52
+}
+body.v3-bookshelf .case-name[data-crest="founders-key"]{width:min(640px,91%)}
+
+body.v3-bookshelf .bookcase{
+  max-width:790px;padding:28px 29px 39px;border-width:1px 8px 11px;
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.1),transparent 8%,rgba(0,0,0,.16) 48%,transparent 89%,rgba(0,0,0,.6)),
+    radial-gradient(140% 48% at 50% 0%,rgba(112,31,37,.32),transparent 72%),
+    var(--wood-surface),linear-gradient(145deg,#5c2020 0,#321112 28%,#170808 66%,#090405 100%);
+  background-size:auto,auto,560px auto,auto;background-blend-mode:soft-light,screen,soft-light,normal;
+  box-shadow:22px 23px 0 -9px rgba(0,0,0,.58),0 50px 96px -27px rgba(0,0,0,.96),0 0 0 6px rgba(0,0,0,.27),inset 0 2px rgba(255,243,211,.14),inset 15px 0 19px -12px rgba(255,225,177,.18),inset -18px 0 22px -11px rgba(0,0,0,.88),inset 0 -10px 15px rgba(0,0,0,.7)
+}
+body.v3-bookshelf .bookcase::before{left:-21px;right:-21px;height:38px;top:-20px;border-radius:7px 7px 2px 2px}
+body.v3-bookshelf .bookcase::after{left:-22px;right:-22px;height:38px;bottom:-24px}
+body.v3-bookshelf .cabinet-pilaster{width:25px;top:18px;bottom:22px}
+body.v3-bookshelf .cabinet-pilaster::after,
+body.v3-bookshelf .cabinet-pilaster::before{height:17px}
+body.v3-bookshelf .interior{padding:14px 23px 21px;background:
+  radial-gradient(78% 24% at 50% 0%,rgba(116,37,54,.16),transparent 76%),
+  linear-gradient(90deg,rgba(255,255,255,.018),transparent 15%,rgba(0,0,0,.09) 52%,transparent 85%),
+  var(--wood-tex),linear-gradient(165deg,#1a090a,#070505 76%)}
+
+body.v3-bookshelf .shelfrow{isolation:isolate;padding-top:12px;min-height:224px}
+body.v3-bookshelf .shelfrow[data-shelf-status="reading"]{min-height:264px}
+body.v3-bookshelf .plate{font-size:1rem;margin-bottom:2px}
+body.v3-bookshelf .row{z-index:2}
+body.v3-bookshelf .books{min-height:184px;padding-top:24px;gap:10px}
+body.v3-bookshelf .plank{height:21px;margin-left:-7px;margin-right:-7px}
+
+/* Shared ritual scenery lives behind real, interactive books. */
+.v3-ritual{position:absolute;z-index:0;left:4px;right:4px;top:41px;bottom:19px;overflow:hidden;pointer-events:none;border:1px solid rgba(214,175,93,.12);border-radius:4px;background-position:center;background-size:cover;box-shadow:inset 0 0 0 1px rgba(0,0,0,.62),inset 0 0 44px rgba(0,0,0,.34)}
+.v3-ritual::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,2,3,.55),transparent 17% 83%,rgba(5,2,3,.5)),linear-gradient(180deg,rgba(4,2,3,.32),transparent 42%,rgba(2,1,2,.38));mix-blend-mode:multiply}
+.v3-ritual::after{content:"";position:absolute;inset:0;box-shadow:inset 0 20px 30px rgba(0,0,0,.48),inset 0 -16px 24px rgba(0,0,0,.42)}
+
+/* Currently Reading: a real open book in front of an impossible shelf-depth portal. */
+.v3-threshold{position:relative;isolation:isolate;flex:0 0 382px;height:174px;align-self:flex-end;border:0;background:none;color:#1d120d;cursor:pointer;overflow:visible;filter:drop-shadow(0 13px 14px rgba(0,0,0,.7));scroll-snap-align:start}
+.v3-threshold::before{content:"";position:absolute;z-index:-3;left:39%;right:-4%;top:1px;bottom:0;border:1px solid rgba(210,174,94,.24);border-radius:44% 5px 4px 38%;background:
+  linear-gradient(90deg,rgba(4,5,10,.85),transparent 44%),
+  url('/themes/moonlit-reading-room/scenes/moonlit-midnight-wide-v3.jpg') center 42%/cover;
+  box-shadow:inset 24px 0 35px rgba(0,0,0,.75),inset 0 0 38px rgba(0,0,0,.5),0 0 24px rgba(62,92,158,.13)}
+.v3-threshold::after{content:"";position:absolute;z-index:-2;left:47%;right:2%;top:22%;height:2px;transform:rotate(-5deg);transform-origin:left;background:linear-gradient(90deg,rgba(246,210,126,.94),rgba(242,176,77,.58) 58%,transparent);box-shadow:0 10px 0 -1px rgba(230,163,69,.36),0 20px 0 -1px rgba(230,163,69,.17);filter:drop-shadow(0 0 6px rgba(255,195,85,.48));animation:v3ThreadBreathe 4.8s ease-in-out infinite}
+.v3-threshold-pages{position:absolute;z-index:2;left:0;top:8px;width:68%;height:158px;display:grid;grid-template-columns:47% 53%;transform:perspective(700px) rotateX(1deg) rotateY(3deg);transform-origin:50% 100%}
+.v3-threshold-cover,.v3-threshold-page{position:relative;overflow:hidden;border:1px solid rgba(124,80,39,.72);box-shadow:inset 0 0 14px rgba(58,27,12,.25)}
+.v3-threshold-cover{border-radius:5px 1px 1px 5px;background:#150d10;transform:rotateY(5deg);transform-origin:right center}
+.v3-threshold-cover img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.88) contrast(1.04)}
+.v3-threshold-page{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:14px 12px;border-radius:1px 6px 6px 1px;background:linear-gradient(100deg,#c8aa79,#efe0bd 14%,#e5cf9f 90%,#b18b55);transform:rotateY(-4deg);transform-origin:left center}
+.v3-threshold-page::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 9px,rgba(83,54,28,.035) 10px);mix-blend-mode:multiply}
+.v3-threshold-page small,.v3-threshold-page strong,.v3-threshold-page span{position:relative;z-index:1;display:block}
+.v3-threshold-page small{font:800 .43rem 'Hanken Grotesk';letter-spacing:.13em;text-transform:uppercase;color:#765128}
+.v3-threshold-page strong{max-width:130px;margin:5px 0 7px;font:600 .8rem/1.05 'Fraunces';color:#28160f}
+.v3-threshold-page span{padding:.46em .72em;border:1px solid rgba(105,66,24,.35);border-radius:99px;font:800 .44rem 'Hanken Grotesk';letter-spacing:.06em;text-transform:uppercase}
+.v3-threshold:hover{filter:drop-shadow(0 16px 17px rgba(0,0,0,.8)) brightness(1.05)}
+
+/* TBR: a moonlit conservatory beyond the cabinet, with breathing room for the books. */
+.v3-tbr-ritual{background-image:none;background-position:center 58%}
+.v3-depth-glass{position:absolute;inset:0;background:radial-gradient(circle at 50% 26%,rgba(143,186,226,.16),transparent 25%),linear-gradient(112deg,transparent 8%,rgba(114,153,184,.09) 42%,transparent 64%)}
+.v3-mist{position:absolute;left:-8%;width:116%;height:36px;border-radius:50%;filter:blur(9px);opacity:.34;background:linear-gradient(90deg,transparent,rgba(126,163,190,.45),rgba(181,149,187,.2),transparent);animation:v3Mist 10s ease-in-out infinite}
+.v3-mist.one{top:57%;transform:rotate(2deg)}.v3-mist.two{top:72%;animation-delay:-4s;transform:rotate(-3deg);opacity:.2}
+body.v3-bookshelf .shelfrow[data-shelf-status="want"].is-curated .books{justify-content:space-around;gap:clamp(18px,3.4vw,36px);padding-left:22px;padding-right:22px}
+body.v3-bookshelf .shelfrow[data-shelf-status="want"] .book.face::before{content:"Next read";position:absolute;left:50%;bottom:-15px;transform:translateX(-50%);padding:.2em .55em;border:1px solid rgba(219,187,111,.34);border-radius:99px;background:rgba(18,12,13,.88);color:#e5c77f;font:800 .38rem 'Hanken Grotesk';letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;backdrop-filter:blur(5px)}
+
+/* Read: an architectural celestial archive, not a diagram laid over an empty box. */
+.v3-read-ritual{background-image:none;background-position:center 51%;filter:saturate(.9)}
+.v3-orrery-glow{position:absolute;left:34%;top:0;width:32%;height:100%;background:radial-gradient(circle,rgba(230,177,72,.14),transparent 62%);animation:v3OrreryPulse 6s ease-in-out infinite}
+.v3-star-dust{position:absolute;width:3px;height:3px;border-radius:50%;background:#f4d180;box-shadow:61px 23px #d1a753,142px 9px #f4d180,217px 35px #b68c45,326px 17px #e0bc6d;opacity:.18;animation:v3DustDrift 8s ease-in-out infinite}
+.v3-star-dust.one{left:22%;top:22%}.v3-star-dust.two{left:49%;top:48%;transform:scale(.65);animation-delay:-4s}
+body.v3-bookshelf .shelfrow[data-shelf-status="read"].is-curated .books{justify-content:space-between;padding-left:18px;padding-right:18px}
+
+/* DNF: a genuine memorial alcove with a localized lantern control. */
+.v3-dnf-ritual{background-image:none;background-position:center 51%;transition:filter .55s,opacity .55s}
+.v3-lantern-bloom{position:absolute;right:4%;top:0;width:24%;height:100%;background:radial-gradient(circle at 55% 30%,rgba(255,193,85,.3),transparent 43%);mix-blend-mode:screen;animation:v3LanternLive 4.7s ease-in-out infinite;transition:opacity .5s}
+.v3-dnf-smoke{position:absolute;left:-10%;bottom:8%;width:72%;height:36px;border-radius:50%;filter:blur(9px);background:linear-gradient(90deg,transparent,rgba(170,177,188,.2),transparent);animation:v3Smoke 8s ease-in-out infinite}
+.v3-dnf-smoke.two{left:42%;bottom:17%;animation-delay:-4s;opacity:.45}
+.dnf-light-switch{position:absolute;z-index:9;right:9px;top:50px;width:44px;height:44px;border:0;border-radius:50%;background:transparent;cursor:pointer;touch-action:manipulation}
+.dnf-light-switch::before{content:"✦";position:absolute;inset:5px;display:grid;place-items:center;border:1px solid rgba(246,211,133,.7);border-radius:50%;background:radial-gradient(circle at 36% 28%,#f4d486,#8b5727 54%,#26130e 75%);color:#1c0d08;font-size:.75rem;box-shadow:0 4px 9px rgba(0,0,0,.62),0 0 0 3px rgba(18,8,8,.72),0 0 16px rgba(235,176,71,.2);transition:filter .35s,box-shadow .35s}
+.dnf-light-switch::after{content:"LIGHT";position:absolute;right:42px;top:15px;color:#d8b76f;font:800 .37rem 'Hanken Grotesk';letter-spacing:.12em;opacity:.72}
+.dnf-light-switch[aria-pressed="true"]::before{box-shadow:0 4px 9px rgba(0,0,0,.62),0 0 0 3px rgba(18,8,8,.72),0 0 22px rgba(245,183,73,.7);filter:brightness(1.13)}
+body.v3-bookshelf .shelfrow[data-shelf-status="dnf"]::marker{display:none}
+body.v3-bookshelf .shelfrow[data-shelf-status="dnf"].dnf-lit{background:radial-gradient(70% 95% at 74% 44%,rgba(216,139,55,.16),transparent 74%),linear-gradient(180deg,rgba(91,20,39,.055),transparent 38%)}
+body.v3-bookshelf .shelfrow[data-shelf-status="dnf"] .books{transition:filter .45s,opacity .45s}
+body.v3-bookshelf .shelfrow[data-shelf-status="dnf"]:not(.dnf-lit) .books{filter:brightness(.48) saturate(.65);opacity:.72}
+body.v3-bookshelf .shelfrow[data-shelf-status="dnf"]:not(.dnf-lit) .v3-dnf-ritual{filter:brightness(.36) saturate(.6);opacity:.78}
+body.v3-bookshelf .shelfrow[data-shelf-status="dnf"]:not(.dnf-lit) .v3-lantern-bloom{opacity:0}
+
+@keyframes v3ThreadBreathe{0%,100%{opacity:.58;transform:rotate(-5deg) scaleX(.96)}50%{opacity:1;transform:rotate(-3deg) scaleX(1.04)}}
+@keyframes v3Mist{0%,100%{transform:translateX(-4%) rotate(3deg);opacity:.2}50%{transform:translateX(5%) rotate(-2deg);opacity:.38}}
+@keyframes v3OrreryPulse{0%,100%{opacity:.42;transform:scale(.96)}50%{opacity:.9;transform:scale(1.04)}}
+@keyframes v3DustDrift{0%,100%{opacity:.12;transform:translate3d(-3px,3px,0)}50%{opacity:.42;transform:translate3d(5px,-5px,0)}}
+@keyframes v3LanternLive{0%,100%{opacity:.72;transform:scale(.96)}42%{opacity:1;transform:scale(1.04)}55%{opacity:.84;transform:scale(1)}}
+@keyframes v3Smoke{0%,100%{opacity:.1;transform:translate3d(-4%,5px,0) scaleX(.86)}50%{opacity:.35;transform:translate3d(7%,-4px,0) scaleX(1.12)}}
+
+@media(max-width:760px){
+  body.v3-bookshelf .library-layout{width:100%;max-width:100%;grid-template-columns:minmax(0,1fr)}
+  body.v3-bookshelf .library-main,body.v3-bookshelf .library-stats,body.v3-bookshelf .world-ribbon,body.v3-bookshelf .library-rail{min-width:0;width:100%;max-width:100%}
+  body.v3-bookshelf .case-identity{width:min(430px,92%);margin-bottom:-4px}
+  body.v3-bookshelf .case-identity::before{left:-2%;right:-2%;top:19%;bottom:-7%}
+  body.v3-bookshelf .case-name[data-crest="founders-key"]{width:min(400px,92%)}
+  body.v3-bookshelf .bookcase{max-width:100%;padding:21px 17px 30px;border-width:1px 5px 8px}
+  body.v3-bookshelf .bookcase::before{left:-9px;right:-9px;top:-12px;height:26px}
+  body.v3-bookshelf .bookcase::after{left:-10px;right:-10px;bottom:-18px;height:28px}
+  body.v3-bookshelf .cabinet-pilaster{width:15px;top:14px;bottom:17px}
+  body.v3-bookshelf .interior{padding-left:12px;padding-right:12px}
+  body.v3-bookshelf .shelfrow{min-height:205px}
+  body.v3-bookshelf .shelfrow[data-shelf-status="reading"]{min-height:226px}
+  body.v3-bookshelf .books{min-height:168px;padding-top:19px;gap:8px}
+  .v3-threshold{flex-basis:306px;height:156px}
+  .v3-threshold-pages{height:142px;width:67%;top:8px}
+  .v3-threshold-page{padding:9px 7px}.v3-threshold-page strong{font-size:.7rem}.v3-threshold-page small{font-size:.35rem}.v3-threshold-page span{font-size:.37rem}
+  .dnf-light-switch{right:3px;top:45px}
+}
+
+@media(max-width:460px){
+  body.v3-bookshelf .roomhead{padding-left:22px;padding-right:22px}
+  body.v3-bookshelf .roomhead h1{font-size:clamp(1.62rem,9vw,2.05rem);line-height:1.08;text-wrap:balance}
+  body.v3-bookshelf .roomhead .sub{max-width:330px;margin:7px auto 0;line-height:1.4}
+  body.v3-bookshelf .library-stats{padding:0 4px;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none}
+  body.v3-bookshelf .library-stats::-webkit-scrollbar{display:none}
+  body.v3-bookshelf .world-ribbon{grid-template-columns:auto minmax(0,1fr);gap:9px}
+  body.v3-bookshelf .world-ribbon-copy{min-width:0}.v3-bookshelf .world-ribbon strong{white-space:normal;line-height:1.08}
+  body.v3-bookshelf .case-identity{width:min(350px,94%)}
+  body.v3-bookshelf .case-identity::before{bottom:-3%}
+  body.v3-bookshelf .case-name[data-crest="founders-key"]{width:96%}
+  body.v3-bookshelf .bookcase{padding:18px 13px 27px}
+  body.v3-bookshelf .interior{padding-left:9px;padding-right:9px}
+  body.v3-bookshelf .shelfrow{min-height:190px;padding-top:9px}
+  body.v3-bookshelf .shelfrow[data-shelf-status="reading"]{min-height:207px}
+  body.v3-bookshelf .plate{font-size:.83rem;gap:5px}.v3-bookshelf .plate .shelf-sub{font-size:.48rem}
+  body.v3-bookshelf .books{min-height:154px;padding:16px 22px 0 3px;gap:7px}
+  .v3-ritual{top:37px;bottom:18px}
+  .v3-threshold{flex-basis:min(276px,calc(100vw - 75px));height:142px}
+  .v3-threshold-pages{height:127px;width:70%;top:9px;grid-template-columns:45% 55%}
+  .v3-threshold-page strong{font-size:.61rem;margin:3px 0 5px;max-width:90px}.v3-threshold-page span{padding:.35em .5em}
+  body.v3-bookshelf .shelfrow[data-shelf-status="want"].is-curated .books{justify-content:flex-start;gap:17px;padding-left:8px;padding-right:25px}
+  body.v3-bookshelf .shelfrow[data-shelf-status="read"].is-curated .books{justify-content:flex-start;gap:12px;padding-left:7px;padding-right:24px}
+  body.v3-bookshelf .themepill{right:10px;bottom:14px}
+  .dnf-light-switch{right:0;top:42px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .v3-threshold::after,.v3-mist,.v3-orrery-glow,.v3-star-dust,.v3-lantern-bloom,.v3-dnf-smoke{animation:none!important}
+}
+
+/* --------------------------------------------------------------------------
+   APPROVED V3 CABINET
+   The rendered cabinet/world plate is the source of visual truth. Live books,
+   labels and controls sit on top of its measured shelf openings.
+   -------------------------------------------------------------------------- */
+body.v3-bookshelf .library-layout{width:min(100%,920px);grid-template-columns:minmax(0,860px)}
+body.v3-bookshelf .world-ribbon{max-width:700px}
+body.v3-bookshelf .case-identity{display:none}
+body.v3-bookshelf .library-main{width:100%;min-width:0}
+
+body.v3-bookshelf .bookcase{
+  position:relative;width:min(100%,860px);max-width:none;aspect-ratio:912/1724;margin:0 auto;padding:0;border:0;border-radius:0;
+  background:url('/bookshelf/assets/v3/founder-cabinet-worlds-v1.jpg') center top/100% 100% no-repeat;
+  box-shadow:none;isolation:isolate;overflow:visible
+}
+body.v3-bookshelf .bookcase::before,body.v3-bookshelf .bookcase::after,
+body.v3-bookshelf .cabinet-pilaster,body.v3-bookshelf .case-flourish{display:none!important}
+body.v3-bookshelf .interior{position:absolute;inset:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;overflow:visible}
+body.v3-bookshelf .interior::before,body.v3-bookshelf .interior::after{display:none}
+
+body.v3-bookshelf .cabinet-crest{
+  display:flex;position:absolute;z-index:6;left:28%;right:28%;top:4.2%;height:5%;flex-direction:column;align-items:center;justify-content:center;
+  color:#e9c579;text-align:center;text-transform:uppercase;text-shadow:0 2px 4px #080204,0 0 13px rgba(216,151,55,.2);pointer-events:none;
+  background:none!important;background-image:none!important;filter:none!important;clip-path:none!important
+}
+body.v3-bookshelf .cabinet-crest small{font:800 clamp(.38rem,.75vw,.52rem) 'Hanken Grotesk';letter-spacing:.2em;color:rgba(244,220,181,.74)}
+body.v3-bookshelf .cabinet-crest strong{font:600 clamp(.84rem,2.1vw,1.45rem)/1.05 'Fraunces';letter-spacing:.18em;color:#f7d990;margin-top:.18em}
+body.v3-bookshelf .cabinet-crest em{font:800 clamp(.3rem,.58vw,.42rem) 'Hanken Grotesk';letter-spacing:.2em;color:rgba(222,166,83,.77);font-style:normal;margin-top:.35em}
+
+body.v3-bookshelf .shelfrow{position:absolute;left:14.7%;right:14.7%;min-height:0!important;height:auto;padding:0;background:none!important;isolation:isolate}
+body.v3-bookshelf .shelfrow::before,body.v3-bookshelf .shelfrow::after{display:none}
+body.v3-bookshelf .shelfrow[data-shelf-status="reading"]{top:10.45%;height:18.2%;min-height:0}
+body.v3-bookshelf .shelfrow[data-shelf-status="want"]{top:29.05%;height:18.2%;margin:0}
+body.v3-bookshelf .shelfrow[data-shelf-status="read"]{top:48%;height:19.6%}
+body.v3-bookshelf .shelfrow[data-shelf-status="dnf"]{top:68.25%;height:19.55%;margin:0}
+
+body.v3-bookshelf .plate{position:absolute;z-index:8;left:2.8%;right:2.5%;top:1.6%;width:auto;margin:0;padding:0;align-items:baseline;gap:8px;
+  font-size:clamp(.78rem,1.7vw,1.08rem);letter-spacing:.025em;color:#e7c77e;text-shadow:0 2px 5px #030102,0 0 12px rgba(218,166,69,.17)}
+body.v3-bookshelf .plate .ct{font-size:.7em;color:#ce395a;opacity:1}
+body.v3-bookshelf .plate .shelf-sub{font-size:.56em;color:rgba(244,232,227,.62)}
+body.v3-bookshelf .shelfrow[data-shelf-status="dnf"] .plate{color:#e7c77e}
+body.v3-bookshelf .shelfrow[data-shelf-status="dnf"] .plate::before{display:none}
+body.v3-bookshelf .shelf-door{transform:none;margin-left:auto;padding:.42em .72em;border-color:rgba(221,174,85,.55);background:rgba(8,5,7,.7);box-shadow:inset 0 0 0 1px rgba(0,0,0,.45),0 5px 12px rgba(0,0,0,.42);font-size:.48em;color:#e8c778;backdrop-filter:blur(6px)}
+
+body.v3-bookshelf .shelfrow .row{position:absolute;z-index:4;left:1.5%;right:1.5%;top:12%;bottom:3.4%;overflow:hidden}
+body.v3-bookshelf .shelfrow .row::before,body.v3-bookshelf .shelfrow .row::after{display:none}
+body.v3-bookshelf .books{height:100%;min-height:0;padding:0 2%;gap:clamp(3px,.55vw,6px);overflow-x:auto;overflow-y:hidden;align-items:flex-end;justify-content:flex-start;background:none;scroll-padding-inline:2%}
+body.v3-bookshelf .plank,body.v3-bookshelf .v3-ritual{display:none}
+body.v3-bookshelf .hint{margin-top:-2.1rem;position:relative;z-index:7}
+
+body.v3-bookshelf .book{filter:drop-shadow(0 11px 8px rgba(0,0,0,.72))}
+body.v3-bookshelf .book::after{bottom:-3px;height:6px;background:radial-gradient(ellipse at center,rgba(0,0,0,.78),transparent 74%)}
+body.v3-bookshelf .book.face{width:clamp(78px,11.8vw,100px)}
+body.v3-bookshelf .book.spine{width:clamp(32px,5.2vw,var(--book-w,45px))}
+body.v3-bookshelf .book.spine .spineinner{height:clamp(142px,19vw,176px)!important;border-color:rgba(202,152,70,.3);box-shadow:inset 0 0 0 1px rgba(247,217,156,.14),inset 5px 0 8px -6px rgba(255,255,255,.4),0 0 0 1px rgba(0,0,0,.55)}
+body.v3-bookshelf .book.spine .spineinner::before,body.v3-bookshelf .book.spine .spineinner::after{background:#b8873d;opacity:.58}
+body.v3-bookshelf .book.spine .stitle{color:#ecd49b;background:rgba(9,6,8,.55)}
+body.v3-bookshelf .shelfrow[data-shelf-status="want"] .books,body.v3-bookshelf .shelfrow[data-shelf-status="want"].is-curated .books{justify-content:flex-start;padding-left:5%;padding-right:4%;gap:clamp(3px,.55vw,6px)}
+body.v3-bookshelf .shelfrow[data-shelf-status="read"] .books,body.v3-bookshelf .shelfrow[data-shelf-status="read"].is-curated .books{justify-content:flex-start;padding-left:4%;padding-right:4%;gap:clamp(3px,.55vw,6px)}
+body.v3-bookshelf .shelfrow[data-shelf-status="dnf"] .books{justify-content:flex-start;padding-left:7%;padding-right:6%;gap:clamp(3px,.55vw,6px)}
+body.v3-bookshelf .shelfrow[data-shelf-status="want"] .book.face::before{bottom:4px;z-index:7;background:rgba(10,6,7,.86);box-shadow:0 2px 7px rgba(0,0,0,.55)}
+body.v3-bookshelf .shelfrow[data-shelf-status="dnf"]::after{content:"";display:block;position:absolute;z-index:2;inset:0;background:radial-gradient(45% 80% at 84% 28%,rgba(4,3,5,.35),rgba(2,2,4,.76));opacity:0;pointer-events:none;transition:opacity .5s}
+body.v3-bookshelf .shelfrow[data-shelf-status="dnf"]:not(.dnf-lit)::after{opacity:.82}
+
+body.v3-bookshelf .v3-threshold{flex:0 0 clamp(275px,38vw,330px);height:clamp(166px,23.5vw,204px);margin:0 2px 0 3px;filter:drop-shadow(0 15px 12px rgba(0,0,0,.88));transform:translateY(1px) rotate(-.45deg);transform-origin:50% 100%}
+body.v3-bookshelf .v3-threshold::before,body.v3-bookshelf .v3-threshold::after{display:none}
+body.v3-bookshelf .v3-threshold-pages{left:0;top:2%;width:100%;height:97%;grid-template-columns:49% 51%;overflow:visible;transform:perspective(900px) rotateX(1.2deg) rotateY(-1deg);filter:drop-shadow(0 2px 1px rgba(232,185,92,.26))}
+body.v3-bookshelf .v3-threshold-cover{z-index:2;overflow:hidden;border-color:rgba(204,157,75,.78);border-radius:9% 2% 3% 7%/5% 2% 3% 7%;clip-path:polygon(4% 1%,98% 3%,100% 96%,3% 100%,0 51%);transform:perspective(620px) rotateY(5.5deg) rotateZ(-1.2deg) translateX(2px);box-shadow:inset 0 0 0 2px rgba(216,177,92,.27),inset 0 0 18px rgba(0,0,0,.38),-4px 7px 0 #3b2116,-7px 10px 12px rgba(0,0,0,.5)}
+body.v3-bookshelf .v3-threshold-cover::after{content:"";position:absolute;inset:6px 5px 7px 7px;border:1px solid rgba(231,194,111,.72);border-radius:7% 1% 2% 5%;background:linear-gradient(135deg,rgba(241,211,139,.64),transparent 11% 89%,rgba(241,211,139,.52));box-shadow:inset 0 0 0 2px rgba(20,10,11,.5);pointer-events:none}
+body.v3-bookshelf .v3-threshold-page{z-index:1;overflow:hidden;justify-content:center;align-items:flex-start;padding:9% 8% 7% 12%;border-color:rgba(170,120,54,.78);border-radius:2% 8% 7% 2%/2% 7% 8% 2%;clip-path:polygon(0 3%,96% 0,100% 48%,97% 97%,1% 100%);transform:perspective(620px) rotateY(-4.2deg) rotateZ(.8deg) translateX(-2px);background:radial-gradient(circle at 78% 20%,rgba(112,69,29,.1),transparent 30%),repeating-linear-gradient(0deg,transparent 0 13px,rgba(83,54,28,.035) 14px),linear-gradient(100deg,#a98451,#ead8ad 12%,#ead6a7 84%,#a77b48);box-shadow:inset 11px 0 15px -12px #32180d,inset -7px 0 10px -9px #4f2d14,inset 0 0 17px rgba(86,49,19,.2),5px 8px 0 rgba(69,37,19,.72),9px 11px 14px rgba(0,0,0,.45)}
+body.v3-bookshelf .v3-threshold-page::after{content:"";position:absolute;left:0;top:3px;bottom:3px;width:7px;background:linear-gradient(90deg,#390812,#a42334 45%,#4b0b14 82%,rgba(28,9,9,.4));box-shadow:2px 0 4px rgba(44,11,10,.65)}
+body.v3-bookshelf .v3-threshold-page small{font-size:.38rem;letter-spacing:.11em}
+body.v3-bookshelf .v3-threshold-page strong{max-width:145px;font-size:.79rem;margin:3px 0 1px;text-align:left}
+body.v3-bookshelf .v3-threshold-page em{position:relative;z-index:1;display:block;max-width:145px;color:#674426;font:600 .34rem/1.2 'Hanken Grotesk';font-style:normal}
+body.v3-bookshelf .v3-threshold-rating{position:relative;z-index:1;display:flex!important;align-items:center;gap:3px;margin-top:3px;color:#5d3b24;font:800 .31rem 'Hanken Grotesk'}
+body.v3-bookshelf .v3-threshold-rating b{color:#7f4c20;letter-spacing:-.08em}body.v3-bookshelf .v3-threshold-rating i{font-size:.25rem;font-style:normal;opacity:.68}
+body.v3-bookshelf .v3-threshold-tags{position:relative;z-index:1;display:flex;justify-content:flex-start;gap:2px;margin:5px 0 5px}
+body.v3-bookshelf .v3-threshold-tags i{display:block;padding:.2em .4em;border:1px solid rgba(98,61,28,.3);border-radius:99px;color:#6b492a;font:800 .25rem 'Hanken Grotesk';font-style:normal;text-transform:uppercase;letter-spacing:.03em}
+body.v3-bookshelf .v3-threshold-page q{position:relative;z-index:1;display:block;max-width:126px;margin:0 0 6px;color:#5d3b24;font:italic .34rem/1.35 'Fraunces';text-align:left}
+body.v3-bookshelf .v3-threshold-page q::before,body.v3-bookshelf .v3-threshold-page q::after{content:""}
+body.v3-bookshelf .v3-threshold-page .v3-threshold-enter{font-size:.34rem;border:0;background:none;padding:0;color:#5b3a20;text-transform:none;letter-spacing:0}
+
+body.v3-bookshelf .dnf-light-switch{right:-9.2%;top:31%;width:44px;height:52px;border-radius:20px}
+body.v3-bookshelf .dnf-light-switch::before{content:"";inset:7px 13px 27px;border-color:rgba(246,211,133,.72);background:radial-gradient(circle at 38% 30%,#f2d17e,#7b481c 56%,#24120c 77%)}
+body.v3-bookshelf .dnf-light-switch::after{content:"";left:50%;right:auto;top:25px;width:1px;height:17px;background:linear-gradient(#e1b85f,#6d421e);box-shadow:0 15px 0 2px #a06a2a;transform:translateX(-50%);opacity:.9}
+body.v3-bookshelf .dnf-light-switch[aria-pressed="true"]::before{box-shadow:0 4px 9px rgba(0,0,0,.62),0 0 0 3px rgba(18,8,8,.72),0 0 22px rgba(245,183,73,.78)}
+
+@media(max-width:760px){
+  body.v3-bookshelf .library-layout{width:100%;max-width:100%;grid-template-columns:minmax(0,1fr)}
+  body.v3-bookshelf .bookcase{width:100%;max-width:none}
+  body.v3-bookshelf .plate{font-size:clamp(.54rem,2.35vw,.72rem)}
+  body.v3-bookshelf .shelf-door{font-size:.48em}
+  body.v3-bookshelf .shelfrow .row{top:13%;bottom:3.8%}
+  body.v3-bookshelf .book.face{width:clamp(50px,14vw,78px)}
+  body.v3-bookshelf .book.spine{width:clamp(21px,6vw,33px)}
+  body.v3-bookshelf .book.spine .spineinner{height:clamp(90px,24vw,126px)!important}
+  body.v3-bookshelf .book.spine .stitle{font-size:clamp(.35rem,1.5vw,.5rem);max-height:76px;padding:3px 1px}
+  body.v3-bookshelf .v3-threshold{flex-basis:clamp(174px,47vw,244px);height:clamp(108px,29vw,150px)}
+  body.v3-bookshelf .v3-threshold-page{padding:6px 4px}
+  body.v3-bookshelf .v3-threshold-page small{font-size:clamp(.22rem,.8vw,.32rem)}body.v3-bookshelf .v3-threshold-page strong{font-size:clamp(.4rem,1.8vw,.64rem);margin:2px 0}body.v3-bookshelf .v3-threshold-page .v3-threshold-enter{font-size:clamp(.22rem,.78vw,.3rem)}
+  body.v3-bookshelf .v3-threshold-page em{font-size:clamp(.2rem,.7vw,.28rem)}
+  body.v3-bookshelf .v3-threshold-rating{font-size:clamp(.18rem,.65vw,.25rem)}body.v3-bookshelf .v3-threshold-tags{margin:2px 0 3px}.v3-bookshelf .v3-threshold-tags i{font-size:clamp(.14rem,.52vw,.21rem)}
+  body.v3-bookshelf .v3-threshold-page q{display:none}
+  body.v3-bookshelf .dnf-light-switch{right:-10.8%;top:27%;transform:none}
+  body.v3-bookshelf .hint{display:none}
+}
+
+@media(max-width:460px){
+  body.v3-bookshelf .shelfrow{left:14.2%;right:14.2%}
+  body.v3-bookshelf .plate{left:2%;right:2%;top:1%;gap:4px}
+  body.v3-bookshelf .plate .shelf-sub{font-size:.48em;letter-spacing:.05em}
+  body.v3-bookshelf .shelf-door{padding:.32em .46em;font-size:.42em}
+  body.v3-bookshelf .shelfrow .row{left:.5%;right:.5%;top:12.5%;bottom:3.2%}
+  body.v3-bookshelf .books{gap:2px;padding-left:1%;padding-right:1%}
+  body.v3-bookshelf .shelfrow[data-shelf-status="reading"] .books{gap:2px}
+  body.v3-bookshelf .shelfrow[data-shelf-status="want"] .books,body.v3-bookshelf .shelfrow[data-shelf-status="want"].is-curated .books,body.v3-bookshelf .shelfrow[data-shelf-status="read"] .books,body.v3-bookshelf .shelfrow[data-shelf-status="read"].is-curated .books{justify-content:flex-start;padding-left:3%;padding-right:2.5%;gap:2px}
+  body.v3-bookshelf .book.face{width:clamp(44px,14vw,60px)}
+  body.v3-bookshelf .book.spine{width:clamp(18px,5.8vw,26px)}
+  body.v3-bookshelf .book.spine .spineinner{height:clamp(76px,24vw,104px)!important}
+  body.v3-bookshelf .v3-threshold{flex-basis:clamp(128px,35vw,150px);height:clamp(86px,23vw,102px)}
+  body.v3-bookshelf .v3-threshold-page em,body.v3-bookshelf .v3-threshold-tags,body.v3-bookshelf .v3-threshold-rating{display:none!important}
+  body.v3-bookshelf .cabinet-crest small{font-size:clamp(.22rem,1vw,.3rem)}
+  body.v3-bookshelf .cabinet-crest strong{font-size:clamp(.52rem,2.8vw,.74rem)}
+  body.v3-bookshelf .cabinet-crest em{font-size:clamp(.18rem,.78vw,.24rem)}
+  body.v3-bookshelf .dnf-light-switch{right:-12%;top:24%;transform:none}
+}
+
+/* LAYERED READING WORLD
+   The environment, live book content and painterly book shell are independent.
+   This preserves a dedicated scenic window instead of letting the book hide it. */
+body.v3-bookshelf .shelfrow[data-shelf-status="reading"]::before{
+  content:"";display:block;position:absolute;z-index:0;inset:0;height:auto;
+  background:
+    linear-gradient(180deg,rgba(5,2,4,.28),transparent 18% 82%,rgba(3,1,2,.26)),
+    linear-gradient(90deg,rgba(8,3,5,.48) 0%,rgba(8,3,5,.12) 31%,transparent 48%,rgba(5,2,4,.08) 100%),
+    url('/bookshelf/assets/v3/reading-world-layer-v1.webp') right center/92% 100% no-repeat,
+    #080405;
+  box-shadow:inset 0 18px 30px -22px #000,inset 0 -16px 24px -18px #000;
+  pointer-events:none
+}
+body.v3-bookshelf .shelfrow[data-shelf-status="reading"] .row::before{display:none}
+body.v3-bookshelf .shelfrow[data-shelf-status="reading"] .books{z-index:2;padding-left:2.2%;padding-right:2.2%;gap:clamp(3px,.5vw,6px)}
+body.v3-bookshelf .shelfrow[data-shelf-status="reading"] .book.spine{width:clamp(22px,3vw,24px)}
+body.v3-bookshelf .shelfrow[data-shelf-status="reading"] .book.spine .spineinner{height:clamp(136px,17vw,160px)!important}
+
+body.v3-bookshelf .v3-world-slot{position:relative;z-index:1;display:block;flex:0 0 clamp(105px,14vw,120px);height:100%;pointer-events:none}
+body.v3-bookshelf .v3-world-slot::after{content:"";position:absolute;left:2%;right:2%;bottom:1%;height:15%;background:radial-gradient(ellipse at center,rgba(249,178,62,.2),transparent 70%);filter:blur(5px)}
+
+body.v3-bookshelf .v3-threshold{
+  flex:0 0 clamp(245px,31.4vw,270px);height:clamp(140px,17.9vw,154px);margin:0 -2px 0 1px;
+  overflow:visible;filter:drop-shadow(0 13px 10px rgba(0,0,0,.9));transform:translateY(2px);transform-origin:50% 100%
+}
+body.v3-bookshelf .v3-threshold-pages{display:block;left:0;top:0;width:100%;height:100%;overflow:visible;transform:none;filter:none}
+body.v3-bookshelf .v3-threshold-shell{position:absolute;z-index:5;inset:0;width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;filter:drop-shadow(0 2px 1px rgba(239,193,98,.22))}
+body.v3-bookshelf .v3-threshold-cover,body.v3-bookshelf .v3-threshold-page{position:absolute;z-index:2;top:12.7%;height:69.5%;margin:0;border:0;border-radius:0;clip-path:none;transform:none;box-shadow:none}
+body.v3-bookshelf .v3-threshold-cover{left:12.7%;width:34%;overflow:hidden;background:#10090d}
+body.v3-bookshelf .v3-threshold-cover img{width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.9) contrast(1.05)}
+body.v3-bookshelf .v3-threshold-cover::after,body.v3-bookshelf .v3-threshold-page::after{display:none}
+body.v3-bookshelf .v3-threshold-page{
+  left:53.3%;width:33.9%;display:flex;justify-content:center;align-items:flex-start;padding:8% 7% 5%;overflow:hidden;text-align:left;
+  background:radial-gradient(circle at 76% 18%,rgba(114,73,31,.08),transparent 29%),repeating-linear-gradient(0deg,transparent 0 11px,rgba(83,54,28,.035) 12px),linear-gradient(100deg,#c7a875,#ead9ae 12%,#e7d2a3 88%,#b48d59)
+}
+body.v3-bookshelf .v3-threshold-page small{font-size:.32rem;letter-spacing:.09em}
+body.v3-bookshelf .v3-threshold-page strong{max-width:100%;font-size:.72rem;line-height:1.02;margin:3px 0 2px}
+body.v3-bookshelf .v3-threshold-page em{max-width:100%;font-size:.4rem;line-height:1.2}
+body.v3-bookshelf .v3-threshold-score{position:relative;z-index:1;display:flex!important;align-items:baseline;gap:4px;margin-top:7px;padding:0!important;border:0!important;border-radius:0!important;background:none!important;color:#4f301b;font-family:'Hanken Grotesk'}
+body.v3-bookshelf .v3-threshold-score i{font-size:.35rem;font-weight:800;font-style:normal;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+body.v3-bookshelf .v3-threshold-score b{font-size:.56rem;color:#633918;white-space:nowrap}
+body.v3-bookshelf .v3-threshold-detail{position:relative;z-index:1;display:block;margin-top:4px;padding:0!important;border:0!important;border-radius:0!important;background:none!important;color:#624326;font:700 .42rem/1.2 'Hanken Grotesk';letter-spacing:0;text-transform:none}
+body.v3-bookshelf .v3-threshold-page .v3-threshold-enter{margin-top:7px;padding:0!important;border:0!important;border-radius:0!important;background:none!important;color:#4b2c17;font:800 .42rem/1.1 'Hanken Grotesk';letter-spacing:0;text-transform:none}
+
+@media(max-width:760px){
+  body.v3-bookshelf .shelfrow[data-shelf-status="reading"] .book.spine{width:clamp(18px,4.2vw,24px)}
+  body.v3-bookshelf .shelfrow[data-shelf-status="reading"] .book.spine .spineinner{height:clamp(86px,22vw,116px)!important}
+  body.v3-bookshelf .v3-threshold{flex-basis:clamp(145px,35vw,190px);height:clamp(83px,20vw,109px)}
+  body.v3-bookshelf .v3-world-slot{flex-basis:clamp(60px,16vw,90px)}
+  body.v3-bookshelf .v3-threshold-page{padding:8% 6% 4%}
+  body.v3-bookshelf .v3-threshold-page small{font-size:clamp(.16rem,.58vw,.25rem)}
+  body.v3-bookshelf .v3-threshold-page strong{font-size:clamp(.34rem,1.3vw,.56rem)}
+  body.v3-bookshelf .v3-threshold-page em{font-size:clamp(.16rem,.55vw,.24rem)}
+  body.v3-bookshelf .v3-threshold-score{gap:2px;margin-top:3px}body.v3-bookshelf .v3-threshold-score i{font-size:clamp(.12rem,.42vw,.18rem)}body.v3-bookshelf .v3-threshold-score b{font-size:clamp(.17rem,.62vw,.26rem)}
+  body.v3-bookshelf .v3-threshold-detail{margin-top:2px;font-size:clamp(.14rem,.48vw,.2rem)}
+  body.v3-bookshelf .v3-threshold-page .v3-threshold-enter{margin-top:3px;font-size:clamp(.14rem,.5vw,.21rem)}
+}
+
+@media(max-width:460px){
+  body.v3-bookshelf .shelfrow[data-shelf-status="reading"] .books{padding-left:.5%;padding-right:.5%;gap:2px}
+  body.v3-bookshelf .shelfrow[data-shelf-status="reading"] .book.spine{width:clamp(16px,4.4vw,19px)}
+  body.v3-bookshelf .v3-threshold{flex-basis:clamp(105px,28.5vw,118px);height:clamp(60px,16.3vw,68px);margin-left:-1px;margin-right:-2px}
+  body.v3-bookshelf .v3-world-slot{flex-basis:clamp(40px,11.5vw,48px)}
+  body.v3-bookshelf .v3-threshold-page small{font-size:.14rem}
+  body.v3-bookshelf .v3-threshold-page strong{font-size:.29rem;margin:1px 0}
+  body.v3-bookshelf .v3-threshold-page em{font-size:.14rem}
+  body.v3-bookshelf .v3-threshold-score{margin-top:2px}body.v3-bookshelf .v3-threshold-score i{display:none}body.v3-bookshelf .v3-threshold-score b{font-size:.16rem}
+  body.v3-bookshelf .v3-threshold-detail{display:none}
+  body.v3-bookshelf .v3-threshold-page .v3-threshold-enter{margin-top:2px;font-size:.13rem}
+}
+
+/* UNIFIED LIVE SPINES */
+body.v3-bookshelf .book.spine,body.v3-bookshelf .shelfrow[data-shelf-status="reading"] .book.spine{width:clamp(27px,3.1vw,28px)}
+body.v3-bookshelf .book.spine .stitle{max-height:118px;padding:5px 2px;font-size:clamp(.5rem,.92vw,.6rem);line-height:1.05;letter-spacing:.005em}
+@media(hover:hover) and (pointer:fine){
+  body.v3-bookshelf .book.spine::before{content:attr(data-title);position:absolute;z-index:30;left:50%;bottom:calc(100% + 7px);max-width:190px;padding:.42em .62em;border:1px solid rgba(230,190,105,.35);border-radius:7px;background:rgba(9,5,7,.94);box-shadow:0 9px 22px rgba(0,0,0,.58);color:#f0d99f;font:700 .58rem/1.25 'Hanken Grotesk';white-space:normal;text-align:center;opacity:0;pointer-events:none;transform:translate(-50%,5px);transition:opacity .16s,transform .16s}
+  body.v3-bookshelf .book.spine:hover::before{opacity:1;transform:translate(-50%,0)}
+}
+
+/* FLUID SHELF REORDERING */
+body.v3-bookshelf .book,body.v3-bookshelf .v3-threshold{transition:filter .2s ease,opacity .2s ease,box-shadow .2s ease}
+body.v3-bookshelf.book-drag-active .book:not(.dragging),body.v3-bookshelf.book-drag-active .v3-threshold:not(.dragging){transition:filter .2s ease,opacity .2s ease}
+body.v3-bookshelf .book.dragging,body.v3-bookshelf .v3-threshold.dragging{z-index:12;opacity:.24;cursor:grabbing;filter:drop-shadow(0 18px 16px rgba(0,0,0,.92)) saturate(.72)}
+body.v3-bookshelf .books.drag-over{box-shadow:inset 0 -2px rgba(229,185,92,.48),inset 0 0 26px rgba(180,116,39,.08)}
+body.v3-bookshelf .books.drag-over::after{content:"Release to place";position:absolute;z-index:15;right:8px;top:8px;padding:.38em .6em;border:1px solid rgba(229,185,92,.4);border-radius:99px;background:rgba(9,5,7,.82);color:#e8cb85;font:800 .42rem 'Hanken Grotesk';letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;pointer-events:none;animation:v3DropCue .2s ease-out}
+@keyframes v3DropCue{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+@media(max-width:760px){
+  body.v3-bookshelf .book.spine,body.v3-bookshelf .shelfrow[data-shelf-status="reading"] .book.spine{width:clamp(20px,5vw,24px)}
+  body.v3-bookshelf .book.spine .stitle{max-height:78px;padding:3px 1px;font-size:clamp(.37rem,1.35vw,.48rem)}
+}
+
+@media(max-width:460px){
+  body.v3-bookshelf .book.spine,body.v3-bookshelf .shelfrow[data-shelf-status="reading"] .book.spine{width:clamp(18px,5vw,21px)}
+  body.v3-bookshelf .book.spine .stitle{max-height:68px;font-size:clamp(.34rem,1.35vw,.42rem)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  body.v3-bookshelf .books.drag-over::after{animation:none}
+}
+
+/* THE ATELIER · V3 RELEASE GATE
+   Only treatments rebuilt for the Founder Heirloom can be selected. The rest
+   stay visible as a deliberate release roadmap, without pretending to work. */
+body.v3-bookshelf .themecard{width:100%;appearance:none;color:var(--cream);font:inherit;text-align:left}
+body.v3-bookshelf .themecard>span:last-child{display:block;min-width:0}
+body.v3-bookshelf .themecard .tn,body.v3-bookshelf .themecard .tdesc,body.v3-bookshelf .themecard .lock{display:block}
+body.v3-bookshelf .atelier-locked{cursor:not-allowed!important;opacity:.46;filter:saturate(.5)}
+body.v3-bookshelf .atelier-locked:hover{transform:none!important;border-color:var(--line)!important;box-shadow:none!important}
+body.v3-bookshelf .atelier-locked .trial-mark{color:#b9a892}
+body.v3-bookshelf .cabinetcard:not(.atelier-locked) .trial-mark,
+body.v3-bookshelf .themecard:not(.atelier-locked) .trial-mark,
+body.v3-bookshelf .crestcard:not(.atelier-locked) em{color:#73ddb6;text-transform:uppercase;letter-spacing:.08em}
+body.v3-bookshelf #atelierUnlock:disabled{cursor:default;opacity:.8;color:#d8bc7b}

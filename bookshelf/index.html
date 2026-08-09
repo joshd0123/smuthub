@@ -27,6 +27,7 @@
 <script defer src="/auth.js"></script>
 <script src="/bookcase-catalog.js?v=founders-key-gate-1"></script>
 <link rel="stylesheet" href="/companion.css">
+<link rel="stylesheet" href="/bookshelf/v3-bookshelf.css?v=founder-sanctuary-live-1">
 <script defer src="/companion.js"></script>
 <style>
   :root{
@@ -785,7 +786,7 @@
 <div class="sheetbase" id="themesheetbg">
   <div class="bottomsheet">
     <div class="sheet-heading"><div><h3>The Library Atelier</h3>
-    <p class="note">Change your bookshelf colour once a month, free. Preview any crest, cabinet or collected detail to see how it looks — full customization is coming soon.</p></div>
+    <p class="note" id="atelierNote">Change your bookshelf colour once a month, free. Preview any crest, cabinet or collected detail to see how it looks — full customization is coming soon.</p></div>
     <button class="sheet-close" onclick="closeThemeSheet()" aria-label="Close Library Atelier">×</button></div>
     <h4 class="atelier-title" style="margin-top:2px">Choose your bookcase</h4>
     <div class="cabinetgrid" id="cabinetgrid"></div>
@@ -886,7 +887,11 @@
   // Until then the page uses the CSS gradients (no missing-image requests).
   const THEME_ART=false;
 
-  const REVIEW_MODE=new URLSearchParams(location.search).get('prototype')==='bookcase-v2';
+  const BOOKSHELF_PARAMS=new URLSearchParams(location.search);
+  const REVIEW_MODE=BOOKSHELF_PARAMS.get('prototype')==='bookcase-v2';
+  // V3 is now the production bookshelf. ?v3=classic remains as a temporary
+  // rollback view while the new cabinet completes its launch soak.
+  const V3_MODE=BOOKSHELF_PARAMS.get('v3')!=='classic';
   // Read-only "view someone else's shelf" mode: /bookshelf/?u=<username>.
   // Renders another reader's PUBLIC shelf (RLS-gated) with all editing removed.
   const VIEW_HANDLE=(new URLSearchParams(location.search).get('u')||'').trim().toLowerCase();
@@ -902,7 +907,7 @@
   try{ const savedCrest=localStorage.getItem(CREST_STORAGE_KEY); if(CREST_STYLES.some(c=>c.key===savedCrest)) crestStyle=savedCrest; }catch(_){}
   let custom={};
   let ownedProducts=new Set(), accountTrials={};
-  let shelfIndex=0, selectedProp=null, drawerTab='worlds', previewWorld=null;
+  let shelfIndex=0, selectedProp=null, drawerTab='worlds', previewWorld=null, dnfLightOn=true;
   let shelfPages={reading:0,want:0,read:0,dnf:0}, pageDirection=0, collectionOpen=false, collectionQuery='';
   const WORLD_PROGRESS_KEY='sh_moonlit_progress_v2';
   const freshWorldState=(saved={})=>{
@@ -947,6 +952,7 @@
       readerName='Novarin';
       shelf=DEMO_SHELF.map((b,i)=>({...b,sort_order:i,created_at:new Date(Date.now()-i*86400000).toISOString()}));
       spiceMap={'demo-1':4,'demo-2':5,'demo-4':5,'demo-7':3};
+      if(V3_MODE) crestStyle='founders-key';
       setTheme('founder',true);
       document.body.dataset.cabinet=cabinetStyle;
       document.body.dataset.crest=crestStyle;
@@ -966,11 +972,17 @@
     const COMP_ACCESS={'joshd0123@gmail.com':1,'martaantonczak@hotmail.ca':2};
     const compKey=(user.email||'').trim().toLowerCase();
     if(COMP_ACCESS[compKey]){ isPremium=true; if(!founderNumber) founderNumber=COMP_ACCESS[compKey]; }
+    if(V3_MODE&&founderNumber) crestStyle='founders-key';
     if(crestStyle==='founders-key'&&!founderNumber) crestStyle='enchanted-rose';
     document.body.dataset.crest=crestStyle;
     const rawName=profile.display_name||profile.username||(user.email||'').split('@')[0];
     readerName=rawName ? rawName.charAt(0).toUpperCase()+rawName.slice(1) : 'Your';
-    if(e.detail.profile && e.detail.profile.theme){
+    if(V3_MODE){
+      // The new cabinet currently ships in one fully art-directed finish.
+      // Saved legacy finishes remain untouched and can return as each Atelier
+      // treatment is rebuilt to the same production standard.
+      setTheme('founder', true);
+    } else if(e.detail.profile && e.detail.profile.theme){
       const savedTheme=THEMES.find(t=>t.id===e.detail.profile.theme);
       setTheme(savedTheme?savedTheme.id:'walnut', true);
     }
@@ -984,7 +996,7 @@
 
   function setTheme(id, silent){
     theme=id;
-    document.body.className='theme-'+id+(THEME_ART?' art-on':'');
+    document.body.className='theme-'+id+(THEME_ART?' art-on':'')+(V3_MODE?' v3-bookshelf':'');
     document.querySelectorAll('.themecard').forEach(s=>s.classList.toggle('on',s.dataset.t===id));
     if(!silent && window.SH && SH.user){ SH.saveTheme(id); toast("Theme saved to your account ✨"); }
   }
@@ -1123,7 +1135,7 @@
     const spineLean=((bookHash%5)-2)*.34, spineSit=Math.floor(bookHash/5)%3;
     const spineStyle='--spine:'+color+';--book-w:'+(34+(bookHash%15))+'px;--book-h:'+(132+((bookHash>>3)%15))+'px;--spine-pos:'+Math.max(0,Math.min(100,spinePosition))+'%;--lean:'+spineLean+'deg;--sit:'+spineSit+'px;'
       +(spineArt?'--spine-art:url(&quot;'+esc(spineArt)+'&quot;);':'');
-    return '<div class="book spine'+(dnf?' dnf':'')+'" draggable="'+(VIEW_MODE?'false':'true')+'" data-key="'+esc(b.book_key)+'" style="--book-w:'+(34+(bookHash%15))+'px">'
+    return '<div class="book spine'+(dnf?' dnf':'')+'" draggable="'+(VIEW_MODE?'false':'true')+'" data-key="'+esc(b.book_key)+'" data-title="'+esc(b.title||'Untitled')+'" title="'+esc(b.title||'Untitled')+'" aria-label="'+esc(b.title||'Untitled')+'" style="--book-w:'+(34+(bookHash%15))+'px">'
       + '<div class="spineinner" style="'+spineStyle+'"><span class="stitle">'+esc(b.title||'Untitled')+'</span></div>'
       + badges + '</div>';
   }
@@ -1131,6 +1143,32 @@
   function tbrStackHTML(count){
     return '<button class="tbr-stack" type="button" data-open-tbr aria-label="Enter your TBR shelf, '+count+' books">'
       +'<span class="tbr-copy"><strong>'+count+'</strong>TBR</span></button>';
+  }
+
+  function v3ThresholdHTML(b){
+    if(!V3_MODE||!b) return '';
+    const src=coverSrc(b);
+    const cover=src?'<img src="'+esc(src)+'" alt="" onerror="this.style.display=\'none\'">':'';
+    const byline=b.author?'by '+esc(b.author):'from your private library';
+    const heat=spiceMap[b.book_key]||0;
+    const rawRating=Number(b.user_rating??b.rating??b.stars);
+    const userRating=Number.isFinite(rawRating)&&rawRating>0?Math.min(5,rawRating):(REVIEW_MODE?4.8:null);
+    return '<button class="v3-threshold" type="button" draggable="'+(VIEW_MODE?'false':'true')+'" data-key="'+esc(b.book_key)+'" data-threshold-book="'+esc(b.book_key)+'" aria-label="Open '+esc(b.title||'this book')+' and enter its threshold">'
+      +'<span class="v3-threshold-pages"><span class="v3-threshold-cover">'+cover+'</span>'
+      +'<span class="v3-threshold-page"><small>Currently reading</small><strong>'+esc(b.title||'Untitled')+'</strong><em>'+byline+'</em>'
+      +'<span class="v3-threshold-score"><i>Your rating</i><b>'+(userRating?userRating.toFixed(1)+' ★':'Not rated')+'</b></span>'
+      +'<span class="v3-threshold-detail">'+(heat?'Spice rating · '+heat+'/5':'Spice rating · Unrated')+'</span>'
+      +'<span class="v3-threshold-enter">Enter this world →</span></span>'
+      +'<img class="v3-threshold-shell" src="/bookshelf/assets/v3/open-book-shell-v1.png" alt="" aria-hidden="true"></span></button>';
+  }
+
+  function v3RitualHTML(status){
+    if(!V3_MODE) return '';
+    if(status==='want') return '<div class="v3-ritual v3-tbr-ritual" aria-hidden="true"><span class="v3-depth-glass"></span><span class="v3-mist one"></span><span class="v3-mist two"></span></div>';
+    if(status==='read') return '<div class="v3-ritual v3-read-ritual" aria-hidden="true"><span class="v3-orrery-glow"></span><span class="v3-star-dust one"></span><span class="v3-star-dust two"></span></div>';
+    if(status==='dnf') return '<div class="v3-ritual v3-dnf-ritual" aria-hidden="true"><span class="v3-lantern-bloom"></span><span class="v3-dnf-smoke one"></span><span class="v3-dnf-smoke two"></span></div>'
+      +'<button class="dnf-light-switch" type="button" aria-label="Turn DNF shelf light '+(dnfLightOn?'off':'on')+'" aria-pressed="'+dnfLightOn+'"></button>';
+    return '';
   }
 
   function renderRoom(){
@@ -1150,23 +1188,27 @@
       + '<button class="world-ribbon" id="openLiveWorld"><span class="moon-seal" aria-hidden="true">✦</span><span class="world-ribbon-copy"><small>Live premium world · 3 relics to awaken</small><strong>The Moonlit Reading Room</strong><span class="world-ribbon-desc">Your books, a working clock, candlelight and visitors that leave something behind.</span></span><b>Enter world →</b></button>'
       + '<div class="library-main">'
       + '<div class="case-identity"><span class="plaque-chain left" aria-hidden="true"></span><span class="plaque-chain right" aria-hidden="true"></span><div class="case-name" data-crest="'+esc(crest.key)+'"><span class="crest-glass" aria-hidden="true"></span><span class="crest-reflection" aria-hidden="true"></span><img class="case-art" src="'+esc(crest.src)+'" alt="" aria-hidden="true" decoding="async"><span class="crest-heart" aria-hidden="true"></span><div class="case-copy"><small>'+esc(crest.eyebrow)+'</small><strong>'+esc(readerName)+'</strong><span class="case-motto">'+esc(crest.motto)+'</span></div>'+founderSocketHTML()+'</div>'+founderEditionHTML()+'</div>'
-      + '<div class="bookcase"><span class="cabinet-crest"></span><span class="cabinet-pilaster left"></span><span class="cabinet-pilaster right"></span><span class="case-flourish"></span><div class="interior">'
+      + '<div class="bookcase"><span class="cabinet-crest"><small>The founding library of</small><strong>'+esc(readerName)+'</strong><em>First edition · forever kept</em></span><span class="cabinet-pilaster left"></span><span class="cabinet-pilaster right"></span><span class="case-flourish"></span><div class="interior">'
       + visible.map(([st,label])=>{
           const items=ordered.filter(b=>b.status===st);
-          const inner = (st==='want'&&items.length?tbrStackHTML(items.length):'')+(items.length ? items.map((b,i)=>bookHTML(b,i===0)).join('') : (VIEW_MODE?'':ghostHTML));
+          const inner = V3_MODE&&st==='reading'&&items.length
+            ? items.slice(1,3).map(b=>bookHTML(b,false)).join('')+v3ThresholdHTML(items[0])+'<span class="v3-world-slot" aria-hidden="true"></span>'+items.slice(3).map(b=>bookHTML(b,false)).join('')
+            : V3_MODE&&(st==='read'||st==='dnf')&&items.length
+              ? items.map(b=>bookHTML(b,false)).join('')
+            : (st==='want'&&items.length&&!V3_MODE?tbrStackHTML(items.length):'')+(items.length ? items.map((b,i)=>bookHTML(b,i===0)).join('') : (VIEW_MODE?'':ghostHTML));
           const overflow=items.length>7;
           const displayLabel=st==='want'?'TBR':st==='dnf'?'DNF':label;
           const shelfSub=st==='want'?'<span class="shelf-sub">Want to Read</span>':st==='dnf'?'<span class="shelf-sub">Laid to Rest</span>':'';
-          return '<div class="shelfrow'+(overflow?' has-overflow':'')+'" data-shelf-status="'+st+'"><div class="plate">'+displayLabel+' '+shelfSub+' <span class="ct">'+items.length+'</span>'
+          return '<div class="shelfrow'+(overflow?' has-overflow':'')+(V3_MODE&&items.length<=7?' is-curated':'')+(V3_MODE&&st==='dnf'&&dnfLightOn?' dnf-lit':'')+'" data-shelf-status="'+st+'" data-count="'+items.length+'"><div class="plate">'+displayLabel+' '+shelfSub+' <span class="ct">'+items.length+'</span>'
             +'<button class="shelf-door" data-enter-shelf="'+st+'">Enter world ↗</button></div>'
-            + '<div class="row"><div class="books" data-status="'+st+'" aria-label="'+esc(label)+', '+items.length+' books">'+inner+'</div></div><div class="plank"></div></div>';
+            +v3RitualHTML(st)+'<div class="row"><div class="books" data-status="'+st+'" aria-label="'+esc(label)+', '+items.length+' books">'+inner+'</div></div><div class="plank"></div></div>';
         }).join('')
       + '</div></div>'
       + (total?'<p class="hint">✋ Drag books to reorder · tap a shelf label or ledge to enter its world</p>':'')
       + '</div><aside class="library-rail">'
-      + '<section class="rail-card"><div class="rail-kicker">The Library Atelier</div><h3>The bookcase is collectible, too.</h3>'
-      + '<p>Choose a wide heirloom cabinet, a moon arch, a gothic tower, or open gallery shelves. Then layer in finishes, plaques, gilded trim, and atmosphere.</p>'
-      + '<button class="rail-btn" id="openAtelier">Style this library</button></section>'
+      + '<section class="rail-card"><div class="rail-kicker">The Library Atelier</div><h3>One heirloom is live. More are being forged.</h3>'
+      + '<p>The Founder Heirloom is ready now. New cabinets, finishes, crests, and collected details will arrive one at a time — only when each one belongs in this world.</p>'
+      + '<button class="rail-btn" id="openAtelier">Visit the Atelier</button></section>'
       + '<section class="rail-card world-card"><span class="world-live">Live and touchable</span><div class="rail-kicker">The Moonlit Reading Room</div><h3>This is a world, not a skin.</h3>'
       + '<p>Change the hour, wake hidden visitors, alter the light, and bring the books from this shelf with you.</p>'
       + '<button class="rail-link" id="openReadingWorld">Enter the reading world →</button></section>'
@@ -1207,6 +1249,17 @@
     const liveWorld=$('openLiveWorld'); if(liveWorld) liveWorld.onclick=()=>enterShelf('reading');
     const tbrWorld=$('openTbrWorld'); if(tbrWorld) tbrWorld.onclick=()=>enterShelf('want');
     document.querySelectorAll('[data-open-tbr]').forEach(el=>el.onclick=()=>enterShelf('want'));
+    document.querySelectorAll('[data-threshold-book]').forEach(el=>el.onclick=()=>{ if(el._suppress){el._suppress=false;return;} openBook(el.dataset.thresholdBook); });
+    const dnfSwitch=document.querySelector('.dnf-light-switch');
+    if(dnfSwitch) dnfSwitch.onclick=e=>{
+      e.stopPropagation();
+      dnfLightOn=!dnfLightOn;
+      const row=dnfSwitch.closest('.shelfrow');
+      row.classList.toggle('dnf-lit',dnfLightOn);
+      dnfSwitch.setAttribute('aria-pressed',String(dnfLightOn));
+      dnfSwitch.setAttribute('aria-label','Turn DNF shelf light '+(dnfLightOn?'off':'on'));
+      toast(dnfLightOn?'The resting shelf glows again':'The resting shelf goes quiet');
+    };
     document.querySelectorAll('[data-enter-shelf]').forEach(el=>el.onclick=e=>{ e.stopPropagation(); enterShelf(el.dataset.enterShelf); });
     document.querySelectorAll('#stage .book').forEach(el=>{
       const key=el.dataset.key; let lp=null;
@@ -1224,40 +1277,72 @@
   }
 
   // ── DRAG & DROP REORDER (desktop) ──
-  let draggedEl=null;
+  const DND_ITEM='.book,[data-threshold-book]';
+  let draggedEl=null, dragMarker='';
+  const dragKey=el=>el ? (el.dataset.key||el.dataset.thresholdBook||'') : '';
+  function captureBookPositions(){
+    return new Map([...document.querySelectorAll('#stage '+DND_ITEM)].map(el=>[dragKey(el),el.getBoundingClientRect()]));
+  }
+  function animateBookPositions(before, skipKey=''){
+    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    document.querySelectorAll('#stage '+DND_ITEM).forEach(el=>{
+      const key=dragKey(el), old=before.get(key); if(!old||key===skipKey) return;
+      const now=el.getBoundingClientRect(), dx=old.left-now.left, dy=old.top-now.top;
+      if(Math.abs(dx)<1&&Math.abs(dy)<1) return;
+      el.animate([{transform:'translate('+dx+'px,'+dy+'px)'},{transform:'translate(0,0)'}],{duration:280,easing:'cubic-bezier(.2,.78,.22,1)'});
+    });
+  }
   function attachDnD(){
-    document.querySelectorAll('#stage .book').forEach(el=>{
-      el.addEventListener('dragstart', ()=>{ draggedEl=el; setTimeout(()=>el.classList.add('dragging'),0); });
+    document.querySelectorAll('#stage '+DND_ITEM).forEach(el=>{
+      el.addEventListener('dragstart', e=>{
+        draggedEl=el; dragMarker=''; el._suppress=true;
+        if(e.dataTransfer){ e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',dragKey(el)); }
+        document.body.classList.add('book-drag-active');
+        setTimeout(()=>el.classList.add('dragging'),0);
+      });
       el.addEventListener('dragend', onDragEnd);
     });
     document.querySelectorAll('#stage .books').forEach(c=>{
       c.addEventListener('dragover', e=>{
         e.preventDefault();
         if(!draggedEl) return;
+        if(e.dataTransfer) e.dataTransfer.dropEffect='move';
         const after=dragAfterElement(c, e.clientX);
+        const marker=c.dataset.status+'|'+(after?dragKey(after):'end');
+        if(marker===dragMarker) return;
+        dragMarker=marker;
+        const before=captureBookPositions();
+        document.querySelectorAll('#stage .books.drag-over').forEach(row=>row.classList.remove('drag-over'));
+        c.classList.add('drag-over');
         if(after==null) c.appendChild(draggedEl); else c.insertBefore(draggedEl, after);
+        animateBookPositions(before,dragKey(draggedEl));
       });
+      c.addEventListener('drop',e=>{ e.preventDefault(); c.classList.add('drop-received'); });
     });
   }
   function dragAfterElement(container, x){
-    const els=[...container.querySelectorAll('.book:not(.dragging)')];
+    const els=[...container.querySelectorAll(DND_ITEM)].filter(el=>el!==draggedEl);
     let closest={offset:-Infinity, el:null};
     for(const el of els){ const box=el.getBoundingClientRect(); const offset=x-(box.left+box.width/2); if(offset<0 && offset>closest.offset) closest={offset, el}; }
     return closest.el;
   }
   async function onDragEnd(){
+    const movedKey=dragKey(draggedEl), before=captureBookPositions();
     if(draggedEl) draggedEl.classList.remove('dragging');
-    draggedEl=null;
+    document.body.classList.remove('book-drag-active');
+    document.querySelectorAll('#stage .books.drag-over,#stage .books.drop-received').forEach(row=>row.classList.remove('drag-over','drop-received'));
     const changed=commitOrder();
     renderRoom();
+    requestAnimationFrame(()=>animateBookPositions(before,movedKey));
+    draggedEl=null; dragMarker='';
     if(changed.length) await persistOrder(changed);
   }
   function commitOrder(){
     let idx=0; const changed=[];
     document.querySelectorAll('#stage .books').forEach(c=>{
       const status=c.dataset.status;
-      c.querySelectorAll('.book').forEach(el=>{
-        const row=shelf.find(b=>b.book_key===el.dataset.key);
+      c.querySelectorAll(DND_ITEM).forEach(el=>{
+        const row=shelf.find(b=>b.book_key===dragKey(el));
         if(row && (row.sort_order!==idx || row.status!==status)){ row.sort_order=idx; row.status=status; changed.push(row); }
         idx++;
       });
@@ -1404,25 +1489,41 @@
     applyCrestStyle(key, !(REVIEW_MODE||isPremium));
   }
   function buildThemeSheet(){
+    if(V3_MODE){
+      const note=$('atelierNote');
+      if(note) note.textContent='The Founder Heirloom is live. The Atelier is now being rebuilt around this cabinet, one finished silhouette and detail at a time. Locked pieces are previews of what arrives next.';
+    }
     $('cabinetgrid').innerHTML=CABINET_STYLES.map(c=>
-      '<button class="cabinetcard '+(cabinetStyle===c.key?'on':'')+'" data-cabinet="'+c.key+'">'
+      '<button class="cabinetcard '+(cabinetStyle===c.key?'on':'')+(V3_MODE&&c.key!=='grand-heirloom'?' atelier-locked':'')+'" data-cabinet="'+c.key+'" '+(V3_MODE&&c.key!=='grand-heirloom'?'disabled aria-disabled="true"':'')+'>'
       +'<span class="cabinet-shape '+c.shape+'" style="--cab:'+THEMES.find(t=>t.id===theme).color+'"></span>'
-      +'<strong>'+c.name+'</strong><small>'+c.desc+'</small><small class="cab-price trial-mark">'+lockedAccessLabel(c.premium)+'</small></button>'
+      +'<strong>'+(V3_MODE&&c.key==='grand-heirloom'?'Founder Heirloom':c.name)+'</strong><small>'+c.desc+'</small><small class="cab-price trial-mark">'+(V3_MODE?(c.key==='grand-heirloom'?'● Live now':'Coming soon'):lockedAccessLabel(c.premium))+'</small></button>'
     ).join('');
     $('themegrid').innerHTML = THEMES.map(t=>
-      '<div class="themecard '+(t.id===theme?'on':'')+'" data-t="'+t.id+'">'
+      '<button type="button" class="themecard '+(t.id===theme?'on':'')+(V3_MODE&&t.id!=='founder'?' atelier-locked':'')+'" data-t="'+t.id+'" '+(V3_MODE&&t.id!=='founder'?'disabled aria-disabled="true"':'')+'>'
       + '<span class="dot" style="background:'+t.color+'"></span>'
-      + '<div><div class="tn">'+t.name+'</div><div class="tdesc">'+t.desc+'</div><div class="lock trial-mark">'+themeAccessLabel()+'</div></div></div>'
+      + '<span><span class="tn">'+t.name+'</span><span class="tdesc">'+t.desc+'</span><span class="lock trial-mark">'+(V3_MODE?(t.id==='founder'?'● Live now':'Coming soon'):themeAccessLabel())+'</span></span></button>'
     ).join('');
     $('crestgrid').innerHTML=CREST_STYLES.map(c=>{
       const founderLocked=c.founderOnly&&!founderNumber&&!REVIEW_MODE;
-      const accessLabel=c.founderOnly?(founderLocked?'Original 100 only':'✦ Original 100 unlocked'):lockedAccessLabel(c.premium);
-      return '<button class="crestcard '+(crestStyle===c.key?'on':'')+'" data-crest-style="'+c.key+'" '+(founderLocked?'disabled':'')+'>'
+      const v3Locked=V3_MODE&&(c.key!=='founders-key'||founderLocked);
+      const accessLabel=V3_MODE?(c.key==='founders-key'?(founderLocked?'Original 100 only':'● Live · Original 100'):'Coming soon'):(c.founderOnly?(founderLocked?'Original 100 only':'✦ Original 100 unlocked'):lockedAccessLabel(c.premium));
+      return '<button class="crestcard '+(crestStyle===c.key?'on':'')+(v3Locked?' atelier-locked':'')+'" data-crest-style="'+c.key+'" '+(founderLocked||v3Locked?'disabled aria-disabled="true"':'')+'>'
         +'<span class="crest-preview"><img src="'+c.src+'" alt="" aria-hidden="true" loading="lazy"></span><span class="crest-copy-card"><strong>'+c.name+'</strong><small>'+c.desc+'</small><em>'+accessLabel+'</em></span></button>';
     }).join('');
-    $('detailgrid').innerHTML=LIBRARY_DETAILS.map(d=>'<button class="detailcard '+(libraryDetail===d.key?'on':'')+'" data-library-detail="'+d.key+'">'
-      +'<span>'+d.icon+'</span><strong>'+d.name+'</strong><small class="trial-mark">'+lockedAccessLabel(d.premium)+'</small></button>').join('');
-    const unlockBtn=$('atelierUnlock'); if(unlockBtn) unlockBtn.style.display=(isPremium||REVIEW_MODE)?'none':'block';
+    $('detailgrid').innerHTML=LIBRARY_DETAILS.map(d=>'<button class="detailcard '+(libraryDetail===d.key?'on':'')+(V3_MODE?' atelier-locked':'')+'" data-library-detail="'+d.key+'" '+(V3_MODE?'disabled aria-disabled="true"':'')+'>'
+      +'<span>'+d.icon+'</span><strong>'+d.name+'</strong><small class="trial-mark">'+(V3_MODE?'Coming soon':lockedAccessLabel(d.premium))+'</small></button>').join('');
+    const unlockBtn=$('atelierUnlock');
+    if(unlockBtn){
+      if(V3_MODE){
+        unlockBtn.style.display='block';
+        unlockBtn.disabled=true;
+        unlockBtn.textContent='✦ New Atelier pieces are being crafted — coming soon';
+      } else {
+        unlockBtn.disabled=false;
+        unlockBtn.textContent='🔒 Unlock full customization — coming soon';
+        unlockBtn.style.display=(isPremium||REVIEW_MODE)?'none':'block';
+      }
+    }
     document.querySelectorAll('#cabinetgrid [data-cabinet]').forEach(c=>c.onclick=()=>setCabinetStyle(c.dataset.cabinet));
     document.querySelectorAll('#themegrid .themecard').forEach(c=>c.onclick=()=>{
       const id=c.dataset.t;
