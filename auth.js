@@ -219,6 +219,11 @@
       });
       document.addEventListener('click', e => { if(guides.open && !guides.contains(e.target)) guides.open = false; });
       document.addEventListener('keydown', e => { if(e.key === 'Escape' && guides.open){ guides.open = false; guides.querySelector('summary').focus(); } });
+      // Close the dropdown the instant a destination is chosen — desktop nav is
+      // immediate, and on mobile it stops the panel lingering over the page.
+      guides.querySelectorAll('.sh-guides-menu a').forEach(a => {
+        a.addEventListener('click', () => { guides.open = false; });
+      });
     }
     renderNavAccount();
   }
@@ -465,6 +470,14 @@
       header{transition:transform .28s cubic-bezier(.4,0,.2,1);will-change:transform}
       header.sh-header-hidden{transform:translateY(-100%)}
       @media(prefers-reduced-motion:reduce){header{transition:none}}
+      /* Canonical header — single source of truth so every page matches the
+         guides-page spacing (generous, full-width) and is sticky, so the
+         auto-hide above applies uniformly everywhere. */
+      header{position:sticky;top:0;z-index:60;border-bottom:1px solid var(--line,#2a1d22);
+        background:rgba(18,11,18,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+      header .nav{max-width:none;margin:0;min-height:74px;gap:1.25rem;justify-content:space-between;
+        padding-left:clamp(1.2rem,4vw,4.25rem);padding-right:clamp(1.2rem,4vw,4.25rem)}
+      header .logo,header .brand{font-size:1.4rem}
       .sh-totop{position:fixed;right:16px;bottom:16px;z-index:60;width:46px;height:46px;border-radius:50%;
         background:var(--grad,linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40));color:#1a0c10;border:0;cursor:pointer;
         font-size:1.25rem;font-weight:800;line-height:1;font-family:inherit;
@@ -566,7 +579,8 @@
       .sh-hamburger{display:none;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;
         background:none;border:1px solid var(--line,#2a1d22);color:var(--cream,#f4e8e3);font-size:1.3rem;line-height:1;cursor:pointer;flex:0 0 auto}
       @media(max-width:880px){
-        header .nav{flex-wrap:nowrap;height:auto;min-height:54px;gap:8px;
+        header .nav{flex-wrap:nowrap;height:auto;min-height:58px;gap:8px;
+          padding-left:16px;padding-right:16px;
           padding-top:calc(8px + env(safe-area-inset-top,0px));padding-bottom:8px}
         header .logo{font-size:1.45rem;margin-right:auto}
         header .sh-hamburger{width:38px;height:38px;border-radius:11px;font-size:1.15rem}
@@ -604,7 +618,13 @@
     burger.className='sh-hamburger'; burger.type='button';
     burger.setAttribute('aria-label','Menu'); burger.setAttribute('aria-expanded','false');
     burger.textContent='☰';
-    const setOpen=(open)=>{ links.classList.toggle('sh-open',open); burger.textContent=open?'✕':'☰'; burger.setAttribute('aria-expanded',open?'true':'false'); };
+    const setOpen=(open)=>{
+      links.classList.toggle('sh-open',open);
+      // Collapse the nested Guides submenu when the drawer closes, so it never
+      // reopens already-expanded next time.
+      if(!open){ const d=links.querySelector('.sh-guides[open]'); if(d) d.open=false; }
+      burger.textContent=open?'✕':'☰'; burger.setAttribute('aria-expanded',open?'true':'false');
+    };
     burger.addEventListener('click',(e)=>{
       e.stopPropagation();
       const opening = !links.classList.contains('sh-open');

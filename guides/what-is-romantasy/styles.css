@@ -36,7 +36,7 @@ a { color: inherit; }
 
 .site-header {
   border-bottom: 1px solid var(--line);
-  position: relative; z-index: 20; background: rgba(18, 11, 18, .88); backdrop-filter: blur(20px);
+  position: sticky; top: 0; z-index: 60; background: rgba(18, 11, 18, .88); backdrop-filter: blur(20px);
 }
 .site-header .nav {
   min-height: 74px; display: flex; align-items: center; justify-content: space-between;
