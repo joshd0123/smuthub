@@ -478,3 +478,136 @@ body.v3-bookshelf .interior-offer .offer-dismiss:hover{color:#f0ded8;background:
   body.v3-bookshelf .interior-offer .row{grid-template-columns:1fr}
   body.v3-bookshelf .interior-offer .offer-dismiss{grid-column:1}
 }
+
+/* PREMIUM WORLD POLISH
+   The cabinet, access explanation and lighting controls read as one object. */
+body.v3-bookshelf .library-layout{display:grid;grid-template-columns:minmax(0,860px);row-gap:0}
+body.v3-bookshelf .library-stats{grid-column:1;grid-row:1}
+body.v3-bookshelf .world-ribbon{grid-column:1;grid-row:2}
+body.v3-bookshelf .bookshelf-tier-note{grid-column:1;grid-row:3}
+body.v3-bookshelf .library-light-console{grid-column:1;grid-row:4}
+body.v3-bookshelf .library-main{position:relative;grid-column:1;grid-row:5;isolation:isolate}
+body.v3-bookshelf .library-main::before{content:"";position:absolute;z-index:0;left:50%;top:-1%;bottom:-1%;width:min(130vw,1500px);transform:translateX(-50%);pointer-events:none;background:radial-gradient(ellipse at center,#000 0 42%,rgba(0,0,0,.82) 58%,rgba(0,0,0,.34) 72%,transparent 86%)}
+body.v3-bookshelf .library-rail{grid-column:1;grid-row:6;grid-template-columns:repeat(2,minmax(0,1fr));padding-top:0!important;margin-top:18px}
+body.v3-bookshelf .roomwrap.library-mode{background:#000}
+body.v3-bookshelf .roomwrap.library-mode::before{opacity:0}
+body.v3-bookshelf .roomwrap.library-mode::after{background:radial-gradient(70% 28% at 50% 12%,rgba(112,48,40,.17),transparent 74%),linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.22) 68%,#000 100%)}
+
+body.v3-bookshelf .bookshelf-tier-note{width:min(100%,700px);margin:-7px auto 12px;padding:0 10px;display:flex;align-items:center;justify-content:center;gap:12px;color:rgba(237,224,216,.66);font:650 .66rem/1.35 'Hanken Grotesk';text-align:center}
+body.v3-bookshelf .bookshelf-tier-note strong{color:#e5c77f}
+body.v3-bookshelf .bookshelf-tier-note a,body.v3-bookshelf .bookshelf-tier-note button{padding:0;border:0;background:none;color:#e8c978;font:800 .66rem 'Hanken Grotesk';white-space:nowrap;text-decoration:none;cursor:pointer}
+body.v3-bookshelf .bookshelf-tier-note a:hover,body.v3-bookshelf .bookshelf-tier-note button:hover{color:#fff0bd;text-decoration:underline;text-underline-offset:3px}
+
+body.v3-bookshelf .library-light-console{position:relative;z-index:8;width:min(100%,700px);margin:0 auto 11px;padding:9px 11px 9px 14px;display:flex;align-items:center;justify-content:space-between;gap:14px;border:1px solid rgba(220,178,91,.23);border-radius:10px;background:linear-gradient(110deg,rgba(34,15,19,.94),rgba(10,8,11,.94));box-shadow:0 9px 22px rgba(0,0,0,.3),inset 0 1px rgba(255,235,192,.04)}
+body.v3-bookshelf .library-light-console span{display:grid;text-align:left}
+body.v3-bookshelf .library-light-console small{color:#cda75e;font:800 .51rem 'Hanken Grotesk';letter-spacing:.13em;text-transform:uppercase}
+body.v3-bookshelf .library-light-console strong{margin-top:2px;color:#e9ded7;font:600 .72rem 'Fraunces'}
+body.v3-bookshelf #masterShelfLight{display:flex;align-items:center;gap:8px;padding:.58em .8em;border:1px solid rgba(230,190,105,.42);border-radius:7px;background:#11090c;color:#ebce88;font:800 .61rem 'Hanken Grotesk';letter-spacing:.03em;cursor:pointer;white-space:nowrap}
+body.v3-bookshelf #masterShelfLight i,body.v3-bookshelf .shelf-light-toggle i{display:block;width:8px;height:8px;border-radius:50%;background:#edcc75;box-shadow:0 0 5px #ffd982,0 0 13px rgba(239,189,78,.66)}
+body.v3-bookshelf #masterShelfLight[aria-pressed="false"] i,body.v3-bookshelf .shelf-light-toggle[aria-pressed="false"] i{background:#3c3032;box-shadow:inset 0 0 0 1px #160d0f}
+
+/* The source illustration keeps its native ratio and sits farther right.
+   The left darkness becomes usable space instead of a stretched scene. */
+body.v3-bookshelf .shelfrow[data-shelf-status="reading"]::before{
+  background:
+    linear-gradient(180deg,rgba(5,2,4,.22),transparent 18% 82%,rgba(3,1,2,.22)),
+    linear-gradient(90deg,rgba(8,3,5,.52) 0%,rgba(8,3,5,.12) 28%,transparent 47%,rgba(5,2,4,.05) 100%),
+    url('/bookshelf/assets/v3/reading-world-layer-v1.webp') right center/auto 100% no-repeat,
+    #080405
+}
+
+/* The cabinet JPG has a black matte around its silhouette. Lighten blending
+   lets the page atmosphere replace only that matte while preserving the wood. */
+body.v3-bookshelf .bookcase{z-index:1;mix-blend-mode:lighten}
+
+/* Launch-safe open book: cover, title, author, personal rating and one action. */
+body.v3-bookshelf .v3-threshold-page{justify-content:center;padding:9% 8% 6% 10%}
+body.v3-bookshelf .v3-threshold-page small{font-size:.3rem}
+body.v3-bookshelf .v3-threshold-page strong{display:-webkit-box;max-width:100%;margin:3px 0 2px;font-size:clamp(.6rem,1.2vw,.74rem);line-height:1.04;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+body.v3-bookshelf .v3-threshold-page em{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.37rem}
+body.v3-bookshelf .v3-threshold-score{display:grid!important;gap:1px;margin-top:7px}
+body.v3-bookshelf .v3-threshold-score i{font-size:.29rem}
+body.v3-bookshelf .v3-threshold-score b{font-size:.48rem;line-height:1.1}
+body.v3-bookshelf .v3-threshold-detail{display:none!important}
+body.v3-bookshelf .v3-threshold-page .v3-threshold-enter{margin-top:7px;font-size:.38rem}
+
+/* Long finished shelves preserve the archive behind them. Larger, varied
+   spines move horizontally instead of compressing into one solid wall. */
+body.v3-bookshelf .shelfrow[data-shelf-status="read"] .books{gap:clamp(11px,1.55vw,15px);padding-left:5%;padding-right:14%;scroll-padding-inline:5%}
+body.v3-bookshelf .shelfrow[data-shelf-status="read"] .book.spine{width:clamp(27px,3.1vw,28px)}
+body.v3-bookshelf .shelfrow[data-shelf-status="read"] .book.spine .spineinner,
+body.v3-bookshelf .shelfrow[data-shelf-status="read"] .book.spine:nth-child(n) .spineinner{height:clamp(142px,19vw,176px)!important}
+
+/* Small collected objects sit behind the live books to add depth without
+   stealing their click or drag targets. */
+body.v3-bookshelf .v3-shelf-charms{position:absolute;z-index:1;left:4px;right:4px;top:41px;bottom:19px;overflow:hidden;pointer-events:none}
+body.v3-bookshelf .v3-shelf-charms i{position:absolute;display:block;transform-origin:50% 0}
+body.v3-bookshelf .charms-read .charm-fairy{top:0;width:18px;height:92px;border-left:1px solid rgba(222,184,103,.32);background:radial-gradient(circle at 0 100%,#fff0b2 0 3px,#d49f46 4px,transparent 7px);filter:drop-shadow(0 0 7px rgba(246,200,91,.54));animation:v3CharmSway 6s ease-in-out infinite}
+body.v3-bookshelf .charms-read .charm-fairy::after{content:"";position:absolute;left:-8px;bottom:-4px;width:16px;height:9px;border:1px solid rgba(238,221,172,.44);border-radius:90% 10%;background:rgba(220,234,225,.1);transform:rotate(28deg)}
+body.v3-bookshelf .charms-read .charm-fairy.one{left:42%}.v3-bookshelf .charms-read .charm-fairy.two{left:74%;height:70px;animation-delay:-3.1s}
+body.v3-bookshelf .charms-read .charm-star{right:10%;top:0;width:1px;height:54px;border-left:1px solid rgba(219,177,91,.34)}
+body.v3-bookshelf .charms-read .charm-star::after{content:"✦";position:absolute;left:-6px;bottom:-11px;color:#dbb65f;font-size:.75rem;text-shadow:0 0 10px rgba(238,190,83,.62)}
+body.v3-bookshelf .charms-want .charm-moon{left:55%;top:0;width:1px;height:64px;border-left:1px solid rgba(211,192,142,.28)}
+body.v3-bookshelf .charms-want .charm-moon::after{content:"☾";position:absolute;left:-7px;bottom:-12px;color:#d7d9d6;font-size:1rem;text-shadow:0 0 12px rgba(134,176,220,.72)}
+body.v3-bookshelf .charms-want .charm-glass{right:13%;bottom:8%;width:24px;height:52px;border:1px solid rgba(213,188,129,.32);border-radius:48% 48% 9px 9px;background:radial-gradient(circle at 50% 70%,rgba(143,192,204,.21),transparent 48%);box-shadow:inset 0 0 13px rgba(141,181,201,.12)}
+body.v3-bookshelf .charms-reading .charm-key{left:9%;top:0;width:1px;height:58px;border-left:1px solid rgba(216,174,86,.28)}
+body.v3-bookshelf .charms-reading .charm-key::after{content:"⚿";position:absolute;left:-7px;bottom:-13px;color:#c8994c;font-size:.9rem;text-shadow:0 0 8px rgba(223,170,67,.45)}
+body.v3-bookshelf .charms-reading .charm-mote{right:17%;top:33%;width:5px;height:5px;border-radius:50%;background:#ffdc83;box-shadow:0 0 8px #f3c461,18px 22px 0 -1px #dba64d,-14px 48px 0 -1px #efd27f}
+body.v3-bookshelf .charms-dnf .charm-rose{right:15%;top:0;width:1px;height:71px;border-left:1px solid rgba(139,74,65,.38)}
+body.v3-bookshelf .charms-dnf .charm-rose::after{content:"✿";position:absolute;left:-7px;bottom:-13px;color:#6f2435;font-size:1rem;text-shadow:0 0 7px rgba(149,35,61,.42)}
+body.v3-bookshelf .charms-dnf{z-index:5}
+body.v3-bookshelf .charms-dnf .dnf-lamp-mask{right:-1%;top:0;width:30%;height:52%;border:0;background:radial-gradient(circle at 77% 24%,#030304 0 15%,rgba(2,2,3,.98) 27%,rgba(2,2,3,.82) 46%,transparent 73%);filter:blur(2px);opacity:0;transition:opacity .5s}
+body.v3-bookshelf .shelfrow[data-shelf-status="dnf"]:not(.shelf-lit) .dnf-lamp-mask{opacity:1}
+@keyframes v3CharmSway{0%,100%{transform:rotate(-2.2deg)}50%{transform:rotate(2.4deg)}}
+
+/* Every shelf can settle independently; the master control simply changes
+   all four states and is never a prerequisite for a single light. */
+body.v3-bookshelf .shelf-light-toggle{margin-left:auto;padding:.36em .5em;display:flex;align-items:center;gap:5px;border:1px solid rgba(218,176,91,.34);border-radius:6px;background:rgba(10,7,9,.72);color:#d9bb78;font:800 .45em 'Hanken Grotesk';letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+body.v3-bookshelf .shelf-light-toggle+.shelf-door{margin-left:4px}
+body.v3-bookshelf .shelfrow .books,body.v3-bookshelf .shelfrow .v3-ritual,body.v3-bookshelf .shelfrow .v3-shelf-charms{transition:filter .5s ease,opacity .5s ease}
+body.v3-bookshelf .shelfrow:not(.shelf-lit) .books{filter:brightness(.5) saturate(.64);opacity:.56}
+body.v3-bookshelf .shelfrow:not(.shelf-lit) .v3-ritual{filter:contrast(1.08) saturate(1.08) brightness(1.04);opacity:1}
+body.v3-bookshelf .shelfrow:not(.shelf-lit) .v3-shelf-charms{filter:brightness(1.24) saturate(1.08);opacity:.9}
+body.v3-bookshelf .shelfrow:not(.shelf-lit)::after{content:"";display:block;position:absolute;z-index:1;inset:0;background:radial-gradient(58% 72% at 55% 44%,rgba(231,181,81,.07),transparent 76%);pointer-events:none}
+body.v3-bookshelf .shelfrow[data-shelf-status="reading"]::before{transition:filter .5s ease}
+body.v3-bookshelf .shelfrow[data-shelf-status="reading"]:not(.shelf-lit)::before{filter:brightness(1.08) saturate(1.12) contrast(1.04)}
+body.v3-bookshelf .shelfrow[data-shelf-status="want"]:not(.shelf-lit)::after{background:radial-gradient(58% 76% at 62% 48%,rgba(112,170,211,.1),transparent 74%)}
+body.v3-bookshelf .shelfrow[data-shelf-status="read"]:not(.shelf-lit)::after{background:radial-gradient(66% 82% at 53% 42%,rgba(235,181,74,.11),transparent 75%)}
+body.v3-bookshelf .shelfrow[data-shelf-status="dnf"]:not(.shelf-lit)::after{background:radial-gradient(34% 58% at 92% 31%,rgba(0,0,0,.97) 0 18%,rgba(0,0,0,.76) 42%,transparent 72%),linear-gradient(90deg,transparent 48%,rgba(0,0,0,.28));}
+body.v3-bookshelf .shelf-light-toggle[aria-pressed="true"]{border-color:rgba(234,199,123,.62);color:#f0d591;box-shadow:0 0 12px rgba(224,171,70,.1)}
+body.v3-bookshelf .shelfrow[data-shelf-status="dnf"].shelf-lit .books{filter:none;opacity:1}
+body.v3-bookshelf .shelfrow[data-shelf-status="dnf"].shelf-lit .v3-dnf-ritual{filter:none;opacity:1}
+body.v3-bookshelf .shelfrow[data-shelf-status="dnf"].shelf-lit .v3-lantern-bloom{opacity:1}
+
+@media(max-width:760px){
+  body.v3-bookshelf .library-rail{grid-template-columns:1fr}
+  body.v3-bookshelf .bookshelf-tier-note{align-items:flex-start;justify-content:space-between;text-align:left;font-size:.58rem}
+  body.v3-bookshelf .library-light-console{margin-left:7px;margin-right:7px;width:calc(100% - 14px)}
+  body.v3-bookshelf .shelf-light-toggle span{display:none}
+  body.v3-bookshelf .shelf-light-toggle{padding:.32em}
+  body.v3-bookshelf .shelfrow[data-shelf-status="read"] .books{gap:6px;padding-left:4%;padding-right:12%}
+  body.v3-bookshelf .shelfrow[data-shelf-status="read"] .book.spine{width:clamp(20px,5.4vw,25px)}
+  body.v3-bookshelf .shelfrow[data-shelf-status="read"] .book.spine .spineinner,
+  body.v3-bookshelf .shelfrow[data-shelf-status="read"] .book.spine:nth-child(n) .spineinner{height:clamp(88px,23vw,112px)!important}
+}
+
+@media(max-width:460px){
+  body.v3-bookshelf .bookshelf-tier-note{display:grid;grid-template-columns:1fr auto;margin-top:-5px;padding:0 8px;gap:7px}
+  body.v3-bookshelf .library-light-console{padding:8px 9px}.v3-bookshelf .library-light-console strong{font-size:.62rem}.v3-bookshelf #masterShelfLight{font-size:.53rem}
+  body.v3-bookshelf .shelf-door{margin-left:3px}
+  body.v3-bookshelf .shelfrow[data-shelf-status="read"] .books{gap:4px}
+  body.v3-bookshelf .v3-threshold-score i{display:block}
+}
+
+/* MOBILE CABINET FOCUS
+   Premium sacrifices a little outer frame to give the living worlds more
+   physical space. Free keeps more of the heirloom exterior it includes. */
+@media(max-width:600px){
+  body.v3-bookshelf .library-layout{width:100%;max-width:100%}
+  body.v3-bookshelf .library-main{width:100vw;max-width:100vw;margin-left:calc(50% - 50vw);overflow:hidden}
+  body.v3-bookshelf .bookcase{left:50%;max-width:none;margin:0;transform:translateX(-50%);transform-origin:50% 0}
+  body.v3-bookshelf .bookcase.worlds-unlocked{width:128vw}
+  body.v3-bookshelf .bookcase.worlds-locked{width:108vw}
+  body.v3-bookshelf .library-main::before{width:150vw}
+  body.v3-bookshelf .hint{padding-left:10px;padding-right:10px;text-align:center}
+}

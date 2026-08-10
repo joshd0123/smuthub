@@ -909,7 +909,12 @@
   try{ const savedCrest=localStorage.getItem(CREST_STORAGE_KEY); if(CREST_STYLES.some(c=>c.key===savedCrest)) crestStyle=savedCrest; }catch(_){}
   let custom={};
   let ownedProducts=new Set(), accountTrials={};
-  let shelfIndex=0, selectedProp=null, drawerTab='worlds', previewWorld=null, dnfLightOn=true;
+  const SHELF_LIGHTS_KEY='sh_bookshelf_lights_v1';
+  let shelfIndex=0, selectedProp=null, drawerTab='worlds', previewWorld=null;
+  let shelfLights=(()=>{
+    const fallback={reading:true,want:true,read:true,dnf:true};
+    try{return {...fallback,...JSON.parse(localStorage.getItem(SHELF_LIGHTS_KEY)||'{}')};}catch(_){return fallback;}
+  })();
   let shelfPages={reading:0,want:0,read:0,dnf:0}, pageDirection=0, collectionOpen=false, collectionQuery='';
   const WORLD_PROGRESS_KEY='sh_moonlit_progress_v2';
   const freshWorldState=(saved={})=>{
@@ -1153,15 +1158,13 @@
     const src=coverSrc(b);
     const cover=src?'<img src="'+esc(src)+'" alt="" onerror="this.style.display=\'none\'">':'';
     const byline=b.author?'by '+esc(b.author):'from your private library';
-    const heat=spiceMap[b.book_key]||0;
     const rawRating=Number(b.user_rating??b.rating??b.stars);
     const userRating=Number.isFinite(rawRating)&&rawRating>0?Math.min(5,rawRating):(REVIEW_MODE?4.8:null);
-    return '<button class="v3-threshold" type="button" draggable="'+(VIEW_MODE?'false':'true')+'" data-key="'+esc(b.book_key)+'" data-threshold-book="'+esc(b.book_key)+'" aria-label="Open '+esc(b.title||'this book')+' and enter its threshold">'
+    return '<button class="v3-threshold" type="button" draggable="'+(VIEW_MODE?'false':'true')+'" data-key="'+esc(b.book_key)+'" data-threshold-book="'+esc(b.book_key)+'" aria-label="Open '+esc(b.title||'this book')+'">'
       +'<span class="v3-threshold-pages"><span class="v3-threshold-cover">'+cover+'</span>'
       +'<span class="v3-threshold-page"><small>Currently reading</small><strong>'+esc(b.title||'Untitled')+'</strong><em>'+byline+'</em>'
       +'<span class="v3-threshold-score"><i>Your rating</i><b>'+(userRating?userRating.toFixed(1)+' ★':'Not rated')+'</b></span>'
-      +'<span class="v3-threshold-detail">'+(heat?'Spice rating · '+heat+'/5':'Spice rating · Unrated')+'</span>'
-      +'<span class="v3-threshold-enter">Enter this world →</span></span>'
+      +'<span class="v3-threshold-enter">Open book →</span></span>'
       +'<img class="v3-threshold-shell" src="/bookshelf/assets/v3/open-book-shell-v1.png" alt="" aria-hidden="true"></span></button>';
   }
 
@@ -1169,9 +1172,16 @@
     if(!V3_MODE||!hasInteriorAccess()) return '';
     if(status==='want') return '<div class="v3-ritual v3-tbr-ritual" aria-hidden="true"><span class="v3-depth-glass"></span><span class="v3-mist one"></span><span class="v3-mist two"></span></div>';
     if(status==='read') return '<div class="v3-ritual v3-read-ritual" aria-hidden="true"><span class="v3-orrery-glow"></span><span class="v3-star-dust one"></span><span class="v3-star-dust two"></span></div>';
-    if(status==='dnf') return '<div class="v3-ritual v3-dnf-ritual" aria-hidden="true"><span class="v3-lantern-bloom"></span><span class="v3-dnf-smoke one"></span><span class="v3-dnf-smoke two"></span></div>'
-      +'<button class="dnf-light-switch" type="button" aria-label="Turn DNF shelf light '+(dnfLightOn?'off':'on')+'" aria-pressed="'+dnfLightOn+'"></button>';
+    if(status==='dnf') return '<div class="v3-ritual v3-dnf-ritual" aria-hidden="true"><span class="v3-lantern-bloom"></span><span class="v3-dnf-smoke one"></span><span class="v3-dnf-smoke two"></span></div>';
     return '';
+  }
+
+  function v3ShelfCharmsHTML(status){
+    if(!V3_MODE||!hasInteriorAccess()) return '';
+    if(status==='reading') return '<span class="v3-shelf-charms charms-reading" aria-hidden="true"><i class="charm-key"></i><i class="charm-mote"></i></span>';
+    if(status==='want') return '<span class="v3-shelf-charms charms-want" aria-hidden="true"><i class="charm-moon"></i><i class="charm-glass"></i></span>';
+    if(status==='read') return '<span class="v3-shelf-charms charms-read" aria-hidden="true"><i class="charm-fairy one"></i><i class="charm-fairy two"></i><i class="charm-star"></i></span>';
+    return '<span class="v3-shelf-charms charms-dnf" aria-hidden="true"><i class="dnf-lamp-mask"></i><i class="charm-rose"></i></span>';
   }
 
   function renderRoom(){
@@ -1187,12 +1197,19 @@
     const counts=Object.fromEntries(SHELVES.map(([st])=>[st,ordered.filter(b=>b.status===st).length]));
     const worldRibbon=interiorsUnlocked
       ? '<button class="world-ribbon" id="openLiveWorld"><span class="moon-seal" aria-hidden="true">✦</span><span class="world-ribbon-copy"><small>Live premium world · 3 relics to awaken</small><strong>The Moonlit Reading Room</strong><span class="world-ribbon-desc">Your books, a working clock, candlelight and visitors that leave something behind.</span></span><b>Enter world →</b></button>'
-      : '<button class="world-ribbon world-ribbon-locked" data-unlock-interiors><span class="moon-seal" aria-hidden="true">◇</span><span class="world-ribbon-copy"><small>Premium shelf interiors</small><strong>Bring the inside of your cabinet to life</strong><span class="world-ribbon-desc">Keep this heirloom exterior free. Unlock Moonlit once for CA$4.99, or enter with Premium.</span></span><b>See access →</b></button>';
+      : '<button class="world-ribbon world-ribbon-locked" data-unlock-interiors><span class="moon-seal" aria-hidden="true">◇</span><span class="world-ribbon-copy"><small>Premium shelf interiors</small><strong>Bring the inside of your cabinet to life</strong><span class="world-ribbon-desc">Premium includes living worlds inside the shelves. Free includes the heirloom exterior and exterior updates.</span></span><b>See access →</b></button>';
+    const tierNote=interiorsUnlocked
+      ? '<div class="bookshelf-tier-note"><span><strong>Premium bookshelf</strong> · living worlds and interactions inside all four shelves</span><a href="/bookshelf/?access=free">See free tier →</a></div>'
+      : '<div class="bookshelf-tier-note is-free"><span><strong>Free bookshelf</strong> · books plus heirloom exterior updates</span><button type="button" data-unlock-interiors>See Premium worlds →</button></div>';
+    const allLightsOn=Object.values(shelfLights).every(Boolean);
+    const lightConsole=interiorsUnlocked?'<div class="library-light-console"><span><small>Cabinet lighting</small><strong>Each shelf answers independently</strong></span><button type="button" id="masterShelfLight" aria-pressed="'+allLightsOn+'"><i aria-hidden="true"></i><b>'+(allLightsOn?'Dim all shelves':'Light all shelves')+'</b></button></div>':'';
     $('stage').innerHTML = '<div class="library-layout">'
       + '<div class="library-stats"><span class="library-stat"><strong>'+counts.reading+'</strong> reading now</span>'
       + '<span class="library-stat"><strong>'+counts.want+'</strong> waiting in TBR</span><span class="library-stat"><strong>'+counts.read+'</strong> finished</span>'
       + '<span class="library-stat"><strong>'+counts.dnf+'</strong> laid to rest</span></div>'
       + worldRibbon
+      + tierNote
+      + lightConsole
       + '<div class="library-main">'
       + '<div class="case-identity"><span class="plaque-chain left" aria-hidden="true"></span><span class="plaque-chain right" aria-hidden="true"></span><div class="case-name" data-crest="'+esc(crest.key)+'"><span class="crest-glass" aria-hidden="true"></span><span class="crest-reflection" aria-hidden="true"></span><img class="case-art" src="'+esc(crest.src)+'" alt="" aria-hidden="true" decoding="async"><span class="crest-heart" aria-hidden="true"></span><div class="case-copy"><small>'+esc(crest.eyebrow)+'</small><strong>'+esc(readerName)+'</strong><span class="case-motto">'+esc(crest.motto)+'</span></div>'+founderSocketHTML()+'</div>'+founderEditionHTML()+'</div>'
       + '<div class="bookcase '+(interiorsUnlocked?'worlds-unlocked':'worlds-locked')+'"><span class="cabinet-crest"><small>The founding library of</small><strong>'+esc(readerName)+'</strong><em>First edition · forever kept</em></span><span class="cabinet-pilaster left"></span><span class="cabinet-pilaster right"></span><span class="case-flourish"></span><div class="interior">'
@@ -1206,9 +1223,10 @@
           const overflow=items.length>7;
           const displayLabel=st==='want'?'TBR':st==='dnf'?'DNF':label;
           const shelfSub=st==='want'?'<span class="shelf-sub">Want to Read</span>':st==='dnf'?'<span class="shelf-sub">Laid to Rest</span>':'';
-          return '<div class="shelfrow'+(overflow?' has-overflow':'')+(V3_MODE&&items.length<=7?' is-curated':'')+(V3_MODE&&interiorsUnlocked&&st==='dnf'&&dnfLightOn?' dnf-lit':'')+'" data-shelf-status="'+st+'" data-count="'+items.length+'"><div class="plate">'+displayLabel+' '+shelfSub+' <span class="ct">'+items.length+'</span>'
+          return '<div class="shelfrow'+(overflow?' has-overflow':'')+(V3_MODE&&items.length<=7?' is-curated':'')+(interiorsUnlocked&&shelfLights[st]?' shelf-lit':'')+'" data-shelf-status="'+st+'" data-count="'+items.length+'"><div class="plate">'+displayLabel+' '+shelfSub+' <span class="ct">'+items.length+'</span>'
+            +(interiorsUnlocked?'<button class="shelf-light-toggle" type="button" data-shelf-light="'+st+'" aria-label="Turn '+esc(displayLabel)+' shelf light '+(shelfLights[st]?'off':'on')+'" aria-pressed="'+shelfLights[st]+'"><i aria-hidden="true"></i><span>Light</span></button>':'')
             +'<button class="shelf-door" '+(interiorsUnlocked?'data-enter-shelf="'+st+'"':'data-unlock-interiors')+'>'+(interiorsUnlocked?'Enter world ↗':'Unlock interior')+'</button></div>'
-            +v3RitualHTML(st)+'<div class="row"><div class="books" data-status="'+st+'" aria-label="'+esc(label)+', '+items.length+' books">'+inner+'</div></div><div class="plank"></div></div>';
+            +v3RitualHTML(st)+v3ShelfCharmsHTML(st)+'<div class="row"><div class="books" data-status="'+st+'" aria-label="'+esc(label)+', '+items.length+' books">'+inner+'</div></div><div class="plank"></div></div>';
         }).join('')
       + '</div></div>'
       + (total?'<p class="hint">✋ Drag books to reorder · tap a shelf label or ledge to enter its world</p>':'')
@@ -1258,16 +1276,21 @@
     const tbrWorld=$('openTbrWorld'); if(tbrWorld) tbrWorld.onclick=()=>enterShelf('want');
     document.querySelectorAll('[data-open-tbr]').forEach(el=>el.onclick=()=>enterShelf('want'));
     document.querySelectorAll('[data-threshold-book]').forEach(el=>el.onclick=()=>{ if(el._suppress){el._suppress=false;return;} openBook(el.dataset.thresholdBook); });
-    const dnfSwitch=document.querySelector('.dnf-light-switch');
-    if(dnfSwitch) dnfSwitch.onclick=e=>{
-      e.stopPropagation();
-      dnfLightOn=!dnfLightOn;
-      const row=dnfSwitch.closest('.shelfrow');
-      row.classList.toggle('dnf-lit',dnfLightOn);
-      dnfSwitch.setAttribute('aria-pressed',String(dnfLightOn));
-      dnfSwitch.setAttribute('aria-label','Turn DNF shelf light '+(dnfLightOn?'off':'on'));
-      toast(dnfLightOn?'The resting shelf glows again':'The resting shelf goes quiet');
+    const saveShelfLights=()=>{try{localStorage.setItem(SHELF_LIGHTS_KEY,JSON.stringify(shelfLights));}catch(_){}};
+    const syncShelfLights=()=>{
+      document.querySelectorAll('[data-shelf-light]').forEach(btn=>{
+        const status=btn.dataset.shelfLight, on=!!shelfLights[status], row=btn.closest('.shelfrow');
+        if(row) row.classList.toggle('shelf-lit',on);
+        btn.setAttribute('aria-pressed',String(on));
+        btn.setAttribute('aria-label','Turn '+labelOf(status)+' shelf light '+(on?'off':'on'));
+      });
+      const master=$('masterShelfLight');
+      if(master){const allOn=Object.values(shelfLights).every(Boolean);master.setAttribute('aria-pressed',String(allOn));master.querySelector('b').textContent=allOn?'Dim all shelves':'Light all shelves';}
+      saveShelfLights();
     };
+    document.querySelectorAll('[data-shelf-light]').forEach(btn=>btn.onclick=e=>{e.stopPropagation();const status=btn.dataset.shelfLight;shelfLights[status]=!shelfLights[status];syncShelfLights();toast(shelfLights[status]?labelOf(status)+' glows again':labelOf(status)+' settles into shadow');});
+    const masterLight=$('masterShelfLight');
+    if(masterLight) masterLight.onclick=e=>{e.stopPropagation();const turnOn=!Object.values(shelfLights).every(Boolean);Object.keys(shelfLights).forEach(status=>shelfLights[status]=turnOn);syncShelfLights();toast(turnOn?'The whole cabinet wakes':'The cabinet settles into shadow');};
     document.querySelectorAll('[data-enter-shelf]').forEach(el=>el.onclick=e=>{ e.stopPropagation(); enterShelf(el.dataset.enterShelf); });
     document.querySelectorAll('#stage .book').forEach(el=>{
       const key=el.dataset.key; let lp=null;
@@ -1613,7 +1636,8 @@
     worldState=freshWorldState(); renderShelfView(); worldMessage('The room falls quiet. Its three relics are waiting for you again.');
   }
   function hasInteriorAccess(){
-    return REVIEW_MODE ? ACCESS_PREVIEW!=='free' : isPremium||ownedProducts.has(MOONLIT_PRODUCT_KEY);
+    if(ACCESS_PREVIEW==='free') return false;
+    return REVIEW_MODE ? true : isPremium||ownedProducts.has(MOONLIT_PRODUCT_KEY);
   }
   function enterShelf(status){
     if(V3_MODE&&!hasInteriorAccess()){ openInteriorOffer(); return; }
