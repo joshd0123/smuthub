@@ -223,7 +223,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-seeall{margin-top:14px;padding:7px 0;background:none;border:0;border-bottom:1px solid var(--line);color:var(--cream);font-family:inherit;font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
   .af-seeall span{margin-left:7px;color:var(--amber)}
   .af-seeall:hover{border-color:var(--rose)}
-  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto 1fr 1fr;gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
+  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
   @media(max-width:720px){.af-spice{grid-template-columns:1fr;gap:10px}}
   .af-spice b{display:block;margin-bottom:3px;color:var(--cream);font-size:.66rem;text-transform:uppercase;letter-spacing:.09em}
   .af-gauge{display:flex;gap:5px}
@@ -236,6 +236,9 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-blurb summary span{color:var(--amber);font-size:1.1rem;line-height:.7;transition:transform .2s}
   .af-blurb[open] summary span{transform:rotate(45deg)}
   .af-blurb .af-blurb-body{padding-bottom:18px}
+  .af-comps{margin-top:18px}
+  .af-comps-h{display:block;color:var(--amber);font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+  .af-comps .af-tags a{border-style:dashed}
   .af-commit{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   @media(max-width:720px){.af-commit{grid-template-columns:1fr}.af-commit>div{border-right:0!important;border-bottom:1px solid var(--line)}}
   .af-commit>div{padding:16px;border-right:1px solid var(--line)}
@@ -470,7 +473,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>4 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>7 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>none recorded</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>tap to reveal</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
+        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>4 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>7 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>3 flagged</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>tap to reveal</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
       </nav>
     </aside>
   </section>
@@ -482,7 +485,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     <div><p class="af-label">What&#39;s it about?</p><h2>Orlaith has lived twenty years inside the same castle grounds, guarded by the ruthless, ageless king who saved her from a childhood she can&#39;t remember.</h2><details class="af-blurb">
         <summary>Read the full blurb <span>+</span></summary>
         <div class="af-blurb-body"><p class="lead">Orlaith has lived twenty years inside the same castle grounds, guarded by the ruthless, ageless king who saved her from a childhood she can&#39;t remember.</p><div class="more"><p>When cracks begin to spider through her carefully closed life, she has to reckon with what — and who — has been waiting on the other side. Parker&#39;s cult-favorite debut before When the Moon Hatched.</p></div><div class="fade"></div></div>
-      </details></div>
+      </details><div class="af-comps"><span class="af-comps-h">For fans of</span><div class="af-tags"><a href="/books/?q=A%20Court%20of%20Thorns%20and%20Roses">A Court of Thorns and Roses</a><a href="/books/?q=Fourth%20Wing">Fourth Wing</a></div></div></div>
   </section>
 
     <section class="af-sec" id="af-spice">
@@ -491,6 +494,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <span class="af-gauge" aria-label="Spice level 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span>
         <span><b>Door</b>On-page (open door)</span>
         <span><b>Frequency</b>Frequent</span>
+        <span><b>Burn</b>Fast Burn</span>
       </div></div>
   </section>
 
@@ -502,9 +506,9 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
     <section class="af-sec" id="af-warnings">
     <span class="af-num">04</span>
-    <div><p class="af-label">Any hard nos?</p><h2>No content warnings recorded for this book.</h2>
+    <div><p class="af-label">Any hard nos?</p><h2>Flagged: fantasy violence, death in battle, blood / gore.</h2><div class="af-tags is-warn"><span>Fantasy Violence</span><span>Death in Battle</span><span>Blood / Gore</span></div>
         
-        <p class="af-empty-note">Nobody has flagged content warnings here yet. That's not a guarantee the book is warning-free — just that we don't have them recorded.</p></div>
+        </div>
   </section>
 
     <section class="af-sec" id="af-ending">
@@ -520,7 +524,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     <section class="af-sec" id="af-detail">
     <span class="af-num">06</span>
     <div><p class="af-label">Every recorded detail</p><h2>486 pages, book 1 of the series.</h2><div class="dgrid">
-      <div class="drow"><span class="dk">Series</span><span class="dv">The Crystal Bloom · Book 1</span></div><div class="drow"><span class="dk">POV</span><span class="dv">First person · single</span></div><div class="drow"><span class="dk">Length</span><span class="dv">486 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">High Fantasy</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div><div class="drow"><span class="dk">Audiobook</span><span class="dv">Available</span></div>
+      <div class="drow"><span class="dk">Series</span><span class="dv">The Crystal Bloom · Book 1</span></div><div class="drow"><span class="dk">POV</span><span class="dv">First person · single</span></div><div class="drow"><span class="dk">Length</span><span class="dv">486 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">High Fantasy</span></div><div class="drow"><span class="dk">Time period</span><span class="dv">Secondary Fantasy World</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div><div class="drow"><span class="dk">Audiobook</span><span class="dv">Available</span></div>
     </div></div>
   </section>
 
@@ -556,7 +560,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     </div>
     <div class="af-rail"><a class="af-bcard" href="/books/the-ballad-of-falling-dragons-parker-2026/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/the-ballad-of-falling-dragons-parker-2026.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/the-ballad-of-falling-dragons-parker-2026.jpg" alt="The Ballad of Falling Dragons book cover" loading="lazy"></div>
-      <div class="bm"><h3>The Ballad of Falling Dragons</h3><p>Sarah A. Parker</p></div>
+      <div class="bm"><span>🌶️🌶️🌶️</span><h3>The Ballad of Falling Dragons</h3><p>Sarah A. Parker</p></div>
     </a><a class="af-bcard" href="/books/when-the-moon-hatched-parker-2024/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/when-the-moon-hatched-parker-2024.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/when-the-moon-hatched-parker-2024.jpg" alt="When the Moon Hatched book cover" loading="lazy"></div>
       <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>When the Moon Hatched</h3><p>Sarah A. Parker</p></div>
@@ -588,11 +592,11 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 <!-- Drawer content is server-rendered and hidden, so the complete trope and
      warning lists exist in the HTML for crawlers and for no-JS readers. -->
 <template id="afDrawerTropes"><a href="/glossary/trope/dark-romance/"><span>01</span><b>Dark Romance</b></a><a href="/glossary/trope/fae/"><span>02</span><b>Fae</b></a><a href="/glossary/trope/forced-proximity/"><span>03</span><b>Forced Proximity</b></a><div><span>04</span><b>Hidden Identity</b></div><a href="/glossary/trope/monster-romance/"><span>05</span><b>Monster Romance</b></a><a href="/glossary/trope/slow-burn/"><span>06</span><b>Slow Burn</b></a><div><span>07</span><b>Spicy</b></div></template>
-<template id="afDrawerWarnings"></template>
+<template id="afDrawerWarnings"><div><span>01</span><b>Fantasy Violence</b></div><div><span>02</span><b>Death in Battle</b></div><div><span>03</span><b>Blood / Gore</b></div></template>
 <noscript>
   <div class="wrap">
     <section class="blk"><h2>All tropes</h2><div class="af-tags"><span>Dark Romance</span><span>Fae</span><span>Forced Proximity</span><span>Hidden Identity</span><span>Monster Romance</span><span>Slow Burn</span><span>Spicy</span></div></section>
-    
+    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Fantasy Violence</span><span>Death in Battle</span><span>Blood / Gore</span></div></section>
   </div>
 </noscript>
 

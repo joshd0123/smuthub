@@ -101,6 +101,27 @@ const ensureDir = p => fs.mkdir(p, { recursive: true });
 const bookPath = b => `/books/${b.slug}/`;
 const bookURL = b => `${SITE}${bookPath(b)}`;
 
+// Normalize the messy CSV-import encodings into a clean string list. Handles a
+// JSON-array string ('["a","b"]'), a text[] whose sole element is such a string
+// (double-encoded by the importer → ['["a","b"]']), a plain text[] (['a','b']),
+// or a lone value. Deduped, order-preserving, case-insensitive.
+function listField(v){
+  const out = [];
+  const eat = x => {
+    if (x == null) return;
+    if (Array.isArray(x)) { x.forEach(eat); return; }
+    const s = String(x).trim();
+    if (!s) return;
+    if (s[0] === '[') { try { eat(JSON.parse(s)); return; } catch (_) {} }
+    out.push(s.replace(/^["']+|["']+$/g, '').trim());
+  };
+  eat(v);
+  const seen = new Set(), res = [];
+  for (const s of out) { if (!s) continue; const k = s.toLowerCase(); if (!seen.has(k)) { seen.add(k); res.push(s); } }
+  return res;
+}
+const firstOf = v => (Array.isArray(v) ? v[0] : v) || '';
+
 // Absolute cover URL for OG/Twitter + JSON-LD image. Covers live on
 // covers.smuthub.ca (absolute already); fall back to the site OG image.
 function absCover(b){
@@ -333,7 +354,7 @@ const ASK_CSS = `
   .af-seeall{margin-top:14px;padding:7px 0;background:none;border:0;border-bottom:1px solid var(--line);color:var(--cream);font-family:inherit;font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
   .af-seeall span{margin-left:7px;color:var(--amber)}
   .af-seeall:hover{border-color:var(--rose)}
-  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto 1fr 1fr;gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
+  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
   @media(max-width:720px){.af-spice{grid-template-columns:1fr;gap:10px}}
   .af-spice b{display:block;margin-bottom:3px;color:var(--cream);font-size:.66rem;text-transform:uppercase;letter-spacing:.09em}
   .af-gauge{display:flex;gap:5px}
@@ -346,6 +367,9 @@ const ASK_CSS = `
   .af-blurb summary span{color:var(--amber);font-size:1.1rem;line-height:.7;transition:transform .2s}
   .af-blurb[open] summary span{transform:rotate(45deg)}
   .af-blurb .af-blurb-body{padding-bottom:18px}
+  .af-comps{margin-top:18px}
+  .af-comps-h{display:block;color:var(--amber);font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+  .af-comps .af-tags a{border-style:dashed}
   .af-commit{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   @media(max-width:720px){.af-commit{grid-template-columns:1fr}.af-commit>div{border-right:0!important;border-bottom:1px solid var(--line)}}
   .af-commit>div{padding:16px;border-right:1px solid var(--line)}
@@ -950,7 +974,20 @@ function renderBookPage(book){
   const hasSpice  = Number.isFinite(spiceLvl) && spiceLvl > 0;
   const shortAns  = afShortAnswer(book.blurb);
   const facts     = afFacts(book);
-  const triggers  = (book.triggers_detail || '').trim();
+  // Content warnings: most books carry them only in triggers_detail (free text,
+  // often a JSON-array string), NOT in tag_ids — so merge both into one list, or
+  // the page wrongly reads "none recorded" and leaks raw JSON. Tag warnings keep
+  // their glossary links; text triggers are plain chips.
+  const warnItems = (() => {
+    const items = warnTags.map(t => ({ label: t.label, href: t.href }));
+    const have = new Set(items.map(i => i.label.toLowerCase()));
+    for (const w of listField(book.triggers_detail)) {
+      if (!have.has(w.toLowerCase())) { have.add(w.toLowerCase()); items.push({ label: w, href: null }); }
+    }
+    return items;
+  })();
+  const comps     = listField(book.comp_titles);        // "for fans of…"
+  const heatLabel = firstOf(book.heat_type).trim();     // e.g. "Slow Burn"
   // The full series, current book included, in reading order — the design calls
   // for the current book to be identifiable and the next one obvious.
   const fullSeries = book.series
@@ -970,7 +1007,7 @@ function renderBookPage(book){
     ['#af-plot', "What's it about?", (shortAns || book.blurb) ? '30-sec answer' : 'not recorded'],
     ['#af-spice', 'How spicy is it?', hasSpice ? `${spiceLvl} / 5${doorWord ? ` · ${doorWord}` : ''}` : (doorWord || 'not recorded')],
     ['#af-tropes', 'Which tropes?', tropeTags.length ? `${tropeTags.length} tagged` : 'none tagged'],
-    ['#af-warnings', 'Any hard nos?', warnTags.length ? `${warnTags.length} warning${warnTags.length === 1 ? '' : 's'}` : triggers ? 'read first' : 'none recorded'],
+    ['#af-warnings', 'Any hard nos?', warnItems.length ? `${warnItems.length} flagged` : 'none recorded'],
     ['#af-ending', 'How does it end?', endingLabel ? 'tap to reveal' : 'not recorded', true],
     ['#af-detail', 'Every recorded detail', detailGrid ? 'the full record' : 'not recorded'],
   ];
@@ -1044,10 +1081,10 @@ ${sharedHeader('books')}
     ${afSection({
       id: 'af-plot', num: '01', label: "What's it about?",
       headline: esc(shortAns || book.title),
-      body: book.blurb ? `<details class="af-blurb">
+      body: `${book.blurb ? `<details class="af-blurb">
         <summary>Read the full blurb <span>+</span></summary>
         <div class="af-blurb-body">${renderBlurbBody(book.blurb, tags).html}</div>
-      </details>` : `<p class="af-empty-note">No description recorded yet.</p>`,
+      </details>` : `<p class="af-empty-note">No description recorded yet.</p>`}${comps.length ? `<div class="af-comps"><span class="af-comps-h">For fans of</span><div class="af-tags">${comps.slice(0, 4).map(c => `<a href="/books/?q=${encodeURIComponent(c)}">${esc(c)}</a>`).join('')}</div></div>` : ''}`,
     })}
 
     ${afSection({
@@ -1055,10 +1092,11 @@ ${sharedHeader('books')}
       headline: hasSpice
         ? esc(`${spiceLvl} / 5${book.door ? ` — ${(DOOR[book.door] || book.door).toLowerCase()}` : ''}.`)
         : book.door ? esc(DOOR[book.door] || humanize(book.door || '')) : 'Not recorded yet.',
-      body: (hasSpice || book.door || book.spice_frequency) ? `<div class="af-spice">
+      body: (hasSpice || book.door || book.spice_frequency || heatLabel) ? `<div class="af-spice">
         ${hasSpice ? `<span class="af-gauge" aria-label="Spice level ${spiceLvl} of 5">${[1,2,3,4,5].map(n => `<i class="${n <= spiceLvl ? 'on' : ''}"></i>`).join('')}</span>` : '<span></span>'}
         ${book.door ? `<span><b>Door</b>${esc(DOOR[book.door] || humanize(book.door))}</span>` : '<span></span>'}
         ${book.spice_frequency ? `<span><b>Frequency</b>${esc(FREQ[book.spice_frequency] || humanize(book.spice_frequency))}</span>` : '<span></span>'}
+        ${heatLabel ? `<span><b>Burn</b>${esc(heatLabel)}</span>` : ''}
       </div>${book.spice_notes ? `<p>${esc(book.spice_notes)}</p>` : ''}`
         : `<p class="af-empty-note">No spice rating recorded yet — check back as the catalog fills in.</p>`,
     })}
@@ -1076,14 +1114,13 @@ ${sharedHeader('books')}
 
     ${afSection({
       id: 'af-warnings', num: '04', label: 'Any hard nos?',
-      headline: warnTags.length
-        ? esc(`Flagged: ${warnTags.slice(0, 3).map(t => t.label.toLowerCase()).join(', ')}${warnTags.length > 3 ? ', and more.' : '.'}`)
-        : triggers ? 'Read the detail before you start.'
+      headline: warnItems.length
+        ? esc(`Flagged: ${warnItems.slice(0, 3).map(w => w.label.toLowerCase()).join(', ')}${warnItems.length > 3 ? ', and more.' : '.'}`)
         : 'No content warnings recorded for this book.',
-      body: `${warnTags.length ? `<div class="af-tags is-warn">${warnTags.slice(0, 6).map(t => t.href
-          ? `<a href="${escAttr(t.href)}">${esc(t.label)}</a>` : `<span>${esc(t.label)}</span>`).join('')}</div>` : ''}
-        ${warnTags.length > 6 || triggers ? `<button type="button" class="af-seeall" data-drawer="warnings">See all ${warnTags.length ? `${warnTags.length} warnings` : 'the detail'} <span>→</span></button>` : ''}
-        ${!warnTags.length && !triggers ? `<p class="af-empty-note">Nobody has flagged content warnings here yet. That's not a guarantee the book is warning-free — just that we don't have them recorded.</p>` : ''}`,
+      body: `${warnItems.length ? `<div class="af-tags is-warn">${warnItems.slice(0, 6).map(w => w.href
+          ? `<a href="${escAttr(w.href)}">${esc(w.label)}</a>` : `<span>${esc(w.label)}</span>`).join('')}</div>` : ''}
+        ${warnItems.length > 6 ? `<button type="button" class="af-seeall" data-drawer="warnings">See all ${warnItems.length} warnings <span>→</span></button>` : ''}
+        ${!warnItems.length ? `<p class="af-empty-note">Nobody has flagged content warnings here yet. That's not a guarantee the book is warning-free — just that we don't have them recorded.</p>` : ''}`,
     })}
 
     ${afSection({
@@ -1159,13 +1196,13 @@ ${sharedHeader('books')}
 <template id="afDrawerTropes">${tropeTags.map((t, i) => t.href
   ? `<a href="${escAttr(t.href)}"><span>${String(i + 1).padStart(2, '0')}</span><b>${esc(t.label)}</b></a>`
   : `<div><span>${String(i + 1).padStart(2, '0')}</span><b>${esc(t.label)}</b></div>`).join('')}</template>
-<template id="afDrawerWarnings">${warnTags.map((t, i) => t.href
-  ? `<a href="${escAttr(t.href)}"><span>${String(i + 1).padStart(2, '0')}</span><b>${esc(t.label)}</b></a>`
-  : `<div><span>${String(i + 1).padStart(2, '0')}</span><b>${esc(t.label)}</b></div>`).join('')}${triggers ? `<p class="af-drawer-detail">${esc(triggers)}</p>` : ''}</template>
+<template id="afDrawerWarnings">${warnItems.map((w, i) => w.href
+  ? `<a href="${escAttr(w.href)}"><span>${String(i + 1).padStart(2, '0')}</span><b>${esc(w.label)}</b></a>`
+  : `<div><span>${String(i + 1).padStart(2, '0')}</span><b>${esc(w.label)}</b></div>`).join('')}</template>
 <noscript>
   <div class="wrap">
     ${tropeTags.length ? `<section class="blk"><h2>All tropes</h2><div class="af-tags">${tropeTags.map(t => `<span>${esc(t.label)}</span>`).join('')}</div></section>` : ''}
-    ${warnTags.length ? `<section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn">${warnTags.map(t => `<span>${esc(t.label)}</span>`).join('')}</div>${triggers ? `<p>${esc(triggers)}</p>` : ''}</section>` : ''}
+    ${warnItems.length ? `<section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn">${warnItems.map(w => `<span>${esc(w.label)}</span>`).join('')}</div></section>` : ''}
   </div>
 </noscript>
 

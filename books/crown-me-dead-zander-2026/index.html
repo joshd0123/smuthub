@@ -223,7 +223,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-seeall{margin-top:14px;padding:7px 0;background:none;border:0;border-bottom:1px solid var(--line);color:var(--cream);font-family:inherit;font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
   .af-seeall span{margin-left:7px;color:var(--amber)}
   .af-seeall:hover{border-color:var(--rose)}
-  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto 1fr 1fr;gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
+  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
   @media(max-width:720px){.af-spice{grid-template-columns:1fr;gap:10px}}
   .af-spice b{display:block;margin-bottom:3px;color:var(--cream);font-size:.66rem;text-transform:uppercase;letter-spacing:.09em}
   .af-gauge{display:flex;gap:5px}
@@ -236,6 +236,9 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-blurb summary span{color:var(--amber);font-size:1.1rem;line-height:.7;transition:transform .2s}
   .af-blurb[open] summary span{transform:rotate(45deg)}
   .af-blurb .af-blurb-body{padding-bottom:18px}
+  .af-comps{margin-top:18px}
+  .af-comps-h{display:block;color:var(--amber);font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+  .af-comps .af-tags a{border-style:dashed}
   .af-commit{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   @media(max-width:720px){.af-commit{grid-template-columns:1fr}.af-commit>div{border-right:0!important;border-bottom:1px solid var(--line)}}
   .af-commit>div{padding:16px;border-right:1px solid var(--line)}
@@ -470,7 +473,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>4 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>24 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>10 warnings</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>not recorded</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
+        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>4 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>24 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>11 flagged</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>tap to reveal</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
       </nav>
     </aside>
   </section>
@@ -482,7 +485,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     <div><p class="af-label">What&#39;s it about?</p><h2>Wed me. Bed me. Slit my throat. Born in dirt, raised in rot, I dig graves for the dead, While the living decay around me. When my brother coughs blood, He appears. A man too polished for the graveyard, With a bargain too cruel for the light: Seduce the King. Become the Queen.</h2><details class="af-blurb">
         <summary>Read the full blurb <span>+</span></summary>
         <div class="af-blurb-body"><p class="lead">Wed me. Bed me. Slit my throat. Born in dirt, raised in rot, I dig graves for the dead, While the living decay around me. When my brother coughs blood, He appears.</p><div class="more"><p>A man too polished for the graveyard, With a bargain too cruel for the light: Seduce the King. Become the Queen. Die. And my brother lives. Kael is a nightmare of living ruin, The rotting ruler of a festering realm. And Vale is his shadow, The cold architect of my demise. One man needs my heart to beat. The other plans to stop it forever. They think I&#39;m a pawn. But I&#39;m the gravedigger&#39;s daughter. And I know exactly where to bury them. Welcome to the funeral. Crown Me Dead is a <span class="term">dark fantasy</span> romance novel, and book one in the Heartstring Duet. The two-part story features deception, mystery, more deception, a handsome liar, and the woman who wants to bury him, along with a HUDDTPMYL... Happily Until Death Does Them Part Many Years Later (yes, the author made that up). This world contains <span class="term">dark</span> elements, violence, and themes some may find disturbing. Readers can find more detailed information on www.livzander.com. What this book doesn&#39;t contain is a hero - because villains do it better.</p></div><div class="fade"></div></div>
-      </details></div>
+      </details><div class="af-comps"><span class="af-comps-h">For fans of</span><div class="af-tags"><a href="/books/?q=A%20Court%20of%20Thorns%20and%20Roses">A Court of Thorns and Roses</a><a href="/books/?q=Fourth%20Wing">Fourth Wing</a></div></div></div>
   </section>
 
     <section class="af-sec" id="af-spice">
@@ -491,6 +494,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <span class="af-gauge" aria-label="Spice level 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span>
         <span><b>Door</b>On-page (open door)</span>
         <span><b>Frequency</b>Frequent</span>
+        <span><b>Burn</b>Fast Burn</span>
       </div></div>
   </section>
 
@@ -503,19 +507,24 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     <section class="af-sec" id="af-warnings">
     <span class="af-num">04</span>
     <div><p class="af-label">Any hard nos?</p><h2>Flagged: child death, death, death grief, and more.</h2><div class="af-tags is-warn"><a href="/glossary/warning/child-death/">Child Death</a><span>Death</span><a href="/glossary/warning/death-grief/">Death Grief</a><a href="/glossary/warning/dubious-consent/">Dubious Consent</a><a href="/glossary/warning/graphic-violence/">Graphic Violence</a><span>Grief</span></div>
-        <button type="button" class="af-seeall" data-drawer="warnings">See all 10 warnings <span>→</span></button>
+        <button type="button" class="af-seeall" data-drawer="warnings">See all 11 warnings <span>→</span></button>
         </div>
   </section>
 
     <section class="af-sec" id="af-ending">
     <span class="af-num">05</span>
-    <div><p class="af-label">How does it end?</p><h2>Not recorded yet.</h2><p class="af-empty-note">The ending isn't recorded yet.</p></div>
+    <div><p class="af-label">How does it end?</p><h2>Hidden to avoid spoilers.</h2><div class="af-ending">
+          <button type="button" class="af-reveal" aria-expanded="false" aria-controls="af-ending-body">⚠ Reveal the ending</button>
+          <div class="af-ending-body" id="af-ending-body" hidden>
+            <p class="af-ending-verdict">HFN / Open.</p>
+          </div>
+        </div></div>
   </section>
 
     <section class="af-sec" id="af-detail">
     <span class="af-num">06</span>
     <div><p class="af-label">Every recorded detail</p><h2>270 pages, book 1 of the series.</h2><p class="af-detail-next">Next in the series: <b>Crown Me Yours</b></p><div class="dgrid">
-      <div class="drow"><span class="dk">Series</span><span class="dv">Heartstring Duet · Book 1</span></div><div class="drow"><span class="dk">POV</span><span class="dv">First person · dual</span></div><div class="drow"><span class="dk">Pacing</span><span class="dv">Slow burn</span></div><div class="drow"><span class="dk">Length</span><span class="dv">270 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">Historical</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div><div class="drow"><span class="dk">Energy</span><span class="dv">Heavy</span></div>
+      <div class="drow"><span class="dk">Series</span><span class="dv">Heartstring Duet · Book 1</span></div><div class="drow"><span class="dk">POV</span><span class="dv">First person · dual</span></div><div class="drow"><span class="dk">Pacing</span><span class="dv">Slow burn</span></div><div class="drow"><span class="dk">Length</span><span class="dv">270 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">Historical</span></div><div class="drow"><span class="dk">Time period</span><span class="dv">Secondary Fantasy World</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div><div class="drow"><span class="dk">Energy</span><span class="dv">Heavy</span></div>
     </div></div>
   </section>
 
@@ -583,11 +592,11 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 <!-- Drawer content is server-rendered and hidden, so the complete trope and
      warning lists exist in the HTML for crawlers and for no-JS readers. -->
 <template id="afDrawerTropes"><a href="/glossary/trope/age-gap/"><span>01</span><b>Age Gap</b></a><div><span>02</span><b>Angst</b></div><div><span>03</span><b>Arranged Forced Marriage</b></div><a href="/glossary/trope/arranged-marriage/"><span>04</span><b>Arranged Marriage</b></a><a href="/glossary/trope/caretaking/"><span>05</span><b>Caretaking</b></a><a href="/glossary/trope/dark-romance/"><span>06</span><b>Dark Romance</b></a><div><span>07</span><b>Demon</b></div><a href="/glossary/trope/enemies-to-lovers/"><span>08</span><b>Enemies to Lovers</b></a><div><span>09</span><b>Forced Marriage</b></div><a href="/glossary/trope/forced-proximity/"><span>10</span><b>Forced Proximity</b></a><a href="/glossary/trope/good-grovel/"><span>11</span><b>Good Grovel</b></a><a href="/glossary/trope/grumpy-sunshine/"><span>12</span><b>Grumpy x Sunshine</b></a><div><span>13</span><b>Historical</b></div><a href="/glossary/trope/hurt-comfort/"><span>14</span><b>Hurt / Comfort</b></a><a href="/glossary/trope/love-triangle/"><span>15</span><b>Love Triangle</b></a><a href="/glossary/trope/marriage-of-convenience/"><span>16</span><b>Marriage of Convenience</b></a><div><span>17</span><b>Political</b></div><div><span>18</span><b>Political Court Intrigue</b></div><div><span>19</span><b>Possessive Hero</b></div><a href="/glossary/trope/pregnancy/"><span>20</span><b>Pregnancy</b></a><a href="/glossary/trope/slow-burn/"><span>21</span><b>Slow Burn</b></a><div><span>22</span><b>Spicy</b></div><div><span>23</span><b>Vengeance</b></div><div><span>24</span><b>Virgin Heroine</b></div></template>
-<template id="afDrawerWarnings"><a href="/glossary/warning/child-death/"><span>01</span><b>Child Death</b></a><div><span>02</span><b>Death</b></div><a href="/glossary/warning/death-grief/"><span>03</span><b>Death Grief</b></a><a href="/glossary/warning/dubious-consent/"><span>04</span><b>Dubious Consent</b></a><a href="/glossary/warning/graphic-violence/"><span>05</span><b>Graphic Violence</b></a><div><span>06</span><b>Grief</b></div><a href="/glossary/warning/mental-trauma/"><span>07</span><b>Mental Trauma</b></a><a href="/glossary/warning/non-traditional-hea/"><span>08</span><b>Non-Traditional HEA</b></a><a href="/glossary/warning/past-child-neglect/"><span>09</span><b>Past Child Neglect</b></a><a href="/glossary/warning/terminal-illness/"><span>10</span><b>Terminal Illness</b></a></template>
+<template id="afDrawerWarnings"><a href="/glossary/warning/child-death/"><span>01</span><b>Child Death</b></a><div><span>02</span><b>Death</b></div><a href="/glossary/warning/death-grief/"><span>03</span><b>Death Grief</b></a><a href="/glossary/warning/dubious-consent/"><span>04</span><b>Dubious Consent</b></a><a href="/glossary/warning/graphic-violence/"><span>05</span><b>Graphic Violence</b></a><div><span>06</span><b>Grief</b></div><a href="/glossary/warning/mental-trauma/"><span>07</span><b>Mental Trauma</b></a><a href="/glossary/warning/non-traditional-hea/"><span>08</span><b>Non-Traditional HEA</b></a><a href="/glossary/warning/past-child-neglect/"><span>09</span><b>Past Child Neglect</b></a><a href="/glossary/warning/terminal-illness/"><span>10</span><b>Terminal Illness</b></a><div><span>11</span><b>Death &amp; Grief</b></div></template>
 <noscript>
   <div class="wrap">
     <section class="blk"><h2>All tropes</h2><div class="af-tags"><span>Age Gap</span><span>Angst</span><span>Arranged Forced Marriage</span><span>Arranged Marriage</span><span>Caretaking</span><span>Dark Romance</span><span>Demon</span><span>Enemies to Lovers</span><span>Forced Marriage</span><span>Forced Proximity</span><span>Good Grovel</span><span>Grumpy x Sunshine</span><span>Historical</span><span>Hurt / Comfort</span><span>Love Triangle</span><span>Marriage of Convenience</span><span>Political</span><span>Political Court Intrigue</span><span>Possessive Hero</span><span>Pregnancy</span><span>Slow Burn</span><span>Spicy</span><span>Vengeance</span><span>Virgin Heroine</span></div></section>
-    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Child Death</span><span>Death</span><span>Death Grief</span><span>Dubious Consent</span><span>Graphic Violence</span><span>Grief</span><span>Mental Trauma</span><span>Non-Traditional HEA</span><span>Past Child Neglect</span><span>Terminal Illness</span></div></section>
+    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Child Death</span><span>Death</span><span>Death Grief</span><span>Dubious Consent</span><span>Graphic Violence</span><span>Grief</span><span>Mental Trauma</span><span>Non-Traditional HEA</span><span>Past Child Neglect</span><span>Terminal Illness</span><span>Death &amp; Grief</span></div></section>
   </div>
 </noscript>
 

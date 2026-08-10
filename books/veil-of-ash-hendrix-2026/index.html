@@ -223,7 +223,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-seeall{margin-top:14px;padding:7px 0;background:none;border:0;border-bottom:1px solid var(--line);color:var(--cream);font-family:inherit;font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
   .af-seeall span{margin-left:7px;color:var(--amber)}
   .af-seeall:hover{border-color:var(--rose)}
-  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto 1fr 1fr;gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
+  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
   @media(max-width:720px){.af-spice{grid-template-columns:1fr;gap:10px}}
   .af-spice b{display:block;margin-bottom:3px;color:var(--cream);font-size:.66rem;text-transform:uppercase;letter-spacing:.09em}
   .af-gauge{display:flex;gap:5px}
@@ -236,6 +236,9 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-blurb summary span{color:var(--amber);font-size:1.1rem;line-height:.7;transition:transform .2s}
   .af-blurb[open] summary span{transform:rotate(45deg)}
   .af-blurb .af-blurb-body{padding-bottom:18px}
+  .af-comps{margin-top:18px}
+  .af-comps-h{display:block;color:var(--amber);font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+  .af-comps .af-tags a{border-style:dashed}
   .af-commit{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   @media(max-width:720px){.af-commit{grid-template-columns:1fr}.af-commit>div{border-right:0!important;border-bottom:1px solid var(--line)}}
   .af-commit>div{padding:16px;border-right:1px solid var(--line)}
@@ -470,7 +473,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>4 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>19 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>4 warnings</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>not recorded</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
+        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>4 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>19 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>5 flagged</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>tap to reveal</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
       </nav>
     </aside>
   </section>
@@ -482,7 +485,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     <div><p class="af-label">What&#39;s it about?</p><h2>She imprinted on five guardians who were never meant to have a mate. Brielle Breslin spent twenty-two years believing she was human-until her magic ignited and branded her a monster. Dragged into the unknown realm of Bryxton, she learns the truth: she is a Soul Elemental.</h2><details class="af-blurb">
         <summary>Read the full blurb <span>+</span></summary>
         <div class="af-blurb-body"><p class="lead">She imprinted on five guardians who were never meant to have a mate. Brielle Breslin spent twenty-two years believing she was human-until her <span class="term">magic</span> ignited and branded her a monster.</p><div class="more"><p>Dragged into the unknown realm of Bryxton, she learns the truth: she is a Soul Elemental. A Keystone. The rarest power in a world built on balance. And somehow, impossibly, she has bonded to the Vestra-five lethal guardians sworn to protect their realm¿ and bound by prophecy to remain unbroken by a mate&#39;s allure. Two of them feel the imprint and are prepared to tear the world apart to keep her safe. Three of them feel it-and treat her like a threat that must be contained. Because the prophecy was clear: their hearts would beat, but never feel. A mate was never part of their fate. If the Council discovers the bond, Brielle won&#39;t survive the interrogation. If the prophecy has been altered, the consequences won&#39;t stop with her. Now she must train in secret, master powers she barely understands, and learn to shield her mind from those who would tear it apart-all while living under the same roof as the men divided over whether she is their salvation¿ or the beginning of their ruin. In Bryxton, prophecy is law. And Brielle may be the one thing they were never meant to have.</p></div><div class="fade"></div></div>
-      </details></div>
+      </details><div class="af-comps"><span class="af-comps-h">For fans of</span><div class="af-tags"><a href="/books/?q=Cursed%20Shadows%2C%20Primitus%2C%20The%20Forbidden%20Dragon%20King">Cursed Shadows, Primitus, The Forbidden Dragon King</a></div></div></div>
   </section>
 
     <section class="af-sec" id="af-spice">
@@ -491,6 +494,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <span class="af-gauge" aria-label="Spice level 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span>
         <span><b>Door</b>On-page (open door)</span>
         <span><b>Frequency</b>Frequent</span>
+        <span><b>Burn</b>Fast Burn</span>
       </div><p>What to expect in Veil of Ash:
 
 Slow-Burn Why Choose Romance (MFMMMMM)
@@ -510,20 +514,25 @@ Epic World-Building &amp; Political Intrigue</p></div>
 
     <section class="af-sec" id="af-warnings">
     <span class="af-num">04</span>
-    <div><p class="af-label">Any hard nos?</p><h2>Flagged: mental trauma, past sexual abuse, torture, and more.</h2><div class="af-tags is-warn"><a href="/glossary/warning/mental-trauma/">Mental Trauma</a><a href="/glossary/warning/past-sexual-abuse/">Past Sexual Abuse</a><span>Torture</span><a href="/glossary/warning/torture-of-mcs/">Torture Of Mcs</a></div>
+    <div><p class="af-label">Any hard nos?</p><h2>Flagged: mental trauma, past sexual abuse, torture, and more.</h2><div class="af-tags is-warn"><a href="/glossary/warning/mental-trauma/">Mental Trauma</a><a href="/glossary/warning/past-sexual-abuse/">Past Sexual Abuse</a><span>Torture</span><a href="/glossary/warning/torture-of-mcs/">Torture Of Mcs</a><span>Torture / Captivity</span></div>
         
         </div>
   </section>
 
     <section class="af-sec" id="af-ending">
     <span class="af-num">05</span>
-    <div><p class="af-label">How does it end?</p><h2>Not recorded yet.</h2><p class="af-empty-note">The ending isn't recorded yet.</p></div>
+    <div><p class="af-label">How does it end?</p><h2>Hidden to avoid spoilers.</h2><div class="af-ending">
+          <button type="button" class="af-reveal" aria-expanded="false" aria-controls="af-ending-body">⚠ Reveal the ending</button>
+          <div class="af-ending-body" id="af-ending-body" hidden>
+            <p class="af-ending-verdict">HFN / Open.</p>
+          </div>
+        </div></div>
   </section>
 
     <section class="af-sec" id="af-detail">
     <span class="af-num">06</span>
     <div><p class="af-label">Every recorded detail</p><h2>579 pages, book 1 of the series.</h2><div class="dgrid">
-      <div class="drow"><span class="dk">Series</span><span class="dv">The Veil Saga · Book 1</span></div><div class="drow"><span class="dk">POV</span><span class="dv">First person · single</span></div><div class="drow"><span class="dk">Pacing</span><span class="dv">Slow burn</span></div><div class="drow"><span class="dk">Length</span><span class="dv">579 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Fantasy Romance</span></div><div class="drow"><span class="dk">World</span><span class="dv">High Fantasy</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">Why-choose</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div><div class="drow"><span class="dk">Energy</span><span class="dv">Medium</span></div>
+      <div class="drow"><span class="dk">Series</span><span class="dv">The Veil Saga · Book 1</span></div><div class="drow"><span class="dk">POV</span><span class="dv">First person · single</span></div><div class="drow"><span class="dk">Pacing</span><span class="dv">Slow burn</span></div><div class="drow"><span class="dk">Length</span><span class="dv">579 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Fantasy Romance</span></div><div class="drow"><span class="dk">World</span><span class="dv">High Fantasy</span></div><div class="drow"><span class="dk">Time period</span><span class="dv">Secondary Fantasy World</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">Why-choose</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div><div class="drow"><span class="dk">Energy</span><span class="dv">Medium</span></div>
     </div></div>
   </section>
 
@@ -579,11 +588,11 @@ Epic World-Building &amp; Political Intrigue</p></div>
 <!-- Drawer content is server-rendered and hidden, so the complete trope and
      warning lists exist in the HTML for crawlers and for no-JS readers. -->
 <template id="afDrawerTropes"><div><span>01</span><b>Court</b></div><a href="/glossary/trope/fae/"><span>02</span><b>Fae</b></a><a href="/glossary/trope/fated-mates/"><span>03</span><b>Fated Mates</b></a><div><span>04</span><b>Forbidden Love</b></div><a href="/glossary/trope/forced-proximity/"><span>05</span><b>Forced Proximity</b></a><a href="/glossary/trope/found-family/"><span>06</span><b>Found Family</b></a><div><span>07</span><b>Grumpy</b></div><div><span>08</span><b>Magic</b></div><a href="/glossary/trope/morally-grey/"><span>09</span><b>Morally Grey</b></a><div><span>10</span><b>Political</b></div><div><span>11</span><b>Political Court Intrigue</b></div><div><span>12</span><b>Possessive Hero</b></div><div><span>13</span><b>Possessive MC</b></div><div><span>14</span><b>Reverse Harem</b></div><a href="/glossary/trope/slow-burn/"><span>15</span><b>Slow Burn</b></a><a href="/glossary/trope/touch-her-and-die/"><span>16</span><b>Touch Her and Die</b></a><div><span>17</span><b>Virgin Heroine</b></div><div><span>18</span><b>Werewolves</b></div><div><span>19</span><b>Why Choose</b></div></template>
-<template id="afDrawerWarnings"><a href="/glossary/warning/mental-trauma/"><span>01</span><b>Mental Trauma</b></a><a href="/glossary/warning/past-sexual-abuse/"><span>02</span><b>Past Sexual Abuse</b></a><div><span>03</span><b>Torture</b></div><a href="/glossary/warning/torture-of-mcs/"><span>04</span><b>Torture Of Mcs</b></a></template>
+<template id="afDrawerWarnings"><a href="/glossary/warning/mental-trauma/"><span>01</span><b>Mental Trauma</b></a><a href="/glossary/warning/past-sexual-abuse/"><span>02</span><b>Past Sexual Abuse</b></a><div><span>03</span><b>Torture</b></div><a href="/glossary/warning/torture-of-mcs/"><span>04</span><b>Torture Of Mcs</b></a><div><span>05</span><b>Torture / Captivity</b></div></template>
 <noscript>
   <div class="wrap">
     <section class="blk"><h2>All tropes</h2><div class="af-tags"><span>Court</span><span>Fae</span><span>Fated Mates</span><span>Forbidden Love</span><span>Forced Proximity</span><span>Found Family</span><span>Grumpy</span><span>Magic</span><span>Morally Grey</span><span>Political</span><span>Political Court Intrigue</span><span>Possessive Hero</span><span>Possessive MC</span><span>Reverse Harem</span><span>Slow Burn</span><span>Touch Her and Die</span><span>Virgin Heroine</span><span>Werewolves</span><span>Why Choose</span></div></section>
-    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Mental Trauma</span><span>Past Sexual Abuse</span><span>Torture</span><span>Torture Of Mcs</span></div></section>
+    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Mental Trauma</span><span>Past Sexual Abuse</span><span>Torture</span><span>Torture Of Mcs</span><span>Torture / Captivity</span></div></section>
   </div>
 </noscript>
 

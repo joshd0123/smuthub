@@ -223,7 +223,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-seeall{margin-top:14px;padding:7px 0;background:none;border:0;border-bottom:1px solid var(--line);color:var(--cream);font-family:inherit;font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
   .af-seeall span{margin-left:7px;color:var(--amber)}
   .af-seeall:hover{border-color:var(--rose)}
-  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto 1fr 1fr;gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
+  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
   @media(max-width:720px){.af-spice{grid-template-columns:1fr;gap:10px}}
   .af-spice b{display:block;margin-bottom:3px;color:var(--cream);font-size:.66rem;text-transform:uppercase;letter-spacing:.09em}
   .af-gauge{display:flex;gap:5px}
@@ -236,6 +236,9 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-blurb summary span{color:var(--amber);font-size:1.1rem;line-height:.7;transition:transform .2s}
   .af-blurb[open] summary span{transform:rotate(45deg)}
   .af-blurb .af-blurb-body{padding-bottom:18px}
+  .af-comps{margin-top:18px}
+  .af-comps-h{display:block;color:var(--amber);font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+  .af-comps .af-tags a{border-style:dashed}
   .af-commit{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   @media(max-width:720px){.af-commit{grid-template-columns:1fr}.af-commit>div{border-right:0!important;border-bottom:1px solid var(--line)}}
   .af-commit>div{padding:16px;border-right:1px solid var(--line)}
@@ -470,7 +473,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>2 / 5 · closed</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>24 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>7 warnings</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>tap to reveal</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
+        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>2 / 5 · closed</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>24 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>10 flagged</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>tap to reveal</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
       </nav>
     </aside>
   </section>
@@ -482,7 +485,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     <div><p class="af-label">What&#39;s it about?</p><h2>A powerful curse forces the exiled Queen of Faerie to choose between ambition and humanity in this highly anticipated and jaw-dropping finale to The Folk of the Air trilogy from a #1 New York Times bestselling author.</h2><details class="af-blurb">
         <summary>Read the full blurb <span>+</span></summary>
         <div class="af-blurb-body"><p class="lead">A powerful curse forces the exiled Queen of Faerie to choose between ambition and humanity in this highly anticipated and jaw-dropping finale to The Folk of the Air trilogy from a #1 New York Times bestselling author.</p><div class="more"><p>He will be the destruction of the crown and the ruination of the throne Power is much easier to acquire than it is to hold onto. Jude learned this lesson when she released her control over the wicked king, Cardan, in exchange for immeasurable power. Now as the exiled mortal Queen of Faerie, Jude is powerless and left reeling from Cardan&#39;s <span class="term">betrayal</span>. She bides her time determined to reclaim everything he took from her. Opportunity arrives in the form of her twin sister, Taryn, whose life is in peril. Jude must risk venturing back into the treacherous Faerie Court, and confront her lingering feelings for Cardan, if she wishes to save her sister. But Elfhame is not as she left it. <span class="term">War</span> is brewing. As Jude slips deep within enemy lines she becomes ensnared in the conflict&#39;s bloody politics. And, when a dormant yet powerful curse is unleashed, panic spreads throughout the land, forcing her to choose between her ambition and her humanity . . .</p></div><div class="fade"></div></div>
-      </details></div>
+      </details><div class="af-comps"><span class="af-comps-h">For fans of</span><div class="af-tags"><a href="/books/?q=A%20Court%20of%20Thorns%20and%20Roses">A Court of Thorns and Roses</a><a href="/books/?q=Fourth%20Wing">Fourth Wing</a></div></div></div>
   </section>
 
     <section class="af-sec" id="af-spice">
@@ -490,7 +493,8 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     <div><p class="af-label">How spicy is it?</p><h2>2 / 5 — closed door.</h2><div class="af-spice">
         <span class="af-gauge" aria-label="Spice level 2 of 5"><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i></span>
         <span><b>Door</b>Closed door</span>
-        <span></span>
+        <span><b>Frequency</b>Moderate</span>
+        <span><b>Burn</b>Slow Burn</span>
       </div></div>
   </section>
 
@@ -503,7 +507,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     <section class="af-sec" id="af-warnings">
     <span class="af-num">04</span>
     <div><p class="af-label">Any hard nos?</p><h2>Flagged: abuse, death, death grief, and more.</h2><div class="af-tags is-warn"><a href="/glossary/warning/abuse/">Abuse</a><span>Death</span><a href="/glossary/warning/death-grief/">Death Grief</a><span>Grief</span><span>Torture</span><a href="/glossary/warning/torture-of-side-characters/">Torture Of Side Characters</a></div>
-        <button type="button" class="af-seeall" data-drawer="warnings">See all 7 warnings <span>→</span></button>
+        <button type="button" class="af-seeall" data-drawer="warnings">See all 10 warnings <span>→</span></button>
         </div>
   </section>
 
@@ -609,11 +613,11 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 <!-- Drawer content is server-rendered and hidden, so the complete trope and
      warning lists exist in the HTML for crawlers and for no-JS readers. -->
 <template id="afDrawerTropes"><a href="/glossary/trope/abduction/"><span>01</span><b>Abduction</b></a><div><span>02</span><b>Angst</b></div><div><span>03</span><b>Aristo</b></div><a href="/glossary/trope/betrayal/"><span>04</span><b>Betrayal</b></a><a href="/glossary/trope/court-intrigue/"><span>05</span><b>Court Intrigue</b></a><a href="/glossary/trope/dark-romance/"><span>06</span><b>Dark Romance</b></a><a href="/glossary/trope/enemies-to-lovers/"><span>07</span><b>Enemies to Lovers</b></a><a href="/glossary/trope/fae/"><span>08</span><b>Fae</b></a><a href="/glossary/trope/found-family/"><span>09</span><b>Found Family</b></a><a href="/glossary/trope/grumpy-sunshine/"><span>10</span><b>Grumpy x Sunshine</b></a><div><span>11</span><b>High Fantasy</b></div><div><span>12</span><b>Historical</b></div><div><span>13</span><b>Immortal</b></div><div><span>14</span><b>Magic</b></div><div><span>15</span><b>Mystery</b></div><div><span>16</span><b>Political</b></div><div><span>17</span><b>Political Court Intrigue</b></div><a href="/glossary/trope/royal-romance/"><span>18</span><b>Royal Romance</b></a><a href="/glossary/trope/second-chance/"><span>19</span><b>Second Chance</b></a><a href="/glossary/trope/slow-burn/"><span>20</span><b>Slow Burn</b></a><div><span>21</span><b>Urban Fantasy</b></div><div><span>22</span><b>Vengeance</b></div><div><span>23</span><b>Virgin Heroine</b></div><a href="/glossary/trope/war/"><span>24</span><b>War</b></a></template>
-<template id="afDrawerWarnings"><a href="/glossary/warning/abuse/"><span>01</span><b>Abuse</b></a><div><span>02</span><b>Death</b></div><a href="/glossary/warning/death-grief/"><span>03</span><b>Death Grief</b></a><div><span>04</span><b>Grief</b></div><div><span>05</span><b>Torture</b></div><a href="/glossary/warning/torture-of-side-characters/"><span>06</span><b>Torture Of Side Characters</b></a><div><span>07</span><b>War</b></div></template>
+<template id="afDrawerWarnings"><a href="/glossary/warning/abuse/"><span>01</span><b>Abuse</b></a><div><span>02</span><b>Death</b></div><a href="/glossary/warning/death-grief/"><span>03</span><b>Death Grief</b></a><div><span>04</span><b>Grief</b></div><div><span>05</span><b>Torture</b></div><a href="/glossary/warning/torture-of-side-characters/"><span>06</span><b>Torture Of Side Characters</b></a><div><span>07</span><b>War</b></div><div><span>08</span><b>Abuse / Trauma</b></div><div><span>09</span><b>Death &amp; Grief</b></div><div><span>10</span><b>Torture / Captivity</b></div></template>
 <noscript>
   <div class="wrap">
     <section class="blk"><h2>All tropes</h2><div class="af-tags"><span>Abduction</span><span>Angst</span><span>Aristo</span><span>Betrayal</span><span>Court Intrigue</span><span>Dark Romance</span><span>Enemies to Lovers</span><span>Fae</span><span>Found Family</span><span>Grumpy x Sunshine</span><span>High Fantasy</span><span>Historical</span><span>Immortal</span><span>Magic</span><span>Mystery</span><span>Political</span><span>Political Court Intrigue</span><span>Royal Romance</span><span>Second Chance</span><span>Slow Burn</span><span>Urban Fantasy</span><span>Vengeance</span><span>Virgin Heroine</span><span>War</span></div></section>
-    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Abuse</span><span>Death</span><span>Death Grief</span><span>Grief</span><span>Torture</span><span>Torture Of Side Characters</span><span>War</span></div></section>
+    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Abuse</span><span>Death</span><span>Death Grief</span><span>Grief</span><span>Torture</span><span>Torture Of Side Characters</span><span>War</span><span>Abuse / Trauma</span><span>Death &amp; Grief</span><span>Torture / Captivity</span></div></section>
   </div>
 </noscript>
 
