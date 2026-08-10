@@ -477,7 +477,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>3 / 5 · open</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>none tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>3 flagged</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>tap to reveal</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
+        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>3 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>none tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>3 flagged</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>tap to reveal</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
       </nav>
     </aside>
   </section>
@@ -494,9 +494,9 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
     <section class="af-sec" id="af-spice">
     <span class="af-num">02</span>
-    <div><p class="af-label">How spicy is it?</p><h2>3 / 5 — open door.</h2><div class="af-spice">
+    <div><p class="af-label">How spicy is it?</p><h2>3 / 5 — on-page (open door).</h2><div class="af-spice">
         <span class="af-gauge" aria-label="Spice level 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
-        <span><b>Door</b>Open Door</span>
+        <span><b>Door</b>On-page (open door)</span>
         <span><b>Frequency</b>Moderate</span>
         <span><b>Burn</b>Medium Burn</span>
       </div></div>
@@ -556,7 +556,16 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     </a></div>
   </section>
 
-    
+    <section class="af-disc" id="af-author" aria-labelledby="af-author-h">
+    <div class="af-disc-head">
+      <div><span>Same author</span><h2 id="af-author-h">More by Demi Winters</h2><p>Other books by this author in the catalog.</p></div>
+      <a href="/books/?q=Demi%20Winters">See all →</a>
+    </div>
+    <div class="af-rail"><a class="af-bcard" href="/books/the-road-of-bones-winters-2023/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/the-road-of-bones-winters-2023.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/the-road-of-bones-winters-2023.jpg" alt="The Road of Bones book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️🌶️</span><h3>The Road of Bones</h3><p>Demi Winters</p></div>
+    </a></div>
+  </section>
   </div>
 </div>
 
@@ -743,7 +752,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('shelf').select('status').eq('book_key', BOOK.key).maybeSingle();
+          var r = await sb.from('shelf').select('status').eq('user_id', user.id).eq('book_key', BOOK.key).maybeSingle();
           if (r.data) current = r.data.status;
         }
       } catch(e){ /* anon — fine */ }
@@ -910,7 +919,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('book_tags').select('spice').eq('book_key', KEY).maybeSingle();
+          var r = await sb.from('book_tags').select('spice').eq('user_id', user.id).eq('book_key', KEY).maybeSingle();
           if (r.data && r.data.spice){ mine = r.data.spice; paint(); note.textContent = 'You rated it ' + mine + '/5'; }
         } else {
           note.innerHTML = '<a href="/dashboard.html">Log in</a> to save your rating';

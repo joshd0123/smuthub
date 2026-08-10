@@ -527,12 +527,27 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
     <section class="af-sec" id="af-detail">
     <span class="af-num">06</span>
-    <div><p class="af-label">Every recorded detail</p><h2>210 pages, book 1 of the series.</h2><div class="af-groups"><div class="af-group"><span class="af-group-h">Mood</span><div class="af-tags"><a href="/glossary/mood/cozy/">Cozy</a></div></div></div><div class="dgrid">
+    <div><p class="af-label">Every recorded detail</p><h2>210 pages, book 1 of the series.</h2><p class="af-detail-next">Next in the series: <b>Ten Thousand Stitches</b></p><div class="af-groups"><div class="af-group"><span class="af-group-h">Mood</span><div class="af-tags"><a href="/glossary/mood/cozy/">Cozy</a></div></div></div><div class="dgrid">
       <div class="drow"><span class="dk">Series</span><span class="dv">Regency Faerie Tales · Book 1</span></div><div class="drow"><span class="dk">POV</span><span class="dv">Third person · single</span></div><div class="drow"><span class="dk">Length</span><span class="dv">210 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">Historical</span></div><div class="drow"><span class="dk">Time period</span><span class="dv">Secondary Fantasy World</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div><div class="drow"><span class="dk">Audiobook</span><span class="dv">Available</span></div>
     </div></div>
   </section>
 
-    
+    <section class="af-disc" id="af-series" aria-labelledby="af-series-h">
+    <div class="af-disc-head">
+      <div><span>Keep reading</span><h2 id="af-series-h">Books in the series</h2><p>The full reading order, without leaving this page.</p></div>
+      <a href="/books/?q=Regency%20Faerie%20Tales">View full series →</a>
+    </div>
+    <div class="af-rail"><a class="af-bcard is-current" href="/books/half-a-soul-atwater-2020/" aria-current="page">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/half-a-soul-atwater-2020.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/half-a-soul-atwater-2020.jpg" alt="Half a Soul book cover" loading="lazy"></div>
+      <div class="bm"><span>Book 1 · You are here</span><h3>Half a Soul</h3><p>Olivia Atwater</p></div>
+    </a><a class="af-bcard" href="/books/ten-thousand-stitches-atwater-2020/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/ten-thousand-stitches-atwater-2020.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/ten-thousand-stitches-atwater-2020.jpg" alt="Ten Thousand Stitches book cover" loading="lazy"></div>
+      <div class="bm"><span>Book 2</span><h3>Ten Thousand Stitches</h3><p>Olivia Atwater</p></div>
+    </a><a class="af-bcard" href="/books/longshadow-atwater-2021/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/longshadow-atwater-2021.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/longshadow-atwater-2021.jpg" alt="Longshadow book cover" loading="lazy"></div>
+      <div class="bm"><span>Book 3</span><h3>Longshadow</h3><p>Olivia Atwater</p></div>
+    </a></div>
+  </section>
 
     <section class="af-disc" id="af-related" aria-labelledby="af-related-h">
     <div class="af-disc-head">
@@ -744,7 +759,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('shelf').select('status').eq('book_key', BOOK.key).maybeSingle();
+          var r = await sb.from('shelf').select('status').eq('user_id', user.id).eq('book_key', BOOK.key).maybeSingle();
           if (r.data) current = r.data.status;
         }
       } catch(e){ /* anon — fine */ }
@@ -911,7 +926,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('book_tags').select('spice').eq('book_key', KEY).maybeSingle();
+          var r = await sb.from('book_tags').select('spice').eq('user_id', user.id).eq('book_key', KEY).maybeSingle();
           if (r.data && r.data.spice){ mine = r.data.spice; paint(); note.textContent = 'You rated it ' + mine + '/5'; }
         } else {
           note.innerHTML = '<a href="/dashboard.html">Log in</a> to save your rating';

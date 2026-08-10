@@ -583,15 +583,15 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     </a><a class="af-bcard" href="/books/a-kingdom-of-flesh-and-fire-armentrout/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/a-kingdom-of-flesh-and-fire-armentrout.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/a-kingdom-of-flesh-and-fire-armentrout.jpg" alt="A Kingdom of Flesh and Fire book cover" loading="lazy"></div>
       <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>A Kingdom of Flesh and Fire</h3><p>Jennifer L. Armentrout</p></div>
+    </a><a class="af-bcard" href="/books/every-last-breath-armentrout-2015/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/every-last-breath-armentrout-2015.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/every-last-breath-armentrout-2015.jpg" alt="Every Last Breath book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️🌶️</span><h3>Every Last Breath</h3><p>Jennifer L. Armentrout</p></div>
     </a><a class="af-bcard" href="/books/from-blood-and-ash-armentrout-2020/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/from-blood-and-ash-armentrout-2020.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/from-blood-and-ash-armentrout-2020.jpg" alt="From Blood and Ash book cover" loading="lazy"></div>
       <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>From Blood and Ash</h3><p>Jennifer L. Armentrout</p></div>
-    </a><a class="af-bcard" href="/books/the-crown-of-gilded-bones-armentrout-2021/">
-      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/the-crown-of-gilded-bones-armentrout-2021.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/the-crown-of-gilded-bones-armentrout-2021.jpg" alt="The Crown of Gilded Bones book cover" loading="lazy"></div>
-      <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>The Crown of Gilded Bones</h3><p>Jennifer L. Armentrout</p></div>
-    </a><a class="af-bcard" href="/books/the-war-of-two-queens-armentrout-2022/">
-      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/the-war-of-two-queens-armentrout-2022.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/the-war-of-two-queens-armentrout-2022.jpg" alt="The War of Two Queens book cover" loading="lazy"></div>
-      <div class="bm"><span>🌶️🌶️🌶️🌶️🌶️</span><h3>The War of Two Queens</h3><p>Jennifer L. Armentrout</p></div>
+    </a><a class="af-bcard" href="/books/stone-cold-touch-armentrout-2015/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/stone-cold-touch-armentrout-2015.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/stone-cold-touch-armentrout-2015.jpg" alt="Stone Cold Touch book cover" loading="lazy"></div>
+      <div class="bm"><span>🌶️🌶️🌶️</span><h3>Stone Cold Touch</h3><p>Jennifer L. Armentrout</p></div>
     </a></div>
   </section>
   </div>
@@ -780,7 +780,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('shelf').select('status').eq('book_key', BOOK.key).maybeSingle();
+          var r = await sb.from('shelf').select('status').eq('user_id', user.id).eq('book_key', BOOK.key).maybeSingle();
           if (r.data) current = r.data.status;
         }
       } catch(e){ /* anon — fine */ }
@@ -947,7 +947,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('book_tags').select('spice').eq('book_key', KEY).maybeSingle();
+          var r = await sb.from('book_tags').select('spice').eq('user_id', user.id).eq('book_key', KEY).maybeSingle();
           if (r.data && r.data.spice){ mine = r.data.spice; paint(); note.textContent = 'You rated it ' + mine + '/5'; }
         } else {
           note.innerHTML = '<a href="/dashboard.html">Log in</a> to save your rating';

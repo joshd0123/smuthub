@@ -203,9 +203,12 @@
   function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
 
   async function loadMine(){
+    // Scope to the current user — the public-shelves RLS policy is permissive
+    // (ORs with owner-read), so an unscoped select returns other public readers'
+    // rows too, which would mislabel books as on your shelf / rated by you.
     const [{data:tags}, {data:shelf}] = await Promise.all([
-      sb.from('book_tags').select('book_key,spice'),
-      sb.from('shelf').select('book_key,status')
+      sb.from('book_tags').select('book_key,spice').eq('user_id', user.id),
+      sb.from('shelf').select('book_key,status').eq('user_id', user.id)
     ]);
     (tags||[]).forEach(t=>{ if(t.spice) spiceMap[t.book_key]=t.spice; });
     (shelf||[]).forEach(s=>{ shelfSet.add(s.book_key); shelfStatus[s.book_key]=s.status||'want'; });

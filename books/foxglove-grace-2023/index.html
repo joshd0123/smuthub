@@ -537,7 +537,10 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       <div><span>Keep reading</span><h2 id="af-series-h">Books in the series</h2><p>The full reading order, without leaving this page.</p></div>
       <a href="/books/?q=Belladonna">View full series →</a>
     </div>
-    <div class="af-rail"><a class="af-bcard is-current" href="/books/foxglove-grace-2023/" aria-current="page">
+    <div class="af-rail"><a class="af-bcard" href="/books/belladonna-grace-2022/">
+      <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/belladonna-grace-2022.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/belladonna-grace-2022.jpg" alt="Belladonna book cover" loading="lazy"></div>
+      <div class="bm"><span>Book 1</span><h3>Belladonna</h3><p>Adalyn Grace</p></div>
+    </a><a class="af-bcard is-current" href="/books/foxglove-grace-2023/" aria-current="page">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/foxglove-grace-2023.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/foxglove-grace-2023.jpg" alt="Foxglove book cover" loading="lazy"></div>
       <div class="bm"><span>Book 2 · You are here</span><h3>Foxglove</h3><p>Adalyn Grace</p></div>
     </a><a class="af-bcard" href="/books/wisteria-grace-2024/">
@@ -756,7 +759,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('shelf').select('status').eq('book_key', BOOK.key).maybeSingle();
+          var r = await sb.from('shelf').select('status').eq('user_id', user.id).eq('book_key', BOOK.key).maybeSingle();
           if (r.data) current = r.data.status;
         }
       } catch(e){ /* anon — fine */ }
@@ -923,7 +926,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('book_tags').select('spice').eq('book_key', KEY).maybeSingle();
+          var r = await sb.from('book_tags').select('spice').eq('user_id', user.id).eq('book_key', KEY).maybeSingle();
           if (r.data && r.data.spice){ mine = r.data.spice; paint(); note.textContent = 'You rated it ' + mine + '/5'; }
         } else {
           note.innerHTML = '<a href="/dashboard.html">Log in</a> to save your rating';

@@ -691,9 +691,13 @@
 
     if (sb){
       try{
+        // MUST scope to the current user: the public-shelves migration added a
+        // permissive "read public shelves/book_tags" RLS policy, and Postgres
+        // ORs policies together — so an unscoped select('*') now returns every
+        // public reader's rows too, inflating "your" stats. Filter explicitly.
         const [{data:s},{data:t}] = await Promise.all([
-          sb.from('shelf').select('*'),
-          sb.from('book_tags').select('book_key,spice')
+          sb.from('shelf').select('*').eq('user_id', user.id),
+          sb.from('book_tags').select('book_key,spice').eq('user_id', user.id)
         ]);
         myShelf = (s || []).sort(shelfCmp);
         mySpice = Object.fromEntries((t||[]).filter(r=>r.spice).map(r=>[r.book_key,r.spice]));

@@ -756,7 +756,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('shelf').select('status').eq('book_key', BOOK.key).maybeSingle();
+          var r = await sb.from('shelf').select('status').eq('user_id', user.id).eq('book_key', BOOK.key).maybeSingle();
           if (r.data) current = r.data.status;
         }
       } catch(e){ /* anon — fine */ }
@@ -923,7 +923,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('book_tags').select('spice').eq('book_key', KEY).maybeSingle();
+          var r = await sb.from('book_tags').select('spice').eq('user_id', user.id).eq('book_key', KEY).maybeSingle();
           if (r.data && r.data.spice){ mine = r.data.spice; paint(); note.textContent = 'You rated it ' + mine + '/5'; }
         } else {
           note.innerHTML = '<a href="/dashboard.html">Log in</a> to save your rating';
