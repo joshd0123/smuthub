@@ -1,5 +1,6 @@
 -- ════════════════════════════════════════════════════════════════════════
---  smutHub · PROPOSAL — DO NOT RUN until reviewed & approved by Josh
+--  smutHub · APPLIED (deployed to production Supabase) — kept as the record of
+--  the social layer's RLS/security design. Reflects what is actually live.
 --  Social layer v1 — Phases 1+2
 --    • Phase 1: opt-in PUBLIC bookshelves (a shelf is private until you turn it on)
 --    • Phase 2: one-directional FOLLOW graph
@@ -11,8 +12,8 @@
 --      Postgres RLS is permissive (policies OR together), so private rows stay
 --      owner-only. No existing policy is dropped.
 --    • No column leakage. Public reads of profile data go through a view that
---      exposes ONLY safe columns (username, created_at) — never is_admin, never
---      the raw profiles row.
+--      exposes ONLY safe columns (username, display_name, created_at) — never
+--      is_admin, never the raw profiles row.
 --
 --  Pre-req to verify before running (ask if unsure):
 --    • `shelf` and `book_tags` already have RLS enabled with owner-only SELECT
@@ -44,8 +45,18 @@ grant execute on public.profile_is_public(uuid) to anon, authenticated;
 --       never the profiles table, for anyone but the signed-in user. Because
 --       we do NOT add a public SELECT policy to the profiles base table,
 --       is_admin and any future private column can never leak. ─────────────
+--
+--  ⚠ INTENTIONAL SECURITY DEFINER — DO NOT "fix" the advisor by flipping this
+--    to security_invoker on its own. This is a deliberate "safe public
+--    projection of a private table": the definer behaviour is what lets anon
+--    read the whitelisted columns while the base `profiles` table stays fully
+--    RLS-locked (anon SELECT on profiles returns 0 rows — verified in prod).
+--    Flipping to security_invoker WITHOUT a scoped read policy + column-level
+--    grants on profiles would make this view return nothing and break public
+--    shelves. Supabase's "security_definer_view" advisor is a generic flag;
+--    this specific view is reviewed-safe (only public columns, is_public gate).
 create or replace view public.public_profiles as
-  select id, username, created_at
+  select id, username, display_name, created_at
   from profiles
   where is_public = true;
 grant select on public.public_profiles to anon, authenticated;
