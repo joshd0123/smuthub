@@ -252,7 +252,7 @@
           <button id="shUserBtn" class="sh-avatar" title="${esc(name)}" aria-label="Account menu" aria-haspopup="menu" aria-expanded="false">${esc(initial)}</button>
           <div id="shMenu" class="sh-account-menu" role="menu" style="display:none;position:absolute;right:0;top:125%;z-index:95;background:#150e10;border:1px solid var(--line,#2a1d22);border-radius:14px;min-width:220px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.5)">
             <div style="padding:.7em 1.1em;border-bottom:1px solid var(--line,#2a1d22);color:#b69089;font-size:.78rem">Signed in as<br><b style="color:var(--amber,#ffab40);font-size:.92rem">${esc(name)}</b>${handle?`<br><span style="color:#8a6d66">@${esc(handle)}</span>`:''}</div>
-            <a class="sh-menu-link" role="menuitem" href="/dashboard"><span class="sh-ico">📊</span><span>Dashboard</span></a>
+            <a class="sh-menu-link" role="menuitem" href="/dashboard.html"><span class="sh-ico">📊</span><span>Dashboard</span></a>
             <a class="sh-menu-link" role="menuitem" href="/import/"><span class="sh-ico">📥</span><span>Import library</span></a>
             <button type="button" class="shMenuItem" role="menuitem" data-act="display"><span class="sh-ico">✏️</span><span>Edit display name</span></button>
             ${handle?'':'<button type="button" class="shMenuItem" role="menuitem" data-act="handle"><span class="sh-ico">🏷️</span><span>Claim your handle</span></button>'}
