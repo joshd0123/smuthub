@@ -204,6 +204,18 @@ function shouldCountScan(isbn) {
   return !prototypeState.scanEvents.some((event) => event.isbn === isbn && event.createdAt > cutoff);
 }
 
+function hasUsefulBookIdentity(match) {
+  const title = match?.book?.title?.trim();
+  const author = match?.book?.author?.trim();
+  return Boolean(
+    validIsbn(match?.edition?.isbn || "") &&
+    title &&
+    author &&
+    !/^unknown author$|^author unavailable$/i.test(author) &&
+    match.matchQuality !== "partial"
+  );
+}
+
 function contextSummary(context) {
   if (context.readingStatus === "finished") return "Read · Your rating saved";
   if (context.readingStatus === "want") return "On Want to Read";
@@ -211,6 +223,7 @@ function contextSummary(context) {
 }
 
 function recordSuccessfulScan(match) {
+  if (!hasUsefulBookIdentity(match)) return false;
   const { edition, book, context } = match;
   if (shouldCountScan(edition.isbn)) {
     prototypeState.freeScansUsed = Math.min(FREE_SCAN_LIMIT, prototypeState.freeScansUsed + 1);
@@ -222,10 +235,95 @@ function recordSuccessfulScan(match) {
     ...prototypeState.recent.filter((item) => item.bookId !== book.id)
   ].slice(0, 3);
   savePrototypeState();
+  return true;
 }
 
 function emptyUserContext() {
   return { readingStatus: "none", rating: null, spice: null, note: null, shelves: [], ownedEditions: [] };
+}
+
+function safeCatalogKey(value) {
+  return String(value || "book")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 80);
+}
+
+function catalogBookFromRow(data) {
+  return {
+    id: `catalog-${data.slug}`,
+    catalogKey: data.slug,
+    title: data.title,
+    author: data.author || "Author unavailable",
+    series: data.series ? `${data.series}${data.series_number ? ` · Book ${data.series_number}` : ""}` : "Matched in SmutHub",
+    rating: data.rating_avg || "—",
+    ratingCount: "SmutHub catalog",
+    communitySpice: data.spice_level ?? "?",
+    friends: "Friend activity coming soon",
+    friendDetail: "Your private shelf is checked first"
+  };
+}
+
+async function notifyCatalogReview(match, reason = "new-book") {
+  const isbn = normalizeIsbn(match?.edition?.isbn || "");
+  if (!isbn) return false;
+  const notificationKey = `smuthub.scan.catalog-notified.${isbn}`;
+  try { if (localStorage.getItem(notificationKey)) return true; } catch { /* Send without local dedupe. */ }
+
+  const title = match?.book?.title || "Unknown title";
+  const author = match?.book?.author || "Unknown author";
+  const publisher = match?.edition?.publisher || "Unknown publisher";
+  const reviewUrl = new URL("/catalog-admin.html", location.origin);
+  reviewUrl.searchParams.set("scan_review", "1");
+  reviewUrl.searchParams.set("isbn", isbn);
+  reviewUrl.searchParams.set("title", title);
+  reviewUrl.searchParams.set("author", author);
+  reviewUrl.searchParams.set("publisher", publisher);
+  if (match?.edition?.cover) reviewUrl.searchParams.set("cover", match.edition.cover);
+  const message = [
+    "Scanner catalog review request",
+    `Reason: ${reason}`,
+    `ISBN: ${isbn}`,
+    `Title: ${title}`,
+    `Author: ${author}`,
+    `Publisher: ${publisher}`,
+    `Source: ${match?.catalogStatus || "unmatched"}`,
+    `Review and approve: ${reviewUrl}`
+  ].join("\n");
+  const jobs = [];
+
+  if (window.SH?.sb && window.SH?.user) {
+    jobs.push(window.SH.sb.from("feedback").insert({
+      user_id: window.SH.user.id,
+      page: "/scan/catalog-review",
+      message
+    }).then(({ error }) => { if (error) throw error; }));
+  }
+
+  const accessKey = window.SMUTHUB_CONFIG?.WEB3FORMS_KEY;
+  if (accessKey) {
+    jobs.push(fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        access_key: accessKey,
+        subject: `SmutHub scanner: review ISBN ${isbn}`,
+        from_name: "SmutHub Scanner",
+        message
+      })
+    }).then((response) => { if (!response.ok) throw new Error("Notification failed"); }));
+  }
+
+  if (!jobs.length) return false;
+  const results = await Promise.allSettled(jobs);
+  const delivered = results.some((result) => result.status === "fulfilled");
+  if (delivered) {
+    try { localStorage.setItem(notificationKey, String(Date.now())); } catch { /* Notification already sent. */ }
+  }
+  return delivered;
 }
 
 function resolveLocalEdition(isbn, useDemoContext = false) {
@@ -234,7 +332,7 @@ function resolveLocalEdition(isbn, useDemoContext = false) {
   const sourceBook = canonicalBooks[edition.bookId];
   const book = useDemoContext ? sourceBook : { ...sourceBook, friends: "Friend activity coming soon", friendDetail: "Private friend matching is not enabled in this field test" };
   const context = useDemoContext ? (userBookState[book.id] || emptyUserContext()) : emptyUserContext();
-  return { book, edition, context };
+  return { book, edition, context, catalogStatus: "smuthub", matchQuality: "full" };
 }
 
 async function liveUserContext(book) {
@@ -271,22 +369,13 @@ async function findBook(rawIsbn) {
         .select("slug,title,author,cover_url,series,series_number,isbn,publisher,spice_level,rating_avg")
         .eq("isbn", normalized).eq("status", "live").maybeSingle();
       if (data) {
-        const book = {
-          id: `catalog-${data.slug}`,
-          catalogKey: data.slug,
-          title: data.title,
-          author: data.author || "Unknown author",
-          series: data.series ? `${data.series}${data.series_number ? ` · Book ${data.series_number}` : ""}` : "Matched in SmutHub",
-          rating: data.rating_avg || "—",
-          ratingCount: "SmutHub catalog",
-          communitySpice: data.spice_level ?? "?",
-          friends: "Friend activity coming soon",
-          friendDetail: "Your private shelf is checked first"
-        };
+        const book = catalogBookFromRow(data);
         return {
           book,
           edition: { isbn: normalized, bookId: book.id, format: "Catalog edition", publisher: data.publisher || "Publisher unavailable", cover: data.cover_url || `https://covers.openlibrary.org/b/isbn/${normalized}-L.jpg` },
-          context: await liveUserContext(book)
+          context: await liveUserContext(book),
+          catalogStatus: "smuthub",
+          matchQuality: "full"
         };
       }
     } catch { /* Continue to the public metadata fallback. */ }
@@ -296,32 +385,75 @@ async function findBook(rawIsbn) {
     const response = await fetch(`https://openlibrary.org/isbn/${normalized}.json`);
     if (!response.ok) throw new Error("Not found");
     const data = await response.json();
-    let author = "Unknown author";
-    if (data.authors?.[0]?.key) {
-      const authorResponse = await fetch(`https://openlibrary.org${data.authors[0].key}.json`);
+    const workKey = data.works?.[0]?.key;
+    let work = {};
+    if (workKey) {
+      const workResponse = await fetch(`https://openlibrary.org${workKey}.json`);
+      if (workResponse.ok) work = await workResponse.json();
+    }
+    const authorKeys = [
+      ...(data.authors || []).map((entry) => entry.key),
+      ...(work.authors || []).map((entry) => entry.author?.key || entry.key)
+    ].filter(Boolean);
+    let author = "Author unavailable";
+    if (authorKeys[0]) {
+      const authorResponse = await fetch(`https://openlibrary.org${authorKeys[0]}.json`);
       if (authorResponse.ok) author = (await authorResponse.json()).name || author;
     }
-    const bookId = data.works?.[0]?.key || `isbn-${normalized}`;
+    const title = work.title || data.title;
+    const bookId = workKey || `isbn-${normalized}`;
+    const coverId = data.covers?.find((id) => id > 0) || work.covers?.find((id) => id > 0);
+    const matchQuality = title && author !== "Author unavailable" ? "identified" : "partial";
+    const scannedEdition = {
+      isbn: normalized,
+      bookId,
+      format: data.physical_format || "This edition",
+      publisher: data.publishers?.[0] || "Publisher unavailable",
+      cover: coverId ? `https://covers.openlibrary.org/b/id/${coverId}-L.jpg` : `https://covers.openlibrary.org/b/isbn/${normalized}-L.jpg`
+    };
+
+    // An ISBN can be absent from our catalog row even when its parent title is
+    // already present. Resolve the canonical title after public metadata fills
+    // in the title/author; this is the path that connects collector editions.
+    if (window.SH?.sb && title && author !== "Author unavailable") {
+      try {
+        const catalogLookupTitle = title.split(":")[0].trim().replace(/[%_]/g, "");
+        const { data: titleMatches } = await window.SH.sb.from("books")
+          .select("slug,title,author,cover_url,series,series_number,isbn,publisher,spice_level,rating_avg")
+          .ilike("title", `${catalogLookupTitle}%`).eq("status", "live").limit(5);
+        const authorSurname = author.toLowerCase().split(/\s+/).pop();
+        const canonical = (titleMatches || []).find((row) => String(row.author || "").toLowerCase().includes(authorSurname)) || titleMatches?.[0];
+        if (canonical) {
+          const book = catalogBookFromRow(canonical);
+          scannedEdition.bookId = book.id;
+          if (!coverId && canonical.cover_url) scannedEdition.cover = canonical.cover_url;
+          return {
+            book,
+            edition: scannedEdition,
+            context: await liveUserContext(book),
+            catalogStatus: "smuthub",
+            matchQuality: "full"
+          };
+        }
+      } catch { /* Keep the public match and queue it for catalog review. */ }
+    }
+
     return {
       book: {
         id: bookId,
-        title: data.title,
+        title: title || "Title unavailable",
         author,
-        series: data.series?.[0] || "Matched by ISBN",
+        series: data.series?.[0] || "Book identified by ISBN",
         rating: "—",
-        ratingCount: "Community rating coming soon",
+        ratingCount: "Community details are being added",
         communitySpice: "?",
-        friends: "No friend activity yet",
-        friendDetail: "Be the first in your circle to read it"
+        friends: "You found a new book for the Hub",
+        friendDetail: "You can save it now while we prepare its full community profile"
       },
-      edition: {
-        isbn: normalized,
-        bookId,
-        format: data.physical_format || "This edition",
-        publisher: data.publishers?.[0] || "Publisher unavailable",
-        cover: `https://covers.openlibrary.org/b/isbn/${normalized}-L.jpg`
-      },
-      context: emptyUserContext()
+      edition: scannedEdition,
+      context: emptyUserContext(),
+      catalogStatus: "external",
+      matchQuality
     };
   } catch {
     return null;
@@ -349,9 +481,16 @@ function renderEditionRelationship(match) {
   const ownedEdition = context.ownedEditions.map((isbn) => editions[isbn]).find(Boolean);
   const ownsScannedEdition = context.ownedEditions.includes(edition.isbn);
   notice.classList.toggle("same-edition", ownsScannedEdition);
+  notice.classList.toggle("external-book", match.catalogStatus === "external");
   notice.querySelector(":scope > span").textContent = ownsScannedEdition ? "✓" : "↗";
 
-  if (ownsScannedEdition) {
+  if (match.catalogStatus === "external") {
+    notice.querySelector(":scope > span").textContent = match.matchQuality === "partial" ? "!" : "+";
+    $("#editionHeadline").textContent = match.matchQuality === "partial" ? "We’re checking this ISBN — no scan used" : "Full profile is on its way";
+    $("#editionDetail").textContent = match.matchQuality === "partial"
+      ? "We notified the catalog team because the public book information is incomplete."
+      : "Save it now. The catalog team has been notified to review and complete its SmutHub page.";
+  } else if (ownsScannedEdition) {
     $("#editionHeadline").textContent = "This exact edition is in your library";
     $("#editionDetail").textContent = `${edition.format} · ${edition.publisher}`;
   } else if (ownedEdition) {
@@ -369,7 +508,7 @@ function renderEditionRelationship(match) {
 function renderBook(match, { countScan = true } = {}) {
   currentMatch = match;
   const { book, edition, context } = match;
-  if (countScan) recordSuccessfulScan(match);
+  const acceptedResult = !countScan || recordSuccessfulScan(match);
   const presentation = readingPresentation(context);
   const ownsScannedEdition = context.ownedEditions.includes(edition.isbn);
 
@@ -381,6 +520,11 @@ function renderBook(match, { countScan = true } = {}) {
   $("#resultRating").textContent = book.rating;
   $("#ratingCount").textContent = book.ratingCount;
   $("#spiceBadge").textContent = context.spice ? `Your 🌶 ${context.spice}` : `🌶 ${book.communitySpice}`;
+  const externalMatch = match.catalogStatus === "external";
+  $("#matchPill").classList.toggle("external", externalMatch && match.matchQuality !== "partial");
+  $("#matchPill").classList.toggle("partial", match.matchQuality === "partial");
+  $("#matchIcon").textContent = match.matchQuality === "partial" ? "!" : externalMatch ? "+" : "✓";
+  $("#matchText").textContent = match.matchQuality === "partial" ? "Checking this book · no scan used" : externalMatch ? "Book identified" : "Book found";
   $("#friendHeadline").textContent = book.friends;
   $("#friendDetail").textContent = book.friendDetail;
   $("#isbnMeta").textContent = `${edition.format} matched via ISBN ${edition.isbn}`;
@@ -392,9 +536,17 @@ function renderBook(match, { countScan = true } = {}) {
   $("#shelfState").textContent = context.shelves[0] || "No shelf";
   $("#shelfButton").textContent = presentation.action;
   $("#shelfButton").disabled = false;
+  if (match.matchQuality === "partial") {
+    $("#shelfButton").textContent = "Sent for catalog review ✓";
+    $("#shelfButton").disabled = true;
+  }
+  $("#detailsButton").textContent = externalMatch ? "Profile requested ✓" : "View book details";
+  $("#detailsButton").disabled = externalMatch;
   $("#notesButton").hidden = !presentation.notes;
   renderEditionRelationship(match);
   if (!resultDialog.open) resultDialog.showModal();
+  if (countScan && !acceptedResult) toast("Incomplete match — you still have all your scans.");
+  if (externalMatch) notifyCatalogReview(match, match.matchQuality === "partial" ? "incomplete-metadata" : "new-book");
 }
 
 async function processIsbn(isbn) {
@@ -404,9 +556,13 @@ async function processIsbn(isbn) {
   stopCamera();
   if (match) renderBook(match);
   else {
-    toast("We found the code but couldn’t match the edition. Try the cover instead.");
-    activeMode = "cover";
-    updateModeUi();
+    notifyCatalogReview({
+      book: { title: "Unknown title", author: "Unknown author" },
+      edition: { isbn: isbn10to13(normalizeIsbn(isbn)), publisher: "Unknown publisher" },
+      catalogStatus: "unmatched"
+    }, "isbn-not-found");
+    toast("Barcode read, but this ISBN isn’t in our book data yet. No scan used.");
+    setFeedback("No scan used — we sent the ISBN for review", 3200);
   }
 }
 
@@ -417,7 +573,12 @@ async function startCamera() {
     return;
   }
   try {
-    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 } }, audio: false });
+    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } }, audio: false });
+    const videoTrack = cameraStream.getVideoTracks()[0];
+    const capabilities = videoTrack?.getCapabilities?.();
+    if (capabilities?.focusMode?.includes?.("continuous")) {
+      await videoTrack.applyConstraints({ advanced: [{ focusMode: "continuous" }] });
+    }
     cameraVideo.srcObject = cameraStream;
     await cameraVideo.play();
     cameraStage.classList.add("camera-on");
@@ -525,7 +686,7 @@ function updateModeUi() {
   });
   cameraStage.classList.toggle("cover-mode", activeMode === "cover");
   $("#cameraPlaceholder strong").textContent = activeMode === "isbn" ? "Point at the ISBN barcode" : "Frame the entire front cover";
-  $("#cameraPlaceholder small").textContent = activeMode === "isbn" ? "Usually on the back cover" : "Good lighting improves the match";
+  $("#cameraPlaceholder small").textContent = activeMode === "isbn" ? "Fit the full barcode inside the wide frame" : "Good lighting improves the match";
   if (cameraStream) {
     window.clearInterval(scanTimer);
     if (activeMode === "isbn") startBarcodeDetection();
@@ -591,7 +752,10 @@ imageInput.addEventListener("change", async () => {
   if (!file || !requestScanAccess()) return;
   if (activeMode === "isbn") {
     const isbn = await detectIsbnFromPhoto(file);
-    if (isbn) return processIsbn(isbn);
+    if (isbn) {
+      imageInput.value = "";
+      return processIsbn(isbn);
+    }
     toast("No ISBN found in that photo. Try a sharper image or type it in.");
   } else if (activeMode === "cover") {
     setFeedback("Matching cover…", 1800);
@@ -609,9 +773,33 @@ $("#demoButton").addEventListener("click", () => {
   window.setTimeout(() => renderBook(resolveLocalEdition(isbn, true)), 500);
 });
 
-$("#shelfButton").addEventListener("click", () => {
+$("#shelfButton").addEventListener("click", async () => {
   if (!currentMatch) return;
-  const { context, edition } = currentMatch;
+  const { context, edition, book } = currentMatch;
+  if (!window.SH?.user || !window.SH?.sb) {
+    toast("Sign in to save this book to your shelf");
+    window.SH?.openAuth?.();
+    return;
+  }
+  const bookKey = book.catalogKey || `pending-isbn-${edition.isbn}-${safeCatalogKey(book.title)}`;
+  const shelfStatus = context.readingStatus === "finished" ? "read" : context.readingStatus === "reading" ? "reading" : "want";
+  const payload = {
+    book_key: bookKey,
+    status: shelfStatus,
+    title: book.title,
+    author: book.author,
+    cover_url: edition.cover || null
+  };
+  if (shelfStatus === "read") payload.finished_at = new Date().toISOString();
+  let { error } = await window.SH.sb.from("shelf").upsert(payload, { onConflict: "user_id,book_key" });
+  if (error && /cover_url/i.test(error.message || "")) {
+    delete payload.cover_url;
+    ({ error } = await window.SH.sb.from("shelf").upsert(payload, { onConflict: "user_id,book_key" }));
+  }
+  if (error) {
+    toast(`Couldn’t save this book: ${error.message}`);
+    return;
+  }
   let message = "Added to Want to Read";
   if (context.readingStatus === "finished") message = `Added the ${edition.format} to your library`;
   if (context.readingStatus === "want") message = "Marked as purchased";
@@ -653,4 +841,3 @@ $("#unlockButton").addEventListener("click", () => {
 document.addEventListener("visibilitychange", () => { if (document.hidden) stopCamera(); });
 updateQuotaUi();
 renderRecent();
-
