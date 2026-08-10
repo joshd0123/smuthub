@@ -136,7 +136,7 @@
       <div class="result-scroll">
         <div class="sheet-handle"></div>
         <button class="close-button" id="closeResult" aria-label="Close">×</button>
-        <div class="match-pill"><span>✓</span> Book found</div>
+        <div class="match-pill" id="matchPill"><span id="matchIcon">✓</span><span id="matchText">Book found</span></div>
         <section class="book-summary">
           <div class="cover-wrap"><img id="resultCover" alt="" /><span id="spiceBadge">🌶 3</span></div>
           <div class="book-copy">
@@ -183,8 +183,8 @@
       <p class="eyebrow">How it works</p>
       <h2>From cover to context</h2>
       <ol>
-        <li><span>1</span><div><strong>Scan</strong><p>ISBN is fastest and most exact. Cover matching is useful when the barcode isn’t visible.</p></div></li>
-        <li><span>2</span><div><strong>Match</strong><p>We identify the edition, then connect it to the main book record.</p></div></li>
+        <li><span>1</span><div><strong>Scan</strong><p>ISBN is fastest and most exact. Failed or incomplete matches never use one of your five scans.</p></div></li>
+        <li><span>2</span><div><strong>Match</strong><p>We identify the edition, connect it to the main book record, or send a new title for catalog review.</p></div></li>
         <li><span>3</span><div><strong>Remember</strong><p>Your shelves, history, rating, notes, spice and friend activity appear together.</p></div></li>
       </ol>
       <div class="prototype-tools">
