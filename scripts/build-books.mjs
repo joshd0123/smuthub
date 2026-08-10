@@ -28,7 +28,7 @@
 //
 //  Usage:
 //    node scripts/build-books.mjs
-//  Then: git add book/ sitemap.xml && git commit && git push
+//  Then: git add books/ sitemap.xml && git commit && git push
 //  (Manual local build — same workflow as build-glossary.mjs. No CI.)
 //
 //  No dependencies — Node built-in fetch + fs. Reads anon Supabase creds
@@ -2077,4 +2077,4 @@ await fs.writeFile(sitemapPath, sitemap);
 console.log(`✓ Wrote ${wrote} book pages → /books/<slug>/`);
 console.log(`✓ Wrote the browse index → /books/`);
 console.log(`✓ Updated sitemap.xml with ${books.filter(b => b.slug).length} book URLs + /books/`);
-console.log(`\nNext: git add book/ sitemap.xml && git commit && git push`);
+console.log(`\nNext: git add books/ sitemap.xml && git commit && git push`);
