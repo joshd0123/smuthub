@@ -66,6 +66,20 @@ try {
 } catch (e) {
   console.log('  (could not load tags — chips will fall back to prettified slugs)');
 }
+// Merge the reviewed Notion glossary overlay exactly as build-glossary.mjs does,
+// so a chip links to EVERY term page that actually gets generated (Supabase +
+// Notion-only terms), not just the subset already in Supabase. Without this,
+// ~200 real glossary pages exist that book chips never linked to.
+try {
+  const glossarySync = JSON.parse(await fs.readFile(path.join(ROOT, 'data', 'glossary-notion-sync.json'), 'utf-8'));
+  const byKey = new Map(allTags.map(t => [`${t.category}:${t.slug}`, t]));
+  for (const s of glossarySync) {
+    const key = `${s.category}:${s.slug}`;
+    const ex = byKey.get(key);
+    if (ex) Object.assign(ex, s);
+    else { const t = { ...s }; allTags.push(t); byKey.set(key, t); }
+  }
+} catch (e) { if (e && e.code !== 'ENOENT') throw e; }
 console.log(`◇ Building pages for ${books.length} live books · resolved ${allTags.length} glossary tags`);
 
 if (!books.length){ console.error('✗ No live books returned — nothing to build. Check status=live rows exist.'); process.exit(1); }
