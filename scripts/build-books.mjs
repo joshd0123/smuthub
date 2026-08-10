@@ -370,6 +370,10 @@ const ASK_CSS = `
   .af-comps{margin-top:18px}
   .af-comps-h{display:block;color:var(--amber);font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
   .af-comps .af-tags a{border-style:dashed}
+  /* Grouped taste tags (mood, themes, setting, archetypes, representation…) in #06 */
+  .af-groups{margin:2px 0 22px;display:grid;gap:16px}
+  .af-group-h{display:block;color:var(--muted);font-size:.64rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;margin-bottom:9px}
+  .af-groups .af-tags{margin-top:0}
   .af-commit{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   @media(max-width:720px){.af-commit{grid-template-columns:1fr}.af-commit>div{border-right:0!important;border-bottom:1px solid var(--line)}}
   .af-commit>div{padding:16px;border-right:1px solid var(--line)}
@@ -988,6 +992,22 @@ function renderBookPage(book){
   })();
   const comps     = listField(book.comp_titles);        // "for fans of…"
   const heatLabel = firstOf(book.heat_type).trim();     // e.g. "Slow Burn"
+  // The rest of the taste tags the catalog carries but the page never showed
+  // (tropes → #03 and warnings → #04 render separately). Grouped by category,
+  // rendered in "Every recorded detail" (#06); chips auto-link to the glossary
+  // where a page exists. Order = reader interest.
+  const TAG_GROUPS = [
+    ['mood', 'Mood'], ['theme', 'Themes'], ['vibe', 'Vibe'],
+    ['setting', 'Setting'], ['worldbuilding', 'World-building'],
+    ['mc-archetype', 'Main character'], ['li-archetype', 'Love interest'],
+    ['representation', 'Representation'], ['kink', 'Kinks'],
+  ];
+  const tagGroupsHTML = TAG_GROUPS.map(([cat, label]) => {
+    const items = tags.filter(t => t.category === cat);
+    if (!items.length) return '';
+    return `<div class="af-group"><span class="af-group-h">${esc(label)}</span><div class="af-tags">${items.map(t => t.href
+      ? `<a href="${escAttr(t.href)}">${esc(t.label)}</a>` : `<span>${esc(t.label)}</span>`).join('')}</div></div>`;
+  }).filter(Boolean).join('');
   // The full series, current book included, in reading order — the design calls
   // for the current book to be identifiable and the next one obvious.
   const fullSeries = book.series
@@ -1140,8 +1160,8 @@ ${sharedHeader('books')}
         book.page_count ? `${book.page_count} pages` : '',
         book.series_number ? `book ${book.series_number} of the series` : (book.standalone ? 'a standalone' : ''),
       ].filter(Boolean).join(', ') + '.') : 'The essentials, all in one place.',
-      body: detailGrid
-        ? `${nextInSeries(fullSeries, book) ? `<p class="af-detail-next">Next in the series: <b>${esc(nextInSeries(fullSeries, book).title)}</b></p>` : ''}${detailGrid}`
+      body: (tagGroupsHTML || detailGrid)
+        ? `${nextInSeries(fullSeries, book) ? `<p class="af-detail-next">Next in the series: <b>${esc(nextInSeries(fullSeries, book).title)}</b></p>` : ''}${tagGroupsHTML ? `<div class="af-groups">${tagGroupsHTML}</div>` : ''}${detailGrid || ''}`
         : `<p class="af-empty-note">Length and series details aren't recorded yet.</p>`,
     })}
 
