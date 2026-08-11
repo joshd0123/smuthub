@@ -71,6 +71,37 @@ const editions = {
   }
 };
 
+// High-traffic Canadian/US editions that public ISBN services commonly miss.
+// They resolve to the canonical SmutHub title; this is deliberately edition
+// data, not a second book catalog.
+const catalogIsbnAliases = {
+  "9781538774199": { slug: "quicksilver-hart-2024", format: "US/Canada hardcover", publisher: "Forever" },
+  "9781538774212": { slug: "quicksilver-hart-2024", format: "US/Canada paperback", publisher: "Grand Central Publishing" },
+  "9798328436045": { slug: "quicksilver-hart-2024", format: "Independently published edition", publisher: "Callie Hart" },
+  "9781538774229": { slug: "brimstone-hart-2025", format: "US/Canada hardcover", publisher: "Forever" },
+  "9781538774243": { slug: "brimstone-hart-2025", format: "Ebook edition", publisher: "Grand Central Publishing" },
+  "9781538776001": { slug: "brimstone-hart-2025", format: "Standard hardcover", publisher: "Forever" },
+  "9780593975183": { slug: "the-bridge-kingdom-jensen-2019", format: "US/Canada paperback", publisher: "Random House Worlds" },
+  "9781733090308": { slug: "the-bridge-kingdom-jensen-2019", format: "Original paperback", publisher: "Context Literary Agency" },
+  "9798228269088": { slug: "skyshade-aster-2025", format: "US/Canada hardcover", publisher: "Amulet Books" },
+  "9781419773785": { slug: "skyshade-aster-2025", format: "US/Canada hardcover", publisher: "Amulet Books" },
+  "9781419790942": { slug: "skyshade-aster-2025", format: "Collector's edition", publisher: "Amulet Books" },
+  "9781952457258": { slug: "the-crown-of-gilded-bones-armentrout-2021", format: "Hardcover", publisher: "Blue Box Press" },
+  "9781952457265": { slug: "the-crown-of-gilded-bones-armentrout-2021", format: "Hardcover", publisher: "Blue Box Press" },
+  "9781952457630": { slug: "the-crown-of-gilded-bones-armentrout-2021", format: "Hardcover", publisher: "Blue Box Press" },
+  "9781952457784": { slug: "the-crown-of-gilded-bones-armentrout-2021", format: "Paperback", publisher: "Blue Box Press" },
+  "9781952457593": { slug: "the-crown-of-gilded-bones-armentrout-2021", format: "Indigo exclusive paperback", publisher: "Evil Eye Concepts" },
+  "9781963135633": { slug: "the-crown-of-gilded-bones-armentrout-2021", format: "2024 edition", publisher: "Blue Box Press" }
+};
+
+const pendingIsbnAliases = {
+  "9780063479791": { title: "Starside", author: "Alex Aster", format: "Standard hardcover", publisher: "Avon" },
+  "9780063462434": { title: "Starside", author: "Alex Aster", format: "Deluxe limited edition", publisher: "HarperCollins" },
+  "9780063489967": { title: "Starside", author: "Alex Aster", format: "Indigo exclusive hardcover", publisher: "HarperCollins" },
+  "9780063475564": { title: "Starside", author: "Alex Aster", format: "Large print hardcover", publisher: "HarperCollins" },
+  "9781037204654": { title: "Starside", author: "Alex Aster", format: "UK special edition", publisher: "Bloomsbury Publishing" }
+};
+
 const userBookState = {
   "book-fourth-wing": {
     readingStatus: "finished",
@@ -116,6 +147,7 @@ let scanTimer = null;
 let zxingControls = null;
 let currentMatch = null;
 let demoIndex = 0;
+let scanInProgress = false;
 
 function defaultPrototypeState() {
   return { freeScansUsed: 0, lifetimeUnlocked: false, scanEvents: [], recent: [] };
@@ -252,6 +284,37 @@ function safeCatalogKey(value) {
     .slice(0, 80);
 }
 
+function canonicalTitle(value) {
+  return String(value || "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[’‘]/g, "'")
+    .replace(/\([^)]*\)/g, "")
+    .replace(/\b(?:collector'?s?|special|deluxe|exclusive|limited|signed|illustrated) edition\b.*$/i, "")
+    .split(":")[0]
+    .replace(/[^a-z0-9]+/gi, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+function authorSurname(value) {
+  return String(value || "").toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().split(/\s+/).pop() || "";
+}
+
+async function fetchJson(url, timeoutMs = 6500) {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    if (!response.ok) return null;
+    return await response.json();
+  } catch {
+    return null;
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+
 function catalogBookFromRow(data) {
   return {
     id: `catalog-${data.slug}`,
@@ -339,8 +402,8 @@ async function liveUserContext(book) {
   if (!window.SH?.sb || !window.SH?.user || !book.catalogKey) return emptyUserContext();
   try {
     const [{ data: shelf }, { data: tags }] = await Promise.all([
-      window.SH.sb.from("shelf").select("status").eq("book_key", book.catalogKey).maybeSingle(),
-      window.SH.sb.from("book_tags").select("spice").eq("book_key", book.catalogKey).maybeSingle()
+      window.SH.sb.from("shelf").select("status").eq("user_id", window.SH.user.id).eq("book_key", book.catalogKey).maybeSingle(),
+      window.SH.sb.from("book_tags").select("spice").eq("user_id", window.SH.user.id).eq("book_key", book.catalogKey).maybeSingle()
     ]);
     const status = shelf?.status || "none";
     const readingStatus = status === "read" ? "finished" : status === "reading" ? "reading" : status === "want" ? "want" : status === "dnf" ? "abandoned" : "none";
@@ -353,6 +416,126 @@ async function liveUserContext(book) {
   } catch {
     return emptyUserContext();
   }
+}
+
+async function findCatalogTitle(title, author) {
+  if (!window.SH?.sb || !title) return null;
+  const lookup = canonicalTitle(title).replace(/[%_]/g, "");
+  if (!lookup) return null;
+  const lookupPrefix = String(title).split(":")[0].split("(")[0].trim().replace(/[%_]/g, "");
+  const { data, error } = await window.SH.sb.from("books")
+    .select("slug,title,author,cover_url,series,series_number,isbn,publisher,spice_level,rating_avg")
+    .ilike("title", `${lookupPrefix}%`).eq("status", "live").limit(8);
+  if (error || !data?.length) return null;
+  const exactTitle = data.filter((row) => canonicalTitle(row.title) === lookup);
+  const pool = exactTitle.length ? exactTitle : data;
+  const surname = authorSurname(author);
+  return (surname && pool.find((row) => authorSurname(row.author) === surname || String(row.author || "").toLowerCase().includes(surname))) || pool[0];
+}
+
+async function resolveCatalogAlias(isbn) {
+  const alias = catalogIsbnAliases[isbn];
+  if (!alias || !window.SH?.sb) return null;
+  const { data, error } = await window.SH.sb.from("books")
+    .select("slug,title,author,cover_url,series,series_number,isbn,publisher,spice_level,rating_avg")
+    .eq("slug", alias.slug).eq("status", "live").maybeSingle();
+  if (error || !data) return null;
+  const book = catalogBookFromRow(data);
+  return {
+    book,
+    edition: {
+      isbn,
+      bookId: book.id,
+      format: alias.format,
+      publisher: alias.publisher || data.publisher || "Publisher unavailable",
+      cover: data.cover_url || `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`
+    },
+    context: await liveUserContext(book),
+    catalogStatus: "smuthub",
+    matchQuality: "full"
+  };
+}
+
+async function resolvePendingAlias(isbn) {
+  const alias = pendingIsbnAliases[isbn];
+  if (!alias) return null;
+  const book = {
+    id: `isbn-${isbn}`,
+    catalogKey: `pending-isbn-${isbn}-${safeCatalogKey(alias.title)}`,
+    title: alias.title,
+    author: alias.author,
+    series: "New title awaiting SmutHub catalog review",
+    rating: "—",
+    ratingCount: "Community details are being added",
+    communitySpice: "?",
+    friends: "You found a new book for the Hub",
+    friendDetail: "You can save it now while we prepare its full community profile"
+  };
+  return {
+    book,
+    edition: {
+      isbn,
+      bookId: book.id,
+      format: alias.format,
+      publisher: alias.publisher,
+      cover: `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`
+    },
+    context: await liveUserContext(book),
+    catalogStatus: "external",
+    matchQuality: "identified"
+  };
+}
+
+async function googleBooksMetadata(isbn) {
+  const key = window.SMUTHUB_CONFIG?.GOOGLE_BOOKS_KEY;
+  const params = new URLSearchParams({ q: `isbn:${isbn}`, maxResults: "5", printType: "books" });
+  if (key) params.set("key", key);
+  const data = await fetchJson(`https://www.googleapis.com/books/v1/volumes?${params}`);
+  const item = data?.items?.find((entry) => entry.volumeInfo?.industryIdentifiers?.some((id) => normalizeIsbn(id.identifier) === isbn)) || data?.items?.[0];
+  if (!item?.volumeInfo?.title) return null;
+  const info = item.volumeInfo;
+  return {
+    title: info.title,
+    author: info.authors?.[0] || "Author unavailable",
+    publisher: info.publisher || "Publisher unavailable",
+    format: info.printType === "BOOK" ? "Google Books edition" : "This edition",
+    series: info.subtitle || "Book identified by ISBN",
+    cover: (info.imageLinks?.large || info.imageLinks?.medium || info.imageLinks?.thumbnail || "").replace(/^http:/, "https:"),
+    sourceId: item.id
+  };
+}
+
+async function openLibraryMetadata(isbn) {
+  const edition = await fetchJson(`https://openlibrary.org/isbn/${isbn}.json`);
+  if (edition) {
+    const workKey = edition.works?.[0]?.key;
+    const work = workKey ? (await fetchJson(`https://openlibrary.org${workKey}.json`) || {}) : {};
+    const authorKey = [...(edition.authors || []), ...(work.authors || [])]
+      .map((entry) => entry.author?.key || entry.key).find(Boolean);
+    const authorData = authorKey ? await fetchJson(`https://openlibrary.org${authorKey}.json`) : null;
+    const coverId = edition.covers?.find((id) => id > 0) || work.covers?.find((id) => id > 0);
+    return {
+      title: work.title || edition.title,
+      author: authorData?.name || "Author unavailable",
+      publisher: edition.publishers?.[0] || "Publisher unavailable",
+      format: edition.physical_format || "This edition",
+      series: edition.series?.[0] || "Book identified by ISBN",
+      cover: coverId ? `https://covers.openlibrary.org/b/id/${coverId}-L.jpg` : "",
+      sourceId: workKey || edition.key
+    };
+  }
+  const search = await fetchJson(`https://openlibrary.org/search.json?isbn=${encodeURIComponent(isbn)}&limit=5`);
+  const doc = search?.docs?.[0];
+  if (!doc?.title) return null;
+  return {
+    title: doc.title,
+    author: doc.author_name?.[0] || "Author unavailable",
+    publisher: doc.publisher?.[0] || "Publisher unavailable",
+    format: "Open Library edition",
+    series: doc.series?.[0] || "Book identified by ISBN",
+    cover: doc.cover_i ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg` : "",
+    sourceId: doc.key
+  };
 }
 
 async function findBook(rawIsbn) {
@@ -381,35 +564,28 @@ async function findBook(rawIsbn) {
     } catch { /* Continue to the public metadata fallback. */ }
   }
 
+  const aliasMatch = await resolveCatalogAlias(normalized);
+  if (aliasMatch) return aliasMatch;
+  const pendingMatch = await resolvePendingAlias(normalized);
+  if (pendingMatch) return pendingMatch;
+
   try {
-    const response = await fetch(`https://openlibrary.org/isbn/${normalized}.json`);
-    if (!response.ok) throw new Error("Not found");
-    const data = await response.json();
-    const workKey = data.works?.[0]?.key;
-    let work = {};
-    if (workKey) {
-      const workResponse = await fetch(`https://openlibrary.org${workKey}.json`);
-      if (workResponse.ok) work = await workResponse.json();
-    }
-    const authorKeys = [
-      ...(data.authors || []).map((entry) => entry.key),
-      ...(work.authors || []).map((entry) => entry.author?.key || entry.key)
-    ].filter(Boolean);
-    let author = "Author unavailable";
-    if (authorKeys[0]) {
-      const authorResponse = await fetch(`https://openlibrary.org${authorKeys[0]}.json`);
-      if (authorResponse.ok) author = (await authorResponse.json()).name || author;
-    }
-    const title = work.title || data.title;
-    const bookId = workKey || `isbn-${normalized}`;
-    const coverId = data.covers?.find((id) => id > 0) || work.covers?.find((id) => id > 0);
+    const [google, openLibrary] = await Promise.all([
+      googleBooksMetadata(normalized),
+      openLibraryMetadata(normalized)
+    ]);
+    const metadata = google || openLibrary;
+    if (!metadata?.title) return null;
+    const title = metadata.title;
+    const author = metadata.author !== "Author unavailable" ? metadata.author : (openLibrary?.author || google?.author || "Author unavailable");
+    const bookId = metadata.sourceId || `isbn-${normalized}`;
     const matchQuality = title && author !== "Author unavailable" ? "identified" : "partial";
     const scannedEdition = {
       isbn: normalized,
       bookId,
-      format: data.physical_format || "This edition",
-      publisher: data.publishers?.[0] || "Publisher unavailable",
-      cover: coverId ? `https://covers.openlibrary.org/b/id/${coverId}-L.jpg` : `https://covers.openlibrary.org/b/isbn/${normalized}-L.jpg`
+      format: metadata.format || openLibrary?.format || google?.format || "This edition",
+      publisher: metadata.publisher || openLibrary?.publisher || google?.publisher || "Publisher unavailable",
+      cover: metadata.cover || openLibrary?.cover || google?.cover || `https://covers.openlibrary.org/b/isbn/${normalized}-L.jpg`
     };
 
     // An ISBN can be absent from our catalog row even when its parent title is
@@ -417,16 +593,11 @@ async function findBook(rawIsbn) {
     // in the title/author; this is the path that connects collector editions.
     if (window.SH?.sb && title && author !== "Author unavailable") {
       try {
-        const catalogLookupTitle = title.split(":")[0].trim().replace(/[%_]/g, "");
-        const { data: titleMatches } = await window.SH.sb.from("books")
-          .select("slug,title,author,cover_url,series,series_number,isbn,publisher,spice_level,rating_avg")
-          .ilike("title", `${catalogLookupTitle}%`).eq("status", "live").limit(5);
-        const authorSurname = author.toLowerCase().split(/\s+/).pop();
-        const canonical = (titleMatches || []).find((row) => String(row.author || "").toLowerCase().includes(authorSurname)) || titleMatches?.[0];
+        const canonical = await findCatalogTitle(title, author);
         if (canonical) {
           const book = catalogBookFromRow(canonical);
           scannedEdition.bookId = book.id;
-          if (!coverId && canonical.cover_url) scannedEdition.cover = canonical.cover_url;
+          if (!metadata.cover && canonical.cover_url) scannedEdition.cover = canonical.cover_url;
           return {
             book,
             edition: scannedEdition,
@@ -438,20 +609,22 @@ async function findBook(rawIsbn) {
       } catch { /* Keep the public match and queue it for catalog review. */ }
     }
 
-    return {
-      book: {
+    const externalBook = {
         id: bookId,
+        catalogKey: `pending-isbn-${normalized}-${safeCatalogKey(title)}`,
         title: title || "Title unavailable",
         author,
-        series: data.series?.[0] || "Book identified by ISBN",
+        series: metadata.series || "Book identified by ISBN",
         rating: "—",
         ratingCount: "Community details are being added",
         communitySpice: "?",
         friends: "You found a new book for the Hub",
         friendDetail: "You can save it now while we prepare its full community profile"
-      },
+    };
+    return {
+      book: externalBook,
       edition: scannedEdition,
-      context: emptyUserContext(),
+      context: await liveUserContext(externalBook),
       catalogStatus: "external",
       matchQuality
     };
@@ -470,7 +643,7 @@ function readingPresentation(context) {
   if (context.readingStatus === "reading") return { icon: "↻", label: "You’re currently reading this", detail: "Already on your Currently Reading shelf", state: "Reading", action: "View progress", notes: Boolean(context.note) };
   if (context.readingStatus === "abandoned") return { icon: "×", label: "You did not finish this book", detail: "Previously marked Did Not Finish", state: "DNF", action: "Try it again", notes: Boolean(context.note) };
   if (context.readingStatus === "want") {
-    return { icon: "⌁", label: "Already on your shelf", detail: `Saved to Want to Read · ${context.savedDate}`, state: "Want to read", action: "Mark as purchased", notes: false };
+    return { icon: "⌁", label: "Already on your shelf", detail: context.savedDate ? `Saved to Want to Read · ${context.savedDate}` : "Saved to Want to Read", state: "Want to read", action: "✓ On want to read", notes: false };
   }
   return { icon: "+", label: "This book is new to you", detail: "No reading history or shelf activity yet", state: "Not started", action: "Add to want to read", notes: false };
 }
@@ -535,7 +708,7 @@ function renderBook(match, { countScan = true } = {}) {
   $("#ownershipState").textContent = ownsScannedEdition ? "Own this edition" : context.ownedEditions.length ? "Own another edition" : "Don’t own";
   $("#shelfState").textContent = context.shelves[0] || "No shelf";
   $("#shelfButton").textContent = presentation.action;
-  $("#shelfButton").disabled = false;
+  $("#shelfButton").disabled = context.readingStatus === "want";
   if (match.matchQuality === "partial") {
     $("#shelfButton").textContent = "Sent for catalog review ✓";
     $("#shelfButton").disabled = true;
@@ -550,19 +723,24 @@ function renderBook(match, { countScan = true } = {}) {
 }
 
 async function processIsbn(isbn) {
-  if (!requestScanAccess()) return;
+  if (scanInProgress || !requestScanAccess()) return;
+  scanInProgress = true;
   setFeedback("ISBN found — matching edition…", 2200);
-  const match = await findBook(isbn);
-  stopCamera();
-  if (match) renderBook(match);
-  else {
-    notifyCatalogReview({
-      book: { title: "Unknown title", author: "Unknown author" },
-      edition: { isbn: isbn10to13(normalizeIsbn(isbn)), publisher: "Unknown publisher" },
-      catalogStatus: "unmatched"
-    }, "isbn-not-found");
-    toast("Barcode read, but this ISBN isn’t in our book data yet. No scan used.");
-    setFeedback("No scan used — we sent the ISBN for review", 3200);
+  try {
+    const match = await findBook(isbn);
+    stopCamera();
+    if (match) renderBook(match);
+    else {
+      notifyCatalogReview({
+        book: { title: "Unknown title", author: "Unknown author" },
+        edition: { isbn: isbn10to13(normalizeIsbn(isbn)), publisher: "Unknown publisher" },
+        catalogStatus: "unmatched"
+      }, "isbn-not-found");
+      toast("Barcode read. We sent this ISBN for review—no scan used.");
+      setFeedback("No scan used — try again or type the ISBN", 3200);
+    }
+  } finally {
+    scanInProgress = false;
   }
 }
 
@@ -713,8 +891,8 @@ function renderRecent() {
     summary.textContent = item.summary;
     copy.append(title, summary);
     button.append(image, copy);
-    button.addEventListener("click", () => {
-      const match = resolveLocalEdition(item.isbn);
+    button.addEventListener("click", async () => {
+      const match = await findBook(item.isbn);
       if (match) renderBook(match, { countScan: false });
     });
     list.append(button);
@@ -784,6 +962,7 @@ $("#shelfButton").addEventListener("click", async () => {
   const bookKey = book.catalogKey || `pending-isbn-${edition.isbn}-${safeCatalogKey(book.title)}`;
   const shelfStatus = context.readingStatus === "finished" ? "read" : context.readingStatus === "reading" ? "reading" : "want";
   const payload = {
+    user_id: window.SH.user.id,
     book_key: bookKey,
     status: shelfStatus,
     title: book.title,
@@ -800,12 +979,27 @@ $("#shelfButton").addEventListener("click", async () => {
     toast(`Couldn’t save this book: ${error.message}`);
     return;
   }
+  const { data: saved, error: verifyError } = await window.SH.sb.from("shelf")
+    .select("book_key,status")
+    .eq("user_id", window.SH.user.id)
+    .eq("book_key", bookKey)
+    .maybeSingle();
+  if (verifyError || !saved || saved.status !== shelfStatus) {
+    toast("The shelf did not confirm the save. Please try again.");
+    return;
+  }
+  book.catalogKey = bookKey;
+  currentMatch.context = await liveUserContext(book);
   let message = "Added to Want to Read";
   if (context.readingStatus === "finished") message = `Added the ${edition.format} to your library`;
   if (context.readingStatus === "want") message = "Marked as purchased";
   toast(`${message} · Undo`);
   $("#shelfButton").textContent = "✓ Saved";
   $("#shelfButton").disabled = true;
+  $("#memoryLabel").textContent = currentMatch.context.readingStatus === "finished" ? "You’ve read this book" : "Already on your shelf";
+  $("#memoryDetail").textContent = currentMatch.context.readingStatus === "finished" ? "Marked as read on your SmutHub shelf" : "Saved to Want to Read";
+  $("#readingState").textContent = currentMatch.context.readingStatus === "finished" ? "Finished" : "Want to read";
+  $("#shelfState").textContent = currentMatch.context.shelves[0] || "Want to Read";
 });
 
 $("#notesButton").addEventListener("click", () => toast(`Your note: “${currentMatch?.context.note || "No note yet"}”`));
