@@ -187,6 +187,7 @@
       guides: path.startsWith('/guides/') || path.startsWith('/glossary/'),
       shelf: path === '/bookshelf' || path === '/bookshelf/',
       stores: path === '/stores' || path === '/stores.html',
+      scan: path === '/scan' || path === '/scan.html',
       add: path === '/search' || path === '/search.html' || path === '/smuthub-app.html'
     };
     const on = key => active[key] ? ' class="on"' : '';
@@ -206,7 +207,8 @@
       </details>
       <a href="/bookshelf"${on('shelf')}>My Bookshelf</a>
       <a href="/stores"${on('stores')}>Find a Store</a>
-      <a href="/search"${on('add')}>Add a Book</a>`;
+      <a href="/scan"${on('scan')}>Scan</a>
+      <a href="/search" class="sh-drawer-only${active.add ? ' on' : ''}">Add a Book</a>`;
 
     const guides = nav.querySelector('.sh-guides');
     if(guides){
@@ -495,6 +497,11 @@
       header .navlinks>a,header .sh-guides>summary{display:flex;align-items:center;min-height:42px;color:var(--muted,#b69089);
         font-family:inherit;font-size:.92rem;font-weight:500;text-decoration:none;white-space:nowrap;cursor:pointer;transition:color .2s}
       header .navlinks>a.on,header .sh-guides.on>summary{color:var(--cream,#f4e8e3)}
+      /* "Add a Book" lives only in the mobile hamburger drawer — Scan is the
+         primary add action in the top nav now. Hidden on desktop; shown when the
+         drawer is open on small screens. */
+      header .navlinks .sh-drawer-only{display:none}
+      @media(max-width:880px){ header .navlinks.sh-open .sh-drawer-only{display:flex} }
       header .sh-guides{position:relative}
       header .sh-guides>summary{position:relative;padding-right:17px;list-style:none}
       header .sh-guides>summary::-webkit-details-marker{display:none}
