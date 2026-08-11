@@ -490,7 +490,13 @@ async function googleBooksMetadata(isbn) {
   const key = window.SMUTHUB_CONFIG?.GOOGLE_BOOKS_KEY;
   const params = new URLSearchParams({ q: `isbn:${isbn}`, maxResults: "5", printType: "books" });
   if (key) params.set("key", key);
-  const data = await fetchJson(`https://www.googleapis.com/books/v1/volumes?${params}`);
+  let data = await fetchJson(`https://www.googleapis.com/books/v1/volumes?${params}`);
+  // A misconfigured browser key must not disable Google's normal anonymous
+  // allowance. Retry without it before moving to Open Library and aliases.
+  if (!data?.items?.length && key) {
+    params.delete("key");
+    data = await fetchJson(`https://www.googleapis.com/books/v1/volumes?${params}`);
+  }
   const item = data?.items?.find((entry) => entry.volumeInfo?.industryIdentifiers?.some((id) => normalizeIsbn(id.identifier) === isbn)) || data?.items?.[0];
   if (!item?.volumeInfo?.title) return null;
   const info = item.volumeInfo;
