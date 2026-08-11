@@ -224,6 +224,9 @@
 
   /* ══ REDESIGNED DASHBOARD STATS ══ */
   body.guest .dstats, body.guest .dtwo, body.guest #paceSec, body.guest #raceSec{display:none}
+  /* Demo (logged-out) shows example stats, but the community Read Race needs a
+     real account + follows, so it stays hidden in demo. */
+  body.demo #raceSec{display:none}
   .card{background:var(--ink-2);border:1px solid var(--line);border-radius:18px;padding:18px 20px}
   .empty-line{color:var(--muted);font-size:.88rem;padding:14px 2px}
   .dtwo{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -483,11 +486,21 @@
       try{
         const { data } = await sb.from('books')
           .select('slug,title,author,cover_url,spice_level,rating_avg')
-          .eq('status','live').not('cover_url','is',null).limit(4);
+          .eq('status','live').not('cover_url','is',null)
+          .order('rating_avg',{ascending:false,nullsFirst:false}).limit(14);
         if (data && data.length){
-          const statuses = ['reading','want','read','dnf'];
-          demo = data.map((b,i)=>({ key:'demo-'+b.slug, title:b.title, author:b.author,
-            cover_url:b.cover_url, status:statuses[i%statuses.length], spice:b.spice_level||0 }));
+          // A believable spread so EVERY stat section has something to show:
+          // mostly read (drives pages/pace/taste), a couple reading, some TBR,
+          // one DNF. Read books get spread-out finished dates for the pace chart.
+          const plan = ['read','read','read','read','read','read','read','read','reading','reading','want','want','want','dnf'];
+          const now = new Date();
+          demo = data.map((b,i)=>{
+            const status = plan[i % plan.length];
+            const row = { key:'demo-'+b.slug, title:b.title, author:b.author,
+              cover_url:b.cover_url, status, spice:b.spice_level||0 };
+            if (status==='read'){ const d=new Date(now); d.setMonth(d.getMonth()-i); row.finished_at = d.toISOString(); }
+            return row;
+          });
         }
       }catch(_){}
     }
@@ -683,17 +696,27 @@
     $('commSec').hidden = !user;
 
     if (!user){
+      // Demo dashboard: show EXAMPLE stats (not a bare page) so visitors see the
+      // payoff before signing up. Built from real catalog books via loadDemoReading.
+      document.body.classList.add('demo');
       $('demobar').classList.add('show');
-      setStatsVisible(false);        // personal stats need your data
+      await getCatalogIndex();       // stats need the catalog (tropes/pages/series)
+      await loadDemoReading();       // example shelf → example stats
+      renderStats();                 // renders the stat sections from the demo shelf
       loadTrending();
       return;
     }
+    document.body.classList.remove('demo');   // logging in clears the demo gating
 
     if (sb){
       try{
+        // MUST scope to the current user: the public-shelves migration added a
+        // permissive "read public shelves/book_tags" RLS policy, and Postgres
+        // ORs policies together — so an unscoped select('*') now returns every
+        // public reader's rows too, inflating "your" stats. Filter explicitly.
         const [{data:s},{data:t}] = await Promise.all([
-          sb.from('shelf').select('*'),
-          sb.from('book_tags').select('book_key,spice')
+          sb.from('shelf').select('*').eq('user_id', user.id),
+          sb.from('book_tags').select('book_key,spice').eq('user_id', user.id)
         ]);
         myShelf = (s || []).sort(shelfCmp);
         mySpice = Object.fromEntries((t||[]).filter(r=>r.spice).map(r=>[r.book_key,r.spice]));

@@ -223,7 +223,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-seeall{margin-top:14px;padding:7px 0;background:none;border:0;border-bottom:1px solid var(--line);color:var(--cream);font-family:inherit;font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
   .af-seeall span{margin-left:7px;color:var(--amber)}
   .af-seeall:hover{border-color:var(--rose)}
-  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto 1fr 1fr;gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
+  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
   @media(max-width:720px){.af-spice{grid-template-columns:1fr;gap:10px}}
   .af-spice b{display:block;margin-bottom:3px;color:var(--cream);font-size:.66rem;text-transform:uppercase;letter-spacing:.09em}
   .af-gauge{display:flex;gap:5px}
@@ -236,6 +236,13 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-blurb summary span{color:var(--amber);font-size:1.1rem;line-height:.7;transition:transform .2s}
   .af-blurb[open] summary span{transform:rotate(45deg)}
   .af-blurb .af-blurb-body{padding-bottom:18px}
+  .af-comps{margin-top:18px}
+  .af-comps-h{display:block;color:var(--amber);font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+  .af-comps .af-tags a{border-style:dashed}
+  /* Grouped taste tags (mood, themes, setting, archetypes, representation…) in #06 */
+  .af-groups{margin:2px 0 22px;display:grid;gap:16px}
+  .af-group-h{display:block;color:var(--muted);font-size:.64rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;margin-bottom:9px}
+  .af-groups .af-tags{margin-top:0}
   .af-commit{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   @media(max-width:720px){.af-commit{grid-template-columns:1fr}.af-commit>div{border-right:0!important;border-bottom:1px solid var(--line)}}
   .af-commit>div{padding:16px;border-right:1px solid var(--line)}
@@ -460,7 +467,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       </div>
 
       <dl class="af-facts" aria-label="Quick book facts">
-        <div><dt>Length</dt><dd>481 pages</dd></div><div><dt>Series</dt><dd>Book 2</dd><small>Bonded to Beasts</small></div>
+        <div><dt>Length</dt><dd>481 pages</dd></div><div><dt>Series</dt><dd>Book 2</dd><small>Bonded to Beasts</small></div><div><dt>POV</dt><dd>Dual POV</dd></div><div><dt>Pairing</dt><dd>M/F</dd><small>Central romance</small></div>
       </dl>
     </div>
 
@@ -470,7 +477,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>not recorded</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>1 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>none recorded</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>not recorded</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
+        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>3 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>1 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>3 flagged</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>tap to reveal</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
       </nav>
     </aside>
   </section>
@@ -482,12 +489,17 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     <div><p class="af-label">What&#39;s it about?</p><h2>The rightful queen and her fire-breathing dragon must fight against corruption and overcome the betrayal of the man she loved in the searing conclusion to the Celtic-inspired fantasy romance duology that began with A Fate Forged in Fire. Aemyra Daercathian is a queen on the run.</h2><details class="af-blurb">
         <summary>Read the full blurb <span>+</span></summary>
         <div class="af-blurb-body"><p class="lead">The rightful queen and her fire-breathing dragon must fight against corruption and overcome the betrayal of the man she loved in the searing conclusion to the Celtic-inspired fantasy romance duology that began with A Fate Forged in Fire.</p><div class="more"><p>Aemyra Daercathian is a queen on the run. Having failed to take Àird Lasair and been betrayed by her husband—whom she had grown to trust and was beginning to fall for during her time in captivity—Aemyra is forced to retreat with a raging desire for revenge. But before she can settle the score and fulfill a sacred promise to kill Fiorean, her forces must rest and replenish their strength. No one can know the truth. Although Aemyra has a fierce dragon and a large army of elemental wielders called Dùileach standing behind her, she has lost what’s most important—her fire magic. Haunted by her love for her enemy and unsure if she is Goddess-blessed anymore, Aemyra vows to do right by her people, even if that means she must make a new kind of alliance, one that could mean winning back her territory—at a cost to her heart. From the ashes, Aemyra must emerge a new kind of queen, but will she be the dawn for her people or the fire that burns everything to the ground?</p></div><div class="fade"></div></div>
-      </details></div>
+      </details><div class="af-comps"><span class="af-comps-h">For fans of</span><div class="af-tags"><a href="/books/?q=A%20Court%20of%20Thorns%20and%20Roses">A Court of Thorns and Roses</a><a href="/books/?q=Fourth%20Wing">Fourth Wing</a></div></div></div>
   </section>
 
     <section class="af-sec" id="af-spice">
     <span class="af-num">02</span>
-    <div><p class="af-label">How spicy is it?</p><h2>Not recorded yet.</h2><p class="af-empty-note">No spice rating recorded yet — check back as the catalog fills in.</p></div>
+    <div><p class="af-label">How spicy is it?</p><h2>3 / 5 — on-page (open door).</h2><div class="af-spice">
+        <span class="af-gauge" aria-label="Spice level 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
+        <span><b>Door</b>On-page (open door)</span>
+        <span><b>Frequency</b>Moderate</span>
+        <span><b>Burn</b>Medium Burn</span>
+      </div></div>
   </section>
 
     <section class="af-sec" id="af-tropes">
@@ -498,20 +510,25 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
     <section class="af-sec" id="af-warnings">
     <span class="af-num">04</span>
-    <div><p class="af-label">Any hard nos?</p><h2>No content warnings recorded for this book.</h2>
+    <div><p class="af-label">Any hard nos?</p><h2>Flagged: fantasy violence, death in battle, blood / gore.</h2><div class="af-tags is-warn"><span>Fantasy Violence</span><span>Death in Battle</span><span>Blood / Gore</span></div>
         
-        <p class="af-empty-note">Nobody has flagged content warnings here yet. That's not a guarantee the book is warning-free — just that we don't have them recorded.</p></div>
+        </div>
   </section>
 
     <section class="af-sec" id="af-ending">
     <span class="af-num">05</span>
-    <div><p class="af-label">How does it end?</p><h2>Not recorded yet.</h2><p class="af-empty-note">The ending isn't recorded yet.</p></div>
+    <div><p class="af-label">How does it end?</p><h2>Hidden to avoid spoilers.</h2><div class="af-ending">
+          <button type="button" class="af-reveal" aria-expanded="false" aria-controls="af-ending-body">⚠ Reveal the ending</button>
+          <div class="af-ending-body" id="af-ending-body" hidden>
+            <p class="af-ending-verdict">HFN / Open.</p>
+          </div>
+        </div></div>
   </section>
 
     <section class="af-sec" id="af-detail">
     <span class="af-num">06</span>
-    <div><p class="af-label">Every recorded detail</p><h2>481 pages, book 2 of the series.</h2><div class="dgrid">
-      <div class="drow"><span class="dk">Series</span><span class="dv">Bonded to Beasts · Book 2</span></div><div class="drow"><span class="dk">Length</span><span class="dv">481 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div>
+    <div><p class="af-label">Every recorded detail</p><h2>481 pages, book 2 of the series.</h2><div class="af-groups"><div class="af-group"><span class="af-group-h">Mood</span><div class="af-tags"><a href="/glossary/mood/dark-fantasy/">Dark Fantasy</a><a href="/glossary/mood/dragons/">Dragons</a></div></div></div><div class="dgrid">
+      <div class="drow"><span class="dk">Series</span><span class="dv">Bonded to Beasts · Book 2</span></div><div class="drow"><span class="dk">POV</span><span class="dv">Dual POV</span></div><div class="drow"><span class="dk">Length</span><span class="dv">481 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">Secondary World</span></div><div class="drow"><span class="dk">Time period</span><span class="dv">Secondary Fantasy Realm</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div>
     </div></div>
   </section>
 
@@ -527,16 +544,16 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>Ashwalker</h3><p>S.M Gaither</p></div>
     </a><a class="af-bcard" href="/books/court-of-lies-and-deceit-blackwood-2025/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/court-of-lies-and-deceit-blackwood-2025.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/court-of-lies-and-deceit-blackwood-2025.jpg" alt="Court of Lies and Deceit book cover" loading="lazy"></div>
-      <div class="bm"><h3>Court of Lies and Deceit</h3><p>Marion Blackwood</p></div>
+      <div class="bm"><span>🌶️🌶️🌶️</span><h3>Court of Lies and Deceit</h3><p>Marion Blackwood</p></div>
     </a><a class="af-bcard" href="/books/crown-me-dead-zander-2026/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/crown-me-dead-zander-2026.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/crown-me-dead-zander-2026.jpg" alt="Crown Me Dead book cover" loading="lazy"></div>
       <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>Crown Me Dead</h3><p>Liv Zander</p></div>
     </a><a class="af-bcard" href="/books/crown-me-yours-zander-2026/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/crown-me-yours-zander-2026.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/crown-me-yours-zander-2026.jpg" alt="Crown Me Yours book cover" loading="lazy"></div>
-      <div class="bm"><h3>Crown Me Yours</h3><p>Liv Zander</p></div>
+      <div class="bm"><span>🌶️🌶️🌶️</span><h3>Crown Me Yours</h3><p>Liv Zander</p></div>
     </a><a class="af-bcard" href="/books/empire-of-flame-and-thorns-blackwood-2024/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/empire-of-flame-and-thorns-blackwood-2024.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/empire-of-flame-and-thorns-blackwood-2024.jpg" alt="Empire of Flame and Thorns book cover" loading="lazy"></div>
-      <div class="bm"><h3>Empire of Flame and Thorns</h3><p>Marion Blackwood</p></div>
+      <div class="bm"><span>🌶️🌶️🌶️</span><h3>Empire of Flame and Thorns</h3><p>Marion Blackwood</p></div>
     </a></div>
   </section>
 
@@ -567,11 +584,11 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 <!-- Drawer content is server-rendered and hidden, so the complete trope and
      warning lists exist in the HTML for crawlers and for no-JS readers. -->
 <template id="afDrawerTropes"><a href="/glossary/trope/enemies-to-lovers/"><span>01</span><b>Enemies to Lovers</b></a></template>
-<template id="afDrawerWarnings"></template>
+<template id="afDrawerWarnings"><div><span>01</span><b>Fantasy Violence</b></div><div><span>02</span><b>Death in Battle</b></div><div><span>03</span><b>Blood / Gore</b></div></template>
 <noscript>
   <div class="wrap">
     <section class="blk"><h2>All tropes</h2><div class="af-tags"><span>Enemies to Lovers</span></div></section>
-    
+    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Fantasy Violence</span><span>Death in Battle</span><span>Blood / Gore</span></div></section>
   </div>
 </noscript>
 
@@ -727,7 +744,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('shelf').select('status').eq('book_key', BOOK.key).maybeSingle();
+          var r = await sb.from('shelf').select('status').eq('user_id', user.id).eq('book_key', BOOK.key).maybeSingle();
           if (r.data) current = r.data.status;
         }
       } catch(e){ /* anon — fine */ }
@@ -894,7 +911,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('book_tags').select('spice').eq('book_key', KEY).maybeSingle();
+          var r = await sb.from('book_tags').select('spice').eq('user_id', user.id).eq('book_key', KEY).maybeSingle();
           if (r.data && r.data.spice){ mine = r.data.spice; paint(); note.textContent = 'You rated it ' + mine + '/5'; }
         } else {
           note.innerHTML = '<a href="/dashboard.html">Log in</a> to save your rating';

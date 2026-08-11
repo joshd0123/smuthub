@@ -223,7 +223,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-seeall{margin-top:14px;padding:7px 0;background:none;border:0;border-bottom:1px solid var(--line);color:var(--cream);font-family:inherit;font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
   .af-seeall span{margin-left:7px;color:var(--amber)}
   .af-seeall:hover{border-color:var(--rose)}
-  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto 1fr 1fr;gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
+  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
   @media(max-width:720px){.af-spice{grid-template-columns:1fr;gap:10px}}
   .af-spice b{display:block;margin-bottom:3px;color:var(--cream);font-size:.66rem;text-transform:uppercase;letter-spacing:.09em}
   .af-gauge{display:flex;gap:5px}
@@ -236,6 +236,13 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-blurb summary span{color:var(--amber);font-size:1.1rem;line-height:.7;transition:transform .2s}
   .af-blurb[open] summary span{transform:rotate(45deg)}
   .af-blurb .af-blurb-body{padding-bottom:18px}
+  .af-comps{margin-top:18px}
+  .af-comps-h{display:block;color:var(--amber);font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+  .af-comps .af-tags a{border-style:dashed}
+  /* Grouped taste tags (mood, themes, setting, archetypes, representation…) in #06 */
+  .af-groups{margin:2px 0 22px;display:grid;gap:16px}
+  .af-group-h{display:block;color:var(--muted);font-size:.64rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;margin-bottom:9px}
+  .af-groups .af-tags{margin-top:0}
   .af-commit{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   @media(max-width:720px){.af-commit{grid-template-columns:1fr}.af-commit>div{border-right:0!important;border-bottom:1px solid var(--line)}}
   .af-commit>div{padding:16px;border-right:1px solid var(--line)}
@@ -470,7 +477,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>3 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>7 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>7 warnings</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>tap to reveal</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
+        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>3 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>7 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>9 flagged</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>tap to reveal</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
       </nav>
     </aside>
   </section>
@@ -482,7 +489,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     <div><p class="af-label">What&#39;s it about?</p><h2>Together they will rise. Or together they will fall. Sarah J. Maas&#39;s #1 New York Times bestselling Throne of Glass series draws to an explosive conclusion as Aelin fights for her life, her people, and the promise of a better…</h2><details class="af-blurb">
         <summary>Read the full blurb <span>+</span></summary>
         <div class="af-blurb-body"><p class="lead">Together they will rise. Or together they will fall. Sarah J. Maas&#39;s #1 New York Times bestselling Throne of Glass series draws to an explosive conclusion as Aelin fights for her life, her people, and the promise of a better world.</p></div>
-      </details></div>
+      </details><div class="af-comps"><span class="af-comps-h">For fans of</span><div class="af-tags"><a href="/books/?q=A%20Court%20of%20Thorns%20and%20Roses">A Court of Thorns and Roses</a><a href="/books/?q=Fourth%20Wing">Fourth Wing</a></div></div></div>
   </section>
 
     <section class="af-sec" id="af-spice">
@@ -490,20 +497,21 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     <div><p class="af-label">How spicy is it?</p><h2>3 / 5 — on-page (open door).</h2><div class="af-spice">
         <span class="af-gauge" aria-label="Spice level 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
         <span><b>Door</b>On-page (open door)</span>
-        <span></span>
+        <span><b>Frequency</b>Moderate</span>
+        <span><b>Burn</b>Medium Burn</span>
       </div></div>
   </section>
 
     <section class="af-sec" id="af-tropes">
     <span class="af-num">03</span>
-    <div><p class="af-label">Which tropes?</p><h2>Age Gap, Enemies to Lovers, Fae, and more.</h2><div class="af-tags"><a href="/glossary/trope/age-gap/">Age Gap</a><a href="/glossary/trope/enemies-to-lovers/">Enemies to Lovers</a><a href="/glossary/trope/fae/">Fae</a><a href="/glossary/trope/fated-mates/">Fated Mates</a><a href="/glossary/trope/forced-proximity/">Forced Proximity</a><a href="/glossary/trope/war/">War</a><span>Witches</span></div>
+    <div><p class="af-label">Which tropes?</p><h2>Age Gap, Enemies to Lovers, Fae, and more.</h2><div class="af-tags"><a href="/glossary/trope/age-gap/">Age Gap</a><a href="/glossary/trope/enemies-to-lovers/">Enemies to Lovers</a><a href="/glossary/trope/fae/">Fae</a><a href="/glossary/trope/fated-mates/">Fated Mates</a><a href="/glossary/trope/forced-proximity/">Forced Proximity</a><a href="/glossary/trope/war/">War</a><a href="/glossary/trope/witches/">Witches</a></div>
         </div>
   </section>
 
     <section class="af-sec" id="af-warnings">
     <span class="af-num">04</span>
     <div><p class="af-label">Any hard nos?</p><h2>Flagged: abuse, death, graphic violence, and more.</h2><div class="af-tags is-warn"><a href="/glossary/warning/abuse/">Abuse</a><span>Death</span><a href="/glossary/warning/graphic-violence/">Graphic Violence</a><span>Grief</span><a href="/glossary/warning/mental-trauma/">Mental Trauma</a><a href="/glossary/warning/past-abuse/">Past Abuse</a></div>
-        <button type="button" class="af-seeall" data-drawer="warnings">See all 7 warnings <span>→</span></button>
+        <button type="button" class="af-seeall" data-drawer="warnings">See all 9 warnings <span>→</span></button>
         </div>
   </section>
 
@@ -519,8 +527,8 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
     <section class="af-sec" id="af-detail">
     <span class="af-num">06</span>
-    <div><p class="af-label">Every recorded detail</p><h2>998 pages, book 7 of the series.</h2><div class="dgrid">
-      <div class="drow"><span class="dk">Series</span><span class="dv">Throne of Glass · Book 7</span></div><div class="drow"><span class="dk">POV</span><span class="dv">Multiple POV</span></div><div class="drow"><span class="dk">Pacing</span><span class="dv">Fast</span></div><div class="drow"><span class="dk">Length</span><span class="dv">998 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">High Fantasy</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div><div class="drow"><span class="dk">Energy</span><span class="dv">High</span></div><div class="drow"><span class="dk">Audiobook</span><span class="dv">Available</span></div>
+    <div><p class="af-label">Every recorded detail</p><h2>998 pages, book 7 of the series.</h2><div class="af-groups"><div class="af-group"><span class="af-group-h">Mood</span><div class="af-tags"><a href="/glossary/mood/emotional/">Emotional</a><span>Epic</span></div></div><div class="af-group"><span class="af-group-h">Setting</span><div class="af-tags"><span>War</span></div></div></div><div class="dgrid">
+      <div class="drow"><span class="dk">Series</span><span class="dv">Throne of Glass · Book 7</span></div><div class="drow"><span class="dk">POV</span><span class="dv">Multiple POV</span></div><div class="drow"><span class="dk">Pacing</span><span class="dv">Fast</span></div><div class="drow"><span class="dk">Length</span><span class="dv">998 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">High Fantasy</span></div><div class="drow"><span class="dk">Time period</span><span class="dv">Secondary Fantasy World</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div><div class="drow"><span class="dk">Energy</span><span class="dv">High</span></div><div class="drow"><span class="dk">Audiobook</span><span class="dv">Available</span></div>
     </div></div>
   </section>
 
@@ -626,12 +634,12 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
 <!-- Drawer content is server-rendered and hidden, so the complete trope and
      warning lists exist in the HTML for crawlers and for no-JS readers. -->
-<template id="afDrawerTropes"><a href="/glossary/trope/age-gap/"><span>01</span><b>Age Gap</b></a><a href="/glossary/trope/enemies-to-lovers/"><span>02</span><b>Enemies to Lovers</b></a><a href="/glossary/trope/fae/"><span>03</span><b>Fae</b></a><a href="/glossary/trope/fated-mates/"><span>04</span><b>Fated Mates</b></a><a href="/glossary/trope/forced-proximity/"><span>05</span><b>Forced Proximity</b></a><a href="/glossary/trope/war/"><span>06</span><b>War</b></a><div><span>07</span><b>Witches</b></div></template>
-<template id="afDrawerWarnings"><a href="/glossary/warning/abuse/"><span>01</span><b>Abuse</b></a><div><span>02</span><b>Death</b></div><a href="/glossary/warning/graphic-violence/"><span>03</span><b>Graphic Violence</b></a><div><span>04</span><b>Grief</b></div><a href="/glossary/warning/mental-trauma/"><span>05</span><b>Mental Trauma</b></a><a href="/glossary/warning/past-abuse/"><span>06</span><b>Past Abuse</b></a><div><span>07</span><b>Torture</b></div></template>
+<template id="afDrawerTropes"><a href="/glossary/trope/age-gap/"><span>01</span><b>Age Gap</b></a><a href="/glossary/trope/enemies-to-lovers/"><span>02</span><b>Enemies to Lovers</b></a><a href="/glossary/trope/fae/"><span>03</span><b>Fae</b></a><a href="/glossary/trope/fated-mates/"><span>04</span><b>Fated Mates</b></a><a href="/glossary/trope/forced-proximity/"><span>05</span><b>Forced Proximity</b></a><a href="/glossary/trope/war/"><span>06</span><b>War</b></a><a href="/glossary/trope/witches/"><span>07</span><b>Witches</b></a></template>
+<template id="afDrawerWarnings"><a href="/glossary/warning/abuse/"><span>01</span><b>Abuse</b></a><div><span>02</span><b>Death</b></div><a href="/glossary/warning/graphic-violence/"><span>03</span><b>Graphic Violence</b></a><div><span>04</span><b>Grief</b></div><a href="/glossary/warning/mental-trauma/"><span>05</span><b>Mental Trauma</b></a><a href="/glossary/warning/past-abuse/"><span>06</span><b>Past Abuse</b></a><div><span>07</span><b>Torture</b></div><div><span>08</span><b>Abuse / Trauma</b></div><div><span>09</span><b>Death &amp; Grief</b></div></template>
 <noscript>
   <div class="wrap">
     <section class="blk"><h2>All tropes</h2><div class="af-tags"><span>Age Gap</span><span>Enemies to Lovers</span><span>Fae</span><span>Fated Mates</span><span>Forced Proximity</span><span>War</span><span>Witches</span></div></section>
-    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Abuse</span><span>Death</span><span>Graphic Violence</span><span>Grief</span><span>Mental Trauma</span><span>Past Abuse</span><span>Torture</span></div></section>
+    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Abuse</span><span>Death</span><span>Graphic Violence</span><span>Grief</span><span>Mental Trauma</span><span>Past Abuse</span><span>Torture</span><span>Abuse / Trauma</span><span>Death &amp; Grief</span></div></section>
   </div>
 </noscript>
 
@@ -787,7 +795,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('shelf').select('status').eq('book_key', BOOK.key).maybeSingle();
+          var r = await sb.from('shelf').select('status').eq('user_id', user.id).eq('book_key', BOOK.key).maybeSingle();
           if (r.data) current = r.data.status;
         }
       } catch(e){ /* anon — fine */ }
@@ -954,7 +962,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('book_tags').select('spice').eq('book_key', KEY).maybeSingle();
+          var r = await sb.from('book_tags').select('spice').eq('user_id', user.id).eq('book_key', KEY).maybeSingle();
           if (r.data && r.data.spice){ mine = r.data.spice; paint(); note.textContent = 'You rated it ' + mine + '/5'; }
         } else {
           note.innerHTML = '<a href="/dashboard.html">Log in</a> to save your rating';

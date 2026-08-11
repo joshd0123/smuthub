@@ -275,7 +275,22 @@
       ({data,error}=await sb.from('books').select('slug,title,author,cover_url,year,spice_level,status').order('updated_at',{ascending:false}));
     }
     if(error){ $('bookList').innerHTML='<p class="bad">'+esc(error.message)+(/exist|schema/i.test(error.message)?' — run migrations/2026-06-16-catalog-normalized.sql first.':'')+'</p>'; return; }
-    allBooks=data||[]; renderList();
+    allBooks=data||[]; renderList(); openScannerReview();
+  }
+
+  // Scanner review emails deep-link here with the reliable ISBN metadata
+  // already filled. The founder still reviews and explicitly saves the book.
+  let scannerReviewOpened=false;
+  function openScannerReview(){
+    if(scannerReviewOpened) return;
+    const params=new URLSearchParams(location.search);
+    if(params.get('scan_review')!=='1') return;
+    scannerReviewOpened=true;
+    openEditor(null);
+    const values={title:params.get('title'),author:params.get('author'),isbn:params.get('isbn'),publisher:params.get('publisher'),cover_url:params.get('cover')};
+    Object.entries(values).forEach(([field,value])=>{ const el=$('f_'+field); if(el&&value&&!/^unknown (title|author|publisher)$/i.test(value)) el.value=value; });
+    updateCoverPrev(); updateSpinePrev();
+    $('editMsg').innerHTML='<span class="ok">Opened from a scanner request — review the facts, enrich the profile, then Save.</span>';
   }
   function renderList(){
     const term=$('listSearch').value.trim().toLowerCase(), st=$('listStatus').value;

@@ -223,7 +223,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-seeall{margin-top:14px;padding:7px 0;background:none;border:0;border-bottom:1px solid var(--line);color:var(--cream);font-family:inherit;font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
   .af-seeall span{margin-left:7px;color:var(--amber)}
   .af-seeall:hover{border-color:var(--rose)}
-  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto 1fr 1fr;gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
+  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
   @media(max-width:720px){.af-spice{grid-template-columns:1fr;gap:10px}}
   .af-spice b{display:block;margin-bottom:3px;color:var(--cream);font-size:.66rem;text-transform:uppercase;letter-spacing:.09em}
   .af-gauge{display:flex;gap:5px}
@@ -236,6 +236,13 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-blurb summary span{color:var(--amber);font-size:1.1rem;line-height:.7;transition:transform .2s}
   .af-blurb[open] summary span{transform:rotate(45deg)}
   .af-blurb .af-blurb-body{padding-bottom:18px}
+  .af-comps{margin-top:18px}
+  .af-comps-h{display:block;color:var(--amber);font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+  .af-comps .af-tags a{border-style:dashed}
+  /* Grouped taste tags (mood, themes, setting, archetypes, representation…) in #06 */
+  .af-groups{margin:2px 0 22px;display:grid;gap:16px}
+  .af-group-h{display:block;color:var(--muted);font-size:.64rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;margin-bottom:9px}
+  .af-groups .af-tags{margin-top:0}
   .af-commit{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   @media(max-width:720px){.af-commit{grid-template-columns:1fr}.af-commit>div{border-right:0!important;border-bottom:1px solid var(--line)}}
   .af-commit>div{padding:16px;border-right:1px solid var(--line)}
@@ -470,7 +477,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>3 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>20 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>11 warnings</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>tap to reveal</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
+        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>3 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>20 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>15 flagged</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>tap to reveal</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
       </nav>
     </aside>
   </section>
@@ -482,7 +489,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     <div><p class="af-label">What&#39;s it about?</p><h2>The breakout TikTok fantasy romance! Captured by the king of darkness, she was forced to find the light within. Arwen Valondale never expected to be the brave one, offering her life to save her brother’s.</h2><details class="af-blurb">
         <summary>Read the full blurb <span>+</span></summary>
         <div class="af-blurb-body"><p class="lead">The breakout TikTok fantasy romance! Captured by the king of darkness, she was forced to find the light within. Arwen Valondale never expected to be the brave one, offering her life to save her brother’s.</p><div class="more"><p>Now she’s been taken prisoner by the most dangerous kingdom on the continent, and made to use her rare magical abilities to heal the soldiers of the vicious Onyx King. Arwen knows better than to face the ancient, wicked woods that surround the castle on her own, which means working with a fellow prisoner might be her only path to freedom. Unfortunately, he’s as infuriating as he is cunning—and seems to take twisted pleasure in playing on Arwen’s deepest fears. But here in Onyx Kingdom, trust is a luxury she can’t afford. To make it out of enemy territory, she&#39;ll have to navigate back-stabbing royals, dark <span class="term">magic</span>, and dangerous beasts. But untold power lies inside Arwen, dormant and waiting for a spark. If she can harness it, she just might be able to escape with her life—and hopefully, her heart.</p></div><div class="fade"></div></div>
-      </details></div>
+      </details><div class="af-comps"><span class="af-comps-h">For fans of</span><div class="af-tags"><a href="/books/?q=A%20Court%20of%20Thorns%20and%20Roses">A Court of Thorns and Roses</a><a href="/books/?q=Fourth%20Wing">Fourth Wing</a></div></div></div>
   </section>
 
     <section class="af-sec" id="af-spice">
@@ -491,19 +498,20 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <span class="af-gauge" aria-label="Spice level 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
         <span><b>Door</b>On-page (open door)</span>
         <span><b>Frequency</b>Rare</span>
+        <span><b>Burn</b>Medium Burn</span>
       </div></div>
   </section>
 
     <section class="af-sec" id="af-tropes">
     <span class="af-num">03</span>
-    <div><p class="af-label">Which tropes?</p><h2>Abduction, Caretaking, Court Intrigue, and more.</h2><div class="af-tags"><a href="/glossary/trope/abduction/">Abduction</a><a href="/glossary/trope/caretaking/">Caretaking</a><a href="/glossary/trope/court-intrigue/">Court Intrigue</a><span>Dragon Shifter</span><a href="/glossary/trope/enemies-to-lovers/">Enemies to Lovers</a><a href="/glossary/trope/fae/">Fae</a><a href="/glossary/trope/forced-proximity/">Forced Proximity</a><span>Height Difference</span></div>
+    <div><p class="af-label">Which tropes?</p><h2>Abduction, Caretaking, Court Intrigue, and more.</h2><div class="af-tags"><a href="/glossary/trope/abduction/">Abduction</a><a href="/glossary/trope/caretaking/">Caretaking</a><a href="/glossary/trope/court-intrigue/">Court Intrigue</a><a href="/glossary/trope/dragon-shifter/">Dragon Shifter</a><a href="/glossary/trope/enemies-to-lovers/">Enemies to Lovers</a><a href="/glossary/trope/fae/">Fae</a><a href="/glossary/trope/forced-proximity/">Forced Proximity</a><a href="/glossary/trope/height-difference/">Height Difference</a></div>
         <button type="button" class="af-seeall" data-drawer="tropes">See all 20 tropes <span>→</span></button></div>
   </section>
 
     <section class="af-sec" id="af-warnings">
     <span class="af-num">04</span>
     <div><p class="af-label">Any hard nos?</p><h2>Flagged: abuse, death, death grief, and more.</h2><div class="af-tags is-warn"><a href="/glossary/warning/abuse/">Abuse</a><span>Death</span><a href="/glossary/warning/death-grief/">Death Grief</a><span>Grief</span><a href="/glossary/warning/mental-trauma/">Mental Trauma</a><a href="/glossary/warning/non-traditional-hea/">Non-Traditional HEA</a></div>
-        <button type="button" class="af-seeall" data-drawer="warnings">See all 11 warnings <span>→</span></button>
+        <button type="button" class="af-seeall" data-drawer="warnings">See all 15 warnings <span>→</span></button>
         </div>
   </section>
 
@@ -519,8 +527,8 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
     <section class="af-sec" id="af-detail">
     <span class="af-num">06</span>
-    <div><p class="af-label">Every recorded detail</p><h2>456 pages, book 1 of the series.</h2><div class="dgrid">
-      <div class="drow"><span class="dk">Series</span><span class="dv">The Sacred Stones · Book 1</span></div><div class="drow"><span class="dk">POV</span><span class="dv">First person · single</span></div><div class="drow"><span class="dk">Pacing</span><span class="dv">Slow burn</span></div><div class="drow"><span class="dk">Length</span><span class="dv">Standard · 456 pp</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">High Fantasy</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div><div class="drow"><span class="dk">Energy</span><span class="dv">Light</span></div><div class="drow"><span class="dk">Audiobook</span><span class="dv">Available</span></div>
+    <div><p class="af-label">Every recorded detail</p><h2>456 pages, book 1 of the series.</h2><div class="af-groups"><div class="af-group"><span class="af-group-h">Mood</span><div class="af-tags"><span>Betrayal</span><span>Fae</span><span>Gifted Super Heroine</span><span>Sassy Heroine</span><span>Vengeance</span></div></div><div class="af-group"><span class="af-group-h">Themes</span><div class="af-tags"><span>Found Family</span></div></div><div class="af-group"><span class="af-group-h">Setting</span><div class="af-tags"><span>Class Difference</span></div></div><div class="af-group"><span class="af-group-h">Main character</span><div class="af-tags"><a href="/glossary/mc-archetype/competent-heroine/">Competent Heroine</a><a href="/glossary/mc-archetype/early-20s-fmc/">Early 20s FMC</a><a href="/glossary/mc-archetype/immortal-heroine/">Immortal Heroine</a><a href="/glossary/mc-archetype/independent-heroine/">Independent Heroine</a><a href="/glossary/mc-archetype/non-human-heroine/">Non-Human Heroine</a><a href="/glossary/mc-archetype/sweet-heroine/">Sweet / Gentle Heroine</a><a href="/glossary/mc-archetype/take-charge-heroine/">Take-Charge Heroine</a><a href="/glossary/mc-archetype/tortured-heroine/">Tortured Heroine</a><a href="/glossary/mc-archetype/virgin-heroine/">Virgin Heroine</a><a href="/glossary/mc-archetype/working-class-heroine/">Working-Class Heroine</a></div></div><div class="af-group"><span class="af-group-h">Love interest</span><div class="af-tags"><a href="/glossary/li-archetype/bad-boy/">Bad Boy</a><a href="/glossary/li-archetype/immortal-hero/">Immortal Hero</a><a href="/glossary/li-archetype/non-human-hero/">Non-Human Hero</a><a href="/glossary/li-archetype/possessive-hero/">Possessive Hero</a><a href="/glossary/li-archetype/rich-hero/">Rich Hero</a><a href="/glossary/li-archetype/royal-hero/">Royal Hero</a><a href="/glossary/li-archetype/tortured/">Tortured</a></div></div><div class="af-group"><span class="af-group-h">Representation</span><div class="af-tags"><span>Disabilities</span><a href="/glossary/representation/disabilities-scars/">Disabilities &amp; Scars</a><span>Scars</span></div></div></div><div class="dgrid">
+      <div class="drow"><span class="dk">Series</span><span class="dv">The Sacred Stones · Book 1</span></div><div class="drow"><span class="dk">POV</span><span class="dv">First person · single</span></div><div class="drow"><span class="dk">Pacing</span><span class="dv">Slow burn</span></div><div class="drow"><span class="dk">Length</span><span class="dv">Standard · 456 pp</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">High Fantasy</span></div><div class="drow"><span class="dk">Time period</span><span class="dv">Secondary Fantasy World</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div><div class="drow"><span class="dk">Energy</span><span class="dv">Light</span></div><div class="drow"><span class="dk">Audiobook</span><span class="dv">Available</span></div>
     </div></div>
   </section>
 
@@ -575,12 +583,12 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
 <!-- Drawer content is server-rendered and hidden, so the complete trope and
      warning lists exist in the HTML for crawlers and for no-JS readers. -->
-<template id="afDrawerTropes"><a href="/glossary/trope/abduction/"><span>01</span><b>Abduction</b></a><a href="/glossary/trope/caretaking/"><span>02</span><b>Caretaking</b></a><a href="/glossary/trope/court-intrigue/"><span>03</span><b>Court Intrigue</b></a><div><span>04</span><b>Dragon Shifter</b></div><a href="/glossary/trope/enemies-to-lovers/"><span>05</span><b>Enemies to Lovers</b></a><a href="/glossary/trope/fae/"><span>06</span><b>Fae</b></a><a href="/glossary/trope/forced-proximity/"><span>07</span><b>Forced Proximity</b></a><div><span>08</span><b>Height Difference</b></div><div><span>09</span><b>High Fantasy</b></div><a href="/glossary/trope/hurt-comfort/"><span>10</span><b>Hurt / Comfort</b></a><div><span>11</span><b>Magic</b></div><div><span>12</span><b>Military</b></div><div><span>13</span><b>Monsters</b></div><div><span>14</span><b>Political</b></div><div><span>15</span><b>Political Court Intrigue</b></div><div><span>16</span><b>Shapeshifters</b></div><a href="/glossary/trope/slow-burn/"><span>17</span><b>Slow Burn</b></a><div><span>18</span><b>Vengeance</b></div><a href="/glossary/trope/war/"><span>19</span><b>War</b></a><div><span>20</span><b>Witches</b></div></template>
-<template id="afDrawerWarnings"><a href="/glossary/warning/abuse/"><span>01</span><b>Abuse</b></a><div><span>02</span><b>Death</b></div><a href="/glossary/warning/death-grief/"><span>03</span><b>Death Grief</b></a><div><span>04</span><b>Grief</b></div><a href="/glossary/warning/mental-trauma/"><span>05</span><b>Mental Trauma</b></a><a href="/glossary/warning/non-traditional-hea/"><span>06</span><b>Non-Traditional HEA</b></a><a href="/glossary/warning/past-abuse/"><span>07</span><b>Past Abuse</b></a><a href="/glossary/warning/past-child-abuse/"><span>08</span><b>Past Child Abuse</b></a><div><span>09</span><b>Sexual Assault</b></div><a href="/glossary/warning/third-party-sexual-abuse/"><span>10</span><b>Third-Party Sexual Abuse</b></a><a href="/glossary/warning/torture-of-side-characters/"><span>11</span><b>Torture Of Side Characters</b></a></template>
+<template id="afDrawerTropes"><a href="/glossary/trope/abduction/"><span>01</span><b>Abduction</b></a><a href="/glossary/trope/caretaking/"><span>02</span><b>Caretaking</b></a><a href="/glossary/trope/court-intrigue/"><span>03</span><b>Court Intrigue</b></a><a href="/glossary/trope/dragon-shifter/"><span>04</span><b>Dragon Shifter</b></a><a href="/glossary/trope/enemies-to-lovers/"><span>05</span><b>Enemies to Lovers</b></a><a href="/glossary/trope/fae/"><span>06</span><b>Fae</b></a><a href="/glossary/trope/forced-proximity/"><span>07</span><b>Forced Proximity</b></a><a href="/glossary/trope/height-difference/"><span>08</span><b>Height Difference</b></a><div><span>09</span><b>High Fantasy</b></div><a href="/glossary/trope/hurt-comfort/"><span>10</span><b>Hurt / Comfort</b></a><a href="/glossary/trope/magic/"><span>11</span><b>Magic</b></a><div><span>12</span><b>Military</b></div><a href="/glossary/trope/monsters/"><span>13</span><b>Monsters</b></a><a href="/glossary/trope/political/"><span>14</span><b>Political</b></a><a href="/glossary/trope/political-court-intrigue/"><span>15</span><b>Political Court Intrigue</b></a><div><span>16</span><b>Shapeshifters</b></div><a href="/glossary/trope/slow-burn/"><span>17</span><b>Slow Burn</b></a><a href="/glossary/trope/vengeance/"><span>18</span><b>Vengeance</b></a><a href="/glossary/trope/war/"><span>19</span><b>War</b></a><a href="/glossary/trope/witches/"><span>20</span><b>Witches</b></a></template>
+<template id="afDrawerWarnings"><a href="/glossary/warning/abuse/"><span>01</span><b>Abuse</b></a><div><span>02</span><b>Death</b></div><a href="/glossary/warning/death-grief/"><span>03</span><b>Death Grief</b></a><div><span>04</span><b>Grief</b></div><a href="/glossary/warning/mental-trauma/"><span>05</span><b>Mental Trauma</b></a><a href="/glossary/warning/non-traditional-hea/"><span>06</span><b>Non-Traditional HEA</b></a><a href="/glossary/warning/past-abuse/"><span>07</span><b>Past Abuse</b></a><a href="/glossary/warning/past-child-abuse/"><span>08</span><b>Past Child Abuse</b></a><div><span>09</span><b>Sexual Assault</b></div><a href="/glossary/warning/third-party-sexual-abuse/"><span>10</span><b>Third-Party Sexual Abuse</b></a><a href="/glossary/warning/torture-of-side-characters/"><span>11</span><b>Torture Of Side Characters</b></a><div><span>12</span><b>Abuse / Trauma</b></div><div><span>13</span><b>Death &amp; Grief</b></div><div><span>14</span><b>Non-Consensual / Assault (Mentioned/Past)</b></div><div><span>15</span><b>Torture / Captivity</b></div></template>
 <noscript>
   <div class="wrap">
     <section class="blk"><h2>All tropes</h2><div class="af-tags"><span>Abduction</span><span>Caretaking</span><span>Court Intrigue</span><span>Dragon Shifter</span><span>Enemies to Lovers</span><span>Fae</span><span>Forced Proximity</span><span>Height Difference</span><span>High Fantasy</span><span>Hurt / Comfort</span><span>Magic</span><span>Military</span><span>Monsters</span><span>Political</span><span>Political Court Intrigue</span><span>Shapeshifters</span><span>Slow Burn</span><span>Vengeance</span><span>War</span><span>Witches</span></div></section>
-    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Abuse</span><span>Death</span><span>Death Grief</span><span>Grief</span><span>Mental Trauma</span><span>Non-Traditional HEA</span><span>Past Abuse</span><span>Past Child Abuse</span><span>Sexual Assault</span><span>Third-Party Sexual Abuse</span><span>Torture Of Side Characters</span></div></section>
+    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Abuse</span><span>Death</span><span>Death Grief</span><span>Grief</span><span>Mental Trauma</span><span>Non-Traditional HEA</span><span>Past Abuse</span><span>Past Child Abuse</span><span>Sexual Assault</span><span>Third-Party Sexual Abuse</span><span>Torture Of Side Characters</span><span>Abuse / Trauma</span><span>Death &amp; Grief</span><span>Non-Consensual / Assault (Mentioned/Past)</span><span>Torture / Captivity</span></div></section>
   </div>
 </noscript>
 
@@ -736,7 +744,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('shelf').select('status').eq('book_key', BOOK.key).maybeSingle();
+          var r = await sb.from('shelf').select('status').eq('user_id', user.id).eq('book_key', BOOK.key).maybeSingle();
           if (r.data) current = r.data.status;
         }
       } catch(e){ /* anon — fine */ }
@@ -903,7 +911,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('book_tags').select('spice').eq('book_key', KEY).maybeSingle();
+          var r = await sb.from('book_tags').select('spice').eq('user_id', user.id).eq('book_key', KEY).maybeSingle();
           if (r.data && r.data.spice){ mine = r.data.spice; paint(); note.textContent = 'You rated it ' + mine + '/5'; }
         } else {
           note.innerHTML = '<a href="/dashboard.html">Log in</a> to save your rating';

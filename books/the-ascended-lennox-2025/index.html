@@ -223,7 +223,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-seeall{margin-top:14px;padding:7px 0;background:none;border:0;border-bottom:1px solid var(--line);color:var(--cream);font-family:inherit;font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
   .af-seeall span{margin-left:7px;color:var(--amber)}
   .af-seeall:hover{border-color:var(--rose)}
-  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto 1fr 1fr;gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
+  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
   @media(max-width:720px){.af-spice{grid-template-columns:1fr;gap:10px}}
   .af-spice b{display:block;margin-bottom:3px;color:var(--cream);font-size:.66rem;text-transform:uppercase;letter-spacing:.09em}
   .af-gauge{display:flex;gap:5px}
@@ -236,6 +236,13 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-blurb summary span{color:var(--amber);font-size:1.1rem;line-height:.7;transition:transform .2s}
   .af-blurb[open] summary span{transform:rotate(45deg)}
   .af-blurb .af-blurb-body{padding-bottom:18px}
+  .af-comps{margin-top:18px}
+  .af-comps-h{display:block;color:var(--amber);font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+  .af-comps .af-tags a{border-style:dashed}
+  /* Grouped taste tags (mood, themes, setting, archetypes, representation…) in #06 */
+  .af-groups{margin:2px 0 22px;display:grid;gap:16px}
+  .af-group-h{display:block;color:var(--muted);font-size:.64rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;margin-bottom:9px}
+  .af-groups .af-tags{margin-top:0}
   .af-commit{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   @media(max-width:720px){.af-commit{grid-template-columns:1fr}.af-commit>div{border-right:0!important;border-bottom:1px solid var(--line)}}
   .af-commit>div{padding:16px;border-right:1px solid var(--line)}
@@ -447,7 +454,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       <div class="af-flags">
         <span>Aesymarean Duet #1</span>
         <span>Romantasy</span>
-        
+        <span>Adult</span>
       </div>
       <h1>The Ascended</h1>
       <p class="af-byline">by <a href="/books/?q=Bree%20Grenwich%20%7C%20Parker%20Lennox">Bree Grenwich | Parker Lennox</a> · 2025</p>
@@ -460,7 +467,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       </div>
 
       <dl class="af-facts" aria-label="Quick book facts">
-        <div><dt>Length</dt><dd>753 pages</dd></div><div><dt>Series</dt><dd>Book 1</dd><small>Aesymarean Duet</small></div>
+        <div><dt>Length</dt><dd>753 pages</dd></div><div><dt>Series</dt><dd>Book 1</dd><small>Aesymarean Duet</small></div><div><dt>POV</dt><dd>Dual POV</dd></div><div><dt>Pairing</dt><dd>M/F</dd><small>Central romance</small></div>
       </dl>
     </div>
 
@@ -470,7 +477,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>4 / 5</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>1 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>none recorded</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>not recorded</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
+        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>4 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>1 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>3 flagged</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>tap to reveal</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
       </nav>
     </aside>
   </section>
@@ -482,15 +489,16 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     <div><p class="af-label">What&#39;s it about?</p><h2>The high-stakes trials of Carissa Broadbent&#39;s The Serpent and the Wings of Night meet the forbidden romance of Keri Lake&#39;s Nocticadia in the first of the Aesymarean Duet, as twins thrust into a brutal tournament for godhood must navigate forbidden desires and their own drive for…</h2><details class="af-blurb">
         <summary>Read the full blurb <span>+</span></summary>
         <div class="af-blurb-body"><p class="lead">The high-stakes trials of Carissa Broadbent&#39;s The Serpent and the Wings of Night meet the forbidden romance of Keri Lake&#39;s Nocticadia in the first of the Aesymarean Duet, as twins thrust into a brutal tournament for godhood must navigate forbidden desires and their own drive for revenge.</p><div class="more"><p>In a world where divine power bleeds into the mortal realm, Thais Morvaren has mastered the art of deception. To her seaside village, she&#39;s just a fisherman&#39;s daughter, serving oysters to summer tourists. In secret, she hides her ability to forge weapons from starlight-a power that would force her into the deadly Trials of Ascension. But when a priest&#39;s ritual exposes her divine heritage, Thais is seized and conscripted into the trials against her will. Now trapped in a competition she never wanted to enter, she transforms her fear into purpose: to kill Olinthar, King of the Gods-the father whose divine touch proved fatal to her mother. To take down a god, she must become one, even if it costs her everything. What she doesn&#39;t expect is her twin brother&#39;s powers suddenly manifesting, forcing him into the trials alongside her-leaving Thais to protect more than just herself. Worse still, the selection ceremony binds her to a mentor: Xül. A necromancer prince with blood-soaked hands, a sharp tongue, and dark secrets of his own. From the moment they meet, sparks fly. He&#39;s insufferably arrogant, she&#39;s stubborn to the bone, and neither has any intention of yielding to the other... or to the heat between them. Each trial survived brings her closer to godhood, but beneath the spectacle of competition, something ancient and malevolent stalks the shadows of the divine realm-a darkness that threatens to unravel the heavens themselves. Thais may have been forced into the Trials seeking survival, but she&#39;ll finish them seeking vengeance. And the cost of godhood is rising. Because some stars aren&#39;t meant to be weapons. Some stars are meant to fall.</p></div><div class="fade"></div></div>
-      </details></div>
+      </details><div class="af-comps"><span class="af-comps-h">For fans of</span><div class="af-tags"><a href="/books/?q=A%20Court%20of%20Thorns%20and%20Roses">A Court of Thorns and Roses</a><a href="/books/?q=Fourth%20Wing">Fourth Wing</a></div></div></div>
   </section>
 
     <section class="af-sec" id="af-spice">
     <span class="af-num">02</span>
-    <div><p class="af-label">How spicy is it?</p><h2>4 / 5.</h2><div class="af-spice">
+    <div><p class="af-label">How spicy is it?</p><h2>4 / 5 — on-page (open door).</h2><div class="af-spice">
         <span class="af-gauge" aria-label="Spice level 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span>
-        <span></span>
-        <span></span>
+        <span><b>Door</b>On-page (open door)</span>
+        <span><b>Frequency</b>Moderate</span>
+        <span><b>Burn</b>Fast Burn</span>
       </div></div>
   </section>
 
@@ -502,20 +510,25 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
     <section class="af-sec" id="af-warnings">
     <span class="af-num">04</span>
-    <div><p class="af-label">Any hard nos?</p><h2>No content warnings recorded for this book.</h2>
+    <div><p class="af-label">Any hard nos?</p><h2>Flagged: fantasy violence, death in battle, blood / gore.</h2><div class="af-tags is-warn"><span>Fantasy Violence</span><span>Death in Battle</span><span>Blood / Gore</span></div>
         
-        <p class="af-empty-note">Nobody has flagged content warnings here yet. That's not a guarantee the book is warning-free — just that we don't have them recorded.</p></div>
+        </div>
   </section>
 
     <section class="af-sec" id="af-ending">
     <span class="af-num">05</span>
-    <div><p class="af-label">How does it end?</p><h2>Not recorded yet.</h2><p class="af-empty-note">The ending isn't recorded yet.</p></div>
+    <div><p class="af-label">How does it end?</p><h2>Hidden to avoid spoilers.</h2><div class="af-ending">
+          <button type="button" class="af-reveal" aria-expanded="false" aria-controls="af-ending-body">⚠ Reveal the ending</button>
+          <div class="af-ending-body" id="af-ending-body" hidden>
+            <p class="af-ending-verdict">HFN / Open.</p>
+          </div>
+        </div></div>
   </section>
 
     <section class="af-sec" id="af-detail">
     <span class="af-num">06</span>
-    <div><p class="af-label">Every recorded detail</p><h2>753 pages, book 1 of the series.</h2><div class="dgrid">
-      <div class="drow"><span class="dk">Series</span><span class="dv">Aesymarean Duet · Book 1</span></div><div class="drow"><span class="dk">Length</span><span class="dv">753 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div>
+    <div><p class="af-label">Every recorded detail</p><h2>753 pages, book 1 of the series.</h2><div class="af-groups"><div class="af-group"><span class="af-group-h">Mood</span><div class="af-tags"><span>Dark Romance</span></div></div></div><div class="dgrid">
+      <div class="drow"><span class="dk">Series</span><span class="dv">Aesymarean Duet · Book 1</span></div><div class="drow"><span class="dk">POV</span><span class="dv">Dual POV</span></div><div class="drow"><span class="dk">Length</span><span class="dv">753 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">Secondary World</span></div><div class="drow"><span class="dk">Time period</span><span class="dv">Secondary Fantasy Realm</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div>
     </div></div>
   </section>
 
@@ -528,7 +541,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     </div>
     <div class="af-rail"><a class="af-bcard" href="/books/a-promise-so-bold-and-broken-germain-2025/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/a-promise-so-bold-and-broken-germain-2025.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/a-promise-so-bold-and-broken-germain-2025.jpg" alt="A Promise so Bold and Broken book cover" loading="lazy"></div>
-      <div class="bm"><h3>A Promise so Bold and Broken</h3><p>Sophia St. Germain</p></div>
+      <div class="bm"><span>🌶️🌶️🌶️</span><h3>A Promise so Bold and Broken</h3><p>Sophia St. Germain</p></div>
     </a><a class="af-bcard" href="/books/assistant-to-the-villain-maehrer/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/assistant-to-the-villain-maehrer.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/assistant-to-the-villain-maehrer.jpg" alt="Assistant to the Villain book cover" loading="lazy"></div>
       <div class="bm"><span>🌶️</span><h3>Assistant to the Villain</h3><p>Hannah Nicole Maehrer</p></div>
@@ -540,7 +553,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       <div class="bm"><span>🌶️🌶️🌶️🌶️</span><h3>His Empress</h3><p>Emilia Rossi</p></div>
     </a><a class="af-bcard" href="/books/hollow-huntress-breaux-2026/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/hollow-huntress-breaux-2026.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/hollow-huntress-breaux-2026.jpg" alt="Hollow Huntress book cover" loading="lazy"></div>
-      <div class="bm"><h3>Hollow Huntress</h3><p>Kathryn Breaux</p></div>
+      <div class="bm"><span>🌶️🌶️🌶️</span><h3>Hollow Huntress</h3><p>Kathryn Breaux</p></div>
     </a></div>
   </section>
 
@@ -551,7 +564,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     </div>
     <div class="af-rail"><a class="af-bcard" href="/books/duskbound-lennox-2025/">
       <div class="cv"><img class="cover-bg" src="https://covers.smuthub.ca/duskbound-lennox-2025.jpg" alt="" aria-hidden="true" loading="lazy"><img class="cover-img" src="https://covers.smuthub.ca/duskbound-lennox-2025.jpg" alt="Duskbound book cover" loading="lazy"></div>
-      <div class="bm"><h3>Duskbound</h3><p>Bree Grenwich | Parker Lennox</p></div>
+      <div class="bm"><span>🌶️🌶️🌶️</span><h3>Duskbound</h3><p>Bree Grenwich | Parker Lennox</p></div>
     </a></div>
   </section>
   </div>
@@ -580,11 +593,11 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 <!-- Drawer content is server-rendered and hidden, so the complete trope and
      warning lists exist in the HTML for crawlers and for no-JS readers. -->
 <template id="afDrawerTropes"><a href="/glossary/trope/enemies-to-lovers/"><span>01</span><b>Enemies to Lovers</b></a></template>
-<template id="afDrawerWarnings"></template>
+<template id="afDrawerWarnings"><div><span>01</span><b>Fantasy Violence</b></div><div><span>02</span><b>Death in Battle</b></div><div><span>03</span><b>Blood / Gore</b></div></template>
 <noscript>
   <div class="wrap">
     <section class="blk"><h2>All tropes</h2><div class="af-tags"><span>Enemies to Lovers</span></div></section>
-    
+    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Fantasy Violence</span><span>Death in Battle</span><span>Blood / Gore</span></div></section>
   </div>
 </noscript>
 
@@ -740,7 +753,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('shelf').select('status').eq('book_key', BOOK.key).maybeSingle();
+          var r = await sb.from('shelf').select('status').eq('user_id', user.id).eq('book_key', BOOK.key).maybeSingle();
           if (r.data) current = r.data.status;
         }
       } catch(e){ /* anon — fine */ }
@@ -907,7 +920,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('book_tags').select('spice').eq('book_key', KEY).maybeSingle();
+          var r = await sb.from('book_tags').select('spice').eq('user_id', user.id).eq('book_key', KEY).maybeSingle();
           if (r.data && r.data.spice){ mine = r.data.spice; paint(); note.textContent = 'You rated it ' + mine + '/5'; }
         } else {
           note.innerHTML = '<a href="/dashboard.html">Log in</a> to save your rating';

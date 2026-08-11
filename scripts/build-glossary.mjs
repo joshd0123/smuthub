@@ -932,4 +932,29 @@ await fs.writeFile(sitemapPath, sitemap);
 
 console.log(`✓ Wrote ${wrote} term pages + ${allCategoriesWithTags.size} category pages + index (+ ${tier3Tags.length} tier-3 tags listed inline, no own pages)`);
 console.log(`✓ Updated sitemap.xml with ${tags.length + allCategoriesWithTags.size + 1} URLs`);
+
+// ── Keep the public "N terms across M categories" copy in sync everywhere ────
+// These counts live in hand-authored static files + the shared nav in auth.js,
+// so they silently drift as the glossary grows. Patch them from the single
+// source of truth (this build) so they can never fall behind again.
+async function syncGlossaryCounts(termCount, catCount){
+  const files = ['about.html', 'index.html', 'auth.js', 'guides/index.html', 'roadmap/index.html', 'founders/index.html'];
+  const termRe = /\b\d{2,4}(\+?)(\s+)(romantasy\s+)?terms\b/g;
+  const glossRe = /\b\d{2,4}(-term glossary)\b/g;
+  const catRe = /\b\d{1,2}(\s+categories)\b/g;
+  let touched = 0;
+  for (const rel of files){
+    const p = path.join(ROOT, rel);
+    let txt;
+    try { txt = await fs.readFile(p, 'utf-8'); } catch { continue; }
+    const out = txt
+      .replace(termRe, (_m, plus, sp, rom) => `${termCount}${plus}${sp}${rom || ''}terms`)
+      .replace(glossRe, (_m, suf) => `${termCount}${suf}`)
+      .replace(catRe, (_m, suf) => `${catCount}${suf}`);
+    if (out !== txt){ await fs.writeFile(p, out); console.log(`  · synced glossary count → ${rel}`); touched++; }
+  }
+  if (touched) console.log(`✓ Synced "${termCount} terms / ${catCount} categories" across ${touched} file(s)`);
+}
+await syncGlossaryCounts(tags.length, allCategoriesWithTags.size);
+
 console.log(`\nNext: git add glossary/ sitemap.xml && git commit && git push`);

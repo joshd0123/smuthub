@@ -195,7 +195,7 @@
           <a href="/guides/"><b>All Guides</b><small>Start with the full library</small></a>
           <a href="/guides/what-is-romantasy/"><b>What Is Romantasy?</b><small>Start with the genre essentials</small></a>
           <a href="/guides/spice-levels/"><b>Spice Levels</b><small>Choose your heat with no surprises</small></a>
-          <a href="/glossary/"><b>Glossary</b><small>Decode 356 romantasy terms</small></a>
+          <a href="/glossary/"><b>Glossary</b><small>Decode 562 romantasy terms</small></a>
           <a href="/glossary/trope/"><b>Tropes</b><small>Browse the story dynamics you love</small></a>
           <a href="/glossary/warning/"><b>Content Warnings</b><small>Check before chapter one</small></a>
         </div>

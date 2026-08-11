@@ -223,7 +223,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-seeall{margin-top:14px;padding:7px 0;background:none;border:0;border-bottom:1px solid var(--line);color:var(--cream);font-family:inherit;font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
   .af-seeall span{margin-left:7px;color:var(--amber)}
   .af-seeall:hover{border-color:var(--rose)}
-  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto 1fr 1fr;gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
+  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
   @media(max-width:720px){.af-spice{grid-template-columns:1fr;gap:10px}}
   .af-spice b{display:block;margin-bottom:3px;color:var(--cream);font-size:.66rem;text-transform:uppercase;letter-spacing:.09em}
   .af-gauge{display:flex;gap:5px}
@@ -236,6 +236,13 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-blurb summary span{color:var(--amber);font-size:1.1rem;line-height:.7;transition:transform .2s}
   .af-blurb[open] summary span{transform:rotate(45deg)}
   .af-blurb .af-blurb-body{padding-bottom:18px}
+  .af-comps{margin-top:18px}
+  .af-comps-h{display:block;color:var(--amber);font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+  .af-comps .af-tags a{border-style:dashed}
+  /* Grouped taste tags (mood, themes, setting, archetypes, representation…) in #06 */
+  .af-groups{margin:2px 0 22px;display:grid;gap:16px}
+  .af-group-h{display:block;color:var(--muted);font-size:.64rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;margin-bottom:9px}
+  .af-groups .af-tags{margin-top:0}
   .af-commit{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   @media(max-width:720px){.af-commit{grid-template-columns:1fr}.af-commit>div{border-right:0!important;border-bottom:1px solid var(--line)}}
   .af-commit>div{padding:16px;border-right:1px solid var(--line)}
@@ -460,7 +467,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
       </div>
 
       <dl class="af-facts" aria-label="Quick book facts">
-        <div><dt>Length</dt><dd>412 pages</dd></div><div><dt>Series</dt><dd>Book 5</dd><small>Immortal Hunters</small></div>
+        <div><dt>Length</dt><dd>412 pages</dd></div><div><dt>Series</dt><dd>Book 5</dd><small>Immortal Hunters</small></div><div><dt>POV</dt><dd>Dual POV</dd></div><div><dt>Pairing</dt><dd>M/F</dd><small>Central romance</small></div>
       </dl>
     </div>
 
@@ -470,7 +477,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>4 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>10 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>8 warnings</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>not recorded</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
+        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>4 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>10 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>10 flagged</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>tap to reveal</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
       </nav>
     </aside>
   </section>
@@ -482,7 +489,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     <div><p class="af-label">What&#39;s it about?</p><h2>Hunt or be hunted… Immortal Hunters is a collection of dark romantasy standalones—each novel can be read in any order, but once the hunt begins, it won’t stop.</h2><details class="af-blurb">
         <summary>Read the full blurb <span>+</span></summary>
         <div class="af-blurb-body"><p class="lead">Hunt or be hunted…</p><div class="more"><p>Immortal Hunters is a collection of dark romantasy standalones—each novel can be read in any order, but once the hunt begins, it won’t stop.</p></div><div class="fade"></div></div>
-      </details></div>
+      </details><div class="af-comps"><span class="af-comps-h">For fans of</span><div class="af-tags"><a href="/books/?q=A%20Court%20of%20Thorns%20and%20Roses">A Court of Thorns and Roses</a><a href="/books/?q=Fourth%20Wing">Fourth Wing</a></div></div></div>
   </section>
 
     <section class="af-sec" id="af-spice">
@@ -491,31 +498,37 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <span class="af-gauge" aria-label="Spice level 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span>
         <span><b>Door</b>On-page (open door)</span>
         <span><b>Frequency</b>Constant</span>
+        <span><b>Burn</b>Fast Burn</span>
       </div></div>
   </section>
 
     <section class="af-sec" id="af-tropes">
     <span class="af-num">03</span>
-    <div><p class="af-label">Which tropes?</p><h2>Abduction, Dark Romance, Enemies to Lovers, and more.</h2><div class="af-tags"><a href="/glossary/trope/abduction/">Abduction</a><a href="/glossary/trope/dark-romance/">Dark Romance</a><a href="/glossary/trope/enemies-to-lovers/">Enemies to Lovers</a><a href="/glossary/trope/fated-mates/">Fated Mates</a><span>Height Difference</span><a href="/glossary/trope/hurt-comfort/">Hurt / Comfort</a><span>Possessive Hero</span><span>Royal Heroine</span></div>
+    <div><p class="af-label">Which tropes?</p><h2>Abduction, Dark Romance, Enemies to Lovers, and more.</h2><div class="af-tags"><a href="/glossary/trope/abduction/">Abduction</a><a href="/glossary/trope/dark-romance/">Dark Romance</a><a href="/glossary/trope/enemies-to-lovers/">Enemies to Lovers</a><a href="/glossary/trope/fated-mates/">Fated Mates</a><a href="/glossary/trope/height-difference/">Height Difference</a><a href="/glossary/trope/hurt-comfort/">Hurt / Comfort</a><span>Possessive Hero</span><a href="/glossary/trope/royal-heroine/">Royal Heroine</a></div>
         <button type="button" class="af-seeall" data-drawer="tropes">See all 10 tropes <span>→</span></button></div>
   </section>
 
     <section class="af-sec" id="af-warnings">
     <span class="af-num">04</span>
     <div><p class="af-label">Any hard nos?</p><h2>Flagged: age gap, body betrayal, death, and more.</h2><div class="af-tags is-warn"><span>Age Gap</span><a href="/glossary/warning/body-betrayal/">Body Betrayal</a><span>Death</span><a href="/glossary/warning/death-grief/">Death Grief</a><a href="/glossary/warning/dubious-consent/">Dubious Consent</a><span>Grief</span></div>
-        <button type="button" class="af-seeall" data-drawer="warnings">See all 8 warnings <span>→</span></button>
+        <button type="button" class="af-seeall" data-drawer="warnings">See all 10 warnings <span>→</span></button>
         </div>
   </section>
 
     <section class="af-sec" id="af-ending">
     <span class="af-num">05</span>
-    <div><p class="af-label">How does it end?</p><h2>Not recorded yet.</h2><p class="af-empty-note">The ending isn't recorded yet.</p></div>
+    <div><p class="af-label">How does it end?</p><h2>Hidden to avoid spoilers.</h2><div class="af-ending">
+          <button type="button" class="af-reveal" aria-expanded="false" aria-controls="af-ending-body">⚠ Reveal the ending</button>
+          <div class="af-ending-body" id="af-ending-body" hidden>
+            <p class="af-ending-verdict">HFN / Open.</p>
+          </div>
+        </div></div>
   </section>
 
     <section class="af-sec" id="af-detail">
     <span class="af-num">06</span>
-    <div><p class="af-label">Every recorded detail</p><h2>412 pages, book 5 of the series.</h2><div class="dgrid">
-      <div class="drow"><span class="dk">Series</span><span class="dv">Immortal Hunters · Book 5</span></div><div class="drow"><span class="dk">Length</span><span class="dv">412 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div>
+    <div><p class="af-label">Every recorded detail</p><h2>412 pages, book 5 of the series.</h2><div class="af-groups"><div class="af-group"><span class="af-group-h">Mood</span><div class="af-tags"><span>Exhibitionism</span><span>Fae</span><a href="/glossary/mood/fantasy-romance/">Fantasy Romance</a><span>Paranormal Romance</span><span>Possessive</span></div></div><div class="af-group"><span class="af-group-h">Themes</span><div class="af-tags"><span>Found Family</span></div></div><div class="af-group"><span class="af-group-h">Setting</span><div class="af-tags"><span>Aristo</span></div></div><div class="af-group"><span class="af-group-h">Main character</span><div class="af-tags"><a href="/glossary/mc-archetype/early-20s-fmc/">Early 20s FMC</a><span>Grumpy Cold Hero</span><span>Possessive</span><a href="/glossary/mc-archetype/royal-heroine/">Aristo / Royal Heroine</a></div></div><div class="af-group"><span class="af-group-h">Love interest</span><div class="af-tags"><span>Commander</span><a href="/glossary/li-archetype/cruel-hero/">Cruel / Bully Hero</a><a href="/glossary/li-archetype/immortal-hero/">Immortal Hero</a><a href="/glossary/li-archetype/non-human-hero/">Non-Human Hero</a><span>Possessive</span><a href="/glossary/li-archetype/possessive-hero/">Possessive Hero</a><a href="/glossary/li-archetype/warlord/">Warlord</a></div></div><div class="af-group"><span class="af-group-h">Kinks</span><div class="af-tags"><a href="/glossary/kink/primal-chase/">Primal / Chase Play</a><span>Primal Play</span></div></div></div><div class="dgrid">
+      <div class="drow"><span class="dk">Series</span><span class="dv">Immortal Hunters · Book 5</span></div><div class="drow"><span class="dk">POV</span><span class="dv">Dual POV</span></div><div class="drow"><span class="dk">Length</span><span class="dv">412 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Romantasy</span></div><div class="drow"><span class="dk">World</span><span class="dv">Secondary World</span></div><div class="drow"><span class="dk">Time period</span><span class="dv">Secondary Fantasy Realm</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/F</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div>
     </div></div>
   </section>
 
@@ -582,12 +595,12 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
 <!-- Drawer content is server-rendered and hidden, so the complete trope and
      warning lists exist in the HTML for crawlers and for no-JS readers. -->
-<template id="afDrawerTropes"><a href="/glossary/trope/abduction/"><span>01</span><b>Abduction</b></a><a href="/glossary/trope/dark-romance/"><span>02</span><b>Dark Romance</b></a><a href="/glossary/trope/enemies-to-lovers/"><span>03</span><b>Enemies to Lovers</b></a><a href="/glossary/trope/fated-mates/"><span>04</span><b>Fated Mates</b></a><div><span>05</span><b>Height Difference</b></div><a href="/glossary/trope/hurt-comfort/"><span>06</span><b>Hurt / Comfort</b></a><div><span>07</span><b>Possessive Hero</b></div><div><span>08</span><b>Royal Heroine</b></div><div><span>09</span><b>Shapeshifters</b></div><div><span>10</span><b>Virgin Heroine</b></div></template>
-<template id="afDrawerWarnings"><div><span>01</span><b>Age Gap</b></div><a href="/glossary/warning/body-betrayal/"><span>02</span><b>Body Betrayal</b></a><div><span>03</span><b>Death</b></div><a href="/glossary/warning/death-grief/"><span>04</span><b>Death Grief</b></a><a href="/glossary/warning/dubious-consent/"><span>05</span><b>Dubious Consent</b></a><div><span>06</span><b>Grief</b></div><a href="/glossary/warning/past-child-neglect/"><span>07</span><b>Past Child Neglect</b></a><a href="/glossary/warning/torture-of-mcs/"><span>08</span><b>Torture Of Mcs</b></a></template>
+<template id="afDrawerTropes"><a href="/glossary/trope/abduction/"><span>01</span><b>Abduction</b></a><a href="/glossary/trope/dark-romance/"><span>02</span><b>Dark Romance</b></a><a href="/glossary/trope/enemies-to-lovers/"><span>03</span><b>Enemies to Lovers</b></a><a href="/glossary/trope/fated-mates/"><span>04</span><b>Fated Mates</b></a><a href="/glossary/trope/height-difference/"><span>05</span><b>Height Difference</b></a><a href="/glossary/trope/hurt-comfort/"><span>06</span><b>Hurt / Comfort</b></a><div><span>07</span><b>Possessive Hero</b></div><a href="/glossary/trope/royal-heroine/"><span>08</span><b>Royal Heroine</b></a><div><span>09</span><b>Shapeshifters</b></div><div><span>10</span><b>Virgin Heroine</b></div></template>
+<template id="afDrawerWarnings"><div><span>01</span><b>Age Gap</b></div><a href="/glossary/warning/body-betrayal/"><span>02</span><b>Body Betrayal</b></a><div><span>03</span><b>Death</b></div><a href="/glossary/warning/death-grief/"><span>04</span><b>Death Grief</b></a><a href="/glossary/warning/dubious-consent/"><span>05</span><b>Dubious Consent</b></a><div><span>06</span><b>Grief</b></div><a href="/glossary/warning/past-child-neglect/"><span>07</span><b>Past Child Neglect</b></a><a href="/glossary/warning/torture-of-mcs/"><span>08</span><b>Torture Of Mcs</b></a><div><span>09</span><b>Death &amp; Grief</b></div><div><span>10</span><b>Torture / Captivity</b></div></template>
 <noscript>
   <div class="wrap">
     <section class="blk"><h2>All tropes</h2><div class="af-tags"><span>Abduction</span><span>Dark Romance</span><span>Enemies to Lovers</span><span>Fated Mates</span><span>Height Difference</span><span>Hurt / Comfort</span><span>Possessive Hero</span><span>Royal Heroine</span><span>Shapeshifters</span><span>Virgin Heroine</span></div></section>
-    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Age Gap</span><span>Body Betrayal</span><span>Death</span><span>Death Grief</span><span>Dubious Consent</span><span>Grief</span><span>Past Child Neglect</span><span>Torture Of Mcs</span></div></section>
+    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Age Gap</span><span>Body Betrayal</span><span>Death</span><span>Death Grief</span><span>Dubious Consent</span><span>Grief</span><span>Past Child Neglect</span><span>Torture Of Mcs</span><span>Death &amp; Grief</span><span>Torture / Captivity</span></div></section>
   </div>
 </noscript>
 
@@ -743,7 +756,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('shelf').select('status').eq('book_key', BOOK.key).maybeSingle();
+          var r = await sb.from('shelf').select('status').eq('user_id', user.id).eq('book_key', BOOK.key).maybeSingle();
           if (r.data) current = r.data.status;
         }
       } catch(e){ /* anon — fine */ }
@@ -910,7 +923,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('book_tags').select('spice').eq('book_key', KEY).maybeSingle();
+          var r = await sb.from('book_tags').select('spice').eq('user_id', user.id).eq('book_key', KEY).maybeSingle();
           if (r.data && r.data.spice){ mine = r.data.spice; paint(); note.textContent = 'You rated it ' + mine + '/5'; }
         } else {
           note.innerHTML = '<a href="/dashboard.html">Log in</a> to save your rating';

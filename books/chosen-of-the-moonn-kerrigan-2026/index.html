@@ -223,7 +223,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-seeall{margin-top:14px;padding:7px 0;background:none;border:0;border-bottom:1px solid var(--line);color:var(--cream);font-family:inherit;font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
   .af-seeall span{margin-left:7px;color:var(--amber)}
   .af-seeall:hover{border-color:var(--rose)}
-  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto 1fr 1fr;gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
+  .af-spice{margin-top:16px;padding:14px 0;display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:16px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:.76rem}
   @media(max-width:720px){.af-spice{grid-template-columns:1fr;gap:10px}}
   .af-spice b{display:block;margin-bottom:3px;color:var(--cream);font-size:.66rem;text-transform:uppercase;letter-spacing:.09em}
   .af-gauge{display:flex;gap:5px}
@@ -236,6 +236,13 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
   .af-blurb summary span{color:var(--amber);font-size:1.1rem;line-height:.7;transition:transform .2s}
   .af-blurb[open] summary span{transform:rotate(45deg)}
   .af-blurb .af-blurb-body{padding-bottom:18px}
+  .af-comps{margin-top:18px}
+  .af-comps-h{display:block;color:var(--amber);font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+  .af-comps .af-tags a{border-style:dashed}
+  /* Grouped taste tags (mood, themes, setting, archetypes, representation…) in #06 */
+  .af-groups{margin:2px 0 22px;display:grid;gap:16px}
+  .af-group-h{display:block;color:var(--muted);font-size:.64rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;margin-bottom:9px}
+  .af-groups .af-tags{margin-top:0}
   .af-commit{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   @media(max-width:720px){.af-commit{grid-template-columns:1fr}.af-commit>div{border-right:0!important;border-bottom:1px solid var(--line)}}
   .af-commit>div{padding:16px;border-right:1px solid var(--line)}
@@ -470,7 +477,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <h2 id="af-ask-h">What you <em>actually</em> want to know?</h2>
       </div>
       <nav aria-label="Jump to an answer about this book">
-        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>3 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>4 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>7 warnings</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>not recorded</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
+        <a href="#af-plot"><span class="af-qn">01</span><span class="af-qa"><b>What&#39;s it about?</b><em>30-sec answer</em></span></a><a href="#af-spice"><span class="af-qn">02</span><span class="af-qa"><b>How spicy is it?</b><em>3 / 5 · on-page</em></span></a><a href="#af-tropes"><span class="af-qn">03</span><span class="af-qa"><b>Which tropes?</b><em>4 tagged</em></span></a><a href="#af-warnings"><span class="af-qn">04</span><span class="af-qa"><b>Any hard nos?</b><em>8 flagged</em></span></a><a href="#af-ending" data-spoiler="1"><span class="af-qn">05</span><span class="af-qa"><b>How does it end?</b><em>tap to reveal</em></span></a><a href="#af-detail"><span class="af-qn">06</span><span class="af-qa"><b>Every recorded detail</b><em>the full record</em></span></a>
       </nav>
     </aside>
   </section>
@@ -482,7 +489,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
     <div><p class="af-label">What&#39;s it about?</p><h2>In the kingdom of Cúil Cullach, rulers are chosen by prophecy, not blood. A tradition thrown into chaos when, on the night of the king’s coronation, the Oracle names a queen.</h2><details class="af-blurb">
         <summary>Read the full blurb <span>+</span></summary>
         <div class="af-blurb-body"><p class="lead">In the kingdom of Cúil Cullach, rulers are chosen by prophecy, not blood. A tradition thrown into chaos when, on the night of the king’s coronation, the Oracle names a queen.</p><div class="more"><p>Cerys, a reclusive male druid with a dangerous gift, is forced to wed the newly crowned and wildly immature Skyre, sparking a collision between a dying belief in the old gods and the rising institutional power of the Sun Faith. But as political and personal tensions simmer, Cerys’ dreams begin to bleed with memory and omens. Can he and Skyre work through their differences to unite a fracturing kingdom against an ancient foe?</p></div><div class="fade"></div></div>
-      </details></div>
+      </details><div class="af-comps"><span class="af-comps-h">For fans of</span><div class="af-tags"><a href="/books/?q=From%20Blood%20and%20Ash">From Blood and Ash</a><a href="/books/?q=The%20Serpent%20and%20the%20Wings%20of%20Night">The Serpent and the Wings of Night</a></div></div></div>
   </section>
 
     <section class="af-sec" id="af-spice">
@@ -491,31 +498,37 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         <span class="af-gauge" aria-label="Spice level 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
         <span><b>Door</b>On-page (open door)</span>
         <span><b>Frequency</b>Occasional</span>
+        <span><b>Burn</b>Medium Burn</span>
       </div></div>
   </section>
 
     <section class="af-sec" id="af-tropes">
     <span class="af-num">03</span>
-    <div><p class="af-label">Which tropes?</p><h2>Age Gap, Class Difference, Enemies to Lovers, and more.</h2><div class="af-tags"><a href="/glossary/trope/age-gap/">Age Gap</a><span>Class Difference</span><a href="/glossary/trope/enemies-to-lovers/">Enemies to Lovers</a><a href="/glossary/trope/forced-proximity/">Forced Proximity</a></div>
+    <div><p class="af-label">Which tropes?</p><h2>Age Gap, Class Difference, Enemies to Lovers, and more.</h2><div class="af-tags"><a href="/glossary/trope/age-gap/">Age Gap</a><a href="/glossary/trope/class-difference/">Class Difference</a><a href="/glossary/trope/enemies-to-lovers/">Enemies to Lovers</a><a href="/glossary/trope/forced-proximity/">Forced Proximity</a></div>
         </div>
   </section>
 
     <section class="af-sec" id="af-warnings">
     <span class="af-num">04</span>
     <div><p class="af-label">Any hard nos?</p><h2>Flagged: ableism, abuse, graphic violence, and more.</h2><div class="af-tags is-warn"><a href="/glossary/warning/ableism/">Ableism</a><a href="/glossary/warning/abuse/">Abuse</a><a href="/glossary/warning/graphic-violence/">Graphic Violence</a><a href="/glossary/warning/mental-trauma/">Mental Trauma</a><a href="/glossary/warning/non-traditional-hea/">Non-Traditional HEA</a><a href="/glossary/warning/religious-trauma/">Religious Trauma</a></div>
-        <button type="button" class="af-seeall" data-drawer="warnings">See all 7 warnings <span>→</span></button>
+        <button type="button" class="af-seeall" data-drawer="warnings">See all 8 warnings <span>→</span></button>
         </div>
   </section>
 
     <section class="af-sec" id="af-ending">
     <span class="af-num">05</span>
-    <div><p class="af-label">How does it end?</p><h2>Not recorded yet.</h2><p class="af-empty-note">The ending isn't recorded yet.</p></div>
+    <div><p class="af-label">How does it end?</p><h2>Hidden to avoid spoilers.</h2><div class="af-ending">
+          <button type="button" class="af-reveal" aria-expanded="false" aria-controls="af-ending-body">⚠ Reveal the ending</button>
+          <div class="af-ending-body" id="af-ending-body" hidden>
+            <p class="af-ending-verdict">HFN / Open.</p>
+          </div>
+        </div></div>
   </section>
 
     <section class="af-sec" id="af-detail">
     <span class="af-num">06</span>
-    <div><p class="af-label">Every recorded detail</p><h2>418 pages, book 1 of the series.</h2><div class="dgrid">
-      <div class="drow"><span class="dk">Series</span><span class="dv">The Cullachian · Book 1</span></div><div class="drow"><span class="dk">POV</span><span class="dv">First person · dual</span></div><div class="drow"><span class="dk">Length</span><span class="dv">418 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Fantasy Romance</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/M</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div>
+    <div><p class="af-label">Every recorded detail</p><h2>418 pages, book 1 of the series.</h2><div class="af-groups"><div class="af-group"><span class="af-group-h">Mood</span><div class="af-tags"><a href="/glossary/mood/fantasy-romance/">Fantasy Romance</a><span>Paranormal Romance</span></div></div><div class="af-group"><span class="af-group-h">Setting</span><div class="af-tags"><span>Medieval</span></div></div><div class="af-group"><span class="af-group-h">Representation</span><div class="af-tags"><a href="/glossary/representation/gay/">Gay</a><a href="/glossary/representation/lgbtq/">LGBTQ+</a><a href="/glossary/representation/queer-romance/">Queer Romance</a></div></div><div class="af-group"><span class="af-group-h">Kinks</span><div class="af-tags"><a href="/glossary/kink/anal-sex/">Anal Sex</a></div></div></div><div class="dgrid">
+      <div class="drow"><span class="dk">Series</span><span class="dv">The Cullachian · Book 1</span></div><div class="drow"><span class="dk">POV</span><span class="dv">First person · dual</span></div><div class="drow"><span class="dk">Length</span><span class="dv">418 pages</span></div><div class="drow"><span class="dk">Subgenre</span><span class="dv">Fantasy Romance</span></div><div class="drow"><span class="dk">World</span><span class="dv">Secondary World</span></div><div class="drow"><span class="dk">Time period</span><span class="dv">Secondary Fantasy Realm</span></div><div class="drow"><span class="dk">Relationship</span><span class="dv">M/M</span></div><div class="drow"><span class="dk">Age category</span><span class="dv">Adult</span></div>
     </div></div>
   </section>
 
@@ -570,12 +583,12 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
 
 <!-- Drawer content is server-rendered and hidden, so the complete trope and
      warning lists exist in the HTML for crawlers and for no-JS readers. -->
-<template id="afDrawerTropes"><a href="/glossary/trope/age-gap/"><span>01</span><b>Age Gap</b></a><div><span>02</span><b>Class Difference</b></div><a href="/glossary/trope/enemies-to-lovers/"><span>03</span><b>Enemies to Lovers</b></a><a href="/glossary/trope/forced-proximity/"><span>04</span><b>Forced Proximity</b></a></template>
-<template id="afDrawerWarnings"><a href="/glossary/warning/ableism/"><span>01</span><b>Ableism</b></a><a href="/glossary/warning/abuse/"><span>02</span><b>Abuse</b></a><a href="/glossary/warning/graphic-violence/"><span>03</span><b>Graphic Violence</b></a><a href="/glossary/warning/mental-trauma/"><span>04</span><b>Mental Trauma</b></a><a href="/glossary/warning/non-traditional-hea/"><span>05</span><b>Non-Traditional HEA</b></a><a href="/glossary/warning/religious-trauma/"><span>06</span><b>Religious Trauma</b></a><a href="/glossary/warning/substance-abuse/"><span>07</span><b>Substance Abuse</b></a></template>
+<template id="afDrawerTropes"><a href="/glossary/trope/age-gap/"><span>01</span><b>Age Gap</b></a><a href="/glossary/trope/class-difference/"><span>02</span><b>Class Difference</b></a><a href="/glossary/trope/enemies-to-lovers/"><span>03</span><b>Enemies to Lovers</b></a><a href="/glossary/trope/forced-proximity/"><span>04</span><b>Forced Proximity</b></a></template>
+<template id="afDrawerWarnings"><a href="/glossary/warning/ableism/"><span>01</span><b>Ableism</b></a><a href="/glossary/warning/abuse/"><span>02</span><b>Abuse</b></a><a href="/glossary/warning/graphic-violence/"><span>03</span><b>Graphic Violence</b></a><a href="/glossary/warning/mental-trauma/"><span>04</span><b>Mental Trauma</b></a><a href="/glossary/warning/non-traditional-hea/"><span>05</span><b>Non-Traditional HEA</b></a><a href="/glossary/warning/religious-trauma/"><span>06</span><b>Religious Trauma</b></a><a href="/glossary/warning/substance-abuse/"><span>07</span><b>Substance Abuse</b></a><div><span>08</span><b>Abuse / Trauma</b></div></template>
 <noscript>
   <div class="wrap">
     <section class="blk"><h2>All tropes</h2><div class="af-tags"><span>Age Gap</span><span>Class Difference</span><span>Enemies to Lovers</span><span>Forced Proximity</span></div></section>
-    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Ableism</span><span>Abuse</span><span>Graphic Violence</span><span>Mental Trauma</span><span>Non-Traditional HEA</span><span>Religious Trauma</span><span>Substance Abuse</span></div></section>
+    <section class="blk"><h2>All content warnings</h2><div class="af-tags is-warn"><span>Ableism</span><span>Abuse</span><span>Graphic Violence</span><span>Mental Trauma</span><span>Non-Traditional HEA</span><span>Religious Trauma</span><span>Substance Abuse</span><span>Abuse / Trauma</span></div></section>
   </div>
 </noscript>
 
@@ -731,7 +744,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('shelf').select('status').eq('book_key', BOOK.key).maybeSingle();
+          var r = await sb.from('shelf').select('status').eq('user_id', user.id).eq('book_key', BOOK.key).maybeSingle();
           if (r.data) current = r.data.status;
         }
       } catch(e){ /* anon — fine */ }
@@ -898,7 +911,7 @@ section.blk h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;mar
         var u = await sb.auth.getUser();
         user = u && u.data ? u.data.user : null;
         if (user){
-          var r = await sb.from('book_tags').select('spice').eq('book_key', KEY).maybeSingle();
+          var r = await sb.from('book_tags').select('spice').eq('user_id', user.id).eq('book_key', KEY).maybeSingle();
           if (r.data && r.data.spice){ mine = r.data.spice; paint(); note.textContent = 'You rated it ' + mine + '/5'; }
         } else {
           note.innerHTML = '<a href="/dashboard.html">Log in</a> to save your rating';
