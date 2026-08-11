@@ -564,6 +564,12 @@ body.v3-bookshelf .shelfrow[data-shelf-status="dnf"]:not(.shelf-lit) .dnf-lamp-m
    all four states and is never a prerequisite for a single light. */
 body.v3-bookshelf .shelf-light-toggle{margin-left:auto;padding:.36em .5em;display:flex;align-items:center;gap:5px;border:1px solid rgba(218,176,91,.34);border-radius:6px;background:rgba(10,7,9,.72);color:#d9bb78;font:800 .45em 'Hanken Grotesk';letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
 body.v3-bookshelf .shelf-light-toggle+.shelf-door{margin-left:4px}
+body.v3-bookshelf .plate{min-height:30px;padding:3px 5px;border:1px solid rgba(218,176,91,.14);border-radius:6px;background:linear-gradient(90deg,rgba(8,5,7,.9),rgba(8,5,7,.7) 72%,rgba(8,5,7,.9));box-shadow:0 7px 18px rgba(0,0,0,.34);backdrop-filter:blur(7px)}
+body.v3-bookshelf .shelf-title{flex:0 1 auto;overflow:hidden;text-overflow:ellipsis}
+body.v3-bookshelf .shelf-actions{min-width:0;gap:4px}
+body.v3-bookshelf .shelf-manage{font-size:.44em;padding:.42em .55em}
+body.v3-bookshelf .shelf-light-toggle{margin-left:0}
+body.v3-bookshelf .shelfrow .row{top:17%}
 body.v3-bookshelf .shelfrow .books,body.v3-bookshelf .shelfrow .v3-ritual,body.v3-bookshelf .shelfrow .v3-shelf-charms{transition:filter .5s ease,opacity .5s ease}
 body.v3-bookshelf .shelfrow:not(.shelf-lit) .books{filter:brightness(.5) saturate(.64);opacity:.56}
 body.v3-bookshelf .shelfrow:not(.shelf-lit) .v3-ritual{filter:contrast(1.08) saturate(1.08) brightness(1.04);opacity:1}
@@ -585,6 +591,15 @@ body.v3-bookshelf .shelfrow[data-shelf-status="dnf"].shelf-lit .v3-lantern-bloom
   body.v3-bookshelf .library-light-console{margin-left:7px;margin-right:7px;width:calc(100% - 14px)}
   body.v3-bookshelf .shelf-light-toggle span{display:none}
   body.v3-bookshelf .shelf-light-toggle{padding:.32em}
+  body.v3-bookshelf .plate{min-height:25px;padding:2px 3px;gap:3px}
+  body.v3-bookshelf .shelf-title{gap:4px}
+  body.v3-bookshelf .shelf-actions{gap:3px}
+  body.v3-bookshelf .shelf-manage{width:23px;height:21px;padding:0;font-size:0}
+  body.v3-bookshelf .shelf-manage[data-add-shelf]::after{content:"＋";font:800 .68rem 'Hanken Grotesk'}
+  body.v3-bookshelf .shelf-manage[data-remove-shelf]::after{content:"−";font:800 .76rem 'Hanken Grotesk'}
+  body.v3-bookshelf .shelf-door{width:25px;height:21px;padding:0;font-size:0}
+  body.v3-bookshelf .shelf-door::after{content:"↗";font:800 .62rem 'Hanken Grotesk'}
+  body.v3-bookshelf .shelfrow .row{top:18%}
   body.v3-bookshelf .shelfrow[data-shelf-status="read"] .books{gap:6px;padding-left:4%;padding-right:12%}
   body.v3-bookshelf .shelfrow[data-shelf-status="read"] .book.spine{width:clamp(20px,5.4vw,25px)}
   body.v3-bookshelf .shelfrow[data-shelf-status="read"] .book.spine .spineinner,

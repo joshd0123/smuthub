@@ -230,6 +230,11 @@
     text-shadow:0 1px 3px rgba(0,0,0,.82),0 0 11px rgba(211,167,81,.08)}
   .plate .ct{font-family:'Hanken Grotesk';font-weight:800;font-size:.7rem;color:var(--accent);opacity:.85}
   .plate .shelf-sub{font-family:'Hanken Grotesk';font-size:.61rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,232,227,.44)}
+  .shelf-title{display:flex;align-items:baseline;gap:8px;min-width:0;white-space:nowrap}
+  .shelf-actions{margin-left:auto;display:flex;align-items:center;gap:5px}
+  .shelf-manage{display:inline-flex;align-items:center;justify-content:center;padding:.38em .58em;border:1px solid rgba(231,199,126,.28);border-radius:5px;background:rgba(10,7,9,.72);color:#dfc17e;
+    font:800 .5rem 'Hanken Grotesk';letter-spacing:.06em;text-transform:uppercase;text-decoration:none;white-space:nowrap;cursor:pointer}
+  .shelf-manage:hover{border-color:#e7c77e;background:rgba(61,34,24,.88)}
   .shelf-door{margin-left:auto;transform:translateY(3px);padding:.36em .72em .4em;border:1px solid rgba(231,199,126,.3);border-bottom-color:rgba(59,34,18,.72);border-radius:5px 5px 2px 2px;
     background:linear-gradient(180deg,rgba(172,123,54,.2),rgba(20,12,12,.8));box-shadow:inset 0 1px rgba(255,229,165,.1),0 4px 8px rgba(0,0,0,.35);color:#e7c77e;
     font:800 .52rem 'Hanken Grotesk';letter-spacing:.09em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
@@ -365,6 +370,12 @@
   /* ── OPEN BOOK DETAILS ── */
   .sheetbg{position:fixed;inset:0;z-index:110;background:rgba(4,4,8,.84);backdrop-filter:blur(9px);display:none;align-items:center;justify-content:center;padding:20px}
   .sheetbg.open{display:flex}
+  .shelf-manager{position:relative;width:min(620px,94vw);max-height:min(760px,88vh);overflow:auto;padding:24px;border:1px solid rgba(226,188,104,.3);border-radius:18px;background:linear-gradient(150deg,#211216,#0c090c 72%);box-shadow:0 32px 70px rgba(0,0,0,.7)}
+  .shelf-manager h2{font:600 clamp(1.45rem,4vw,2rem) 'Fraunces';color:#f2dfc7}.shelf-manager>p{margin:5px 44px 18px 0;color:var(--muted);font-size:.86rem}
+  .shelf-manager-list{display:grid;gap:8px}.shelf-manager-book{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:11px 12px;border:1px solid rgba(226,188,104,.16);border-radius:10px;background:rgba(255,255,255,.025)}
+  .shelf-manager-book strong,.shelf-manager-book small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.shelf-manager-book small{margin-top:2px;color:var(--muted);font-size:.72rem}
+  .shelf-manager-remove{padding:.55em .72em;border:1px solid rgba(188,91,106,.42);border-radius:6px;background:rgba(91,24,39,.18);color:#e6a5ae;font:800 .68rem 'Hanken Grotesk';text-transform:uppercase;cursor:pointer}
+  .shelf-manager-add{display:flex;justify-content:center;margin-top:14px;padding:.75em 1em;border:1px solid rgba(226,188,104,.42);border-radius:7px;background:linear-gradient(135deg,#d7b15f,#9b612c);color:#160d0d;font-weight:900;text-decoration:none}
   .openbook{position:relative;width:min(920px,96vw);filter:drop-shadow(0 34px 45px rgba(0,0,0,.7));perspective:1400px;animation:bookOpen .58s cubic-bezier(.18,.75,.24,1)}
   .book-close{position:absolute;z-index:8;right:-12px;top:-14px;width:40px;height:40px;border:1px solid rgba(92,64,44,.26);border-radius:50%;background:#f0e3ca;color:#2b1a12;font-size:1.25rem;cursor:pointer;box-shadow:0 8px 18px rgba(0,0,0,.25)}
   .book-spread{position:relative;display:grid;grid-template-columns:42% 58%;min-height:520px;border-radius:9px 15px 15px 9px;overflow:hidden;background:#eadfc9}
@@ -497,6 +508,8 @@
   .shelf-range{position:absolute;left:50%;top:calc(100% + 11px);transform:translateX(-50%);z-index:8;border:1px solid rgba(225,185,107,.28);border-radius:99px;
     padding:.42em .8em;background:rgba(6,7,12,.72);backdrop-filter:blur(8px);color:#e7c57f;font-family:inherit;font-weight:800;font-size:.66rem;white-space:nowrap;cursor:pointer}
   .shelf-range:hover{border-color:#e7c57f;background:rgba(24,17,14,.86)}
+  .sv-shelf-action{position:absolute;top:calc(100% + 11px);z-index:9;padding:.48em .65em;border:1px solid rgba(225,185,107,.32);border-radius:7px;background:rgba(12,9,12,.82);color:#dfc17e;font:800 .58rem 'Hanken Grotesk';letter-spacing:.05em;text-transform:uppercase;text-decoration:none;cursor:pointer;pointer-events:auto}
+  .sv-shelf-action.add{left:0}.sv-shelf-action.remove{right:0}
   .world-candle{position:absolute;z-index:6;right:0;top:8%;width:13%;height:49%}.world-candle .object-cue{left:54%;top:28%;transform:translate(-50%,-50%) scale(.78)}.world-candle:hover .object-cue,.world-candle:focus-visible .object-cue{transform:translate(-50%,-50%) scale(1)}
   .world-candle .wax{display:none}.candle-flame-live{position:absolute;left:54%;top:18%;width:13px;height:24px;border-radius:60% 40% 55% 45%;background:radial-gradient(ellipse at 50% 72%,#fff8c7 0 18%,#ffd15d 32%,#ff7a24 62%,transparent 70%);filter:drop-shadow(0 0 7px #ffab40) drop-shadow(0 0 18px rgba(255,117,32,.65));transform:translate(-50%,-50%) rotate(3deg);transform-origin:50% 100%;animation:flameAlive 1.7s ease-in-out infinite alternate;transition:opacity .5s,filter .5s;pointer-events:none}
   .world-candle::after{content:"";position:absolute;left:54%;top:22%;width:95px;height:95px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,157,66,.22),transparent 68%);filter:blur(7px);mix-blend-mode:screen;transition:opacity .5s;pointer-events:none}
@@ -749,6 +762,7 @@
   body.view-mode .hint{ display:none !important; }
   body.view-mode .book{ cursor:pointer; }
 </style>
+<link rel="stylesheet" href="/bookshelf/moonlit-mobile-world.css?v=moonlit-threshold-v10-spine-gallery">
 </head>
 <body class="theme-walnut">
 
@@ -814,6 +828,11 @@
 <div class="sheetbg" id="sheetbg" onclick="if(event.target===this)closeSheet()"></div>
 <div class="mmbg" id="movemenu" onclick="if(event.target===this)this.classList.remove('open')"></div>
 <div class="shelfview" id="shelfview"></div>
+<div class="world-entry" id="worldEntry" aria-hidden="true">
+  <div class="world-entry-scene" aria-hidden="true"><span class="entry-moon"></span><span class="entry-flight"></span><span class="entry-thorns"></span></div>
+  <div class="world-entry-copy"><small>Crossing the threshold</small><strong>The Moonlit Reading Room</strong><span>The shelf falls away. Your world remembers you.</span></div>
+  <button class="world-entry-skip" id="worldEntrySkip" type="button">Enter now</button>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -923,6 +942,22 @@
   };
   let worldState=freshWorldState();
   let worldMemories=(()=>{try{return JSON.parse(localStorage.getItem(WORLD_PROGRESS_KEY)||'{}')||{};}catch(_){return {};}})();
+
+  // Warm the exact responsive scene set before the reader crosses the threshold.
+  // The finished world can then be revealed whole instead of assembling on screen.
+  const preloadWorldScenes=()=>{
+    const portrait=window.matchMedia('(orientation:portrait)').matches;
+    const suffix=portrait?'portrait':'wide';
+    const assets=[
+      '/themes/moonlit-reading-room/scenes/moonlit-threshold-'+suffix+'-v4.png',
+      '/themes/moonlit-reading-room/scenes/moonlit-threshold-night-off-'+suffix+'-v5.png',
+      '/themes/moonlit-reading-room/scenes/moonlit-threshold-day-'+suffix+'-v4.png',
+      '/themes/moonlit-reading-room/scenes/moonlit-threshold-day-'+suffix+'-v5.png'
+    ];
+    assets.forEach(src=>{const img=new Image();img.decoding='async';img.src=src;});
+  };
+  if('requestIdleCallback' in window) requestIdleCallback(preloadWorldScenes,{timeout:1400});
+  else setTimeout(preloadWorldScenes,350);
 
   const $=id=>document.getElementById(id);
   const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1104,6 +1139,9 @@
   }
 
   function enterDemoWorld(){
+    beginWorldEntry('reading',document.activeElement,openDemoWorld);
+  }
+  function openDemoWorld(){
     shelfIndex=0;
     previewWorld='moonlit';
     collectionOpen=false; collectionQuery='';
@@ -1196,7 +1234,7 @@
     const visible=SHELVES;
     const counts=Object.fromEntries(SHELVES.map(([st])=>[st,ordered.filter(b=>b.status===st).length]));
     const worldRibbon=interiorsUnlocked
-      ? '<button class="world-ribbon" id="openLiveWorld"><span class="moon-seal" aria-hidden="true">✦</span><span class="world-ribbon-copy"><small>Live premium world · 3 relics to awaken</small><strong>The Moonlit Reading Room</strong><span class="world-ribbon-desc">Your books, a working clock, candlelight and visitors that leave something behind.</span></span><b>Enter world →</b></button>'
+      ? '<button class="world-ribbon" id="openLiveWorld"><span class="moon-seal" aria-hidden="true">✦</span><span class="world-ribbon-copy"><small>Live premium world · 3 room responses</small><strong>The Moonlit Reading Room</strong><span class="world-ribbon-desc">Your books, a working clock, living light, daybreak and visitors that cross the moon.</span></span><b>Enter world →</b></button>'
       : '<button class="world-ribbon world-ribbon-locked" data-unlock-interiors><span class="moon-seal" aria-hidden="true">◇</span><span class="world-ribbon-copy"><small>Premium shelf interiors</small><strong>Bring the inside of your cabinet to life</strong><span class="world-ribbon-desc">Premium includes living worlds inside the shelves. Free includes the heirloom exterior and exterior updates.</span></span><b>See access →</b></button>';
     const tierNote=interiorsUnlocked
       ? '<div class="bookshelf-tier-note"><span><strong>Premium bookshelf</strong> · living worlds and interactions inside all four shelves</span><a href="/bookshelf/?access=free">See free tier →</a></div>'
@@ -1223,9 +1261,10 @@
           const overflow=items.length>7;
           const displayLabel=st==='want'?'TBR':st==='dnf'?'DNF':label;
           const shelfSub=st==='want'?'<span class="shelf-sub">Want to Read</span>':st==='dnf'?'<span class="shelf-sub">Laid to Rest</span>':'';
-          return '<div class="shelfrow'+(overflow?' has-overflow':'')+(V3_MODE&&items.length<=7?' is-curated':'')+(interiorsUnlocked&&shelfLights[st]?' shelf-lit':'')+'" data-shelf-status="'+st+'" data-count="'+items.length+'"><div class="plate">'+displayLabel+' '+shelfSub+' <span class="ct">'+items.length+'</span>'
+          return '<div class="shelfrow'+(overflow?' has-overflow':'')+(V3_MODE&&items.length<=7?' is-curated':'')+(interiorsUnlocked&&shelfLights[st]?' shelf-lit':'')+'" data-shelf-status="'+st+'" data-count="'+items.length+'"><div class="plate"><span class="shelf-title">'+displayLabel+' '+shelfSub+' <span class="ct">'+items.length+'</span></span><span class="shelf-actions">'
+            +(VIEW_MODE?'':'<a class="shelf-manage" data-add-shelf="'+st+'" href="/search" aria-label="Add a book to '+esc(displayLabel)+'">＋ Add</a>'+(items.length?'<button class="shelf-manage" type="button" data-remove-shelf="'+st+'">− Remove</button>':''))
             +(interiorsUnlocked?'<button class="shelf-light-toggle" type="button" data-shelf-light="'+st+'" aria-label="Turn '+esc(displayLabel)+' shelf light '+(shelfLights[st]?'off':'on')+'" aria-pressed="'+shelfLights[st]+'"><i aria-hidden="true"></i><span>Light</span></button>':'')
-            +'<button class="shelf-door" '+(interiorsUnlocked?'data-enter-shelf="'+st+'"':'data-unlock-interiors')+'>'+(interiorsUnlocked?'Enter world ↗':'Unlock interior')+'</button></div>'
+            +'<button class="shelf-door" '+(interiorsUnlocked?'data-enter-shelf="'+st+'"':'data-unlock-interiors')+'>'+(interiorsUnlocked?'Enter world ↗':'Unlock interior')+'</button></span></div>'
             +v3RitualHTML(st)+v3ShelfCharmsHTML(st)+'<div class="row"><div class="books" data-status="'+st+'" aria-label="'+esc(label)+', '+items.length+' books">'+inner+'</div></div><div class="plank"></div></div>';
         }).join('')
       + '</div></div>'
@@ -1270,11 +1309,11 @@
       crestEl.onpointerleave=()=>['crest-rx','crest-ry','crest-x','crest-y','crest-copy-x','crest-copy-y'].forEach((key,i)=>crestEl.style.setProperty('--'+key,i<2?'0deg':'0px'));
     }
     const atelier=$('openAtelier'); if(atelier) atelier.onclick=()=>{ buildThemeSheet(); $('themesheetbg').classList.add('open'); syncScrollLock(); };
-    const readingWorld=$('openReadingWorld'); if(readingWorld) readingWorld.onclick=()=>enterShelf('reading');
-    const liveWorld=$('openLiveWorld'); if(liveWorld) liveWorld.onclick=()=>enterShelf('reading');
+    const readingWorld=$('openReadingWorld'); if(readingWorld) readingWorld.onclick=()=>beginWorldEntry('reading',readingWorld);
+    const liveWorld=$('openLiveWorld'); if(liveWorld) liveWorld.onclick=()=>beginWorldEntry('reading',liveWorld);
     document.querySelectorAll('[data-unlock-interiors]').forEach(el=>el.onclick=e=>{e.stopPropagation();openInteriorOffer();});
-    const tbrWorld=$('openTbrWorld'); if(tbrWorld) tbrWorld.onclick=()=>enterShelf('want');
-    document.querySelectorAll('[data-open-tbr]').forEach(el=>el.onclick=()=>enterShelf('want'));
+    const tbrWorld=$('openTbrWorld'); if(tbrWorld) tbrWorld.onclick=()=>beginWorldEntry('want',tbrWorld);
+    document.querySelectorAll('[data-open-tbr]').forEach(el=>el.onclick=()=>beginWorldEntry('want',el));
     document.querySelectorAll('[data-threshold-book]').forEach(el=>el.onclick=()=>{ if(el._suppress){el._suppress=false;return;} openBook(el.dataset.thresholdBook); });
     const saveShelfLights=()=>{try{localStorage.setItem(SHELF_LIGHTS_KEY,JSON.stringify(shelfLights));}catch(_){}};
     const syncShelfLights=()=>{
@@ -1291,7 +1330,9 @@
     document.querySelectorAll('[data-shelf-light]').forEach(btn=>btn.onclick=e=>{e.stopPropagation();const status=btn.dataset.shelfLight;shelfLights[status]=!shelfLights[status];syncShelfLights();toast(shelfLights[status]?labelOf(status)+' glows again':labelOf(status)+' settles into shadow');});
     const masterLight=$('masterShelfLight');
     if(masterLight) masterLight.onclick=e=>{e.stopPropagation();const turnOn=!Object.values(shelfLights).every(Boolean);Object.keys(shelfLights).forEach(status=>shelfLights[status]=turnOn);syncShelfLights();toast(turnOn?'The whole cabinet wakes':'The cabinet settles into shadow');};
-    document.querySelectorAll('[data-enter-shelf]').forEach(el=>el.onclick=e=>{ e.stopPropagation(); enterShelf(el.dataset.enterShelf); });
+    document.querySelectorAll('[data-enter-shelf]').forEach(el=>el.onclick=e=>{ e.stopPropagation(); beginWorldEntry(el.dataset.enterShelf,el); });
+    document.querySelectorAll('[data-add-shelf]').forEach(el=>el.onclick=e=>e.stopPropagation());
+    document.querySelectorAll('[data-remove-shelf]').forEach(el=>el.onclick=e=>{e.stopPropagation();openShelfManager(el.dataset.removeShelf);});
     document.querySelectorAll('#stage .book').forEach(el=>{
       const key=el.dataset.key; let lp=null;
       el.addEventListener('click', ()=>{ if(el._suppress){ el._suppress=false; return; } openBook(key); });
@@ -1303,7 +1344,7 @@
     });
     document.querySelectorAll('#stage .plank, #stage .plate').forEach(pl=>{
       const st=pl.closest('.shelfrow') ? pl.closest('.shelfrow').querySelector('.books').dataset.status : null;
-      pl.addEventListener('click', ()=>{ if(st) enterShelf(st); });
+      pl.addEventListener('click', ()=>{ if(st) beginWorldEntry(st,pl); });
     });
   }
 
@@ -1392,6 +1433,19 @@
   }
 
   // ── BOOK INFO MODAL ──
+  function openShelfManager(status){
+    if(VIEW_MODE) return;
+    const items=[...shelf].sort(shelfCmp).filter(b=>b.status===status);
+    const label=labelOf(status);
+    $('sheetbg').innerHTML='<section class="shelf-manager" role="dialog" aria-modal="true" aria-labelledby="shelfManagerTitle">'
+      +'<button class="book-close" id="shelfManagerClose" aria-label="Close shelf manager">×</button>'
+      +'<h2 id="shelfManagerTitle">Edit '+esc(label)+'</h2><p>Add another title, or remove a book without leaving your library.</p>'
+      +'<div class="shelf-manager-list">'+(items.length?items.map(b=>'<div class="shelf-manager-book"><span><strong>'+esc(b.title||'Untitled')+'</strong><small>'+esc(b.author||'Unknown author')+'</small></span><button class="shelf-manager-remove" type="button" data-manager-remove="'+esc(b.book_key)+'">Remove</button></div>').join(''):'<div class="collection-empty">This shelf is waiting for its first book.</div>')+'</div>'
+      +'<a class="shelf-manager-add" href="/search">＋ Find a book to add</a></section>';
+    $('sheetbg').classList.add('open'); syncScrollLock();
+    $('shelfManagerClose').onclick=closeSheet;
+    document.querySelectorAll('[data-manager-remove]').forEach(btn=>btn.onclick=()=>removeBook(btn.dataset.managerRemove));
+  }
   function openBook(key){
     const b=shelf.find(x=>x.book_key===key); if(!b) return;
     const sp=spiceMap[key]||0;
@@ -1419,7 +1473,11 @@
     $('sheetbg').classList.add('open');
     syncScrollLock();
   }
-  function closeSheet(){ $('sheetbg').classList.remove('open'); syncScrollLock(); }
+  function closeSheet(){
+    $('sheetbg').classList.remove('open');
+    const world=$('shelfview'); if(world&&world.classList.contains('open')) world.scrollTop=0;
+    syncScrollLock();
+  }
 
   async function setStatus(key,status){
     const row=shelf.find(b=>b.book_key===key); if(row) row.status=status;
@@ -1633,12 +1691,73 @@
   function resetWorldRitual(status){
     delete worldMemories[worldProgressKey(status)];
     try{localStorage.setItem(WORLD_PROGRESS_KEY,JSON.stringify(worldMemories));}catch(_){}
-    worldState=freshWorldState(); renderShelfView(); worldMessage('The room falls quiet. Its three relics are waiting for you again.');
+    worldState=freshWorldState(); renderShelfView(); worldMessage('The room falls quiet. Its clock, moon and rose light are waiting again.');
   }
   function hasInteriorAccess(){
     if(ACCESS_PREVIEW==='free') return false;
     return REVIEW_MODE ? true : isPremium||ownedProducts.has(MOONLIT_PRODUCT_KEY);
   }
+  let worldEntryCallback=null, worldEntryPrepared=false, worldEntryReady=Promise.resolve(), worldEntryTimers=[];
+  function waitForWorldImages(){
+    const images=[...document.querySelectorAll('#shelfview img')];
+    const decoded=images.map(img=>{
+      if(img.complete&&img.naturalWidth) return typeof img.decode==='function'?img.decode().catch(()=>{}):Promise.resolve();
+      return new Promise(resolve=>{
+        const done=()=>{img.removeEventListener('load',done);img.removeEventListener('error',done);resolve();};
+        img.addEventListener('load',done,{once:true});img.addEventListener('error',done,{once:true});
+      });
+    });
+    return Promise.race([Promise.all(decoded),new Promise(resolve=>setTimeout(resolve,1800))]);
+  }
+  function prepareWorldEntry(){
+    const entry=$('worldEntry');
+    if(!entry.classList.contains('active')||worldEntryPrepared) return;
+    worldEntryPrepared=true;
+    const callback=worldEntryCallback;
+    worldEntryCallback=null;
+    if(callback) callback();
+    worldEntryReady=waitForWorldImages();
+    entry.classList.add('prepared');
+  }
+  function clearWorldEntry(){
+    worldEntryTimers.forEach(clearTimeout); worldEntryTimers=[];
+    const entry=$('worldEntry');
+    entry.classList.remove('active','prepared','resolving','entry-blue','entry-dawn','entry-dark');
+    entry.setAttribute('aria-hidden','true');
+    worldEntryCallback=null;
+    worldEntryPrepared=false;
+  }
+  async function resolveWorldEntry(){
+    const entry=$('worldEntry');
+    if(!entry.classList.contains('active')) return;
+    prepareWorldEntry();
+    await worldEntryReady;
+    if(!entry.classList.contains('active')) return;
+    requestAnimationFrame(()=>entry.classList.add('resolving'));
+    worldEntryTimers.push(setTimeout(clearWorldEntry,1100));
+  }
+  function beginWorldEntry(status,source,callback){
+    if($('worldEntry').classList.contains('active')) return;
+    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){ (callback||(()=>enterShelf(status)))(); return; }
+    const entry=$('worldEntry'), rect=source&&source.getBoundingClientRect?source.getBoundingClientRect():null;
+    const entryState=restoreWorldProgress(status);
+    entry.classList.toggle('entry-blue',entryState.time===1);
+    entry.classList.toggle('entry-dawn',entryState.time===2);
+    entry.classList.toggle('entry-dark',entryState.candleDim);
+    const x=rect?rect.left+rect.width/2:innerWidth/2, y=rect?rect.top+rect.height/2:innerHeight/2;
+    entry.style.setProperty('--entry-x',x+'px');
+    entry.style.setProperty('--entry-y',y+'px');
+    entry.querySelector('.world-entry-copy strong').textContent=worldTitle((custom[status]&&custom[status].world_key)||'moonlit');
+    entry.setAttribute('aria-hidden','false');
+    worldEntryCallback=callback||(()=>enterShelf(status));
+    worldEntryPrepared=false;
+    void entry.offsetWidth;
+    entry.classList.add('active');
+    worldEntryTimers.push(setTimeout(prepareWorldEntry,850));
+    worldEntryTimers.push(setTimeout(resolveWorldEntry,3450));
+  }
+  $('worldEntrySkip').onclick=resolveWorldEntry;
+
   function enterShelf(status){
     if(V3_MODE&&!hasInteriorAccess()){ openInteriorOffer(); return; }
     shelfIndex=Math.max(0, SHELVES.findIndex(([s])=>s===status));
@@ -1649,6 +1768,7 @@
     worldState=restoreWorldProgress(status);
     renderShelfView();
     $('shelfview').classList.add('open');
+    $('shelfview').scrollTop=0;
     syncScrollLock();
   }
   function exitShelf(){ persistWorldProgress(); collectionOpen=false; $('shelfview').classList.remove('open'); syncScrollLock(); }
@@ -1671,35 +1791,23 @@
     ['clock','fairies','candle'].forEach(key=>sv.classList.toggle('relic-'+key,!!worldState.discovered[key]));
     Object.keys(OATHS).forEach(key=>sv.classList.toggle('oath-'+key,worldState.oath===key));
     const discovered=Object.values(worldState.discovered).filter(Boolean).length;
-    const count=$('secretCount'); if(count) count.textContent=worldState.oath?OATHS[worldState.oath].name:discovered+'/3 relics awakened';
+    sv.classList.toggle('room-awake',discovered===3);
+    const count=$('secretCount'); if(count) count.textContent=discovered===3?'The threshold is awake':discovered+'/3 room responses';
     document.querySelectorAll('#shelfview [data-secret]').forEach(dot=>dot.classList.toggle('on',!!worldState.discovered[dot.dataset.secret]));
-    const letter=$('worldLetter'); if(letter) letter.classList.toggle('show',worldState.memory&&!worldState.oath);
-    const mark=$('worldOathMark'); if(mark){ mark.classList.toggle('show',!!worldState.oath); if(worldState.oath) mark.querySelector('strong').textContent=OATHS[worldState.oath].name+' · '+OATHS[worldState.oath].line; }
-    const ritual=$('ritualOverlay'); if(ritual) ritual.classList.toggle('open',worldState.letterOpen);
-    const ritualCard=$('ritualCard'); if(ritualCard) ritualCard.classList.toggle('claimed',!!worldState.oath);
-    const ritualName=$('ritualOathName'); if(ritualName&&worldState.oath) ritualName.textContent=OATHS[worldState.oath].name;
-    const ritualLine=$('ritualOathLine'); if(ritualLine&&worldState.oath) ritualLine.textContent=OATHS[worldState.oath].message;
-    const relicCard=$('worldRelicCard'), relic=RELICS[worldState.relicOpen];
-    if(relicCard){
-      relicCard.classList.toggle('show',!!relic);
-      if(relic){ relicCard.querySelector('.relic-glyph').textContent=relic.glyph; relicCard.querySelector('h4').textContent=relic.name; relicCard.querySelector('p').textContent=relic.copy; }
-    }
   }
   function discoverWorldSecret(key){
     const wasComplete=Object.values(worldState.discovered).every(Boolean);
     const wasNew=!worldState.discovered[key];
     worldState.discovered[key]=true;
-    if(wasNew) worldState.relicOpen=key;
     const complete=Object.values(worldState.discovered).every(Boolean);
-    if(complete){ worldState.memory=true; worldState.relicOpen=null; }
+    if(complete) worldState.memory=true;
     persistWorldProgress();
     syncWorldClasses();
-    if(wasNew&&!complete){ const close=$('relicClose'); if(close) close.focus(); }
     return complete&&!wasComplete;
   }
 
   let lastRenderedPageSize=null, shelfResizeTimer=null;
-  const shelfPageSize=()=>window.matchMedia('(max-width:620px)').matches?4:10;
+  const shelfPageSize=()=>6;
   function shelfItems(status){
     return [...(user?shelf:DEMO_SHELF)].sort(shelfCmp).filter(b=>b.status===status);
   }
@@ -1733,27 +1841,15 @@
   }
   function sceneBackdropHTML(world){
     if(world!=='moonlit') return '<div class="sv-backdrop world-'+world+'"></div>';
-    return '<div class="sv-backdrop world-moonlit"><div class="scene-layer scene-midnight"></div><div class="scene-layer scene-blue-hour"></div><div class="scene-layer scene-dawn"></div></div>';
+    return '<div class="sv-backdrop world-moonlit"><div class="scene-layer scene-midnight"></div><div class="scene-layer scene-midnight-off"></div><div class="scene-layer scene-blue-hour"></div><div class="scene-layer scene-blue-hour-off"></div><div class="scene-layer scene-dawn"></div><div class="scene-layer scene-dawn-lit"></div></div>';
   }
   function sceneAtmosphereHTML(){
     return '<div class="scene-atmosphere" aria-hidden="true"><div class="window-veil"></div><div class="light-shaft"></div><div class="depth-fog"></div><div class="moonbeam-sweep"></div>'
+      +'<span class="world-dragon"><i></i></span>'
       +'<div class="resting-drapes"><div class="resting-drape left"></div><div class="resting-drape right"></div></div>'
       +'<div class="curtain-theatre"><div class="curtain-wing curtain-left"></div><div class="curtain-wing curtain-right"></div><div class="curtain-crest"></div></div>'
       +'<div class="petal-depth"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="oath-motes"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>';
   }
-  function ritualHTML(){
-    return '<div class="ritual-overlay'+(worldState.letterOpen?' open':'')+'" id="ritualOverlay" role="dialog" aria-modal="true" aria-label="The Moonlit Letter">'
-      +'<section class="ritual-card'+(worldState.oath?' claimed':'')+'" id="ritualCard">'
-      +'<button class="ritual-close" id="ritualClose" aria-label="Close the Moonlit Letter">×</button>'
-      +'<div class="ritual-intro"><div class="ritual-kicker">The three relics have answered</div><div class="ritual-seal">✦</div><h3>The Moonlit Letter</h3>'
-      +'<p class="ritual-copy">“A room becomes yours only when it knows what you seek inside a story. Speak once. The shelves will remember.”</p>'
-      +'<div class="oath-grid"><button class="oath-choice" data-oath="thorn"><span>❦</span><strong>I choose the dangerous ending.</strong><small>Crimson light · The Thornbound</small></button>'
-      +'<button class="oath-choice" data-oath="vow"><span>◇</span><strong>I guard the stories that undo me.</strong><small>Golden light · The Vowkeeper</small></button>'
-      +'<button class="oath-choice" data-oath="moon"><span>☾</span><strong>I follow the moon beyond the last page.</strong><small>Blue hour · The Nightwanderer</small></button></div></div>'
-      +'<div class="ritual-reward"><div class="ritual-kicker">Your shelf world remembers</div><div class="ritual-seal">✦</div><h3 id="ritualOathName">'+(worldState.oath?OATHS[worldState.oath].name:'')+'</h3><p id="ritualOathLine">'+(worldState.oath?OATHS[worldState.oath].message:'')+'</p>'
-      +'<div class="ritual-actions"><button class="ritual-action primary" id="ritualReturn">Return to your changed room</button><button class="ritual-action" id="ritualReset">Replay the ritual</button></div></div></section></div>';
-  }
-
   function renderShelfView(){
     const [status,label]=SHELVES[shelfIndex];
     const world=activeWorld(status);
@@ -1761,12 +1857,14 @@
     const isWorldPreview=!!(worldProduct&&!owns(worldProduct.key));
     const worldContext=isWorldPreview?'Live premium preview':(isPremium?'Founder’s collection':label);
     const info=shelfPageInfo(status);
-    const books=info.pageItems.length?info.pageItems.map((b,i)=>bookHTML(b,i===0)).join(''):(VIEW_MODE?'':ghostHTML);
+    // Inside an immersive room every title belongs to the physical collection;
+    // featured covers/open books remain exclusive to the outer bookshelf.
+    const books=info.pageItems.length?info.pageItems.map(b=>bookHTML(b,false)).join(''):(VIEW_MODE?'':ghostHTML);
     const range=info.items.length?(info.start+1)+'–'+info.end+' of '+info.items.length:'Empty shelf';
     const pageClass=pageDirection>0?' page-next':(pageDirection<0?' page-prev':'');
     const times=[['11:47 PM','light-moonlit'],['3:18 AM','light-moonlit'],['6:02 AM','light-dawn']];
     const discovered=Object.values(worldState.discovered).filter(Boolean).length;
-    const openingMessage=worldState.oath?OATHS[worldState.oath].message:(worldState.memory?'The relics are assembled. Your sealed letter is waiting.':'The shelf is listening. Touch something and let the room answer.');
+    const openingMessage=worldState.memory?'The threshold remembers you. The castle is listening.':'Touch the clock, moon, or rose light. The room changes—not the interface.';
     $('shelfview').innerHTML =
       sceneBackdropHTML(world)
       + '<div class="sv-light '+(world==='boudoir'?'light-candlelit':times[worldState.time][1])+'"></div>'
@@ -1774,7 +1872,7 @@
       + '<div class="sv-label"><small>'+esc(worldContext)+(worldContext!==label?' · '+esc(label):'')+'</small>'+esc(worldTitle(world))+'</div>'
       + '<button class="sv-shopbtn" id="svshop">✨ Shop &amp; decorate</button></div>'
       + '<div class="sv-world">'+(world==='moonlit'?sceneAtmosphereHTML():'')+'<div class="world-message" id="worldMessage">'+esc(openingMessage)+'</div>'
-      + '<div class="world-discovery"><span id="secretCount">'+(worldState.oath?esc(OATHS[worldState.oath].name):discovered+'/3 relics awakened')+'</span><span class="secret-dots"><i data-secret="clock"></i><i data-secret="fairies"></i><i data-secret="candle"></i></span></div>'
+      + '<div class="world-discovery" aria-live="polite"><span id="secretCount">'+(discovered===3?'The threshold is awake':discovered+'/3 room responses')+'</span><span class="secret-dots"><i data-secret="clock"></i><i data-secret="fairies"></i><i data-secret="candle"></i></span></div>'
       + '<div class="world-stage world-stage-'+world+'">'
       + '<div class="fairy-trail" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>'
       + '<div class="world-constellation" aria-hidden="true"></div>'
@@ -1787,17 +1885,17 @@
       + '<button class="shelf-turn prev" id="shelfPrev" aria-label="Previous shelf section" '+(info.page===0?'disabled':'')+'>‹</button>'
       + '<div class="sv-shelf'+pageClass+'">'
       + '<div class="books" data-status="'+status+'">'+books+'</div><div class="plank"></div>'
-      + '<button class="shelf-range" id="shelfRange" aria-label="View all '+info.items.length+' books">'+range+' · View all</button></div>'
+      + (VIEW_MODE?'':'<a class="sv-shelf-action add" href="/search" aria-label="Add a book to '+esc(label)+'">＋ Add</a>')
+      + '<button class="shelf-range" id="shelfRange" aria-label="View all '+info.items.length+' books">'+range+' · View all</button>'
+      + (!VIEW_MODE&&info.items.length?'<button class="sv-shelf-action remove" id="svRemoveBooks" type="button">− Remove</button>':'')+'</div>'
       + '<button class="shelf-turn next" id="shelfNext" aria-label="Next shelf section" '+(info.page>=info.pageCount-1?'disabled':'')+'>›</button>'
-      + '<button class="world-letter'+(worldState.memory&&!worldState.oath?' show':'')+'" id="worldLetter"><small>Delivered by the room</small><strong>Open the Moonlit Letter</strong></button>'
-      + '<button class="world-oath-mark'+(worldState.oath?' show':'')+'" id="worldOathMark"><small>Your moonlit oath</small><strong>'+(worldState.oath?esc(OATHS[worldState.oath].name+' · '+OATHS[worldState.oath].line):'')+'</strong></button>'
-      + '<aside class="relic-card'+(worldState.relicOpen?' show':'')+'" id="worldRelicCard" aria-live="polite"><div class="relic-glyph"></div><h4></h4><p></p><button class="relic-close" id="relicClose">Keep it in the room</button></aside>'
-      + '</div>'+ritualHTML()+'</div>'
+      + '</div></div>'
       + '<div class="sv-dots">'+SHELVES.map((s,i)=>'<button data-shelf-index="'+i+'" class="'+(i===shelfIndex?'on':'')+'" aria-label="Open '+esc(s[1])+'" title="'+esc(s[1])+'"></button>').join('')+'</div>'
       + '<div class="sv-drawer" id="svdrawer"></div>'
       + collectionDrawerHTML(status,label,info.items,info.size);
     attachShelfView(status);
     syncWorldClasses();
+    $('shelfview').scrollTop=0;
     lastRenderedPageSize=info.size;
     pageDirection=0;
   }
@@ -1808,6 +1906,7 @@
     $('shelfPrev').onclick=()=>changeShelfPage(status,-1);
     $('shelfNext').onclick=()=>changeShelfPage(status,1);
     $('shelfRange').onclick=()=>openCollection(status);
+    const removeBooks=$('svRemoveBooks'); if(removeBooks) removeBooks.onclick=()=>openShelfManager(status);
     $('collectionClose').onclick=closeCollection;
     $('collectionSearch').oninput=e=>{ collectionQuery=e.target.value; renderCollectionList(status); };
     document.querySelectorAll('#shelfview [data-collection-index]').forEach(el=>el.onclick=()=>focusCollectionBook(status,Number(el.dataset.collectionIndex)));
@@ -1823,26 +1922,31 @@
       setTimeout(()=>{
         if(!sv.classList.contains('open')||!$('worldClock')) return;
         worldState.time=(worldState.time+1)%times.length;
+        // First light extinguishes the room's practical candles; moonlit hours
+        // restore them. The generated day scene carries the unlit fixtures.
+        worldState.candleDim=worldState.time===2;
         const complete=discoverWorldSecret('clock');
         $('worldClock').querySelector('.clock-time').textContent=times[worldState.time];
+        $('worldCandle').querySelector('.candle-label').textContent=worldState.candleDim?'Relight candle':'Dim candle';
+        $('worldCandle').setAttribute('aria-label',(worldState.candleDim?'Relight':'Dim')+' the candle');
         sv.classList.remove('clock-strike'); void sv.offsetWidth; sv.classList.add('clock-strike');
-        worldMessage(complete?'The three relics answer one another. A sealed letter descends between the shelves.':messages[worldState.time]);
-      },reduce?0:1050);
+        worldMessage(complete?'The threshold wakes. Every light in the room now answers you.':messages[worldState.time]);
+      },reduce?0:320);
       setTimeout(()=>{
         sv.classList.remove('clock-ringing','curtain-ritual','clock-strike');
         const clock=$('worldClock'); if(clock) clock.removeAttribute('aria-busy');
-      },reduce?80:3550);
+      },reduce?80:1450);
     };
     $('worldFairies').onclick=()=>{
       worldState.fairies=!worldState.fairies; const complete=discoverWorldSecret('fairies');
       $('worldFairies').querySelector('.fairy-label').textContent=worldState.fairies?'Settle lights':'Wake hidden lights';
-      worldMessage(complete?'The three relics answer one another. A sealed letter descends between the shelves.':(worldState.fairies?'Three hidden lights wake in the ivy. One leaves a rose-gilded bookmark among your books.':'The hidden lights settle back into the architecture. Their bookmark remains.'));
+      worldMessage(complete?'The threshold wakes. Every light in the room now answers you.':(worldState.fairies?'Living embers trace the path to the castle.':'The embers retreat into the carved roses.'));
     };
     $('worldCandle').onclick=()=>{
       worldState.candleDim=!worldState.candleDim; const complete=discoverWorldSecret('candle');
       $('worldCandle').querySelector('.candle-label').textContent=worldState.candleDim?'Relight candle':'Dim candle';
       $('worldCandle').setAttribute('aria-label',(worldState.candleDim?'Relight':'Dim')+' the candle');
-      worldMessage(complete?'The three relics answer one another. A sealed letter descends between the shelves.':(worldState.candleDim?'The candle dims. Moonlight takes over the shelf. A verse appears in the dark.':'Warm candlelight returns. The verse waits beneath it.'));
+      worldMessage(complete?'The threshold wakes. Every light in the room now answers you.':(worldState.candleDim?'The rose light fades. Moonlight claims the altar.':'The rose lantern returns warmth to the carved wood.'));
     };
     $('worldWindow').onclick=()=>{
       const sv=$('shelfview');
@@ -1850,26 +1954,8 @@
       worldMessage(worldState.oath?'The glass remembers your oath. Thorn, rose, and moon bloom together in its light.':'A moonbloom opens in the glass—love protected by thorns, waiting for an oath.');
       setTimeout(()=>sv.classList.remove('moonbloom-awake'),5900);
     };
-    $('worldBookmark').onclick=()=>{ worldState.relicOpen='fairies'; syncWorldClasses(); $('relicClose').focus(); };
-    $('hiddenVerse').onclick=()=>{ worldState.relicOpen='candle'; syncWorldClasses(); $('relicClose').focus(); };
-    $('worldLetter').onclick=()=>{ worldState.letterOpen=true; persistWorldProgress(); syncWorldClasses(); document.querySelector('#shelfview [data-oath]').focus(); };
-    $('worldOathMark').onclick=()=>{ worldState.letterOpen=true; syncWorldClasses(); $('ritualReturn').focus(); };
-    $('ritualClose').onclick=()=>{ worldState.letterOpen=false; persistWorldProgress(); syncWorldClasses(); };
-    document.querySelectorAll('#shelfview [data-oath]').forEach(el=>el.onclick=()=>{
-      worldState.oath=el.dataset.oath;
-      worldState.letterOpen=true;
-      persistWorldProgress();
-      syncWorldClasses();
-      $('ritualReturn').focus();
-    });
-    $('ritualReturn').onclick=()=>{
-      worldState.letterOpen=false;
-      persistWorldProgress();
-      syncWorldClasses();
-      worldMessage(OATHS[worldState.oath].message);
-    };
-    $('ritualReset').onclick=()=>resetWorldRitual(status);
-    $('relicClose').onclick=()=>{ worldState.relicOpen=null; syncWorldClasses(); };
+    $('worldBookmark').onclick=()=>worldMessage('The gilded marker warms beside your books.');
+    $('hiddenVerse').onclick=()=>worldMessage('What the flame conceals, the faithful dark remembers.');
     document.querySelectorAll('#shelfview .book').forEach(el=>{
       el.addEventListener('click',()=>openBook(el.dataset.key));
     });
@@ -2008,12 +2094,12 @@
       cancelAnimationFrame(parallaxFrame);
       parallaxFrame=requestAnimationFrame(()=>{
         const x=e.clientX/window.innerWidth-.5, y=e.clientY/window.innerHeight-.5;
-        sv.style.setProperty('--scene-x',(-x*14).toFixed(2)+'px'); sv.style.setProperty('--scene-y',(-y*9).toFixed(2)+'px');
-        sv.style.setProperty('--veil-x',(-x*5).toFixed(2)+'px'); sv.style.setProperty('--veil-y',(-y*3).toFixed(2)+'px');
-        sv.style.setProperty('--stage-x',(x*7).toFixed(2)+'px'); sv.style.setProperty('--stage-y',(y*5).toFixed(2)+'px');
-        sv.style.setProperty('--book-x',(x*7).toFixed(2)+'px'); sv.style.setProperty('--book-y',(y*4).toFixed(2)+'px');
-        sv.style.setProperty('--air-x',(x*15).toFixed(2)+'px'); sv.style.setProperty('--air-y',(y*10).toFixed(2)+'px');
-        sv.style.setProperty('--frame-x',(x*22).toFixed(2)+'px'); sv.style.setProperty('--frame-y',(y*13).toFixed(2)+'px');
+        sv.style.setProperty('--scene-x',(-x*6).toFixed(2)+'px'); sv.style.setProperty('--scene-y',(-y*4).toFixed(2)+'px');
+        sv.style.setProperty('--veil-x',(-x*10).toFixed(2)+'px'); sv.style.setProperty('--veil-y',(-y*6).toFixed(2)+'px');
+        sv.style.setProperty('--stage-x',(x*4).toFixed(2)+'px'); sv.style.setProperty('--stage-y',(y*3).toFixed(2)+'px');
+        sv.style.setProperty('--book-x',(x*6).toFixed(2)+'px'); sv.style.setProperty('--book-y',(y*4).toFixed(2)+'px');
+        sv.style.setProperty('--air-x',(x*12).toFixed(2)+'px'); sv.style.setProperty('--air-y',(y*8).toFixed(2)+'px');
+        sv.style.setProperty('--frame-x',(x*9).toFixed(2)+'px'); sv.style.setProperty('--frame-y',(y*6).toFixed(2)+'px');
       });
     });
     sv.addEventListener('pointerleave',resetParallax);

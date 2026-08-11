@@ -1,0 +1,361 @@
+/* Moonlit Threshold v5
+   A purpose-built environment: the art supplies the architecture and altar;
+   live books and invisible interaction zones sit inside that physical scene. */
+
+.shelfview{
+  --safe-top:max(12px,env(safe-area-inset-top));
+  --safe-bottom:max(12px,env(safe-area-inset-bottom));
+  background:#020306;
+}
+
+.shelfview .scene-layer{
+  inset:0;
+  background-position:center;
+  background-size:cover;
+  transform:translate3d(var(--scene-x),var(--scene-y),0) scale(1.025);
+  transform-style:preserve-3d;
+  will-change:transform,opacity,filter;
+  transition:opacity 1.1s ease,filter 1.1s ease,transform 1.4s cubic-bezier(.2,.7,.2,1);
+}
+.shelfview .scene-midnight,.shelfview .scene-blue-hour{
+  background-image:url('/themes/moonlit-reading-room/scenes/moonlit-threshold-wide-v4.png');
+}
+.shelfview .scene-midnight-off,.shelfview .scene-blue-hour-off{
+  background-image:url('/themes/moonlit-reading-room/scenes/moonlit-threshold-night-off-wide-v5.png');
+}
+.shelfview .scene-dawn{background-image:url('/themes/moonlit-reading-room/scenes/moonlit-threshold-day-wide-v5.png')}
+.shelfview .scene-dawn-lit{background-image:url('/themes/moonlit-reading-room/scenes/moonlit-threshold-day-wide-v4.png')}
+.shelfview .scene-midnight,.shelfview .scene-midnight-off,
+.shelfview .scene-blue-hour,.shelfview .scene-blue-hour-off,
+.shelfview .scene-dawn,.shelfview .scene-dawn-lit{opacity:0}
+.shelfview:not(.time-blue):not(.time-dawn):not(.candle-dim) .scene-midnight,
+.shelfview:not(.time-blue):not(.time-dawn).candle-dim .scene-midnight-off,
+.shelfview.time-blue:not(.candle-dim) .scene-blue-hour,
+.shelfview.time-blue.candle-dim .scene-blue-hour-off,
+.shelfview.time-dawn.candle-dim .scene-dawn,
+.shelfview.time-dawn:not(.candle-dim) .scene-dawn-lit{opacity:1}
+.shelfview:not(.time-blue):not(.time-dawn).candle-dim .scene-midnight,
+.shelfview:not(.time-blue):not(.time-dawn):not(.candle-dim) .scene-midnight-off,
+.shelfview.time-blue.candle-dim .scene-blue-hour,
+.shelfview.time-blue:not(.candle-dim) .scene-blue-hour-off,
+.shelfview.time-dawn:not(.candle-dim) .scene-dawn,
+.shelfview.time-dawn.candle-dim .scene-dawn-lit{opacity:0}
+.shelfview .scene-midnight,.shelfview .scene-midnight-off{filter:none}
+.shelfview .scene-blue-hour,.shelfview .scene-blue-hour-off{filter:brightness(.88) saturate(.92) contrast(1.04)}
+.shelfview .scene-dawn,.shelfview .scene-dawn-lit{filter:brightness(1.02) saturate(.94) contrast(1.02)}
+.shelfview.candle-dim .scene-midnight-off{filter:none}
+.shelfview.time-blue.candle-dim .scene-blue-hour-off{filter:brightness(.88) saturate(.92) contrast(1.04)}
+.shelfview.time-dawn.candle-dim .scene-dawn{filter:brightness(1.02) saturate(.94) contrast(1.02)}
+.shelfview .sv-backdrop::after{
+  background:
+    linear-gradient(180deg,rgba(2,3,7,.5) 0,transparent 18% 72%,rgba(1,2,5,.18) 100%),
+    radial-gradient(92% 80% at 50% 45%,transparent 55%,rgba(1,2,5,.3) 100%);
+}
+
+/* The generated room already contains its drapery, clock, lantern and altar. */
+.shelfview .resting-drapes,
+.shelfview .curtain-theatre,
+.shelfview .candle-flame-live,
+.shelfview .world-candle .wax,
+.shelfview .world-bookmark,
+.shelfview .hidden-verse,
+.shelfview .world-letter,
+.shelfview .world-oath-mark,
+.shelfview .relic-card,
+.shelfview .ritual-overlay{display:none!important}
+
+.shelfview .sv-world{inset:0;display:block;padding:0;pointer-events:none;perspective:1100px;transform-style:preserve-3d}
+.shelfview .world-stage{
+  position:absolute;inset:0;width:100%;height:100%;max-height:none;margin:0;
+  transform:translate3d(var(--stage-x),var(--stage-y),24px);transform-style:preserve-3d;
+  transition:transform .55s cubic-bezier(.2,.7,.2,1);will-change:transform;pointer-events:none;
+}
+.shelfview .scene-atmosphere{
+  inset:0;overflow:hidden;transform:translate3d(var(--air-x),var(--air-y),36px);
+  transition:transform .7s cubic-bezier(.2,.7,.2,1);will-change:transform;
+}
+.shelfview .window-veil{
+  left:31%;right:31%;top:4%;height:61%;opacity:.24;
+  background:radial-gradient(ellipse at 50% 28%,rgba(197,222,255,.28),rgba(93,137,211,.04) 55%,transparent 74%);
+  filter:blur(16px);transform:translate3d(var(--veil-x),var(--veil-y),18px);will-change:transform,opacity;
+  animation:portalBreath 8s ease-in-out infinite;
+}
+.shelfview .light-shaft{left:38%;top:-8%;width:24%;height:76%;opacity:.13}
+.shelfview .depth-fog{left:24%;right:24%;bottom:18%;height:20%;opacity:.18}
+.shelfview .moonbeam-sweep{left:31%;top:-8%;width:17%;height:86%}
+.shelfview .petal-depth{z-index:7}
+.shelfview .world-dragon{
+  position:absolute;left:-12%;top:12%;z-index:4;width:70px;height:26px;opacity:0;
+  filter:drop-shadow(0 0 5px rgba(5,8,18,.9));animation:dragonPass 19s 5s linear infinite;transform:scale(.72);
+}
+.shelfview .world-dragon{display:none!important}
+.shelfview .world-dragon::before,.shelfview .world-dragon::after{
+  content:"";position:absolute;top:4px;width:38px;height:19px;background:#050711;
+}
+.shelfview .world-dragon::before{right:33px;clip-path:polygon(100% 66%,67% 26%,8% 0,34% 52%,0 92%,66% 72%);transform-origin:100% 65%;animation:dragonWingLeft .9s ease-in-out infinite alternate}
+.shelfview .world-dragon::after{left:33px;clip-path:polygon(0 66%,33% 26%,92% 0,66% 52%,100% 92%,34% 72%);transform-origin:0 65%;animation:dragonWingRight .9s ease-in-out infinite alternate}
+.shelfview .world-dragon i{position:absolute;left:29px;top:9px;width:13px;height:8px;border-radius:60% 60% 80% 30%;background:#050711;box-shadow:13px 4px 0 -5px #050711}
+.shelfview.time-dawn .world-dragon{animation:none;opacity:0}
+
+/* Quiet interface: controls frame the room instead of becoming the room. */
+.shelfview .sv-top{
+  top:var(--safe-top);left:18px;right:18px;padding:0;gap:10px;align-items:center;pointer-events:none;
+}
+.shelfview .sv-back,.shelfview .sv-shopbtn,.shelfview .sv-label{pointer-events:auto}
+.shelfview .sv-back,.shelfview .sv-shopbtn{
+  border-radius:9px;border-color:rgba(230,194,112,.34);
+  background:linear-gradient(145deg,rgba(19,12,16,.9),rgba(5,6,10,.72));
+  box-shadow:0 12px 28px rgba(0,0,0,.48),inset 0 1px rgba(255,242,205,.08);
+}
+.shelfview .sv-back{width:44px;height:44px}
+.shelfview .sv-shopbtn{padding:.72em 1em;color:#efd18a}
+.shelfview .sv-label{
+  padding:7px 13px 8px;border-left:1px solid rgba(230,194,112,.3);
+  background:linear-gradient(90deg,rgba(6,7,12,.68),transparent);
+  font-size:clamp(1rem,1.8vw,1.35rem);line-height:1.08;
+}
+.shelfview .sv-label small{font-size:.58rem;color:#edc878}
+
+.shelfview .world-message{
+  top:auto;left:50%;bottom:9.5%;width:auto;max-width:min(560px,62vw);min-height:0;
+  padding:7px 14px;transform:translateX(-50%);border:1px solid rgba(229,195,119,.22);border-radius:8px;
+  background:rgba(5,6,10,.62);backdrop-filter:blur(10px);color:rgba(246,234,221,.76);
+  text-align:center;font-size:.67rem;line-height:1.35;box-shadow:0 10px 28px rgba(0,0,0,.32);pointer-events:none;
+}
+.shelfview .world-discovery{
+  right:20px;bottom:18px;padding:8px 10px;border:1px solid rgba(229,195,119,.22);border-radius:8px;
+  background:rgba(5,6,10,.58);backdrop-filter:blur(9px);pointer-events:none;
+}
+.shelfview .world-discovery>span:first-child{
+  position:static;width:auto;height:auto;margin:0;clip:auto;overflow:visible;
+  color:rgba(239,207,135,.76);font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+}
+.shelfview .world-discovery .secret-dots{gap:7px}
+.shelfview .world-discovery i{width:7px;height:7px}
+
+/* The artwork contains the objects; these are semantic touch zones with
+   restrained affordances. Nothing here can cover the books. */
+.shelfview .world-clock,.shelfview .world-fairies,.shelfview .world-candle,.shelfview .world-window{pointer-events:auto}
+.shelfview .world-clock{left:0;top:20%;width:23%;height:50%}
+.shelfview .world-clock .object-cue{left:33%;top:38%;transform:translate(-50%,-50%) scale(.82)}
+.shelfview .clock-time{left:33%;top:49%}
+.shelfview .clock-bell,.shelfview .object-cue{display:none!important}
+.shelfview .world-candle{right:0;top:24%;width:23%;height:45%}
+.shelfview .world-candle .object-cue{left:66%;top:43%;transform:translate(-50%,-50%) scale(.82)}
+.shelfview .world-candle::after{left:66%;top:43%;width:150px;height:150px;opacity:.35}
+.shelfview .candle-label{left:66%;top:55%}
+.shelfview .world-fairies{left:29%;top:11%;width:42%;height:51%}
+.shelfview .world-fairies .object-cue{left:50%;top:38%;transform:translate(-50%,-50%) scale(.82)}
+.shelfview .fairy-label{bottom:12%;font-size:.58rem}
+.shelfview .world-window{left:30%;top:5%;width:40%;height:60%}
+.shelfview .world-window::after{bottom:23%;border-radius:7px}
+.shelfview .object-cue{opacity:.2;border-radius:8px;background:rgba(7,8,13,.5)}
+.shelfview .world-clock:hover .object-cue,.shelfview .world-clock:focus-visible .object-cue,
+.shelfview .world-fairies:hover .object-cue,.shelfview .world-fairies:focus-visible .object-cue,
+.shelfview .world-candle:hover .object-cue,.shelfview .world-candle:focus-visible .object-cue{opacity:1}
+
+/* Books sit on the illustrated altar surface. There is intentionally no
+   generated shelf graphic or detached corbel layer. */
+.shelfview .sv-shelf{
+  left:50%;bottom:18.6%;z-index:8;width:min(50%,600px);padding:0;
+  transform:translateX(-50%) translate3d(var(--book-x),var(--book-y),42px);
+  filter:drop-shadow(0 13px 13px rgba(0,0,0,.62));pointer-events:none;
+}
+body.v3-bookshelf .shelfview .sv-shelf .books{
+  display:flex!important;height:auto;min-height:clamp(132px,20vh,178px);padding:0 6px;gap:6px;
+  align-items:flex-end;justify-content:center;overflow:hidden;pointer-events:none;
+}
+body.v3-bookshelf .shelfview .sv-shelf .book{pointer-events:auto;transition:filter .2s,transform .22s}
+body.v3-bookshelf .shelfview .sv-shelf .book:hover{transform:translateY(-4px);filter:brightness(1.08) drop-shadow(0 8px 8px rgba(0,0,0,.48))}
+body.v3-bookshelf .shelfview .sv-shelf .book.face{width:clamp(82px,6.8vw,104px)}
+body.v3-bookshelf .shelfview .sv-shelf .book.spine{width:clamp(27px,2.8vw,37px)}
+body.v3-bookshelf .shelfview .sv-shelf .book.spine .spineinner{height:clamp(124px,16.5vh,154px)!important}
+body.v3-bookshelf .shelfview .sv-shelf .book.spine .stitle{max-height:108px;font-size:clamp(.56rem,.64vw,.66rem)}
+.shelfview .world-stage-moonlit .sv-shelf::before,
+.shelfview .world-stage-moonlit .sv-shelf::after,
+body.v3-bookshelf .shelfview .world-stage-moonlit .sv-shelf .plank{display:none!important}
+.shelfview .shelf-range{
+  top:calc(100% + 11px);border-radius:7px;border-color:rgba(229,192,106,.42);
+  background:linear-gradient(180deg,rgba(31,16,18,.96),rgba(8,7,10,.93));font-size:.6rem;pointer-events:auto;
+}
+.shelfview .shelf-turn{
+  bottom:28%;width:38px;height:62px;border-radius:9px;background:linear-gradient(145deg,#2c1218,#09080b);pointer-events:auto;
+}
+.shelfview .shelf-turn.prev{left:max(14px,calc(50% - 390px))}
+.shelfview .shelf-turn.next{right:max(14px,calc(50% - 390px))}
+.shelfview .sv-dots{bottom:18px;pointer-events:auto}
+
+/* The reward is the room changing. */
+.shelfview.fairies-awake .fairy{opacity:.95;animation:fairyFloat 3.6s ease-in-out infinite alternate}
+.shelfview.fairies-awake .oath-motes i{opacity:.8;animation:oathGold 5.6s ease-in-out infinite}
+.shelfview.candle-dim .world-candle::after{opacity:0}
+.shelfview.room-awake .window-veil{opacity:.7;filter:blur(12px) drop-shadow(0 0 25px rgba(144,185,255,.28))}
+.shelfview.room-awake .light-shaft{opacity:.32}
+.shelfview.moonbloom-awake .world-window::before{
+  content:"";position:absolute;left:50%;top:42%;width:56%;aspect-ratio:1;transform:translate(-50%,-50%);
+  border:1px solid rgba(214,228,255,.8);border-radius:50%;box-shadow:0 0 28px rgba(139,181,255,.5),inset 0 0 26px rgba(139,181,255,.2);
+  animation:portalRing 2.4s ease-out both;pointer-events:none;
+}
+
+@media (orientation:portrait){
+  .shelfview .scene-midnight,.shelfview .scene-blue-hour{
+    background-image:url('/themes/moonlit-reading-room/scenes/moonlit-threshold-portrait-v4.png');
+  }
+  .shelfview .scene-midnight-off,.shelfview .scene-blue-hour-off{
+    background-image:url('/themes/moonlit-reading-room/scenes/moonlit-threshold-night-off-portrait-v5.png');
+  }
+  .shelfview .scene-dawn{background-image:url('/themes/moonlit-reading-room/scenes/moonlit-threshold-day-portrait-v5.png')}
+  .shelfview .scene-dawn-lit{background-image:url('/themes/moonlit-reading-room/scenes/moonlit-threshold-day-portrait-v4.png')}
+}
+
+@media (max-width:620px) and (orientation:portrait){
+  .shelfview .scene-layer{background-position:center;transform:scale(1.018)}
+  .shelfview .sv-backdrop::after{
+    background:linear-gradient(180deg,rgba(2,3,7,.57) 0,transparent 16% 70%,rgba(1,2,5,.18) 100%);
+  }
+  .shelfview .sv-top{top:var(--safe-top);left:9px;right:9px;gap:7px;align-items:flex-start}
+  .shelfview .sv-back,.shelfview .sv-shopbtn{width:42px;height:42px;padding:0;display:grid;place-items:center}
+  .shelfview .sv-shopbtn{margin-left:0;font-size:0}
+  .shelfview .sv-shopbtn::before{content:"✦";font:600 1rem 'Fraunces';color:#edc975}
+  .shelfview .sv-label{
+    flex:1;min-width:0;padding:6px 9px 7px;border:1px solid rgba(230,194,112,.24);border-radius:9px;
+    background:rgba(7,7,12,.7);font-size:clamp(.86rem,4vw,1rem);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .shelfview .sv-label small{font-size:.44rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .shelfview .world-message{
+    top:calc(var(--safe-top) + 52px);bottom:auto;width:calc(100% - 54px);max-width:370px;padding:6px 10px;
+    font-size:.58rem;line-height:1.35;
+  }
+  .shelfview .world-discovery{
+    right:10px;bottom:calc(var(--safe-bottom) + 8px);padding:7px 8px;background:rgba(5,6,10,.7);
+  }
+  .shelfview .world-discovery>span:first-child{display:none}
+  .shelfview .world-window{left:20%;top:7%;width:60%;height:49%}
+  .shelfview .world-window::after{display:none}
+  .shelfview .world-clock{left:0;top:20%;width:32%;height:42%}
+  .shelfview .world-clock .object-cue{left:43%;top:48%;opacity:.66;transform:translate(-50%,-50%) scale(.78)}
+  .shelfview .clock-time{left:43%;top:57%;opacity:.85;font-size:.45rem}
+  .shelfview .world-candle{right:0;top:22%;width:31%;height:40%}
+  .shelfview .world-candle .object-cue{left:58%;top:50%;opacity:.66;transform:translate(-50%,-50%) scale(.78)}
+  .shelfview .world-candle::after{left:58%;top:50%;width:95px;height:95px}
+  .shelfview .candle-label{display:none}
+  .shelfview .world-fairies{left:25%;top:12%;width:50%;height:43%}
+  .shelfview .world-fairies .object-cue{left:50%;top:47%;opacity:.52;transform:translate(-50%,-50%) scale(.74)}
+  .shelfview .fairy-label{display:none}
+  .shelfview .window-veil{left:22%;right:22%;top:8%;height:51%}
+  .shelfview .light-shaft{left:31%;top:0;width:38%;height:62%}
+  .shelfview .depth-fog{left:10%;right:10%;bottom:28%;height:18%}
+
+  .shelfview .sv-shelf{
+    bottom:34.1%;width:calc(100% - 42px);max-width:430px;padding:0;filter:drop-shadow(0 10px 9px rgba(0,0,0,.65));
+  }
+  body.v3-bookshelf .shelfview .sv-shelf .books{
+    min-height:clamp(130px,20vh,168px);padding:0 5px;gap:5px;justify-content:center;overflow:hidden;
+  }
+  body.v3-bookshelf .shelfview .sv-shelf .book.face{width:clamp(78px,23vw,96px)}
+  body.v3-bookshelf .shelfview .sv-shelf .book.spine{width:clamp(27px,8.5vw,34px)}
+  body.v3-bookshelf .shelfview .sv-shelf .book.spine .spineinner{height:clamp(96px,13.5vh,116px)!important}
+  body.v3-bookshelf .shelfview .sv-shelf .book.spine .stitle{max-height:82px;font-size:.52rem}
+  body.v3-bookshelf .shelfview .sv-shelf .book:hover{transform:none}
+  .shelfview .shelf-range{top:calc(100% + 8px);font-size:.55rem}
+  .shelfview .shelf-turn{bottom:40.5%;width:31px;height:52px;border-radius:8px}
+  .shelfview .shelf-turn.prev{left:7px}.shelfview .shelf-turn.next{right:7px}
+  .shelfview .sv-dots{left:12px;right:auto;bottom:calc(var(--safe-bottom) + 9px);transform:none;gap:9px}
+  .shelfview .sv-dots button{width:8px;height:8px}
+}
+
+@media (max-width:380px) and (orientation:portrait){
+  .shelfview .sv-shelf{width:calc(100% - 30px)}
+  body.v3-bookshelf .shelfview .sv-shelf .books{gap:4px}
+  body.v3-bookshelf .shelfview .sv-shelf .book.face{width:76px}
+  body.v3-bookshelf .shelfview .sv-shelf .book.spine{width:27px}
+  body.v3-bookshelf .shelfview .sv-shelf .book.spine .spineinner{height:94px!important}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .shelfview .window-veil,.shelfview.moonbloom-awake .world-window::before{animation:none!important}
+}
+@keyframes portalBreath{
+  0%,100%{opacity:.2}50%{opacity:.42}
+}
+@keyframes portalRing{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.25)}35%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(2.1)}
+}
+@keyframes dragonPass{
+  0%,8%{left:-12%;top:17%;opacity:0;transform:scale(.55) rotate(-5deg)}
+  14%{opacity:.72}
+  48%{top:10%;opacity:.58;transform:scale(.82) rotate(2deg)}
+  76%{opacity:.44}
+  88%,100%{left:108%;top:15%;opacity:0;transform:scale(.64) rotate(6deg)}
+}
+@keyframes dragonWingLeft{from{transform:rotate(11deg) scaleY(.72)}to{transform:rotate(-13deg) scaleY(1.08)}}
+@keyframes dragonWingRight{from{transform:rotate(-11deg) scaleY(.72)}to{transform:rotate(13deg) scaleY(1.08)}}
+
+/* Shelf-to-world threshold sequence. It begins at the chosen Enter control,
+   then resolves into the live room beneath it. */
+.world-entry{
+  --entry-x:50vw;--entry-y:50vh;position:fixed;inset:0;z-index:220;overflow:hidden;
+  opacity:0;visibility:hidden;pointer-events:none;background:#010207;color:#f7ead8;
+  transition:opacity .9s ease,visibility 0s .9s;
+}
+.world-entry.active{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .18s ease,visibility 0s}
+.world-entry.resolving{opacity:0;pointer-events:none;transition:opacity 1s cubic-bezier(.2,.7,.2,1)}
+.world-entry-scene{
+  position:absolute;inset:0;background:url('/themes/moonlit-reading-room/scenes/moonlit-threshold-wide-v4.png') center/cover no-repeat;
+  clip-path:circle(0 at var(--entry-x) var(--entry-y));filter:brightness(.25) blur(7px);transform:scale(1.18);
+}
+.world-entry.entry-dark .world-entry-scene{background-image:url('/themes/moonlit-reading-room/scenes/moonlit-threshold-night-off-wide-v5.png')}
+.world-entry.entry-dawn .world-entry-scene{background-image:url('/themes/moonlit-reading-room/scenes/moonlit-threshold-day-wide-v4.png')}
+.world-entry.entry-dawn.entry-dark .world-entry-scene{background-image:url('/themes/moonlit-reading-room/scenes/moonlit-threshold-day-wide-v5.png')}
+.world-entry.active .world-entry-scene{animation:entryThreshold 3.25s cubic-bezier(.16,.78,.18,1) both}
+.world-entry-scene::before{
+  content:"";position:absolute;inset:0;background:
+    radial-gradient(circle at 50% 14%,rgba(224,237,255,.78),rgba(113,160,243,.18) 9%,transparent 22%),
+    radial-gradient(ellipse at 50% 52%,transparent 35%,rgba(2,3,8,.62) 100%);
+  mix-blend-mode:screen;opacity:0;
+}
+.world-entry.active .world-entry-scene::before{animation:entryMoonCatch 3s ease both}
+.entry-thorns{position:absolute;inset:0;border:clamp(12px,4vw,58px) solid rgba(10,5,10,.72);box-shadow:inset 0 0 90px 30px #020207;opacity:0;transform:scale(1.1)}
+.world-entry.active .entry-thorns{animation:entryThorns 2.6s .2s ease both}
+.entry-flight{
+  position:absolute;left:-18%;top:25%;width:86px;height:30px;opacity:0;filter:drop-shadow(0 0 8px #02030a);
+}
+.entry-flight{display:none!important}
+.entry-flight::before,.entry-flight::after{content:"";position:absolute;top:4px;width:47px;height:23px;background:#050711}
+.entry-flight::before{right:40px;clip-path:polygon(100% 65%,66% 20%,0 0,34% 52%,3% 95%,68% 74%);transform:rotate(8deg)}
+.entry-flight::after{left:40px;clip-path:polygon(0 65%,34% 20%,100% 0,66% 52%,97% 95%,32% 74%);transform:rotate(-8deg)}
+.world-entry.active .entry-flight{animation:entryDragon 2.5s .35s cubic-bezier(.2,.62,.3,1) both}
+.world-entry-copy{
+  position:absolute;left:50%;bottom:12%;z-index:3;width:min(90%,580px);transform:translate(-50%,24px);
+  text-align:center;text-shadow:0 3px 22px #000;opacity:0;
+}
+.world-entry-copy small,.world-entry-copy strong,.world-entry-copy span{display:block}
+.world-entry-copy small{color:#e4c373;font-size:.58rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
+.world-entry-copy strong{margin:5px 0 7px;font:600 clamp(1.6rem,4.5vw,3.4rem)/1 'Fraunces'}
+.world-entry-copy span{color:rgba(247,234,216,.7);font:italic 500 clamp(.7rem,1.4vw,.9rem) 'Fraunces'}
+.world-entry.active .world-entry-copy{animation:entryCopy 2.8s .2s ease both}
+.world-entry-skip{
+  position:absolute;right:18px;bottom:max(16px,env(safe-area-inset-bottom));z-index:4;padding:.62em .86em;
+  border:1px solid rgba(231,199,126,.32);border-radius:8px;background:rgba(5,6,10,.62);backdrop-filter:blur(9px);
+  color:rgba(244,232,227,.68);font:800 .61rem 'Hanken Grotesk';letter-spacing:.08em;text-transform:uppercase;cursor:pointer;opacity:0;
+}
+.world-entry.active .world-entry-skip{animation:entrySkip .4s 1.3s ease forwards}
+
+@media (orientation:portrait){
+  .world-entry-scene{background-image:url('/themes/moonlit-reading-room/scenes/moonlit-threshold-portrait-v4.png');inset:0}
+  .world-entry.entry-dark .world-entry-scene{background-image:url('/themes/moonlit-reading-room/scenes/moonlit-threshold-night-off-portrait-v5.png')}
+  .world-entry.entry-dawn .world-entry-scene{background-image:url('/themes/moonlit-reading-room/scenes/moonlit-threshold-day-portrait-v4.png')}
+  .world-entry.entry-dawn.entry-dark .world-entry-scene{background-image:url('/themes/moonlit-reading-room/scenes/moonlit-threshold-day-portrait-v5.png')}
+  .world-entry-copy{bottom:10%;padding-inline:20px}
+}
+@media (prefers-reduced-motion:reduce){.world-entry{display:none!important}}
+@keyframes entryThreshold{
+  0%{clip-path:circle(0 at var(--entry-x) var(--entry-y));filter:brightness(.18) blur(8px);transform:scale(1.22)}
+  42%{clip-path:circle(34vmax at 50% 45%);filter:brightness(.65) blur(2px)}
+  100%{clip-path:circle(110vmax at 50% 45%);filter:brightness(1) blur(0);transform:scale(1.025)}
+}
+@keyframes entryMoonCatch{0%,25%{opacity:0}54%{opacity:.7}100%{opacity:0}}
+@keyframes entryThorns{0%{opacity:.86;transform:scale(1.18)}68%{opacity:.36}100%{opacity:0;transform:scale(.94)}}
+@keyframes entryDragon{0%{left:-18%;top:34%;opacity:0;transform:scale(.45) rotate(-8deg)}18%{opacity:.86}72%{opacity:.68}100%{left:112%;top:13%;opacity:0;transform:scale(1.05) rotate(5deg)}}
+@keyframes entryCopy{0%,24%{opacity:0;transform:translate(-50%,24px)}48%,76%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-10px)}}
+@keyframes entrySkip{to{opacity:1}}
