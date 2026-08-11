@@ -662,7 +662,17 @@
           // suffix — "Powerless (Powerless Trilogy Book 1)". A title that starts
           // with the query but then runs on for another 30+ characters is a
           // bundle or an unrelated longer title, not the book being searched for.
-          const titleMatch = t.startsWith(qn) && t.length <= qn.length + 30;
+          //   • the query must land on a WORD BOUNDARY: the title is the query
+          //     itself, or the query followed by a separator (space/(/:/-/,).
+          //     This kills "Bella" → "Bella's Miracle" / "Bella's Christmas
+          //     Blunder" (apostrophe-s continuation into a different title) and
+          //     "Bella" → "Belladonna" (fragment of a longer word), while still
+          //     allowing "Fourth" → "Fourth Wing" and "Powerless (…Book 1)".
+          //   • require ≥4 chars so 3-letter prefixes ("the", "her") don't flood.
+          const after = t.slice(qn.length);
+          const titleMatch = qn.length>=4 && t.startsWith(qn)
+                             && (after==='' || /^[\s:(\[–—,.-]/.test(after))
+                             && t.length <= qn.length + 30;
           const authorMatch = qn.length>=4 && a.includes(qn);
           return (titleMatch || authorMatch) && isNovel(b) && coverSrc(b);
         }).slice(0,12);

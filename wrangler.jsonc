@@ -8,6 +8,10 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "smuthub",
   "compatibility_date": "2026-06-12",
+  // Disable the smuthub.joshd0123.workers.dev preview host so Google can't index
+  // it as a duplicate of production. smuthub.ca is attached as a custom domain
+  // (via the Cloudflare dashboard) and is unaffected by this.
+  "workers_dev": false,
   "observability": {
     "enabled": true
   },

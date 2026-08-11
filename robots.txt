@@ -1,59 +1,19 @@
 # ════════════════════════════════════════════════════════════════════
-#  ⚠️  EARLY LIVE RELEASE — CRAWLING IS LIMITED ON PURPOSE
+#  PUBLIC — full indexing enabled at launch.
 #
-#  smutHub is live for invited/early users. The global site remains blocked,
-#  with explicit exceptions for the first two approved gift-guide URLs.
-#
-#  Left crawlable, search engines could index an early release before launch
-#  QA, canonical-host checks, and the public sitemap rollout are complete.
-#
-#  ►►► ON FULL INDEXING LAUNCH DAY: replace the limited block below with the
-#      public crawler block underneath, then move the guide URLs into the main
-#      sitemap. See LAUNCH.md step 4.
+#  History: pre-launch this file gated the major search crawlers to two
+#  gift-guide URLs while the site was in early release. That block has been
+#  removed. The whole public surface is now crawlable; admin tooling stays out.
 # ════════════════════════════════════════════════════════════════════
 
 # Cloudflare Managed robots.txt prepends a global `User-agent: * / Allow: /`
-# group in production. Search-specific groups are intentionally declared here:
-# specific groups take precedence over Cloudflare's global group and preserve
-# the limited-release crawl gate for the major indexing crawlers.
-User-agent: Googlebot
-User-agent: Bingbot
-User-agent: Applebot
-User-agent: DuckDuckBot
-User-agent: YandexBot
-User-agent: Baiduspider
-Disallow: /
-# First public search surface: allow only the two distinct partner gift guides
-# and the assets required for Google to render them accurately.
-Allow: /guides/romantasy-gift-ideas/listening-ledger/
-Allow: /guides/romantasy-gift-ideas/gift-compass/
-Allow: /guides/romantasy-gift-ideas/assets/
-Allow: /guides/romantasy-gift-ideas/downloads/
-Allow: /guides/romantasy-gift-ideas/shared.css
-Allow: /guides/romantasy-gift-ideas/shared.js
-Allow: /sitemap-gift-guides.xml
-
-# Fallback for crawlers when the origin robots.txt is served without
-# Cloudflare's managed header.
+# group in production, plus its AI-crawler Content-Signal directives. The group
+# below is the origin's own public rule and keeps admin pages out of the index.
 User-agent: *
-Disallow: /
-Allow: /guides/romantasy-gift-ideas/listening-ledger/
-Allow: /guides/romantasy-gift-ideas/gift-compass/
-Allow: /guides/romantasy-gift-ideas/assets/
-Allow: /guides/romantasy-gift-ideas/downloads/
-Allow: /guides/romantasy-gift-ideas/shared.css
-Allow: /guides/romantasy-gift-ideas/shared.js
-Allow: /sitemap-gift-guides.xml
+Allow: /
+Disallow: /admin.html
+Disallow: /catalog-admin.html
 
+# Canonical XML sitemap Google + Bing want.
+Sitemap: https://smuthub.ca/sitemap.xml
 Sitemap: https://smuthub.ca/sitemap-gift-guides.xml
-
-# ── Restore at launch (and delete the two lines above) ───────────────
-# smutHub — public crawler rules
-# Allow all bots into the public surface; keep admin tooling out of the index.
-# User-agent: *
-# Allow: /
-# Disallow: /admin.html
-# Disallow: /catalog-admin.html
-#
-# Sitemap (canonical XML index Google + Bing want)
-# Sitemap: https://smuthub.ca/sitemap.xml
