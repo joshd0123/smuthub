@@ -1012,7 +1012,7 @@
     // every current AND future premium release is unlocked for these accounts.
     // Keyed on the authenticated session email, so it can't be spoofed without
     // controlling the account. Move to a DB entitlement once billing is live.
-    const COMP_ACCESS={'joshd0123@gmail.com':1,'martaantonczak@hotmail.ca':2,'pops27620@gmail.com':3};
+    const COMP_ACCESS={'joshd0123@gmail.com':1,'martaantonczak@hotmail.ca':2,'pops27620@gmail.com':3,'suzyd1264@gmail.com':4};
     const compKey=(user.email||'').trim().toLowerCase();
     if(COMP_ACCESS[compKey]){ isPremium=true; if(!founderNumber) founderNumber=COMP_ACCESS[compKey]; }
     if(V3_MODE&&founderNumber) crestStyle='founders-key';
