@@ -88,6 +88,7 @@ referrer cannot distinguish "series" from "related" (both are `/books/<slug>/`).
 | `blurb-expand` | `slug` | book page | Whether the 30-second answer is enough, or readers always want the full blurb |
 | `drawer-open` | `kind` | book page | Demand for the complete trope / warning lists |
 | `review-open` | `slug` | book page | Demand for reader reviews on a book |
+| `ending-reveal` | `where` | book page | Demand for the spoiler-gated ending. `where` = `book-page` (the section button) or `ask-list` (revealed from the Q&A) |
 | `share` | `where` | book page | |
 | `share-bookshelf` | — | dashboard | Whether readers share their public bookshelf (website version) link |
 
@@ -97,9 +98,25 @@ referrer cannot distinguish "series" from "related" (both are `/books/<slug>/`).
 |---|---|---|---|
 | `shelve` | `status`, `where` | book page, `/search` | `status` = `want`/`reading`/`read`/`dnf` |
 | `spice-rate` | `n`, `where` | book page, `/search` | 1–5 |
-| `signup` | — | any page (`auth.js`) | New account created (fired on the first `SIGNED_IN` for an account < 60s old) — the top post-launch conversion now that the waitlist is gone |
-| `signin` | — | any page (`auth.js`) | Returning login (first genuine `SIGNED_IN` per session; session restores are `INITIAL_SESSION` and excluded) |
+| `signup` | `where` | any page (`auth.js`) | New account created (fired on the first `SIGNED_IN` for an account < 60s old) — the top post-launch conversion now that the waitlist is gone. `where` = the path the account landed on after auth, so signups attribute to the surface that drove them |
+| `signin` | `where` | any page (`auth.js`) | Returning login (first genuine `SIGNED_IN` per session; session restores are `INITIAL_SESSION` and excluded) |
 | `add-to-catalog` | — | `/search` | Admin-only, so suppressed in practice |
+
+### Monetization — is the paid model landing (added 2026-08-11, post-launch)
+
+The `/founders/` pricing page and the live premium bookshelf world (Moonlit,
+free to preview / CA$4.99 to unlock / included with the Founder's Key) are the
+first things that sell. These events answer: *do readers want in, and does the
+free→paid path convert.* Umami already counts `/founders/` and `/bookshelf/`
+pageviews for free — these are the intent signals on top.
+
+| Event | Payload | Fired from | Question it answers |
+|---|---|---|---|
+| `coffee-click` | `where` | `/founders/` | Clicks on the Buy-Me-a-Coffee link — the only live spend today, and the current top of the support funnel |
+| `founders-cta` | `action` | `/founders/` | Which founders CTA pulls. `action` = `to-bookshelf` (preview the live world / start a shelf) or `roadmap` |
+| `world-unlock-intent` | `world` | `/bookshelf/` | **The key conversion signal** — a free reader clicked the "$4.99 / see access" CTA to get inside the premium world |
+| `world-enter` | `world` | `/bookshelf/` | An owner actually entered the live world they have access to (retention of the paid thing) |
+| `customize-unlock-intent` | — | `/bookshelf/` | Interest in unlocking full bookcase customization (the "coming soon" upsell) |
 
 > Removed **2026-07-28:** `waitlist-signup` — the pre-launch waitlist was retired
 > in favour of Google sign-in, so the event no longer fires. `signup` replaces it.

@@ -404,4 +404,25 @@
   </div>
 </footer>
 
+<script>
+  // Founders funnel — the only page selling anything today, so track intent:
+  // coffee clicks (the one live spend) and clicks through to the live world.
+  (function(){
+    function t(name, data){
+      if (window.SH && SH.track) { SH.track(name, data); return; }
+      var n = 0, iv = setInterval(function(){
+        if (window.SH && SH.track) { clearInterval(iv); SH.track(name, data); }
+        else if (++n > 40) clearInterval(iv);
+      }, 100);
+    }
+    document.addEventListener('click', function(e){
+      var a = e.target.closest ? e.target.closest('a') : null;
+      if (!a) return;
+      var href = a.getAttribute('href') || '';
+      if (/buymeacoffee|ko-?fi/i.test(href)) t('coffee-click', { where: 'founders' });
+      else if (/^\/bookshelf(\/|$)/.test(href)) t('founders-cta', { action: 'to-bookshelf' });
+      else if (/^\/roadmap(\/|$)/.test(href)) t('founders-cta', { action: 'roadmap' });
+    });
+  })();
+</script>
 </body></html>

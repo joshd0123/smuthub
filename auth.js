@@ -119,7 +119,11 @@
             try { first = !sessionStorage.getItem('sh_signin_tracked'); if (first) sessionStorage.setItem('sh_signin_tracked','1'); } catch(_) {}
             if (first) {
               const created = new Date(SH.user.created_at).getTime();
-              track(Date.now() - created < 60000 ? 'signup' : 'signin');
+              // `where` = the page the account landed on after auth, so signups
+              // can be attributed to the surface that drove them (home, founders,
+              // a book page, the bookshelf…).
+              const where = location.pathname.replace(/\/index\.html$/, '/') || '/';
+              track(Date.now() - created < 60000 ? 'signup' : 'signin', { where });
             }
           }
         }, 0);
@@ -756,7 +760,23 @@
     };
     window.addEventListener('scroll',()=>{ if(!ticking){ ticking=true; requestAnimationFrame(update); } },{passive:true});
   }
-  function initShUI(){ injectHeaderCSS(); renderSharedNavigation(); enhanceHeader(); mountUmami(); mountBackToTop(); mountHideOnScroll(); /* mountFeedbackButton(); ← disabled */ }
+  // ── Bookshelf monetization funnel ────────────────────────────────────────
+  // Tracked here (delegated) rather than in the bookshelf file so that actively
+  // iterated world code doesn't have to carry analytics, and we avoid merge
+  // churn. Answers the two launch questions: do free readers want in, and do
+  // owners actually use the world once unlocked. Selectors mirror the bookshelf
+  // CTAs (data-unlock-interiors, #openLiveWorld/#openReadingWorld, #atelierUnlock).
+  function mountBookshelfTracking(){
+    if (!/^\/bookshelf(\/|$)/.test(location.pathname)) return;
+    document.addEventListener('click', (e) => {
+      const el = e.target.closest ? e.target.closest('[data-unlock-interiors],#openLiveWorld,#openReadingWorld,#atelierUnlock') : null;
+      if (!el) return;
+      if (el.matches('[data-unlock-interiors]')) track('world-unlock-intent', { world: 'moonlit' });
+      else if (el.id === 'atelierUnlock') track('customize-unlock-intent');
+      else track('world-enter', { world: 'moonlit' });
+    }, true);   // capture: still fires if the bookshelf handler stops propagation
+  }
+  function initShUI(){ injectHeaderCSS(); renderSharedNavigation(); enhanceHeader(); mountUmami(); mountBackToTop(); mountHideOnScroll(); mountBookshelfTracking(); /* mountFeedbackButton(); ← disabled */ }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', initShUI);
   else initShUI();
 })();
