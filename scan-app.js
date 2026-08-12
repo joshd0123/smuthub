@@ -1,6 +1,7 @@
 const FREE_SCAN_LIMIT = 5;
 const DEDUPE_WINDOW_MS = 10 * 60 * 1000;
 const STORAGE_KEY = "smuthub.scan.prototype.v3";
+const UNLIMITED_SCAN_TESTERS = new Set(["joshd0123@gmail.com"]);
 
 const canonicalBooks = {
   "book-fourth-wing": {
@@ -210,11 +211,18 @@ function toast(message) {
   el.toastTimer = window.setTimeout(() => el.classList.remove("show"), 2400);
 }
 
+function hasUnlimitedScanAccess() {
+  const email = String(window.SH?.user?.email || "").trim().toLowerCase();
+  return prototypeState.lifetimeUnlocked || UNLIMITED_SCAN_TESTERS.has(email);
+}
+
 function updateQuotaUi() {
   const chip = $("#quotaChip");
   chip.classList.remove("low", "unlocked");
-  if (prototypeState.lifetimeUnlocked) {
-    chip.textContent = "∞ scans unlocked";
+  if (hasUnlimitedScanAccess()) {
+    chip.textContent = UNLIMITED_SCAN_TESTERS.has(String(window.SH?.user?.email || "").trim().toLowerCase())
+      ? "∞ tester scans"
+      : "∞ scans unlocked";
     chip.classList.add("unlocked");
     return;
   }
@@ -224,14 +232,14 @@ function updateQuotaUi() {
 }
 
 function requestScanAccess() {
-  if (prototypeState.lifetimeUnlocked || prototypeState.freeScansUsed < FREE_SCAN_LIMIT) return true;
+  if (hasUnlimitedScanAccess() || prototypeState.freeScansUsed < FREE_SCAN_LIMIT) return true;
   stopCamera();
   if (!paywallDialog.open) paywallDialog.showModal();
   return false;
 }
 
 function shouldCountScan(isbn) {
-  if (prototypeState.lifetimeUnlocked) return false;
+  if (hasUnlimitedScanAccess()) return false;
   const cutoff = Date.now() - DEDUPE_WINDOW_MS;
   return !prototypeState.scanEvents.some((event) => event.isbn === isbn && event.createdAt > cutoff);
 }
@@ -1039,5 +1047,6 @@ $("#unlockButton").addEventListener("click", () => {
 });
 
 document.addEventListener("visibilitychange", () => { if (document.hidden) stopCamera(); });
+window.addEventListener("sh-auth", updateQuotaUi);
 updateQuotaUi();
 renderRecent();
