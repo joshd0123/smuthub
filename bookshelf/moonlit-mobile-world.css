@@ -175,7 +175,7 @@ body.v3-bookshelf .shelfview .sv-shelf .book.spine .stitle{max-height:108px;font
 .shelfview .world-stage-moonlit .sv-shelf::after,
 body.v3-bookshelf .shelfview .world-stage-moonlit .sv-shelf .plank{display:none!important}
 .shelfview .shelf-range{
-  top:calc(100% + 11px);border-radius:7px;border-color:rgba(229,192,106,.42);
+  top:calc(100% + 30px);border-radius:7px;border-color:rgba(229,192,106,.42);
   background:linear-gradient(180deg,rgba(31,16,18,.96),rgba(8,7,10,.93));font-size:.6rem;pointer-events:auto;
 }
 .shelfview .shelf-turn{
@@ -257,7 +257,7 @@ body.v3-bookshelf .shelfview .world-stage-moonlit .sv-shelf .plank{display:none!
   body.v3-bookshelf .shelfview .sv-shelf .book.spine .spineinner{height:clamp(96px,13.5vh,116px)!important}
   body.v3-bookshelf .shelfview .sv-shelf .book.spine .stitle{max-height:82px;font-size:.52rem}
   body.v3-bookshelf .shelfview .sv-shelf .book:hover{transform:none}
-  .shelfview .shelf-range{top:calc(100% + 8px);font-size:.55rem}
+  .shelfview .shelf-range{top:calc(100% + 28px);font-size:.55rem}
   .shelfview .shelf-turn{bottom:40.5%;width:31px;height:52px;border-radius:8px}
   .shelfview .shelf-turn.prev{left:7px}.shelfview .shelf-turn.next{right:7px}
   .shelfview .sv-dots{left:12px;right:auto;bottom:calc(var(--safe-bottom) + 9px);transform:none;gap:9px}

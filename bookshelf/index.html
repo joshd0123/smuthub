@@ -27,7 +27,7 @@
 <script defer src="/auth.js"></script>
 <script src="/bookcase-catalog.js?v=founders-key-gate-1"></script>
 <link rel="stylesheet" href="/companion.css">
-<link rel="stylesheet" href="/bookshelf/v3-bookshelf.css?v=premium-interiors-1">
+<link rel="stylesheet" href="/bookshelf/v3-bookshelf.css?v=universal-heirloom-1">
 <script defer src="/companion.js"></script>
 <style>
   :root{
@@ -505,7 +505,7 @@
   .shelf-turn:hover:not(:disabled){transform:translateY(-3px) scale(1.04)}
   .shelf-turn:disabled{opacity:.22;cursor:default}
   .shelf-turn.prev{left:max(4px,calc(50% - 355px))}.shelf-turn.next{right:max(4px,calc(50% - 355px))}
-  .shelf-range{position:absolute;left:50%;top:calc(100% + 11px);transform:translateX(-50%);z-index:8;border:1px solid rgba(225,185,107,.28);border-radius:99px;
+  .shelf-range{position:absolute;left:50%;top:calc(100% + 30px);transform:translateX(-50%);z-index:8;border:1px solid rgba(225,185,107,.28);border-radius:99px;
     padding:.42em .8em;background:rgba(6,7,12,.72);backdrop-filter:blur(8px);color:#e7c57f;font-family:inherit;font-weight:800;font-size:.66rem;white-space:nowrap;cursor:pointer}
   .shelf-range:hover{border-color:#e7c57f;background:rgba(24,17,14,.86)}
   .sv-shelf-action{position:absolute;top:calc(100% + 11px);z-index:9;padding:.48em .65em;border:1px solid rgba(225,185,107,.32);border-radius:7px;background:rgba(12,9,12,.82);color:#dfc17e;font:800 .58rem 'Hanken Grotesk';letter-spacing:.05em;text-transform:uppercase;text-decoration:none;cursor:pointer;pointer-events:auto}
@@ -556,7 +556,7 @@
   .shelfview.clock-strike .scene-layer{animation:sceneBreathe 1.25s ease both}
   .shelfview.clock-ringing .clock-bell{animation:clockBellRing 2.15s cubic-bezier(.36,.02,.18,1) both}
   .shelfview.curtain-ritual .resting-drapes{animation:restingDrapeYield 3.45s ease both}
-  .shelfview.curtain-ritual .curtain-left{animation:curtainCloseLeft 3.45s cubic-bezier(.7,0,.22,1) both}.shelfview.curtain-ritual .curtain-right{animation:curtainCloseRight 3.45s cubic-bezier(.7,0,.22,1) both}.shelfview.curtain-ritual .curtain-crest{animation:curtainCrest 3.45s ease both}.shelfview.curtain-ritual .moonbeam-sweep{animation:moonbeamReveal 3.45s ease both}.shelfview.curtain-ritual .world-stage{animation:stageVeil 3.45s ease both}
+  .shelfview.curtain-ritual .curtain-left{animation:curtainCloseLeft 3.45s cubic-bezier(.7,0,.22,1) both}.shelfview.curtain-ritual .curtain-right{animation:curtainCloseRight 3.45s cubic-bezier(.7,0,.22,1) both}.shelfview.curtain-ritual .curtain-crest{animation:curtainCrest 3.45s ease both}.shelfview.curtain-ritual .moonbeam-sweep{animation:moonbeamReveal 3.45s ease both}
   .shelfview.moonbloom-awake .moonbloom-sigil{animation:moonbloomWake 5.8s cubic-bezier(.2,.8,.2,1) both}.shelfview.moonbloom-awake .window-veil{animation:veilPulse 5.8s ease both}.shelfview.moonbloom-awake .petal-depth i{animation:moonPetal 4.3s ease-out both}.shelfview.moonbloom-awake .petal-depth i:nth-child(2){animation-delay:.18s}.shelfview.moonbloom-awake .petal-depth i:nth-child(3){animation-delay:.38s}.shelfview.moonbloom-awake .petal-depth i:nth-child(4){animation-delay:.56s}.shelfview.moonbloom-awake .petal-depth i:nth-child(5){animation-delay:.72s}.shelfview.moonbloom-awake .petal-depth i:nth-child(6){animation-delay:.9s}
   @keyframes fairyArcOne{0%{opacity:0;transform:translate(110px,-30px) scale(.45)}30%{opacity:1}100%{opacity:.62;transform:translate(-70px,36px) scale(.8)}}
   @keyframes fairyArcTwo{0%{opacity:0;transform:translate(130px,20px) scale(.4)}32%{opacity:1}100%{opacity:.52;transform:translate(22px,-54px) scale(.72)}}
@@ -658,7 +658,7 @@
     .sv-shelf .book.spine .spineinner{height:138px}.sv-shelf .book.spine .stitle{max-height:104px}
     .shelf-turn{bottom:112px;width:30px;height:52px;font-size:1.35rem}
     .shelf-turn.prev{left:max(3px,calc(13% - 35px))}.shelf-turn.next{right:max(3px,calc(13% - 35px))}
-    .shelf-range{top:calc(100% + 9px);font-size:.59rem}
+    .shelf-range{top:calc(100% + 28px);font-size:.59rem}
     .product-grid{grid-template-columns:1fr}
     .release-card{grid-template-columns:80px 1fr}.release-price{grid-column:2}
     .founder-note{align-items:flex-start;flex-direction:column}
@@ -864,6 +864,7 @@
     {id:'warbound',name:'Warbound Obsidian',color:'#16151a', premium:true,desc:'Soot-black grain, cold iron and a restrained blood-red glow.'},
   ];
   const CREST_STYLES=[
+    {key:'heirloom-moon',name:'Romantasy Heirloom',src:'/bookshelf/assets/v3/founder-cabinet-worlds-v1.jpg',eyebrow:'The private library of',motto:'Love · Lore · Ever After',desc:'The original oxblood, rose and relic-gold crown—integrated into the cabinet itself.',premium:false},
     {key:'enchanted-rose',name:'Enchanted Rose',src:'/themes/bookcase/romantasy-plaque-v2.webp',eyebrow:'The enchanted library of',motto:'Love · Death · Ever After',desc:'Painterly roses, relic gold and dangerous romance.',premium:true},
     {key:'moonlit-cathedral',name:'Moonlit Cathedral',src:'/themes/bookcase/crests/moonlit-cathedral-v1.webp',eyebrow:'The moonlit library of',motto:'Dream · Desire · Destiny',desc:'Silver tracery, moonflowers and cathedral-blue lacquer.',premium:true},
     {key:'thornbound-reliquary',name:'Thornbound Reliquary',src:'/themes/bookcase/crests/thornbound-reliquary-v1.webp',eyebrow:'The warbound library of',motto:'Love · War · No Mercy',desc:'Black iron, raven wings and a scarred ebony heart.',premium:true},
@@ -912,6 +913,8 @@
   // rollback view while the new cabinet completes its launch soak.
   const V3_MODE=BOOKSHELF_PARAMS.get('v3')!=='classic';
   const ACCESS_PREVIEW=BOOKSHELF_PARAMS.get('access');
+  const CROWN_PREVIEW=BOOKSHELF_PARAMS.get('crown');
+  const FOUNDER_AWAKE_PREVIEW=BOOKSHELF_PARAMS.get('founder-awake')==='1';
   const MOONLIT_PRODUCT_KEY='world_moonlit_reading_room';
   // Read-only "view someone else's shelf" mode: /bookshelf/?u=<username>.
   // Renders another reader's PUBLIC shelf (RLS-gated) with all editing removed.
@@ -969,6 +972,9 @@
     return crest.founderOnly&&!founderNumber&&!REVIEW_MODE?CREST_STYLES[0]:crest;
   }
   function founderEditionHTML(){
+    // The Founder crown is paused while it is rebuilt. Keep the universal
+    // Romantasy Heirloom visually identical for every reader in V3.
+    if(V3_MODE) return '';
     const number=founderNumber?String(founderNumber).padStart(3,'0'):(REVIEW_MODE?'001':null);
     if(!number) return '';
     if(activeCrest().key==='founders-key') return '';
@@ -995,7 +1001,10 @@
       readerName='Novarin';
       shelf=DEMO_SHELF.map((b,i)=>({...b,sort_order:i,created_at:new Date(Date.now()-i*86400000).toISOString()}));
       spiceMap={'demo-1':4,'demo-2':5,'demo-4':5,'demo-7':3};
-      if(V3_MODE) crestStyle='founders-key';
+      // The Romantasy Heirloom is the launch crown for every account. The
+      // unfinished Founder treatment remains available only as an explicit
+      // development preview; it is never selected by account status.
+      if(V3_MODE) crestStyle=CROWN_PREVIEW==='founder'?'founders-key':'heirloom-moon';
       setTheme('founder',true);
       document.body.dataset.cabinet=cabinetStyle;
       document.body.dataset.crest=crestStyle;
@@ -1015,8 +1024,7 @@
     const COMP_ACCESS={'joshd0123@gmail.com':1,'martaantonczak@hotmail.ca':2,'pops27620@gmail.com':3,'suzyd1264@gmail.com':4};
     const compKey=(user.email||'').trim().toLowerCase();
     if(COMP_ACCESS[compKey]){ isPremium=true; if(!founderNumber) founderNumber=COMP_ACCESS[compKey]; }
-    if(V3_MODE&&founderNumber) crestStyle='founders-key';
-    if(crestStyle==='founders-key'&&!founderNumber) crestStyle='enchanted-rose';
+    if(V3_MODE) crestStyle='heirloom-moon';
     document.body.dataset.crest=crestStyle;
     const rawName=profile.display_name||profile.username||(user.email||'').split('@')[0];
     readerName=rawName ? rawName.charAt(0).toUpperCase()+rawName.slice(1) : 'Your';
@@ -1100,6 +1108,7 @@
       VIEW_UID=prof.id;
       const dn=(prof.display_name||'').trim();
       readerName=dn||(prof.username.charAt(0).toUpperCase()+prof.username.slice(1));
+      if(V3_MODE) crestStyle='heirloom-moon';
       setTheme('walnut',true);                    // sets body.className, so add the
       document.body.classList.add('view-mode');   // view-mode class AFTER it, not before
       document.body.dataset.cabinet=cabinetStyle;
@@ -1233,6 +1242,8 @@
     $('sub').textContent = total ? 'The calm before each reading world. Choose a shelf, open a book, or make the library unmistakably yours.' : "Empty shelves… for now. Go find some trouble.";
     const visible=SHELVES;
     const counts=Object.fromEntries(SHELVES.map(([st])=>[st,ordered.filter(b=>b.status===st).length]));
+    const founderCrown=crest.key==='founders-key'&&(!!founderNumber||REVIEW_MODE);
+    const crownNumber=founderCrown?String(founderNumber||(REVIEW_MODE?1:'')).padStart(3,'0'):'';
     const worldRibbon=interiorsUnlocked
       ? '<button class="world-ribbon" id="openLiveWorld"><span class="moon-seal" aria-hidden="true">✦</span><span class="world-ribbon-copy"><small>Live premium world · 3 room responses</small><strong>The Moonlit Reading Room</strong><span class="world-ribbon-desc">Your books, a working clock, living light, daybreak and visitors that cross the moon.</span></span><b>Enter world →</b></button>'
       : '<button class="world-ribbon world-ribbon-locked" data-unlock-interiors><span class="moon-seal" aria-hidden="true">◇</span><span class="world-ribbon-copy"><small>Premium shelf interiors</small><strong>Bring the inside of your cabinet to life</strong><span class="world-ribbon-desc">Premium includes living worlds inside the shelves. Free includes the heirloom exterior and exterior updates.</span></span><b>See access →</b></button>';
@@ -1250,7 +1261,7 @@
       + lightConsole
       + '<div class="library-main">'
       + '<div class="case-identity"><span class="plaque-chain left" aria-hidden="true"></span><span class="plaque-chain right" aria-hidden="true"></span><div class="case-name" data-crest="'+esc(crest.key)+'"><span class="crest-glass" aria-hidden="true"></span><span class="crest-reflection" aria-hidden="true"></span><img class="case-art" src="'+esc(crest.src)+'" alt="" aria-hidden="true" decoding="async"><span class="crest-heart" aria-hidden="true"></span><div class="case-copy"><small>'+esc(crest.eyebrow)+'</small><strong>'+esc(readerName)+'</strong><span class="case-motto">'+esc(crest.motto)+'</span></div>'+founderSocketHTML()+'</div>'+founderEditionHTML()+'</div>'
-      + '<div class="bookcase '+(interiorsUnlocked?'worlds-unlocked':'worlds-locked')+'"><span class="cabinet-crest"><small>The founding library of</small><strong>'+esc(readerName)+'</strong><em>First edition · forever kept</em></span><span class="cabinet-pilaster left"></span><span class="cabinet-pilaster right"></span><span class="case-flourish"></span><div class="interior">'
+      + '<div class="bookcase '+(interiorsUnlocked?'worlds-unlocked':'worlds-locked')+' '+(founderCrown?'founder-crown'+(FOUNDER_AWAKE_PREVIEW?' founder-awake founder-awake-preview':''):'heirloom-crown')+'">'+(founderCrown?'<button class="founder-reliquary" id="founderReliquary" type="button" aria-label="Awaken Founding Key '+crownNumber+'"><span class="founder-memory" aria-hidden="true"></span><span class="founder-ruby-live" aria-hidden="true"></span><span class="founder-thorn-light" aria-hidden="true"></span><span class="founder-dust" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="founder-whisper" aria-hidden="true">The first hundred are remembered</span></button>':'')+'<span class="cabinet-crest"><small>'+(founderCrown?'The founding library of':'The private library of')+'</small><strong>'+esc(readerName)+'</strong><em>'+(founderCrown?'First edition · forever kept':'Love · lore · ever after')+'</em>'+(founderCrown?'<b aria-label="Founding Key '+crownNumber+'">'+crownNumber+'</b>':'')+'</span><span class="cabinet-pilaster left"></span><span class="cabinet-pilaster right"></span><span class="case-flourish"></span><div class="interior">'
       + visible.map(([st,label])=>{
           const items=ordered.filter(b=>b.status===st);
           const inner = V3_MODE&&interiorsUnlocked&&st==='reading'&&items.length
@@ -1271,7 +1282,7 @@
       + (total?'<p class="hint">✋ Drag books to reorder · tap a shelf label or ledge to enter its world</p>':'')
       + '</div><aside class="library-rail">'
       + '<section class="rail-card"><div class="rail-kicker">The Library Atelier</div><h3>One heirloom is live. More are being forged.</h3>'
-      + '<p>The Founder Heirloom is ready now. New cabinets, finishes, crests, and collected details will arrive one at a time — only when each one belongs in this world.</p>'
+      + '<p>The Romantasy Heirloom is ready for every reader. New cabinets, finishes, crests, and collected details will arrive one at a time — only when each one belongs in this world.</p>'
       + '<button class="rail-btn" id="openAtelier">Visit the Atelier</button></section>'
       + '<section class="rail-card world-card"><span class="world-live">'+(interiorsUnlocked?'Live and touchable':'Premium interior')+'</span><div class="rail-kicker">The Moonlit Reading Room</div><h3>This is a world, not a skin.</h3>'
       + '<p>'+(interiorsUnlocked?'Change the hour, wake hidden visitors, alter the light, and bring the books from this shelf with you.':'Unlock the complete four-shelf Moonlit interior once for CA$4.99, or enter with Premium access.')+'</p>'
@@ -1298,6 +1309,16 @@
 
   function attachRoom(){
     attachDnD();
+    const founderRelic=$('founderReliquary');
+    if(founderRelic){
+      founderRelic.onclick=()=>{
+        const cabinet=founderRelic.closest('.bookcase');
+        cabinet.classList.remove('founder-awake'); void cabinet.offsetWidth; cabinet.classList.add('founder-awake');
+        founderRelic.setAttribute('aria-label','Founding Key awakened');
+        toast('Founding Key '+String(founderNumber||(REVIEW_MODE?1:'')).padStart(3,'0')+' remembers you');
+        setTimeout(()=>{cabinet.classList.remove('founder-awake');founderRelic.setAttribute('aria-label','Awaken Founding Key '+String(founderNumber||(REVIEW_MODE?1:'')).padStart(3,'0'));},7200);
+      };
+    }
     const crestEl=document.querySelector('.case-identity');
     if(POINTER_PARALLAX&&crestEl&&window.matchMedia('(hover:hover) and (pointer:fine)').matches&&!window.matchMedia('(prefers-reduced-motion:reduce)').matches){
       crestEl.onpointermove=e=>{
@@ -1580,12 +1601,12 @@
   function buildThemeSheet(){
     if(V3_MODE){
       const note=$('atelierNote');
-      if(note) note.textContent='The Founder Heirloom is live. The Atelier is now being rebuilt around this cabinet, one finished silhouette and detail at a time. Locked pieces are previews of what arrives next.';
+      if(note) note.textContent='The Romantasy Heirloom is now the default for every reader. The Founder’s Key remains reserved for the Original 100 and will return when its living crown is finished.';
     }
     $('cabinetgrid').innerHTML=CABINET_STYLES.map(c=>
       '<button class="cabinetcard '+(cabinetStyle===c.key?'on':'')+(V3_MODE&&c.key!=='grand-heirloom'?' atelier-locked':'')+'" data-cabinet="'+c.key+'" '+(V3_MODE&&c.key!=='grand-heirloom'?'disabled aria-disabled="true"':'')+'>'
       +'<span class="cabinet-shape '+c.shape+'" style="--cab:'+THEMES.find(t=>t.id===theme).color+'"></span>'
-      +'<strong>'+(V3_MODE&&c.key==='grand-heirloom'?'Founder Heirloom':c.name)+'</strong><small>'+c.desc+'</small><small class="cab-price trial-mark">'+(V3_MODE?(c.key==='grand-heirloom'?'● Live now':'Coming soon'):lockedAccessLabel(c.premium))+'</small></button>'
+      +'<strong>'+(V3_MODE&&c.key==='grand-heirloom'?'Grand Heirloom':c.name)+'</strong><small>'+c.desc+'</small><small class="cab-price trial-mark">'+(V3_MODE?(c.key==='grand-heirloom'?'● Live now':'Coming soon'):lockedAccessLabel(c.premium))+'</small></button>'
     ).join('');
     $('themegrid').innerHTML = THEMES.map(t=>
       '<button type="button" class="themecard '+(t.id===theme?'on':'')+(V3_MODE&&t.id!=='founder'?' atelier-locked':'')+'" data-t="'+t.id+'" '+(V3_MODE&&t.id!=='founder'?'disabled aria-disabled="true"':'')+'>'
@@ -1594,8 +1615,9 @@
     ).join('');
     $('crestgrid').innerHTML=CREST_STYLES.map(c=>{
       const founderLocked=c.founderOnly&&!founderNumber&&!REVIEW_MODE;
-      const v3Locked=V3_MODE&&(c.key!=='founders-key'||founderLocked);
-      const accessLabel=V3_MODE?(c.key==='founders-key'?(founderLocked?'Original 100 only':'● Live · Original 100'):'Coming soon'):(c.founderOnly?(founderLocked?'Original 100 only':'✦ Original 100 unlocked'):lockedAccessLabel(c.premium));
+      const v3Live=c.key==='heirloom-moon';
+      const v3Locked=V3_MODE&&(!v3Live||founderLocked);
+      const accessLabel=V3_MODE?(c.key==='founders-key'?'Original 100 · In development':(c.key==='heirloom-moon'?'● Included for every reader':'Coming soon')):(c.founderOnly?(founderLocked?'Original 100 only':'✦ Original 100 unlocked'):lockedAccessLabel(c.premium));
       return '<button class="crestcard '+(crestStyle===c.key?'on':'')+(v3Locked?' atelier-locked':'')+'" data-crest-style="'+c.key+'" '+(founderLocked||v3Locked?'disabled aria-disabled="true"':'')+'>'
         +'<span class="crest-preview"><img src="'+c.src+'" alt="" aria-hidden="true" loading="lazy"></span><span class="crest-copy-card"><strong>'+c.name+'</strong><small>'+c.desc+'</small><em>'+accessLabel+'</em></span></button>';
     }).join('');
@@ -1652,7 +1674,7 @@
   function openUnlockInfo(){
     $('upsellCard').classList.remove('interior-offer');
     $('upsellTitle').textContent='Full customization is coming';
-    $('upsellBody').textContent='The Founder Heirloom is live now. New cabinets, finishes, crests and collected details will arrive one at a time when each is ready.';
+    $('upsellBody').textContent='The Romantasy Heirloom is live for every reader. New cabinets, finishes, crests and collected details will arrive one at a time when each is ready.';
     $('upsellActions').innerHTML='<button class="btn" onclick="closeUpsell()">Got it</button>';
     $('upsell').classList.add('open'); syncScrollLock();
   }
@@ -1850,6 +1872,9 @@
       +'<div class="curtain-theatre"><div class="curtain-wing curtain-left"></div><div class="curtain-wing curtain-right"></div><div class="curtain-crest"></div></div>'
       +'<div class="petal-depth"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="oath-motes"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>';
   }
+  function currentClockTime(){
+    return new Intl.DateTimeFormat(undefined,{hour:'numeric',minute:'2-digit'}).format(new Date());
+  }
   function renderShelfView(){
     const [status,label]=SHELVES[shelfIndex];
     const world=activeWorld(status);
@@ -1860,7 +1885,7 @@
     // Inside an immersive room every title belongs to the physical collection;
     // featured covers/open books remain exclusive to the outer bookshelf.
     const books=info.pageItems.length?info.pageItems.map(b=>bookHTML(b,false)).join(''):(VIEW_MODE?'':ghostHTML);
-    const range=info.items.length?(info.start+1)+'–'+info.end+' of '+info.items.length:'Empty shelf';
+    const range=info.items.length?'View all · '+info.items.length+' book'+(info.items.length===1?'':'s'):'Add your first book';
     const pageClass=pageDirection>0?' page-next':(pageDirection<0?' page-prev':'');
     const times=[['11:47 PM','light-moonlit'],['3:18 AM','light-moonlit'],['6:02 AM','light-dawn']];
     const discovered=Object.values(worldState.discovered).filter(Boolean).length;
@@ -1876,7 +1901,7 @@
       + '<div class="world-stage world-stage-'+world+'">'
       + '<div class="fairy-trail" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>'
       + '<div class="world-constellation" aria-hidden="true"></div>'
-      + '<button class="world-clock" id="worldClock" aria-label="Ring the clock and turn to another hour"><span class="object-cue">↻</span><span class="clock-time">'+times[worldState.time][0]+'</span><span class="clock-bell" aria-hidden="true"></span></button>'
+      + '<button class="world-clock" id="worldClock" aria-label="Ring the clock and turn to another hour"><span class="object-cue">↻</span><span class="clock-time">'+esc(currentClockTime())+'</span><span class="clock-bell" aria-hidden="true"></span></button>'
       + '<button class="world-fairies" id="worldFairies" aria-label="Call the hidden lights"><span class="fairy"></span><span class="fairy"></span><span class="fairy"></span><span class="object-cue">✦</span><span class="fairy-label">'+(worldState.fairies?'Settle lights':'Wake hidden lights')+'</span></button>'
       + '<button class="world-candle" id="worldCandle" aria-label="'+(worldState.candleDim?'Relight':'Dim')+' the candle"><span class="object-cue">◇</span><span class="candle-flame-live"></span><span class="wax"></span><span class="candle-label">'+(worldState.candleDim?'Relight candle':'Dim candle')+'</span></button>'
       + '<button class="world-window" id="worldWindow" aria-label="Wake the moonbloom in the stained glass"><span class="moonbloom-sigil" aria-hidden="true"></span></button>'
@@ -1886,7 +1911,7 @@
       + '<div class="sv-shelf'+pageClass+'">'
       + '<div class="books" data-status="'+status+'">'+books+'</div><div class="plank"></div>'
       + (VIEW_MODE?'':'<a class="sv-shelf-action add" href="/search" aria-label="Add a book to '+esc(label)+'">＋ Add</a>')
-      + '<button class="shelf-range" id="shelfRange" aria-label="View all '+info.items.length+' books">'+range+' · View all</button>'
+      + '<button class="shelf-range" id="shelfRange" aria-label="View all '+info.items.length+' books">'+range+'</button>'
       + (!VIEW_MODE&&info.items.length?'<button class="sv-shelf-action remove" id="svRemoveBooks" type="button">− Remove</button>':'')+'</div>'
       + '<button class="shelf-turn next" id="shelfNext" aria-label="Next shelf section" '+(info.page>=info.pageCount-1?'disabled':'')+'>›</button>'
       + '</div></div>'
@@ -1912,7 +1937,6 @@
     document.querySelectorAll('#shelfview [data-collection-index]').forEach(el=>el.onclick=()=>focusCollectionBook(status,Number(el.dataset.collectionIndex)));
     document.querySelectorAll('#shelfview [data-shelf-index]').forEach(el=>el.onclick=()=>switchShelfTo(Number(el.dataset.shelfIndex)));
     $('worldClock').onclick=()=>{
-      const times=['11:47 PM','3:18 AM','6:02 AM'];
       const messages=['The moon completes its circuit and midnight returns.','The hands turn. The moon slips behind the tracery and blue hour deepens.','The moon passes beyond the glass. First light reaches the shelves.'];
       const sv=$('shelfview');
       if(sv.classList.contains('curtain-ritual')) return;
@@ -1926,7 +1950,7 @@
         // restore them. The generated day scene carries the unlit fixtures.
         worldState.candleDim=worldState.time===2;
         const complete=discoverWorldSecret('clock');
-        $('worldClock').querySelector('.clock-time').textContent=times[worldState.time];
+        $('worldClock').querySelector('.clock-time').textContent=currentClockTime();
         $('worldCandle').querySelector('.candle-label').textContent=worldState.candleDim?'Relight candle':'Dim candle';
         $('worldCandle').setAttribute('aria-label',(worldState.candleDim?'Relight':'Dim')+' the candle');
         sv.classList.remove('clock-strike'); void sv.offsetWidth; sv.classList.add('clock-strike');

@@ -169,7 +169,7 @@ body.v3-bookshelf .shelfrow[data-shelf-status="dnf"]:not(.dnf-lit) .v3-lantern-b
 }
 
 @media(prefers-reduced-motion:reduce){
-  .v3-threshold::after,.v3-mist,.v3-orrery-glow,.v3-star-dust,.v3-lantern-bloom,.v3-dnf-smoke{animation:none!important}
+  .v3-threshold::after,.v3-mist,.v3-orrery-glow,.v3-star-dust,.v3-lantern-bloom,.v3-dnf-smoke,.founder-reliquary::before,.founder-ruby-live,.founder-thorn-light,.founder-memory,.founder-dust i,.founder-whisper,.bookcase.founder-awake .cabinet-crest,.bookcase.founder-awake .cabinet-crest::after,.bookcase.founder-awake .cabinet-crest strong,.bookcase.founder-awake .cabinet-crest b{animation:none!important}
 }
 
 /* --------------------------------------------------------------------------
@@ -187,19 +187,135 @@ body.v3-bookshelf .bookcase{
   background:url('/bookshelf/assets/v3/founder-cabinet-worlds-v1.jpg') center top/100% 100% no-repeat;
   box-shadow:none;isolation:isolate;overflow:visible
 }
+body.v3-bookshelf .bookcase.heirloom-crown{background-image:url('/bookshelf/assets/v3/founder-cabinet-worlds-v1.jpg')}
 body.v3-bookshelf .bookcase::before,body.v3-bookshelf .bookcase::after,
 body.v3-bookshelf .cabinet-pilaster,body.v3-bookshelf .case-flourish{display:none!important}
 body.v3-bookshelf .interior{position:absolute;inset:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;overflow:visible}
 body.v3-bookshelf .interior::before,body.v3-bookshelf .interior::after{display:none}
 
 body.v3-bookshelf .cabinet-crest{
-  display:flex;position:absolute;z-index:6;left:28%;right:28%;top:4.2%;height:5%;flex-direction:column;align-items:center;justify-content:center;
+  display:flex;position:absolute;z-index:6;left:18%;right:18%;top:3.25%;height:5.4%;flex-direction:column;align-items:center;justify-content:center;
   color:#e9c579;text-align:center;text-transform:uppercase;text-shadow:0 2px 4px #080204,0 0 13px rgba(216,151,55,.2);pointer-events:none;
   background:none!important;background-image:none!important;filter:none!important;clip-path:none!important
 }
-body.v3-bookshelf .cabinet-crest small{font:800 clamp(.38rem,.75vw,.52rem) 'Hanken Grotesk';letter-spacing:.2em;color:rgba(244,220,181,.74)}
-body.v3-bookshelf .cabinet-crest strong{font:600 clamp(.84rem,2.1vw,1.45rem)/1.05 'Fraunces';letter-spacing:.18em;color:#f7d990;margin-top:.18em}
-body.v3-bookshelf .cabinet-crest em{font:800 clamp(.3rem,.58vw,.42rem) 'Hanken Grotesk';letter-spacing:.2em;color:rgba(222,166,83,.77);font-style:normal;margin-top:.35em}
+body.v3-bookshelf .cabinet-crest small{font:800 clamp(.42rem,.88vw,.62rem) 'Hanken Grotesk';letter-spacing:.22em;color:rgba(244,220,181,.82)}
+body.v3-bookshelf .cabinet-crest strong{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 clamp(1.08rem,2.65vw,1.82rem)/1.02 'Fraunces';letter-spacing:.17em;color:#f7d990;margin-top:.16em}
+body.v3-bookshelf .cabinet-crest em{font:800 clamp(.34rem,.68vw,.48rem) 'Hanken Grotesk';letter-spacing:.21em;color:rgba(222,166,83,.86);font-style:normal;margin-top:.3em}
+body.v3-bookshelf .cabinet-crest b{position:absolute;left:50%;top:104%;min-width:24px;padding:.28em .56em;transform:translateX(-50%);border:1px solid rgba(225,183,84,.72);border-radius:99px;background:radial-gradient(circle at 45% 24%,#32191d,#090607 72%);box-shadow:0 4px 7px rgba(0,0,0,.65),inset 0 1px rgba(255,238,194,.2);color:#f1ce76;font:900 clamp(.28rem,.55vw,.39rem) 'Hanken Grotesk';letter-spacing:.05em}
+body.v3-bookshelf .bookcase.heirloom-crown .cabinet-crest{
+  z-index:8;left:38%;right:38%;top:3.25%;height:4.15%;padding:.32% 1.15%;
+  border-top:1px solid rgba(169,116,43,.42);border-bottom:1px solid rgba(91,45,27,.68);
+  background:radial-gradient(ellipse at 50% 42%,rgba(56,16,20,.88),rgba(19,7,8,.8) 73%,rgba(9,4,5,.24))!important;
+  box-shadow:inset 0 1px rgba(255,218,139,.05),0 4px 12px rgba(0,0,0,.24);
+  clip-path:polygon(4% 0,96% 0,100% 50%,96% 100%,4% 100%,0 50%)!important
+}
+body.v3-bookshelf .bookcase.heirloom-crown .cabinet-crest small{color:rgba(222,216,198,.78)}
+body.v3-bookshelf .bookcase.heirloom-crown .cabinet-crest strong{font-size:clamp(.78rem,1.72vw,1.2rem);letter-spacing:.13em;color:#ead7a1;text-shadow:0 2px 4px #080204,0 0 15px rgba(197,159,77,.22)}
+body.v3-bookshelf .bookcase.heirloom-crown .cabinet-crest em{color:rgba(194,171,116,.82)}
+
+/* FOUNDER'S LIVING RELIQUARY
+   Uses the original ruby-heart cabinet art as its source. The crown remains
+   carved furniture at rest, then answers its owner when the heart is touched. */
+body.v3-bookshelf .bookcase.founder-crown .cabinet-crest{
+  z-index:12;left:31.5%;right:31.5%;top:3.05%;height:4.55%;padding:.28% 1%;overflow:visible;
+  border:0;background:none!important;box-shadow:none;clip-path:none!important
+}
+body.v3-bookshelf .bookcase.founder-crown .cabinet-crest::before{
+  content:"";position:absolute;z-index:-1;left:2%;right:2%;top:50%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(207,155,66,.48) 16%,transparent 34% 66%,rgba(207,155,66,.48) 84%,transparent);
+  box-shadow:0 1px rgba(25,5,8,.7);opacity:.72
+}
+body.v3-bookshelf .bookcase.founder-crown .cabinet-crest::after{
+  content:"";position:absolute;z-index:-1;left:50%;top:-52%;width:1px;height:205%;transform:translateX(-50%) scaleY(.18);transform-origin:50% 0;
+  background:linear-gradient(180deg,rgba(253,218,140,.9),rgba(174,30,58,.62) 42%,rgba(227,177,76,.8) 76%,transparent);
+  box-shadow:0 0 5px rgba(205,36,67,.35);opacity:0
+}
+body.v3-bookshelf .bookcase.founder-crown .cabinet-crest small{font-size:clamp(.36rem,.75vw,.53rem);color:rgba(241,218,183,.84);text-shadow:0 2px 3px #150408}
+body.v3-bookshelf .bookcase.founder-crown .cabinet-crest strong{font-size:clamp(1.02rem,2.25vw,1.58rem);letter-spacing:.16em;color:#ffe1a0;text-shadow:0 2px 4px #090204,0 0 15px rgba(194,31,63,.14)}
+body.v3-bookshelf .bookcase.founder-crown .cabinet-crest em{font-size:clamp(.28rem,.55vw,.4rem);color:#d7a953}
+body.v3-bookshelf .bookcase.founder-crown .cabinet-crest b{top:110%;z-index:4;min-width:28px;padding:.38em .58em;background:radial-gradient(circle at 48% 30%,#5e1725,#16070c 62%,#050304);border-color:rgba(235,191,91,.82);box-shadow:0 5px 10px #000,inset 0 1px rgba(255,235,181,.22),0 0 11px rgba(175,31,59,.15)}
+body.v3-bookshelf .founder-reliquary{
+  position:absolute;z-index:11;left:15%;right:15%;top:.25%;height:8.5%;padding:0;border:0;background:none;color:inherit;cursor:pointer;
+  overflow:visible;isolation:isolate;-webkit-tap-highlight-color:transparent
+}
+body.v3-bookshelf .founder-reliquary::before{
+  content:"";position:absolute;z-index:-1;inset:5% 0 2%;opacity:.26;
+  background:radial-gradient(ellipse at 50% 36%,rgba(151,15,47,.2),transparent 25%),linear-gradient(90deg,transparent 5%,rgba(222,164,59,.18) 22%,transparent 43% 57%,rgba(222,164,59,.18) 78%,transparent 95%);
+  filter:blur(4px);animation:founderReliquaryBreath 7s ease-in-out infinite
+}
+body.v3-bookshelf .founder-ruby-live{
+  position:absolute;z-index:5;left:50%;top:17%;width:4.55%;aspect-ratio:.78;transform:translateX(-50%);
+  clip-path:polygon(50% 100%,7% 46%,10% 22%,28% 5%,50% 12%,72% 5%,90% 22%,93% 46%);
+  background:radial-gradient(circle at 36% 25%,#f8d7a6 0 2%,#b93a48 7%,#7b0e29 25%,#3a0716 56%,#110308 82%);
+  box-shadow:inset 0 0 8px rgba(255,211,174,.32),0 0 7px rgba(159,20,48,.35),0 0 18px rgba(105,8,31,.15);
+  mix-blend-mode:screen;opacity:.64;animation:founderRubyIdle 4.6s ease-in-out infinite
+}
+body.v3-bookshelf .founder-ruby-live::after{
+  content:"";position:absolute;left:27%;top:17%;width:19%;height:42%;transform:rotate(31deg);border-radius:50%;background:linear-gradient(#fff8db,transparent);filter:blur(.5px);opacity:.65
+}
+body.v3-bookshelf .founder-thorn-light{
+  position:absolute;z-index:3;inset:0;opacity:.18;mix-blend-mode:screen;
+  background:conic-gradient(from 248deg at 50% 40%,transparent 0 19%,rgba(255,210,112,.72) 22%,transparent 25% 67%,rgba(174,18,54,.6) 70%,transparent 73%);
+  mask-image:radial-gradient(ellipse at center,transparent 0 17%,#000 28% 63%,transparent 76%);animation:founderThornTravel 12s linear infinite
+}
+body.v3-bookshelf .founder-memory{
+  position:absolute;z-index:2;left:27%;right:27%;top:24%;bottom:13%;opacity:0;overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 50%,transparent 0 17%,rgba(222,170,78,.7) 17.6% 18.2%,transparent 19% 31%,rgba(151,31,54,.58) 31.6% 32.1%,transparent 33%),
+    conic-gradient(from 22deg at 50% 50%,transparent 0 8%,rgba(225,176,83,.45) 8.4% 8.8%,transparent 9.2% 24%,rgba(225,176,83,.32) 24.4% 24.8%,transparent 25.2% 40%,rgba(225,176,83,.4) 40.4% 40.8%,transparent 41.2% 58%,rgba(225,176,83,.34) 58.4% 58.8%,transparent 59.2% 75%,rgba(225,176,83,.42) 75.4% 75.8%,transparent 76.2%);
+  filter:drop-shadow(0 0 3px rgba(181,121,47,.28));mix-blend-mode:screen;
+  mask-image:radial-gradient(ellipse at center,#000 18%,rgba(0,0,0,.8) 43%,transparent 76%)
+}
+body.v3-bookshelf .founder-memory::before,body.v3-bookshelf .founder-memory::after{
+  content:"";position:absolute;top:50%;width:34%;height:1px;background:linear-gradient(90deg,transparent,rgba(238,190,94,.78),transparent);box-shadow:0 0 5px rgba(203,145,58,.22)
+}
+body.v3-bookshelf .founder-memory::before{left:0;transform:rotate(8deg)}
+body.v3-bookshelf .founder-memory::after{right:0;transform:rotate(-8deg)}
+body.v3-bookshelf .founder-dust{position:absolute;z-index:7;inset:0;pointer-events:none;opacity:.38}
+body.v3-bookshelf .founder-dust i{position:absolute;width:2px;height:2px;border-radius:50%;background:#f5d28a;box-shadow:0 0 5px #d99f48;animation:founderDustFloat 5.4s ease-in-out infinite}
+body.v3-bookshelf .founder-dust i:nth-child(1){left:20%;top:58%}.founder-dust i:nth-child(2){left:29%;top:28%;animation-delay:-1.3s}.founder-dust i:nth-child(3){left:42%;top:68%;animation-delay:-2.8s}.founder-dust i:nth-child(4){left:61%;top:62%;animation-delay:-.7s}.founder-dust i:nth-child(5){left:73%;top:31%;animation-delay:-3.7s}.founder-dust i:nth-child(6){left:82%;top:57%;animation-delay:-2s}
+body.v3-bookshelf .founder-whisper{position:absolute;z-index:14;left:50%;top:84%;transform:translate(-50%,5px);white-space:nowrap;opacity:0;color:#edc979;font:800 clamp(.25rem,.46vw,.34rem) 'Hanken Grotesk';letter-spacing:.17em;text-transform:uppercase;text-shadow:0 2px 4px #000}
+body.v3-bookshelf .founder-reliquary:focus-visible{outline:2px solid #f0c86d;outline-offset:3px;border-radius:8px}
+body.v3-bookshelf .bookcase.founder-awake .founder-ruby-live{animation:founderRubyAwaken 7.2s cubic-bezier(.2,.7,.2,1) both}
+body.v3-bookshelf .bookcase.founder-awake .founder-thorn-light{animation:founderThornAwaken 7.2s ease both}
+body.v3-bookshelf .bookcase.founder-awake .founder-memory{animation:founderMemory 7.2s ease both}
+body.v3-bookshelf .bookcase.founder-awake .founder-dust{animation:founderDustAwaken 7.2s ease both}
+body.v3-bookshelf .bookcase.founder-awake .founder-whisper{animation:founderWhisper 7.2s ease both}
+body.v3-bookshelf .bookcase.founder-awake .cabinet-crest{animation:founderVowPanel 7.2s ease both}
+body.v3-bookshelf .bookcase.founder-awake .cabinet-crest::after{animation:founderKeyBeam 7.2s ease both}
+body.v3-bookshelf .bookcase.founder-awake .cabinet-crest strong{animation:founderNameAwaken 7.2s ease both}
+body.v3-bookshelf .bookcase.founder-awake .cabinet-crest b{animation:founderSealAwaken 7.2s ease both}
+body.v3-bookshelf .bookcase.founder-awake{filter:drop-shadow(0 0 18px rgba(132,20,43,.22))}
+body.v3-bookshelf .bookcase.founder-awake-preview .founder-ruby-live,
+body.v3-bookshelf .bookcase.founder-awake-preview .founder-thorn-light,
+body.v3-bookshelf .bookcase.founder-awake-preview .founder-memory,
+body.v3-bookshelf .bookcase.founder-awake-preview .founder-dust,
+body.v3-bookshelf .bookcase.founder-awake-preview .founder-whisper,
+body.v3-bookshelf .bookcase.founder-awake-preview .cabinet-crest,
+body.v3-bookshelf .bookcase.founder-awake-preview .cabinet-crest::after,
+body.v3-bookshelf .bookcase.founder-awake-preview .cabinet-crest strong,
+body.v3-bookshelf .bookcase.founder-awake-preview .cabinet-crest b{animation:none!important}
+body.v3-bookshelf .bookcase.founder-awake-preview .founder-ruby-live{opacity:.92;filter:brightness(1.16);box-shadow:0 0 6px #d9a269,0 0 18px #77102d,0 0 45px rgba(91,6,26,.48)}
+body.v3-bookshelf .bookcase.founder-awake-preview .founder-thorn-light{opacity:.52;transform:rotate(118deg)}
+body.v3-bookshelf .bookcase.founder-awake-preview .founder-memory{opacity:.7;transform:scale(1)}
+body.v3-bookshelf .bookcase.founder-awake-preview .founder-dust{opacity:1;filter:brightness(1.35)}
+body.v3-bookshelf .bookcase.founder-awake-preview .founder-whisper{opacity:1;transform:translate(-50%,0)}
+body.v3-bookshelf .bookcase.founder-awake-preview .cabinet-crest::after{opacity:.9;transform:translateX(-50%) scaleY(1)}
+body.v3-bookshelf .bookcase.founder-awake-preview .cabinet-crest strong{color:#f8d997;text-shadow:0 0 12px rgba(205,52,75,.48),0 2px 4px #090204}
+body.v3-bookshelf .bookcase.founder-awake-preview .cabinet-crest b{filter:brightness(1.45);box-shadow:0 5px 10px #000,inset 0 1px rgba(255,235,181,.3),0 0 18px rgba(204,144,55,.68)}
+@keyframes founderReliquaryBreath{0%,100%{opacity:.18;filter:blur(5px)}50%{opacity:.36;filter:blur(3px)}}
+@keyframes founderRubyIdle{0%,100%{opacity:.48;filter:brightness(.9)}48%{opacity:.78;filter:brightness(1.18)}55%{opacity:.58;filter:brightness(.98)}}
+@keyframes founderThornTravel{to{transform:rotate(360deg)}}
+@keyframes founderDustFloat{0%,100%{opacity:.18;transform:translate3d(-2px,3px,0) scale(.7)}50%{opacity:.85;transform:translate3d(4px,-5px,0) scale(1.2)}}
+@keyframes founderRubyAwaken{0%{opacity:.5;filter:brightness(1)}10%{opacity:1;filter:brightness(1.32);box-shadow:0 0 7px #e9b875,0 0 24px #8e1735,0 0 56px rgba(103,7,29,.66)}32%,70%{opacity:.9;filter:brightness(1.18);box-shadow:0 0 6px #d9a269,0 0 18px #77102d,0 0 45px rgba(91,6,26,.48)}100%{opacity:.58;filter:brightness(1)}}
+@keyframes founderThornAwaken{0%{opacity:.15;transform:rotate(0)}18%,68%{opacity:.58;transform:rotate(135deg)}100%{opacity:.18;transform:rotate(220deg)}}
+@keyframes founderMemory{0%,12%,100%{opacity:0;transform:scale(.78) rotate(-5deg)}28%,67%{opacity:.7;transform:scale(1) rotate(0)}}
+@keyframes founderDustAwaken{0%,100%{opacity:.3}20%,72%{opacity:1;filter:brightness(1.5)}}
+@keyframes founderWhisper{0%,22%,100%{opacity:0;transform:translate(-50%,5px)}35%,64%{opacity:1;transform:translate(-50%,0)}}
+@keyframes founderVowPanel{0%,100%{filter:none}18%,70%{filter:brightness(1.1) drop-shadow(0 0 6px rgba(187,31,61,.18))}}
+@keyframes founderKeyBeam{0%,10%,100%{opacity:0;transform:translateX(-50%) scaleY(.12)}22%,60%{opacity:.9;transform:translateX(-50%) scaleY(1)}}
+@keyframes founderNameAwaken{0%,100%{color:#ffe1a0;text-shadow:0 2px 4px #090204}24%{color:#fff0be;text-shadow:-5px 0 12px rgba(174,27,55,.72),5px 0 12px rgba(223,169,74,.65),0 2px 4px #090204}48%,67%{color:#f8d997;text-shadow:0 0 12px rgba(205,52,75,.48),0 2px 4px #090204}}
+@keyframes founderSealAwaken{0%,100%{filter:none}18%,68%{filter:brightness(1.45);box-shadow:0 5px 10px #000,inset 0 1px rgba(255,235,181,.3),0 0 18px rgba(204,144,55,.68)}}
 
 body.v3-bookshelf .shelfrow{position:absolute;left:14.7%;right:14.7%;min-height:0!important;height:auto;padding:0;background:none!important;isolation:isolate}
 body.v3-bookshelf .shelfrow::before,body.v3-bookshelf .shelfrow::after{display:none}
@@ -293,9 +409,20 @@ body.v3-bookshelf .dnf-light-switch[aria-pressed="true"]::before{box-shadow:0 4p
   body.v3-bookshelf .book.spine .spineinner{height:clamp(76px,24vw,104px)!important}
   body.v3-bookshelf .v3-threshold{flex-basis:clamp(128px,35vw,150px);height:clamp(86px,23vw,102px)}
   body.v3-bookshelf .v3-threshold-page em,body.v3-bookshelf .v3-threshold-tags,body.v3-bookshelf .v3-threshold-rating{display:none!important}
-  body.v3-bookshelf .cabinet-crest small{font-size:clamp(.22rem,1vw,.3rem)}
-  body.v3-bookshelf .cabinet-crest strong{font-size:clamp(.52rem,2.8vw,.74rem)}
-  body.v3-bookshelf .cabinet-crest em{font-size:clamp(.18rem,.78vw,.24rem)}
+  body.v3-bookshelf .cabinet-crest{left:17%;right:17%;top:3.1%;height:5.7%}
+  body.v3-bookshelf .cabinet-crest small{font-size:clamp(.27rem,1.28vw,.37rem)}
+  body.v3-bookshelf .cabinet-crest strong{font-size:clamp(.72rem,4vw,1rem);letter-spacing:.12em}
+  body.v3-bookshelf .cabinet-crest em{font-size:clamp(.22rem,1vw,.3rem);letter-spacing:.14em}
+  body.v3-bookshelf .cabinet-crest b{font-size:.23rem;top:101%}
+  body.v3-bookshelf .bookcase.heirloom-crown .cabinet-crest{left:37%;right:37%;top:3.15%;height:4.35%}
+  body.v3-bookshelf .bookcase.founder-crown .cabinet-crest{left:28%;right:28%;top:3.18%;height:4.45%}
+  body.v3-bookshelf .bookcase.founder-crown .cabinet-crest small{font-size:clamp(.2rem,.88vw,.27rem);letter-spacing:.14em}
+  body.v3-bookshelf .bookcase.founder-crown .cabinet-crest strong{font-size:clamp(.62rem,3.25vw,.86rem);letter-spacing:.11em;margin-top:.22em}
+  body.v3-bookshelf .bookcase.founder-crown .cabinet-crest em{font-size:clamp(.16rem,.7vw,.22rem);letter-spacing:.12em;margin-top:.38em}
+  body.v3-bookshelf .bookcase.founder-crown .cabinet-crest b{top:116%;font-size:.21rem;padding:.28em .5em}
+  body.v3-bookshelf .founder-reliquary{left:12%;right:12%;height:8.8%}
+  body.v3-bookshelf .founder-ruby-live{width:5.8%}
+  body.v3-bookshelf .founder-whisper{top:88%;font-size:clamp(.16rem,.7vw,.21rem);letter-spacing:.11em}
   body.v3-bookshelf .dnf-light-switch{right:-12%;top:24%;transform:none}
 }
 
@@ -625,4 +752,13 @@ body.v3-bookshelf .shelfrow[data-shelf-status="dnf"].shelf-lit .v3-lantern-bloom
   body.v3-bookshelf .bookcase.worlds-locked{width:108vw}
   body.v3-bookshelf .library-main::before{width:150vw}
   body.v3-bookshelf .hint{padding-left:10px;padding-right:10px;text-align:center}
+}
+
+/* The original cabinet pediment is the crest. Keep live copy inside its
+   quiet centre so the heart, roses and gold vines remain unobstructed. */
+@media(max-width:460px){
+  body.v3-bookshelf .bookcase.heirloom-crown .cabinet-crest{left:36.5%;right:36.5%;top:3.05%;height:4.55%}
+  body.v3-bookshelf .bookcase.heirloom-crown .cabinet-crest small{font-size:clamp(.2rem,.92vw,.28rem);letter-spacing:.13em}
+  body.v3-bookshelf .bookcase.heirloom-crown .cabinet-crest strong{font-size:clamp(.5rem,2.8vw,.7rem);letter-spacing:.09em}
+  body.v3-bookshelf .bookcase.heirloom-crown .cabinet-crest em{font-size:clamp(.16rem,.7vw,.22rem);letter-spacing:.1em}
 }
