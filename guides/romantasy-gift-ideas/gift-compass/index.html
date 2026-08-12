@@ -30,6 +30,9 @@
   <meta name="twitter:description" content="Easy gifts, bookshelf pieces, collector choices, and memorable dates for the romantasy reader you love.">
   <meta name="twitter:image" content="https://smuthub.ca/guides/romantasy-gift-ideas/assets/gift-compass-hero-wide-v2.png">
   <link rel="stylesheet" href="../shared.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/config.js"></script>
+  <script defer src="/auth.js"></script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -71,7 +74,19 @@
   </script>
 </head>
 <body class="compass-page compass-complete">
-  <header class="site-header"><div class="nav wrap"><a class="logo" href="/">smut<strong>Hub</strong></a><nav class="navlinks" aria-label="Primary"><a href="#quick-wins">Easy gifts</a><a href="#match">What else works</a><a href="#never-fail">Never-fail date</a></nav><a class="review-link" href="../">Both experiences</a></div></header>
+  <header class="site-header">
+    <div class="nav">
+      <a class="brand logo" href="/" aria-label="smutHub home"><span>smut</span><strong class="box">Hub</strong></a>
+      <nav class="primary-nav navlinks" aria-label="Primary navigation">
+        <a href="/books/">Browse Books</a>
+        <a href="/guides/">Guides</a>
+        <a href="/bookshelf/">My Bookshelf</a>
+        <a href="/stores">Find a Store</a>
+        <a href="/search">Add a Book</a>
+      </nav>
+      <div class="authbox" id="authbox"></div>
+    </div>
+  </header>
   <div class="guide-rail"><div class="wrap"><span><a href="../">Guides / Romantasy Gift Ideas</a></span><b>02 · The Gift Compass</b><a href="#quick-wins">See the gift ideas ↓</a></div></div>
 
   <main>
