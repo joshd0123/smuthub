@@ -1448,7 +1448,7 @@
     if(!sb||!user) return;
     for(const row of changed){
       const { error } = await sb.from('shelf').update({ sort_order: row.sort_order, status: row.status }).eq('book_key', row.book_key);
-      if(error){ console.error('reorder save', error); toast(/sort_order|column/i.test(error.message) ? "Run smuthub-add-sort-order.sql in Supabase to save ordering" : "Couldn't save order: "+error.message); return; }
+      if(error){ console.error('reorder save', error); toast(/sort_order|column/i.test(error.message) ? "Run migrations/legacy/smuthub-add-sort-order.sql in Supabase to save ordering" : "Couldn't save order: "+error.message); return; }
     }
     toast("Order saved ✨");
   }
