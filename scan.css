@@ -57,14 +57,14 @@ h1 em { background: linear-gradient(100deg, #ff4773, #ffa347); -webkit-backgroun
 .camera-stage video { width: 100%; height: 100%; object-fit: contain; display: none; }
 .camera-stage.camera-on video { display: block; }
 .camera-stage.camera-on .camera-placeholder { display: none; }
-.camera-placeholder { height: 100%; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 40%, #4d4a43, #242422 70%); }
+.camera-placeholder { height: 100%; padding: 34px 18px 0; box-sizing: border-box; color: white; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; background: radial-gradient(circle at 50% 40%, #4d4a43, #242422 70%); }
 .camera-placeholder strong { font-family: "Fraunces", serif; font-size: 18px; }
 .camera-placeholder small { margin-top: 5px; color: #b9b6af; }
-.book-mark { position: relative; width: 52px; height: 66px; margin-bottom: 18px; border: 1.5px solid rgba(255,255,255,.65); border-radius: 3px; transform: rotate(-4deg); }
+.book-mark { position: relative; width: 46px; height: 58px; margin-bottom: 12px; border: 1.5px solid rgba(255,255,255,.65); border-radius: 3px; transform: rotate(-4deg); }
 .book-mark::before { content: ""; position: absolute; inset: 6px; border: 1px solid rgba(255,255,255,.2); }
 .book-mark span { position: absolute; bottom: 10px; width: 1px; height: 17px; background: rgba(255,255,255,.75); }
 .book-mark span:nth-child(1) { left: 19px; }.book-mark span:nth-child(2) { left: 25px; }.book-mark span:nth-child(3) { left: 31px; }
-.scan-frame { position: absolute; top: 50%; left: 5%; right: 5%; height: 106px; transform: translateY(-50%); border: 1px solid rgba(255,255,255,.8); border-radius: 12px; box-shadow: 0 0 0 100vmax rgba(0,0,0,.07); }
+.scan-frame { position: absolute; top: 66%; left: 5%; right: 5%; height: 106px; transform: translateY(-50%); border: 1px solid rgba(255,255,255,.8); border-radius: 12px; box-shadow: 0 0 0 100vmax rgba(0,0,0,.07); }
 .scan-frame::before, .scan-frame::after, .scan-frame span::before, .scan-frame span::after { content: ""; position: absolute; width: 17px; height: 17px; border-color: white; border-style: solid; }
 .scan-frame::before { top: -2px; left: -2px; border-width: 3px 0 0 3px; border-radius: 8px 0 0; }.scan-frame::after { top: -2px; right: -2px; border-width: 3px 3px 0 0; border-radius: 0 8px 0 0; }.scan-frame span::before { bottom: -2px; left: -2px; border-width: 0 0 3px 3px; border-radius: 0 0 0 8px; }.scan-frame span::after { right: -2px; bottom: -2px; border-width: 0 3px 3px 0; border-radius: 0 0 8px; }
 .camera-stage.cover-mode .scan-frame { inset: 28px 27%; height: auto; transform: none; }
