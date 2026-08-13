@@ -27,7 +27,7 @@
 <script defer src="/auth.js"></script>
 <script src="/bookcase-catalog.js?v=founders-key-gate-1"></script>
 <link rel="stylesheet" href="/companion.css">
-<link rel="stylesheet" href="/bookshelf/v3-bookshelf.css?v=universal-heirloom-1">
+<link rel="stylesheet" href="/bookshelf/v3-bookshelf.css?v=ruby-foreground-1">
 <script defer src="/companion.js"></script>
 <style>
   :root{
@@ -937,6 +937,7 @@
     const fallback={reading:true,want:true,read:true,dnf:true};
     try{return {...fallback,...JSON.parse(localStorage.getItem(SHELF_LIGHTS_KEY)||'{}')};}catch(_){return fallback;}
   })();
+  if(REVIEW_MODE&&BOOKSHELF_PARAMS.get('lights')==='off') Object.keys(shelfLights).forEach(status=>shelfLights[status]=false);
   let shelfPages={reading:0,want:0,read:0,dnf:0}, pageDirection=0, collectionOpen=false, collectionQuery='';
   const WORLD_PROGRESS_KEY='sh_moonlit_progress_v2';
   const freshWorldState=(saved={})=>{
@@ -1204,14 +1205,13 @@
     if(!V3_MODE||!b) return '';
     const src=coverSrc(b);
     const cover=src?'<img src="'+esc(src)+'" alt="" onerror="this.style.display=\'none\'">':'';
-    const byline=b.author?'by '+esc(b.author):'from your private library';
     const rawRating=Number(b.user_rating??b.rating??b.stars);
     const userRating=Number.isFinite(rawRating)&&rawRating>0?Math.min(5,rawRating):(REVIEW_MODE?4.8:null);
     return '<button class="v3-threshold" type="button" draggable="'+(VIEW_MODE?'false':'true')+'" data-key="'+esc(b.book_key)+'" data-threshold-book="'+esc(b.book_key)+'" aria-label="Open '+esc(b.title||'this book')+'">'
       +'<span class="v3-threshold-pages"><span class="v3-threshold-cover">'+cover+'</span>'
-      +'<span class="v3-threshold-page"><small>Currently reading</small><strong>'+esc(b.title||'Untitled')+'</strong><em>'+byline+'</em>'
+      +'<span class="v3-threshold-page"><small>Your reading copy</small>'
       +'<span class="v3-threshold-score"><i>Your rating</i><b>'+(userRating?userRating.toFixed(1)+' ★':'Not rated')+'</b></span>'
-      +'<span class="v3-threshold-enter">Open book →</span></span>'
+      +'<span class="v3-threshold-enter">Open details →</span></span>'
       +'<img class="v3-threshold-shell" src="/bookshelf/assets/v3/open-book-shell-v1.png" alt="" aria-hidden="true"></span></button>';
   }
 
@@ -1221,14 +1221,6 @@
     if(status==='read') return '<div class="v3-ritual v3-read-ritual" aria-hidden="true"><span class="v3-orrery-glow"></span><span class="v3-star-dust one"></span><span class="v3-star-dust two"></span></div>';
     if(status==='dnf') return '<div class="v3-ritual v3-dnf-ritual" aria-hidden="true"><span class="v3-lantern-bloom"></span><span class="v3-dnf-smoke one"></span><span class="v3-dnf-smoke two"></span></div>';
     return '';
-  }
-
-  function v3ShelfCharmsHTML(status){
-    if(!V3_MODE||!hasInteriorAccess()) return '';
-    if(status==='reading') return '<span class="v3-shelf-charms charms-reading" aria-hidden="true"><i class="charm-key"></i><i class="charm-mote"></i></span>';
-    if(status==='want') return '<span class="v3-shelf-charms charms-want" aria-hidden="true"><i class="charm-moon"></i><i class="charm-glass"></i></span>';
-    if(status==='read') return '<span class="v3-shelf-charms charms-read" aria-hidden="true"><i class="charm-fairy one"></i><i class="charm-fairy two"></i><i class="charm-star"></i></span>';
-    return '<span class="v3-shelf-charms charms-dnf" aria-hidden="true"><i class="dnf-lamp-mask"></i><i class="charm-rose"></i></span>';
   }
 
   function renderRoom(){
@@ -1261,7 +1253,7 @@
       + lightConsole
       + '<div class="library-main">'
       + '<div class="case-identity"><span class="plaque-chain left" aria-hidden="true"></span><span class="plaque-chain right" aria-hidden="true"></span><div class="case-name" data-crest="'+esc(crest.key)+'"><span class="crest-glass" aria-hidden="true"></span><span class="crest-reflection" aria-hidden="true"></span><img class="case-art" src="'+esc(crest.src)+'" alt="" aria-hidden="true" decoding="async"><span class="crest-heart" aria-hidden="true"></span><div class="case-copy"><small>'+esc(crest.eyebrow)+'</small><strong>'+esc(readerName)+'</strong><span class="case-motto">'+esc(crest.motto)+'</span></div>'+founderSocketHTML()+'</div>'+founderEditionHTML()+'</div>'
-      + '<div class="bookcase '+(interiorsUnlocked?'worlds-unlocked':'worlds-locked')+' '+(founderCrown?'founder-crown'+(FOUNDER_AWAKE_PREVIEW?' founder-awake founder-awake-preview':''):'heirloom-crown')+'">'+(founderCrown?'<button class="founder-reliquary" id="founderReliquary" type="button" aria-label="Awaken Founding Key '+crownNumber+'"><span class="founder-memory" aria-hidden="true"></span><span class="founder-ruby-live" aria-hidden="true"></span><span class="founder-thorn-light" aria-hidden="true"></span><span class="founder-dust" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="founder-whisper" aria-hidden="true">The first hundred are remembered</span></button>':'')+'<span class="cabinet-crest"><small>'+(founderCrown?'The founding library of':'The private library of')+'</small><strong>'+esc(readerName)+'</strong><em>'+(founderCrown?'First edition · forever kept':'Love · lore · ever after')+'</em>'+(founderCrown?'<b aria-label="Founding Key '+crownNumber+'">'+crownNumber+'</b>':'')+'</span><span class="cabinet-pilaster left"></span><span class="cabinet-pilaster right"></span><span class="case-flourish"></span><div class="interior">'
+      + '<div class="bookcase '+(interiorsUnlocked?'worlds-unlocked':'worlds-locked')+' '+(founderCrown?'founder-crown'+(FOUNDER_AWAKE_PREVIEW?' founder-awake founder-awake-preview':''):'heirloom-crown')+'">'+(founderCrown?'<button class="founder-reliquary" id="founderReliquary" type="button" aria-label="Awaken Founding Key '+crownNumber+'"><span class="founder-memory" aria-hidden="true"></span><span class="founder-ruby-live" aria-hidden="true"></span><span class="founder-thorn-light" aria-hidden="true"></span><span class="founder-dust" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="founder-whisper" aria-hidden="true">The first hundred are remembered</span></button>':'')+'<span class="cabinet-crest"><small>'+(founderCrown?'The founding library of':'The private library of')+'</small><strong>'+esc(readerName)+'</strong><em>'+(founderCrown?'First edition · forever kept':'Love · lore · ever after')+'</em>'+(founderCrown?'<b aria-label="Founding Key '+crownNumber+'">'+crownNumber+'</b>':'')+'</span><span class="cabinet-heart" aria-hidden="true"><img src="/bookshelf/assets/v3/founder-cabinet-worlds-v1.jpg" alt=""></span><span class="cabinet-pilaster left"></span><span class="cabinet-pilaster right"></span><span class="case-flourish"></span><div class="interior">'
       + visible.map(([st,label])=>{
           const items=ordered.filter(b=>b.status===st);
           const inner = V3_MODE&&interiorsUnlocked&&st==='reading'&&items.length
@@ -1272,11 +1264,12 @@
           const overflow=items.length>7;
           const displayLabel=st==='want'?'TBR':st==='dnf'?'DNF':label;
           const shelfSub=st==='want'?'<span class="shelf-sub">Want to Read</span>':st==='dnf'?'<span class="shelf-sub">Laid to Rest</span>':'';
-          return '<div class="shelfrow'+(overflow?' has-overflow':'')+(V3_MODE&&items.length<=7?' is-curated':'')+(interiorsUnlocked&&shelfLights[st]?' shelf-lit':'')+'" data-shelf-status="'+st+'" data-count="'+items.length+'"><div class="plate"><span class="shelf-title">'+displayLabel+' '+shelfSub+' <span class="ct">'+items.length+'</span></span><span class="shelf-actions">'
-            +(VIEW_MODE?'':'<a class="shelf-manage" data-add-shelf="'+st+'" href="/search" aria-label="Add a book to '+esc(displayLabel)+'">＋ Add</a>'+(items.length?'<button class="shelf-manage" type="button" data-remove-shelf="'+st+'">− Remove</button>':''))
+          const shelfIsLit=!interiorsUnlocked||shelfLights[st];
+          return '<div class="shelfrow'+(overflow?' has-overflow':'')+(V3_MODE&&items.length<=7?' is-curated':'')+(shelfIsLit?' shelf-lit':'')+'" data-shelf-status="'+st+'" data-count="'+items.length+'"><div class="plate"><span class="shelf-title">'+displayLabel+' '+shelfSub+' <span class="ct">'+items.length+'</span></span><span class="shelf-actions">'
+            +(VIEW_MODE?'':'<button class="shelf-manage" type="button" data-manage-shelf="'+st+'" aria-label="Manage books on '+esc(displayLabel)+'">Manage</button>')
             +(interiorsUnlocked?'<button class="shelf-light-toggle" type="button" data-shelf-light="'+st+'" aria-label="Turn '+esc(displayLabel)+' shelf light '+(shelfLights[st]?'off':'on')+'" aria-pressed="'+shelfLights[st]+'"><i aria-hidden="true"></i><span>Light</span></button>':'')
             +'<button class="shelf-door" '+(interiorsUnlocked?'data-enter-shelf="'+st+'"':'data-unlock-interiors')+'>'+(interiorsUnlocked?'Enter world ↗':'Unlock interior')+'</button></span></div>'
-            +v3RitualHTML(st)+v3ShelfCharmsHTML(st)+'<div class="row"><div class="books" data-status="'+st+'" aria-label="'+esc(label)+', '+items.length+' books">'+inner+'</div></div><div class="plank"></div></div>';
+            +v3RitualHTML(st)+(st==='dnf'&&interiorsUnlocked?'<span class="dnf-lamp-shade" aria-hidden="true"></span>':'')+'<div class="row"><div class="books" data-status="'+st+'" aria-label="'+esc(label)+', '+items.length+' books">'+inner+'</div></div><div class="plank"></div></div>';
         }).join('')
       + '</div></div>'
       + (total?'<p class="hint">✋ Drag books to reorder · tap a shelf label or ledge to enter its world</p>':'')
@@ -1352,8 +1345,7 @@
     const masterLight=$('masterShelfLight');
     if(masterLight) masterLight.onclick=e=>{e.stopPropagation();const turnOn=!Object.values(shelfLights).every(Boolean);Object.keys(shelfLights).forEach(status=>shelfLights[status]=turnOn);syncShelfLights();toast(turnOn?'The whole cabinet wakes':'The cabinet settles into shadow');};
     document.querySelectorAll('[data-enter-shelf]').forEach(el=>el.onclick=e=>{ e.stopPropagation(); beginWorldEntry(el.dataset.enterShelf,el); });
-    document.querySelectorAll('[data-add-shelf]').forEach(el=>el.onclick=e=>e.stopPropagation());
-    document.querySelectorAll('[data-remove-shelf]').forEach(el=>el.onclick=e=>{e.stopPropagation();openShelfManager(el.dataset.removeShelf);});
+    document.querySelectorAll('[data-manage-shelf]').forEach(el=>el.onclick=e=>{e.stopPropagation();openShelfManager(el.dataset.manageShelf);});
     document.querySelectorAll('#stage .book').forEach(el=>{
       const key=el.dataset.key; let lp=null;
       el.addEventListener('click', ()=>{ if(el._suppress){ el._suppress=false; return; } openBook(key); });
