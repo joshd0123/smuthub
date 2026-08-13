@@ -738,7 +738,7 @@
         : "No books found — try a title or author.";
       // A typed search that finds nothing is the single clearest signal of a
       // gap in the catalog — this log becomes the acquisition list. Only fired
-      // for deliberate queries, never for an empty-box browse. See ANALYTICS.md.
+      // for deliberate queries, never for an empty-box browse. See docs/reference/ANALYTICS.md.
       if(typed && !lastDocs.length && window.SH && SH.track) SH.track('search-zero', { q: typed.slice(0,80) });
       render();
     }catch(e){ console.error('search failed', e); st.textContent="Couldn't reach the book catalog — try again in a moment."; }
