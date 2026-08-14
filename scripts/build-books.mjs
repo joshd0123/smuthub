@@ -1639,7 +1639,7 @@ ${sharedHeader('books')}
 
 <script>
   // ── Analytics: how readers reach and use this page ───────────────────────
-  // Event reference lives in ANALYTICS.md.
+  // Event reference lives in docs/reference/ANALYTICS.md.
   (function(){
     var SLUG = ${JSON.stringify(book.slug)};
 
@@ -2030,7 +2030,7 @@ ${railScript}
     // ── Analytics ──────────────────────────────────────────────────────────
     // Which filters readers actually reach for tells us which metadata is
     // worth the tagging effort. Debounced on the text field so a typed word
-    // is one event, not one per keystroke. See ANALYTICS.md.
+    // is one event, not one per keystroke. See docs/reference/ANALYTICS.md.
     var qTimer = null;
     function trackFilter(type, value){
       if (!value || !(window.SH && SH.track)) return;
