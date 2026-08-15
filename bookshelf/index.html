@@ -702,6 +702,9 @@
   /* wider box + clean dark ground so the moonlit-room candles/curtain don't bleed in */
   .gate-card--shelves{max-width:1000px}
   .gate-card--shelves::before{background:linear-gradient(160deg,#1b1322,#0c0812 72%)}
+  .gate-card--shelves .gate-promise{max-width:none;text-align:center}
+  .gate-card--shelves .gate-actions{justify-content:space-between}
+  @media(max-width:560px){.gate-card--shelves .gate-actions{justify-content:center}}
   .bs-duo{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:10px 0 24px;align-items:start}
   .bs-col{min-width:0;display:flex;flex-direction:column;gap:10px;align-items:center}
   .bs-tag{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:.58rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
