@@ -698,25 +698,20 @@
   .gate-actions button{border:0;border-radius:999px;padding:13px 20px;font-weight:800;cursor:pointer}
   .gate-actions .primary{background:#d5b36a;color:#171009}
   .gate-actions .secondary{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.24);backdrop-filter:blur(8px)}
-  /* free-vs-premium comparison inside the non-logged-in gate */
-  .gate-compare{display:grid;grid-template-columns:1fr;gap:14px;max-width:640px;margin:6px 0 26px}
-  .gate-tier{position:relative;border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:20px 20px 18px;background:rgba(9,11,20,.62);backdrop-filter:blur(8px)}
-  .gate-tier.is-premium{border-color:rgba(213,179,106,.5);background:linear-gradient(180deg,rgba(35,27,10,.66),rgba(9,11,20,.66))}
-  .gate-tier-head{display:flex;align-items:center;gap:9px;margin-bottom:4px}
-  .gate-tier-head strong{font-family:Georgia,serif;font-size:1.18rem;color:#fff7e7;line-height:1}
-  .gate-tier-tag{margin-left:auto;font-size:.58rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:.4em .7em;border-radius:99px}
-  .gate-tier .gate-tier-tag{border:1px solid rgba(255,255,255,.2);color:rgba(244,232,227,.7)}
-  .gate-tier.is-premium .gate-tier-tag{border:1px solid rgba(213,179,106,.5);background:rgba(213,179,106,.14);color:#e7c77e}
-  .gate-diamond{color:#8fd4ff;font-size:1rem;filter:drop-shadow(0 0 8px rgba(143,212,255,.55))}
-  .gate-tier-sub{color:rgba(216,216,223,.72);font-size:.82rem;margin:0 0 12px;line-height:1.5}
-  .gate-tier ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-  .gate-tier li{position:relative;padding-left:24px;color:#e7e3ea;font-size:.86rem;line-height:1.45}
-  .gate-tier li::before{content:"✓";position:absolute;left:0;top:0;font-size:.8rem;font-weight:800}
-  .gate-tier li{color:#cfd0d8}
-  .gate-tier li::before{color:#7fd8a8}
-  .gate-tier.is-premium li::before{content:"💎";font-size:.7rem;filter:none}
-  .gate-tier.is-premium li{color:#f1e9dd}
-  @media(min-width:640px){.gate-compare{grid-template-columns:1fr 1fr}}
+  /* signed-out gate: two real cabinets (free | premium) scaled to fit the card */
+  /* wider box + clean dark ground so the moonlit-room candles/curtain don't bleed in */
+  .gate-card--shelves{max-width:1000px}
+  .gate-card--shelves::before{background:linear-gradient(160deg,#1b1322,#0c0812 72%)}
+  .bs-duo{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:10px 0 24px;align-items:start}
+  .bs-col{min-width:0;display:flex;flex-direction:column;gap:10px;align-items:center}
+  .bs-tag{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:.58rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+    padding:.36em .66em;border-radius:999px;border:1px solid rgba(255,255,255,.22);color:rgba(244,232,227,.8);background:rgba(7,8,16,.55)}
+  .bs-tag.is-gem{border-color:rgba(213,179,106,.55);color:#e7c77e;background:rgba(35,27,10,.5)}
+  .bs-tag.is-gem b{filter:drop-shadow(0 0 5px rgba(143,212,255,.6))}
+  .bs-cab-fit{overflow:hidden;border-radius:10px}
+  .bs-cab-zoom{width:680px;zoom:.48;pointer-events:none;user-select:none}
+  .bs-cab-zoom .bookcase{margin:0}
+  @media(max-width:640px){.bs-duo{grid-template-columns:1fr;gap:22px}.bs-cab-zoom{zoom:.56}}
 
   /* grain overlay across everything for richness */
   body::after{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.04;background:var(--grain)}
@@ -938,7 +933,9 @@
   // Read-only "view someone else's shelf" mode: /bookshelf/?u=<username>.
   // Renders another reader's PUBLIC shelf (RLS-gated) with all editing removed.
   const VIEW_HANDLE=(new URLSearchParams(location.search).get('u')||'').trim().toLowerCase();
-  const VIEW_MODE=!!VIEW_HANDLE;
+  // let (not const): the signed-out guest preview also renders read-only, so it
+  // flips this on to reuse the same no-edit rendering path as the public viewer.
+  let VIEW_MODE=!!VIEW_HANDLE;
   let VIEW_UID=null;
   const TRIAL_KEY='sh_bookcase_trials_v1', TRIAL_MS=24*60*60*1000;
   let sb=null, user=null, shelf=[], spiceMap={}, theme='walnut', isPremium=false, readerName='Your', founderNumber=null;
@@ -1155,34 +1152,61 @@
     $('themepill').classList.remove('show');
   }
 
+  // Build just the cabinet (crest + shelves + real book spines) for a given tier,
+  // reusing the same pieces renderRoom() uses. `unlocked` = premium (living worlds
+  // on); false = free (worlds off). Non-interactive — no manage/drag/door buttons.
+  function cabinetMarkup(unlocked){
+    const ordered=[...shelf].sort(shelfCmp);
+    return '<div class="bookcase '+(unlocked?'worlds-unlocked':'worlds-locked')+' heirloom-crown">'
+      +'<span class="cabinet-crest"><small>The private library of</small><strong>'+esc(readerName)+'</strong><em>Love · lore · ever after</em></span>'
+      +'<span class="cabinet-heart" aria-hidden="true"><img src="/bookshelf/assets/v3/founder-cabinet-worlds-v1.jpg" alt=""></span>'
+      +'<span class="cabinet-pilaster left"></span><span class="cabinet-pilaster right"></span><span class="case-flourish"></span><div class="interior">'
+      + SHELVES.map(([st,label])=>{
+          const items=ordered.filter(b=>b.status===st);
+          // Static preview: render plain spines/faces on every shelf. The premium
+          // difference comes from the lit worlds backdrop (worlds-unlocked), not
+          // the interactive "reading copy" threshold card, which looks broken here.
+          const inner = items.length ? items.map((b,i)=>bookHTML(b,i===0)).join('') : '';
+          const overflow=items.length>7;
+          const displayLabel=st==='want'?'TBR':st==='dnf'?'DNF':label;
+          const shelfSub=st==='want'?'<span class="shelf-sub">Want to Read</span>':st==='dnf'?'<span class="shelf-sub">Laid to Rest</span>':'';
+          const shelfIsLit=!unlocked||shelfLights[st];
+          return '<div class="shelfrow'+(overflow?' has-overflow':'')+(V3_MODE&&items.length<=7?' is-curated':'')+(shelfIsLit?' shelf-lit':'')+'" data-shelf-status="'+st+'" data-count="'+items.length+'"><div class="plate"><span class="shelf-title">'+displayLabel+' '+shelfSub+' <span class="ct">'+items.length+'</span></span></div>'
+            +v3RitualHTML(st)+(st==='dnf'&&unlocked?'<span class="dnf-lamp-shade" aria-hidden="true"></span>':'')+'<div class="row"><div class="books" data-status="'+st+'">'+inner+'</div></div><div class="plank"></div></div>';
+        }).join('')
+      +'</div></div>';
+  }
+
+  // Signed-out view: keep the gate card, but sit the TWO real cabinets inside it —
+  // free (worlds off) beside premium (worlds on), each the actual rendered shelf
+  // with real book spines, scaled to fit. CTA steps into the live world or logs in.
   function renderGate(){
     $('roomwrap').classList.remove('library-mode');
+    isPremium=false;
+    readerName='You';
+    if(V3_MODE) crestStyle='heirloom-moon';
+    shelf=DEMO_SHELF.map((b,i)=>({...b,sort_order:i,created_at:new Date(Date.now()-i*86400000).toISOString()}));
+    spiceMap={'demo-1':4,'demo-2':5,'demo-4':5,'demo-7':3};
+    setTheme('founder',true);
+    document.body.dataset.cabinet=cabinetStyle;
+    document.body.dataset.crest=crestStyle;
     document.querySelector('.roomhead h1').innerHTML='My <em>Bookshelf</em>';
-    $('stage').innerHTML='<section class="gate-card">'
+    // Premium cabinet needs interior access to render its worlds — toggle isPremium
+    // just while building that one cabinet's markup, then restore.
+    const freeCab=cabinetMarkup(false);
+    isPremium=true; const premCab=cabinetMarkup(true); isPremium=false;
+    $('stage').innerHTML='<section class="gate-card gate-card--shelves">'
       +'<div class="gate-eyebrow">A living bookcase</div><div class="gate-proof">Premium world · live now</div>'
       +'<h2>Free bookshelf. Premium worlds.</h2>'
       +'<p>Every reader gets the heirloom bookcase — your books, your finishes, yours to keep. Premium is the living world you step <em>into</em>: wind its clock, wake its fairies, dim its candle.</p>'
-      +'<div class="gate-compare">'
-        +'<div class="gate-tier">'
-          +'<div class="gate-tier-head"><strong>Free</strong><span class="gate-tier-tag">Always free</span></div>'
-          +'<p class="gate-tier-sub">The whole bookshelf — not a demo.</p>'
-          +'<ul><li>Your books across all four shelves</li>'
-          +'<li>Heirloom cabinet, finishes, crests &amp; trim</li>'
-          +'<li>Public shelf, import/export &amp; exterior updates</li>'
-          +'<li>Preview any immersive world — see it live</li></ul>'
-        +'</div>'
-        +'<div class="gate-tier is-premium">'
-          +'<div class="gate-tier-head"><span class="gate-diamond" aria-hidden="true">💎</span><strong>Premium</strong><span class="gate-tier-tag">Immersive worlds</span></div>'
-          +'<p class="gate-tier-sub">Step inside — a world, not a skin.</p>'
-          +'<ul><li>Enter the Moonlit Reading Room, fully alive</li>'
-          +'<li>Working clock, living light, daybreak &amp; visitors</li>'
-          +'<li>Living interiors inside all four shelves</li>'
-          +'<li>Bring the books from your shelf with you</li></ul>'
-        +'</div>'
+      +'<div class="bs-duo">'
+        +'<div class="bs-col"><span class="bs-tag">Free · worlds off</span><div class="bs-cab-fit"><div class="bs-cab-zoom">'+freeCab+'</div></div></div>'
+        +'<div class="bs-col"><span class="bs-tag is-gem"><b aria-hidden="true">💎</b> Premium · worlds on</span><div class="bs-cab-fit"><div class="bs-cab-zoom">'+premCab+'</div></div></div>'
       +'</div>'
-      +'<span class="gate-promise">Free to preview any world. The first premium world is included with the Founder’s Key.</span>'
-      +'<div class="gate-actions"><button class="primary" onclick="enterDemoWorld()">💎 Preview the Moonlit Reading Room</button>'
+      +'<span class="gate-promise">Free to preview. The first premium world is included with the Founder’s Key.</span>'
+      +'<div class="gate-actions"><button class="primary" onclick="enterDemoWorld()">💎 Enter the Moonlit Reading Room</button>'
       +'<button class="secondary" onclick="SH.openAuth()">Log in to build yours</button></div></section>';
+    $('themepill').classList.remove('show');
   }
 
   function enterDemoWorld(){
