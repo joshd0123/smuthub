@@ -708,11 +708,11 @@
   .gate-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:26px;align-items:start}
   .gate-main{min-width:0}
   .gate-rail{display:grid;gap:12px;align-content:end;align-self:stretch}
-  @media(max-width:860px){.gate-layout{grid-template-columns:1fr}.gate-rail{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:1040px){.gate-layout{grid-template-columns:1fr}.gate-rail{grid-template-columns:repeat(2,minmax(0,1fr))}}
   /* keep the promise + CTAs centered under the bookshelf column, not the rail */
   .gate-footer{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:26px;margin-top:22px}
   .gate-footer-col{grid-column:1;display:flex;flex-direction:column;align-items:center}
-  @media(max-width:860px){.gate-footer{grid-template-columns:1fr}}
+  @media(max-width:1040px){.gate-footer{grid-template-columns:1fr}}
   @media(max-width:520px){.gate-rail{grid-template-columns:1fr}}
   /* bookcases left-aligned as a group; each tag centered over its cabinet */
   .bs-duo{display:flex;flex-wrap:wrap;gap:18px;margin:10px 0 0;justify-content:flex-start;align-items:flex-start}
@@ -722,9 +722,11 @@
   .bs-tag.is-gem{border-color:rgba(213,179,106,.55);color:#e7c77e;background:rgba(35,27,10,.5)}
   .bs-tag.is-gem b{filter:drop-shadow(0 0 5px rgba(143,212,255,.6))}
   .bs-cab-fit{overflow:hidden;border-radius:10px}
-  .bs-cab-zoom{width:680px;zoom:.48;pointer-events:none;user-select:none}
+  .bs-cab-zoom{width:680px;zoom:.4;pointer-events:none;user-select:none}
+  /* premium shelf: books sit over the lit worlds, so give them a dark halo to read clearly */
+  .bs-cab-zoom .bookcase.worlds-unlocked .book{filter:drop-shadow(0 3px 8px rgba(0,0,0,.9)) drop-shadow(0 0 2px rgba(0,0,0,.8))}
   .bs-cab-zoom .bookcase{margin:0}
-  @media(max-width:640px){.bs-duo{grid-template-columns:1fr;gap:22px}.bs-cab-zoom{zoom:.56}}
+  @media(max-width:720px){.bs-duo{justify-content:center}.bs-cab-zoom{zoom:.52}}
 
   /* grain overlay across everything for richness */
   body::after{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.04;background:var(--grain)}
@@ -1165,11 +1167,27 @@
     $('themepill').classList.remove('show');
   }
 
+  // Romantasy filler titles used to pad the preview shelves so they read as full.
+  const GATE_FILL_TITLES=['A Court of Silver Flames','Iron Flame','A Fate Inked in Blood','Powerless','Crescent City','The Bridge Kingdom','A Kingdom of Flesh and Fire','The Foxglove King','Sorcery of Thorns','Legendborn','The Hurricane Wars','Immortal Longings','A Dawn of Onyx','The Jasad Heir','Lightlark','A Study in Drowning','Kingdom of the Wicked','Bride of the Shadow King','A Tempest of Tea','The Prison Healer','Belladonna','Wildfire','Reckless','Radiance','Heartless','Serpent & Dove','A Deal with the Elf King','The Ashes & the Star-Cursed King','House of Flame and Shadow','Throne of Glass'];
+  // Build a preview shelf dataset with a target book count per status. Real demo
+  // books (with covers) lead each shelf; the rest are spine-only filler.
+  function buildGateShelf(counts){
+    let data=[]; let seed=3;
+    SHELVES.forEach(([st])=>{
+      const need=counts[st]||0;
+      const real=DEMO_SHELF.filter(b=>b.status===st).slice(0,need);
+      const pad=[];
+      for(let i=real.length;i<need;i++){ pad.push({book_key:st+'-fill-'+seed, title:GATE_FILL_TITLES[seed%GATE_FILL_TITLES.length], status:st, cover_url:''}); seed++; }
+      data=data.concat(real,pad);
+    });
+    return data.map((b,i)=>({...b,sort_order:i,created_at:new Date(Date.now()-i*3600000).toISOString()}));
+  }
+
   // Build just the cabinet (crest + shelves + real book spines) for a given tier,
   // reusing the same pieces renderRoom() uses. `unlocked` = premium (living worlds
   // on); false = free (worlds off). Non-interactive — no manage/drag/door buttons.
-  function cabinetMarkup(unlocked){
-    const ordered=[...shelf].sort(shelfCmp);
+  function cabinetMarkup(unlocked, data){
+    const ordered=[...(data||shelf)].sort(shelfCmp);
     return '<div class="bookcase '+(unlocked?'worlds-unlocked':'worlds-locked')+' heirloom-crown">'
       +'<span class="cabinet-crest"><small>The private library of</small><strong>'+esc(readerName)+'</strong><em>Love · lore · ever after</em></span>'
       +'<span class="cabinet-heart" aria-hidden="true"><img src="/bookshelf/assets/v3/founder-cabinet-worlds-v1.jpg" alt=""></span>'
@@ -1204,10 +1222,14 @@
     document.body.dataset.cabinet=cabinetStyle;
     document.body.dataset.crest=crestStyle;
     document.querySelector('.roomhead h1').innerHTML='My <em>Bookshelf</em>';
+    // Per-cabinet fills: free shelves read full (reading ~3/4); premium keeps its
+    // Currently-Reading world visible, TBR full, Read ~3/4, DNF up to the door.
+    const freeData=buildGateShelf({reading:17,want:23,read:23,dnf:23});
+    const premData=buildGateShelf({reading:6,want:23,read:17,dnf:14});
     // Premium cabinet needs interior access to render its worlds — toggle isPremium
     // just while building that one cabinet's markup, then restore.
-    const freeCab=cabinetMarkup(false);
-    isPremium=true; const premCab=cabinetMarkup(true); isPremium=false;
+    const freeCab=cabinetMarkup(false,freeData);
+    isPremium=true; const premCab=cabinetMarkup(true,premData); isPremium=false;
     $('stage').innerHTML='<section class="gate-card gate-card--shelves"><div class="gate-layout"><div class="gate-main">'
       +'<div class="gate-eyebrow">A living bookcase</div><div class="gate-proof">Premium world · live now</div>'
       +'<h2>Free bookshelf. Premium worlds.</h2>'
