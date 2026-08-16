@@ -881,7 +881,15 @@
     {book_key:'demo-11',title:'The Raven’s Oath',author:'D. Winter',status:'want',cover_url:''},
     {book_key:'demo-12',title:'Ashes of Desire',author:'P. Storm',status:'reading',cover_url:''},
     {book_key:'demo-13',title:'Claimed by Night',author:'K. Fable',status:'want',cover_url:''},
-    {book_key:'demo-14',title:'The Last Enchantment',author:'T. Vale',status:'reading',cover_url:''}
+    {book_key:'demo-14',title:'The Last Enchantment',author:'T. Vale',status:'reading',cover_url:''},
+    {book_key:'demo-15',title:'A Kingdom of Flesh and Fire',author:'J. Armentrout',status:'read',cover_url:''},
+    {book_key:'demo-16',title:'Powerless',author:'L. Roberts',status:'read',cover_url:''},
+    {book_key:'demo-17',title:'Sorcery of Thorns',author:'M. Rogerson',status:'read',cover_url:''},
+    {book_key:'demo-18',title:'The Foxglove King',author:'H. Whitten',status:'dnf',cover_url:''},
+    {book_key:'demo-19',title:'Immortal Longings',author:'C. Lee',status:'dnf',cover_url:''},
+    {book_key:'demo-20',title:'The Bridge Kingdom',author:'D. Jensen',status:'want',cover_url:''},
+    {book_key:'demo-21',title:'A Study in Drowning',author:'A. Reid',status:'want',cover_url:''},
+    {book_key:'demo-22',title:'The Hurricane Wars',author:'T. Guanzon',status:'reading',cover_url:''}
   ];
   const THEMES=[
     {id:'founder', name:'Blackthorn Rosewood',color:'#4a1719', premium:true,desc:'Blackened rosewood, oxblood depth and antique brass.'},
@@ -1167,27 +1175,11 @@
     $('themepill').classList.remove('show');
   }
 
-  // Romantasy filler titles used to pad the preview shelves so they read as full.
-  const GATE_FILL_TITLES=['A Court of Silver Flames','Iron Flame','A Fate Inked in Blood','Powerless','Crescent City','The Bridge Kingdom','A Kingdom of Flesh and Fire','The Foxglove King','Sorcery of Thorns','Legendborn','The Hurricane Wars','Immortal Longings','A Dawn of Onyx','The Jasad Heir','Lightlark','A Study in Drowning','Kingdom of the Wicked','Bride of the Shadow King','A Tempest of Tea','The Prison Healer','Belladonna','Wildfire','Reckless','Radiance','Heartless','Serpent & Dove','A Deal with the Elf King','The Ashes & the Star-Cursed King','House of Flame and Shadow','Throne of Glass'];
-  // Build a preview shelf dataset with a target book count per status. Real demo
-  // books (with covers) lead each shelf; the rest are spine-only filler.
-  function buildGateShelf(counts){
-    let data=[]; let seed=3;
-    SHELVES.forEach(([st])=>{
-      const need=counts[st]||0;
-      const real=DEMO_SHELF.filter(b=>b.status===st).slice(0,need);
-      const pad=[];
-      for(let i=real.length;i<need;i++){ pad.push({book_key:st+'-fill-'+seed, title:GATE_FILL_TITLES[seed%GATE_FILL_TITLES.length], status:st, cover_url:''}); seed++; }
-      data=data.concat(real,pad);
-    });
-    return data.map((b,i)=>({...b,sort_order:i,created_at:new Date(Date.now()-i*3600000).toISOString()}));
-  }
-
   // Build just the cabinet (crest + shelves + real book spines) for a given tier,
   // reusing the same pieces renderRoom() uses. `unlocked` = premium (living worlds
   // on); false = free (worlds off). Non-interactive — no manage/drag/door buttons.
-  function cabinetMarkup(unlocked, data){
-    const ordered=[...(data||shelf)].sort(shelfCmp);
+  function cabinetMarkup(unlocked){
+    const ordered=[...shelf].sort(shelfCmp);
     return '<div class="bookcase '+(unlocked?'worlds-unlocked':'worlds-locked')+' heirloom-crown">'
       +'<span class="cabinet-crest"><small>The private library of</small><strong>'+esc(readerName)+'</strong><em>Love · lore · ever after</em></span>'
       +'<span class="cabinet-heart" aria-hidden="true"><img src="/bookshelf/assets/v3/founder-cabinet-worlds-v1.jpg" alt=""></span>'
@@ -1222,14 +1214,10 @@
     document.body.dataset.cabinet=cabinetStyle;
     document.body.dataset.crest=crestStyle;
     document.querySelector('.roomhead h1').innerHTML='My <em>Bookshelf</em>';
-    // Per-cabinet fills: free shelves read full (reading ~3/4); premium keeps its
-    // Currently-Reading world visible, TBR full, Read ~3/4, DNF up to the door.
-    const freeData=buildGateShelf({reading:17,want:23,read:23,dnf:23});
-    const premData=buildGateShelf({reading:6,want:23,read:17,dnf:14});
     // Premium cabinet needs interior access to render its worlds — toggle isPremium
     // just while building that one cabinet's markup, then restore.
-    const freeCab=cabinetMarkup(false,freeData);
-    isPremium=true; const premCab=cabinetMarkup(true,premData); isPremium=false;
+    const freeCab=cabinetMarkup(false);
+    isPremium=true; const premCab=cabinetMarkup(true); isPremium=false;
     $('stage').innerHTML='<section class="gate-card gate-card--shelves"><div class="gate-layout"><div class="gate-main">'
       +'<div class="gate-eyebrow">A living bookcase</div><div class="gate-proof">Premium world · live now</div>'
       +'<h2>Free bookshelf. Premium worlds.</h2>'
