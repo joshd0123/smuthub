@@ -700,14 +700,24 @@
   .gate-actions .secondary{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.24);backdrop-filter:blur(8px)}
   /* signed-out gate: two real cabinets (free | premium) scaled to fit the card */
   /* wider box + clean dark ground so the moonlit-room candles/curtain don't bleed in */
-  .gate-card--shelves{max-width:1000px}
+  .gate-card--shelves{max-width:1180px}
   .gate-card--shelves::before{background:linear-gradient(160deg,#1b1322,#0c0812 72%)}
   .gate-card--shelves .gate-promise{max-width:none;text-align:center}
-  .gate-card--shelves .gate-actions{justify-content:space-between}
-  @media(max-width:560px){.gate-card--shelves .gate-actions{justify-content:center}}
-  .bs-duo{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:10px 0 24px;align-items:start}
+  .gate-card--shelves .gate-actions{justify-content:center}
+  /* left column (intro + bookcases) beside the right rail of 4 cards */
+  .gate-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:26px;align-items:start}
+  .gate-main{min-width:0}
+  .gate-rail{display:grid;gap:12px;align-content:end;align-self:stretch}
+  @media(max-width:860px){.gate-layout{grid-template-columns:1fr}.gate-rail{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  /* keep the promise + CTAs centered under the bookshelf column, not the rail */
+  .gate-footer{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:26px;margin-top:22px}
+  .gate-footer-col{grid-column:1;display:flex;flex-direction:column;align-items:center}
+  @media(max-width:860px){.gate-footer{grid-template-columns:1fr}}
+  @media(max-width:520px){.gate-rail{grid-template-columns:1fr}}
+  /* bookcases left-aligned as a group; each tag centered over its cabinet */
+  .bs-duo{display:flex;flex-wrap:wrap;gap:18px;margin:10px 0 0;justify-content:flex-start;align-items:flex-start}
   .bs-col{min-width:0;display:flex;flex-direction:column;gap:10px;align-items:center}
-  .bs-tag{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:.58rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  .bs-tag{align-self:center;display:inline-flex;align-items:center;gap:6px;font-size:.58rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
     padding:.36em .66em;border-radius:999px;border:1px solid rgba(255,255,255,.22);color:rgba(244,232,227,.8);background:rgba(7,8,16,.55)}
   .bs-tag.is-gem{border-color:rgba(213,179,106,.55);color:#e7c77e;background:rgba(35,27,10,.5)}
   .bs-tag.is-gem b{filter:drop-shadow(0 0 5px rgba(143,212,255,.6))}
@@ -1198,7 +1208,7 @@
     // just while building that one cabinet's markup, then restore.
     const freeCab=cabinetMarkup(false);
     isPremium=true; const premCab=cabinetMarkup(true); isPremium=false;
-    $('stage').innerHTML='<section class="gate-card gate-card--shelves">'
+    $('stage').innerHTML='<section class="gate-card gate-card--shelves"><div class="gate-layout"><div class="gate-main">'
       +'<div class="gate-eyebrow">A living bookcase</div><div class="gate-proof">Premium world · live now</div>'
       +'<h2>Free bookshelf. Premium worlds.</h2>'
       +'<p>Every reader gets the heirloom bookcase — your books, your finishes, yours to keep. Premium is the living world you step <em>into</em>: wind its clock, wake its fairies, dim its candle.</p>'
@@ -1206,10 +1216,30 @@
         +'<div class="bs-col"><span class="bs-tag">Free · worlds off</span><div class="bs-cab-fit"><div class="bs-cab-zoom">'+freeCab+'</div></div></div>'
         +'<div class="bs-col"><span class="bs-tag is-gem"><b aria-hidden="true">💎</b> Premium · worlds on</span><div class="bs-cab-fit"><div class="bs-cab-zoom">'+premCab+'</div></div></div>'
       +'</div>'
-      +'<span class="gate-promise">Free to preview. The first premium world is included with the Founder’s Key.</span>'
-      +'<div class="gate-actions"><button class="primary" onclick="enterDemoWorld()">💎 Enter the Moonlit Reading Room</button>'
-      +'<button class="secondary" onclick="SH.openAuth()">Log in to build yours</button></div></section>';
+      +'</div><aside class="gate-rail">'+railMarkup()+'</aside></div>'
+      +'<div class="gate-footer"><div class="gate-footer-col">'
+        +'<span class="gate-promise">Free to preview. The first premium world is included with the Founder’s Key.</span>'
+        +'<div class="gate-actions"><button class="primary" onclick="enterDemoWorld()">💎 Enter the Moonlit Reading Room</button>'
+        +'<button class="secondary" onclick="SH.openAuth()">Log in to Build Yours</button></div>'
+      +'</div></div></section>';
     $('themepill').classList.remove('show');
+  }
+
+  // The four rail cards from the logged-in shelf, adapted for signed-out guests:
+  // no prices (hidden until billing), wired to the world preview / import / login.
+  function railMarkup(){
+    return '<section class="rail-card"><div class="rail-kicker">The Library Atelier</div><h3>Make it unmistakably yours.</h3>'
+      +'<p>Finishes, cabinets, crests and collected details — customise the heirloom shelf around your own books.</p>'
+      +'<button class="rail-btn" onclick="SH.openAuth()">Visit the Atelier</button></section>'
+      +'<section class="rail-card world-card"><span class="world-live">Live premium world</span><div class="rail-kicker">The Moonlit Reading Room</div><h3>This is a world, not a skin.</h3>'
+      +'<p>Change the hour, wake hidden visitors, alter the light — and bring the books from your shelf with you.</p>'
+      +'<button class="rail-link" onclick="enterDemoWorld()">Enter the reading world →</button></section>'
+      +'<section class="rail-card tbr-card"><div class="rail-kicker">Your visual TBR</div><h3>Make anticipation part of the ritual.</h3>'
+      +'<p>A beautiful to-be-read shelf makes choosing the next romance or fantasy book as satisfying as finishing one.</p>'
+      +'<button class="rail-link" onclick="enterDemoWorld()">Open your TBR →</button></section>'
+      +'<section class="rail-card"><div class="rail-kicker">Bring your books home</div><h3>Already have a reading history?</h3>'
+      +'<p>Import your Goodreads, StoryGraph, or CSV shelf in a few guided steps. Duplicates stay out automatically.</p>'
+      +'<a class="rail-link" href="/import/">Import your library →</a></section>';
   }
 
   function enterDemoWorld(){
