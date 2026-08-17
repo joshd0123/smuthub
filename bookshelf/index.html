@@ -1597,11 +1597,16 @@
   }
 
   async function setStatus(key,status){
-    const row=shelf.find(b=>b.book_key===key); if(row) row.status=status;
+    if(VIEW_MODE) return;
+    const row=shelf.find(b=>b.book_key===key); const prevStatus=row?row.status:null; if(row) row.status=status;
     closeSheet(); refreshViews();
+    if(REVIEW_MODE){ toast("Moved to "+labelOf(status)); return; }   // demo: local only
+    if(!sb||!user){ if(row) row.status=prevStatus; refreshViews(); toast("Sign in to manage your shelf"); if(window.SH) SH.openAuth(); return; }
     // Stamp finished_at the first time a book lands on Read → powers the
     // dashboard reading-pace + "read this year". Cleared when it leaves Read.
-    if(!REVIEW_MODE&&!VIEW_MODE&&sb&&user) await sb.from('shelf').update({status, finished_at: status==='read'? new Date().toISOString() : null}).eq('book_key',key);
+    const { data, error } = await sb.from('shelf').update({status, finished_at: status==='read'? new Date().toISOString() : null}).eq('user_id', user.id).eq('book_key', key).select();
+    if(error){ if(row) row.status=prevStatus; refreshViews(); toast("Couldn't move: "+error.message); return; }
+    if(!data || !data.length){ if(row) row.status=prevStatus; refreshViews(); toast("Couldn't move — nothing matched. Refresh and try again."); return; }
     toast("Moved to "+labelOf(status));
   }
   // ⭐ Favourite toggle — feeds the dashboard "Your favourites" section.
@@ -1614,8 +1619,16 @@
     toast(row.favourite?'Added to favourites ⭐':'Removed from favourites');
   }
   async function removeBook(key){
+    if(VIEW_MODE) return;                                   // can't edit someone else's shelf
+    const prev=shelf.slice();
     shelf=shelf.filter(b=>b.book_key!==key); closeSheet(); refreshViews();
-    if(!REVIEW_MODE&&!VIEW_MODE&&sb&&user) await sb.from('shelf').delete().eq('book_key',key);
+    if(REVIEW_MODE){ toast("Removed from your bookshelf"); return; }   // demo: local only
+    if(!sb||!user){ shelf=prev; refreshViews(); toast("Sign in to manage your shelf"); if(window.SH) SH.openAuth(); return; }
+    // Explicit user_id scope + .select() so we KNOW a row was actually deleted;
+    // never let a failed/no-op delete masquerade as success (books came back).
+    const { data, error } = await sb.from('shelf').delete().eq('user_id', user.id).eq('book_key', key).select();
+    if(error){ shelf=prev; refreshViews(); toast("Couldn't remove: "+error.message); return; }
+    if(!data || !data.length){ shelf=prev; refreshViews(); toast("Couldn't remove — nothing matched. Refresh and try again."); return; }
     toast("Removed from your bookshelf");
   }
   async function rate(e,key){
