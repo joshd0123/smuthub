@@ -118,12 +118,34 @@
             let first = true;
             try { first = !sessionStorage.getItem('sh_signin_tracked'); if (first) sessionStorage.setItem('sh_signin_tracked','1'); } catch(_) {}
             if (first) {
-              const created = new Date(SH.user.created_at).getTime();
               // `where` = the page the account landed on after auth, so signups
               // can be attributed to the surface that drove them (home, founders,
               // a book page, the bookshelf…).
               const where = location.pathname.replace(/\/index\.html$/, '/') || '/';
-              track(Date.now() - created < 60000 ? 'signup' : 'signin', { where });
+              // Signup vs signin is a durable, once-per-account fact: the
+              // `signup_tracked` profile flag (set true the first time we count
+              // an account). The old `Date.now() - created_at < 60s` window
+              // mislabelled any signup whose first *tracked* login landed later
+              // than 60s after account creation, so it's now only a fallback for
+              // when the profile row isn't readable yet.
+              let isSignup;
+              if (SH.profile && typeof SH.profile.signup_tracked !== 'undefined') {
+                isSignup = !SH.profile.signup_tracked;
+              } else {
+                isSignup = (Date.now() - new Date(SH.user.created_at).getTime()) < 60000;
+              }
+              // trackWhenReady, NOT track(): this fires on the post-OAuth cold
+              // load, when the deferred Umami script is usually not loaded yet.
+              // track() silently drops events fired before the script lands —
+              // which is exactly why past signups never recorded. Queue + flush.
+              trackWhenReady(isSignup ? 'signup' : 'signin', { where });
+              // Persist the flag so the account is only ever counted as a signup
+              // once, on any device. Best-effort: a failed write at worst risks a
+              // later login being recounted as a signup, never a lost signin.
+              if (isSignup && SH.profile && !SH.profile.signup_tracked) {
+                SH.profile.signup_tracked = true;
+                try { SH.sb.from('profiles').update({ signup_tracked: true }).eq('id', SH.user.id).then(function(){}, function(){}); } catch(_) {}
+              }
             }
           }
         }, 0);
@@ -381,9 +403,17 @@
     </div>`;
     d.addEventListener('click',e=>{ if(e.target===d) d.remove(); });
     document.body.appendChild(d);
+    // Funnel top: the sign-in sheet opened. `where` attributes the intent to the
+    // page/CTA that drove it, so the funnel reads auth-open → oauth/magic-start →
+    // signup/signin. Interaction event (user clicked to get here), so track() is
+    // safe — Umami is loaded long before any modal opens.
+    track('auth-open', { where: location.pathname.replace(/\/index\.html$/, '/') || '/' });
     const msg=(t,bad)=>{ const m=document.getElementById('aMsg'); m.textContent=t; m.style.color=bad?'#ff9aa8':'#ffab40'; };
     document.getElementById('aCancel').onclick=()=>d.remove();
     document.getElementById('aGoogle').onclick = async ()=>{
+      // Funnel mid: chose Google and left for the OAuth redirect. Fire before the
+      // await so it records even though the page is about to navigate away.
+      track('oauth-start', { method: 'google' });
       msg("Redirecting to Google…");
       const {error}=await SH.sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.href}});
       if(error) msg(error.message,1);
@@ -393,6 +423,9 @@
     const sendMagic = async ()=>{
       const email=document.getElementById('aEmail').value.trim();
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ msg("Enter a valid email first",1); return; }
+      // Funnel mid: chose the passwordless email path. Distinguishes method choice
+      // from oauth-start; both roll up under auth-open.
+      track('magic-link-start', { method: 'email' });
       msg("Sending your link…");
       const {error}=await SH.sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.href}});
       msg(error?error.message:"Link sent — check your email 💌",!!error);
@@ -784,7 +817,22 @@
       else track('world-enter', { world: 'moonlit' });
     }, true);   // capture: still fires if the bookshelf handler stops propagation
   }
-  function initShUI(){ injectHeaderCSS(); renderSharedNavigation(); enhanceHeader(); mountUmami(); mountBackToTop(); mountHideOnScroll(); mountBookshelfTracking(); /* mountFeedbackButton(); ← disabled */ }
+  // Store-directory click tracking. DORMANT until the Find-a-Store map is wired:
+  // it fires `store-click` for any element carrying a data-store-click attribute,
+  // so the day the map renders real store links/CTAs they are tracked with zero
+  // extra code. Nothing fires today because no such elements exist yet, and this
+  // lives in the global script (not the stores.html template), so a map rebuild
+  // can't drop it.
+  //   Contract for wiring the map: put  data-store-click="<store id or name>"  on
+  //   each store link/CTA, and optionally  data-store-action="website|directions|call".
+  function mountStoreTracking(){
+    document.addEventListener('click', (e) => {
+      const el = e.target.closest ? e.target.closest('[data-store-click]') : null;
+      if (!el) return;
+      track('store-click', { store: el.getAttribute('data-store-click') || '', action: el.getAttribute('data-store-action') || 'open' });
+    }, true);
+  }
+  function initShUI(){ injectHeaderCSS(); renderSharedNavigation(); enhanceHeader(); mountUmami(); mountBackToTop(); mountHideOnScroll(); mountBookshelfTracking(); mountStoreTracking(); /* mountFeedbackButton(); ← disabled */ }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', initShUI);
   else initShUI();
 })();
