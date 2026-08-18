@@ -602,3 +602,13 @@
   .never-fail__plans ul{display:block}.never-fail__plans li{margin:8px 0}
   .shelf-invite{grid-template-columns:1fr}.shelf-invite i{grid-column:1;grid-row:auto;margin-top:10px}
 }
+/* Injected header chrome (auth.js global search button + mobile hamburger).
+   auth.js colours their icons with --cream, which is unset on these light guide
+   themes and falls back to near-white — an invisible magnifier in an empty box
+   on the cream/light headers. Re-theme them per page so the icons stay visible.
+   The SVG stroke and (here) the border follow currentColor. */
+.site-header .sh-search-btn,.site-header .sh-hamburger{border-color:currentColor}
+.ledger-page .sh-search-btn,.ledger-page .sh-hamburger{color:#65525a}
+.compass-page .sh-search-btn,.compass-page .sh-hamburger{color:#555d70}
+.field-page .sh-search-btn,.field-page .sh-hamburger{color:#efd7d1}
+.compass-complete .sh-search-btn,.compass-complete .sh-hamburger{color:#b69089}
