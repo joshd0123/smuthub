@@ -602,13 +602,20 @@
   .never-fail__plans ul{display:block}.never-fail__plans li{margin:8px 0}
   .shelf-invite{grid-template-columns:1fr}.shelf-invite i{grid-column:1;grid-row:auto;margin-top:10px}
 }
-/* Injected header chrome (auth.js global search button + mobile hamburger).
-   auth.js colours their icons with --cream, which is unset on these light guide
-   themes and falls back to near-white — an invisible magnifier in an empty box
-   on the cream/light headers. Re-theme them per page so the icons stay visible.
-   The SVG stroke and (here) the border follow currentColor. */
-.site-header .sh-search-btn,.site-header .sh-hamburger{border-color:currentColor}
-.ledger-page .sh-search-btn,.ledger-page .sh-hamburger{color:#65525a}
-.compass-page .sh-search-btn,.compass-page .sh-hamburger{color:#555d70}
-.field-page .sh-search-btn,.field-page .sh-hamburger{color:#efd7d1}
-.compass-complete .sh-search-btn,.compass-complete .sh-hamburger{color:#b69089}
+/* Gift-guide headers: match the site's standard DARK bar (these pages shipped
+   with bespoke cream / light-blue / maroon header bars — the only light headers
+   on the site). Logo + nav go light-on-dark like every other page; each guide
+   keeps its own accent colour on nav hover. compass-complete is already dark and
+   is left untouched. */
+.ledger-page .site-header,.compass-page .site-header,.field-page .site-header{background:rgba(12,7,8,.92);border-color:#2a1d22}
+.ledger-page .logo,.compass-page .logo,.field-page .logo{color:#f4e8e3}
+.ledger-page .logo strong,.compass-page .logo strong,.field-page .logo strong{background:linear-gradient(100deg,#ff3d76,#ff7a4d 55%,#ffab40);color:#160b10;border-radius:.42em}
+.ledger-page .navlinks,.compass-page .navlinks,.field-page .navlinks{color:#b69089;font-family:var(--sans);font-size:.84rem}
+.ledger-page .navlinks a:hover{color:#ff6f8a}
+.compass-page .navlinks a:hover{color:#b58cff}
+.field-page .navlinks a:hover{color:#ff8f6b}
+/* Injected auth.js chrome (global search button + mobile hamburger): light on
+   the now-dark bar, matching the main site. */
+.ledger-page .sh-search-btn,.ledger-page .sh-hamburger,
+.compass-page .sh-search-btn,.compass-page .sh-hamburger,
+.field-page .sh-search-btn,.field-page .sh-hamburger{color:#f4e8e3;border-color:#2a1d22}
