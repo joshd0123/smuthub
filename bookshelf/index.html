@@ -1097,7 +1097,12 @@
     // them only because that profile is public). The customization / entitlement
     // / trial tables stay owner-only, so they return [] for a viewed user — the
     // shelf renders in the default world, which is the right read-only behaviour.
-    const scoped = q => VIEW_UID ? q.eq('user_id', VIEW_UID) : q;
+    // Scope shelf + tags to the owner (or the viewed public user). The DB's RLS
+    // is not reliably filtering the shelf table, so filter by user_id here too —
+    // otherwise every reader loads a merged shelf of ALL users' books, and edits
+    // scoped to your own user_id then "match nothing". Belt-and-braces with RLS.
+    const scopeUid = VIEW_UID || (user && user.id);
+    const scoped = q => scopeUid ? q.eq('user_id', scopeUid) : q;
     const [r1,r2,r3,r4,r5]=await Promise.all([
       scoped(sb.from('shelf').select('*')),
       scoped(sb.from('book_tags').select('book_key,spice')),
