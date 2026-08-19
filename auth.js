@@ -212,7 +212,7 @@
       more: path === '/stores' || path === '/stores.html'
         || path === '/scan' || path === '/scan.html'
         || path === '/search' || path === '/search.html' || path === '/smuthub-app.html'
-        || path.startsWith('/roadmap/') || path === '/about.html' || path === '/contact.html'
+        || path.startsWith('/roadmap/') || path === '/about' || path === '/about.html' || path === '/contact' || path === '/contact.html'
     };
     const on = key => active[key] ? ' class="on"' : '';
     nav.setAttribute('aria-label', 'Primary navigation');
@@ -247,8 +247,8 @@
           <a href="/scan"><b>Scan a Barcode</b><small>Shelf it from the shop floor</small></a>
           <a href="/stores"><b>Find a Store</b><small>Indie shops near you</small></a>
           <a href="/roadmap/"><b>Roadmap</b><small>What we're building next</small></a>
-          <a href="/about.html"><b>About</b><small>Why smutHub exists</small></a>
-          <a href="/contact.html"><b>Contact</b><small>Reach the team</small></a>
+          <a href="/about"><b>About</b><small>Why smutHub exists</small></a>
+          <a href="/contact"><b>Contact</b><small>Reach the team</small></a>
         </div>
       </details>`;
 
