@@ -1,25 +1,26 @@
 .signal-guide{background:#f3ecdf;color:#171017}
 /* Shared site header (nav content + mobile drawer + avatar injected by auth.js).
-   The translucent tint + blur lets each page's colour show through, so the one
-   header "fades into" the page beneath it. */
-.signal-guide .site-header{position:sticky;top:0;z-index:60;height:auto;display:block;padding:0;background:rgba(19,12,19,.82);backdrop-filter:blur(20px);border-bottom:1px solid rgba(245,233,223,.14)}
+   Solid dark so it never washes to grey over the guide's light sections. */
+.signal-guide .site-header{position:sticky;top:0;z-index:60;height:auto;display:block;padding:0;background:#130c13;border-bottom:1px solid rgba(245,233,223,.12)}
 .signal-guide .site-header .nav{position:relative;min-height:74px;display:flex;align-items:center;justify-content:space-between;gap:2rem;padding:0 clamp(1.2rem,4vw,4.25rem)}
 .signal-guide .site-header .brand{font-size:1.35rem;font-weight:800;text-decoration:none;letter-spacing:-.04em;color:var(--cream)}
 .signal-guide .site-header .authbox{display:flex;align-items:center;justify-content:flex-end;flex:none}
-/* Section sub-nav: breadcrumb + in-page # jumps, sticky just under the header. */
-.signal-guide .guide-rail{position:sticky;top:73px;z-index:55;min-height:46px;display:flex;align-items:center;justify-content:space-between;gap:1rem 1.6rem;flex-wrap:wrap;padding:.4rem clamp(1.2rem,4vw,4.25rem);background:rgba(15,9,15,.78);backdrop-filter:blur(16px);border-bottom:1px solid rgba(245,233,223,.1);font-size:.64rem;text-transform:uppercase;letter-spacing:.16em}
+/* Section sub-nav lives INSIDE the header, so auth.js's auto-hide (slides the
+   whole header away on scroll-down, back on scroll-up) carries it too — it
+   moves with the header and never floats alone. Solid, so no grey wash. */
+.signal-guide .site-header .guide-rail{display:flex;align-items:center;justify-content:space-between;gap:1rem 1.6rem;flex-wrap:wrap;padding:.4rem clamp(1.2rem,4vw,4.25rem);background:#1c1119;border-top:1px solid rgba(245,233,223,.08);font-size:.64rem;text-transform:uppercase;letter-spacing:.16em}
 .signal-guide .guide-rail__crumb{display:flex;align-items:center;gap:.6rem;color:var(--muted)}
 .signal-guide .guide-rail__crumb a{color:inherit;text-decoration:none}
 .signal-guide .guide-rail__crumb a:hover{color:var(--cream)}
 .signal-guide .guide-rail__crumb i{opacity:.55;font-style:normal}
 .signal-guide .guide-rail__crumb b{color:var(--cream);font-weight:700}
 .signal-guide .guide-rail__sections{display:flex;align-items:center;gap:1.1rem 1.5rem;flex-wrap:wrap}
-.signal-guide .guide-rail__sections a{color:var(--muted);text-decoration:none;font-weight:700}
+.signal-guide .guide-rail__sections a{color:var(--muted);text-decoration:none;font-weight:700;padding-bottom:2px;border-bottom:2px solid transparent;transition:color .18s,border-color .18s}
 .signal-guide .guide-rail__sections a:hover{color:var(--cream)}
-@media(max-width:880px){.signal-guide .guide-rail{top:57px}}
-@media(max-width:560px){.signal-guide .guide-rail__sections{display:none}}
-/* Land #-anchor jumps just below the sticky header + section rail. */
-.signal-guide #search,.signal-guide #tropes,.signal-guide #compare{scroll-margin-top:128px}
+.signal-guide .guide-rail__sections a.is-active{color:var(--cream);border-bottom-color:var(--rose)}
+@media(max-width:420px){.signal-guide .guide-rail__sections{display:none}}
+/* Land #-anchor jumps just below the header (nav + section rail). */
+.signal-guide #search,.signal-guide #tropes,.signal-guide #compare{scroll-margin-top:124px}
 @media(max-width:880px){.signal-guide #search,.signal-guide #tropes,.signal-guide #compare{scroll-margin-top:104px}}
 .signal-hero{position:relative;isolation:isolate;overflow:hidden;min-height:720px;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:clamp(4rem,9vw,10rem);padding:clamp(5rem,9vw,9rem) clamp(1rem,6vw,7rem);background:radial-gradient(circle at 78% 22%,rgba(157,115,255,.14),transparent 24%),radial-gradient(circle at 16% 88%,rgba(255,93,126,.1),transparent 28%),#130c13;color:var(--cream)}
 .signal-hero::before{content:"";position:absolute;z-index:-1;width:clamp(20rem,43vw,42rem);aspect-ratio:1;right:-12%;top:-28%;border:1px solid rgba(245,233,223,.1);border-radius:50%;box-shadow:0 0 0 4rem rgba(245,233,223,.018),0 0 0 8rem rgba(157,115,255,.018)}

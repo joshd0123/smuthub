@@ -26,6 +26,22 @@
     window.addEventListener('resize', requestUpdate);
   }
 
+  // Section rail scroll-spy: highlight the link for whatever section is in view.
+  const railLinks = [...document.querySelectorAll('.guide-rail__sections a')];
+  if (railLinks.length) {
+    const sections = railLinks
+      .map((a) => document.getElementById(a.getAttribute('href').slice(1)))
+      .filter(Boolean);
+    const setActive = (id) => railLinks.forEach((a) => a.classList.toggle('is-active', a.getAttribute('href') === '#' + id));
+    const spy = new IntersectionObserver((entries) => {
+      const inView = entries
+        .filter((e) => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (inView[0]) setActive(inView[0].target.id);
+    }, { rootMargin: '-130px 0px -55% 0px', threshold: 0 });
+    sections.forEach((s) => spy.observe(s));
+  }
+
   const rail = document.querySelector('.signal-compare__grid');
   const previous = document.querySelector('[data-compare-prev]');
   const next = document.querySelector('[data-compare-next]');
