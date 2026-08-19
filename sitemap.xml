@@ -33,6 +33,12 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://smuthub.ca/guides/romantasy-tropes/</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
   <!-- Romantasy gift guides. Parent /guides/romantasy-gift-ideas/ is noindex and
        intentionally omitted; only these two leaf pages are indexable. Migrated
        here from the retired sitemap-gift-guides.xml when full crawling opened. -->
