@@ -30,6 +30,9 @@
   <meta name="twitter:description" content="Easy bookish gifts, thoughtful collector choices, and memorable romantasy date ideas—without guessing.">
   <meta name="twitter:image" content="https://smuthub.ca/guides/romantasy-gift-ideas/assets/gift-compass-hero-wide-v2.png">
   <link rel="stylesheet" href="./shared.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/config.js"></script>
+  <script defer src="/auth.js"></script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -76,6 +79,19 @@
   </script>
 </head>
 <body class="review-lobby">
+  <header class="site-header">
+    <div class="nav">
+      <a class="brand logo" href="/" aria-label="smutHub home"><span>smut</span><strong class="box">Hub</strong></a>
+      <nav class="primary-nav navlinks" aria-label="Primary navigation">
+        <a href="/books/">Browse Books</a>
+        <a href="/guides/">Guides</a>
+        <a href="/glossary/">Glossary</a>
+        <a href="/bookshelf/">My Bookshelf</a>
+        <a href="/about">More</a>
+      </nav>
+      <div class="authbox" id="authbox"></div>
+    </div>
+  </header>
   <main class="lobby wrap">
     <p class="kicker">SMUTHUB · ROMANTASY GIFT GUIDE</p>
     <h1>Romantasy gifts<br><em>for your partner.</em></h1>

@@ -238,6 +238,7 @@
 
 /* Review lobby — a neutral pinboard that preserves the three identities */
 .review-lobby{background:#e9e4da;color:#221820}
+.review-lobby .site-header .logo{color:var(--paper)}
 .review-lobby::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.28;background-image:radial-gradient(#766a6e .55px,transparent .75px);background-size:8px 8px}
 .review-lobby .lobby{position:relative}
 .review-lobby .lobby h1{color:#221820}
