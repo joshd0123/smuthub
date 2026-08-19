@@ -206,11 +206,13 @@
     const path = location.pathname.replace(/\/index\.html$/, '/');
     const active = {
       books: path.startsWith('/books/'),
-      guides: path.startsWith('/guides/') || path.startsWith('/glossary/'),
+      guides: path.startsWith('/guides/'),
+      glossary: path.startsWith('/glossary/'),
       shelf: path === '/bookshelf' || path === '/bookshelf/',
-      stores: path === '/stores' || path === '/stores.html',
-      scan: path === '/scan' || path === '/scan.html',
-      add: path === '/search' || path === '/search.html' || path === '/smuthub-app.html'
+      more: path === '/stores' || path === '/stores.html'
+        || path === '/scan' || path === '/scan.html'
+        || path === '/search' || path === '/search.html' || path === '/smuthub-app.html'
+        || path.startsWith('/roadmap/') || path === '/about.html' || path === '/contact.html'
     };
     const on = key => active[key] ? ' class="on"' : '';
     nav.setAttribute('aria-label', 'Primary navigation');
@@ -220,40 +222,60 @@
         <summary><span class="sh-guides-label">Guides</span><svg class="sh-guides-chevron" aria-hidden="true" focusable="false" viewBox="0 0 12 8"><path d="M1 1.25 6 6.25 11 1.25"/></svg></summary>
         <div class="sh-guides-menu">
           <a href="/guides/"><b>All Guides</b><small>Start with the full library</small></a>
-          <a href="/guides/what-is-romantasy/"><b>What Is Romantasy?</b><small>Start with the genre essentials</small></a>
+          <a href="/guides/what-is-romantasy/"><b>What Is Romantasy?</b><small>The genre essentials</small></a>
           <a href="/guides/spice-levels/"><b>Spice Levels</b><small>Choose your heat with no surprises</small></a>
-          <a href="/guides/romantasy-tropes/"><b>Romantasy Tropes</b><small>Choose your next read by feeling</small></a>
-          <a href="/glossary/"><b>Glossary</b><small>Decode 562 romantasy terms</small></a>
-          <a href="/glossary/trope/"><b>Tropes</b><small>Browse the story dynamics you love</small></a>
+          <a href="/guides/romantasy-tropes/"><b>Romantasy Tropes</b><small>Find your next read by feeling</small></a>
+          <a href="/guides/romantasy-gift-ideas/"><b>Gift Ideas</b><small>For the romantasy reader you love</small></a>
+        </div>
+      </details>
+      <details class="sh-guides${active.glossary ? ' on' : ''}">
+        <summary><span class="sh-guides-label">Glossary</span><svg class="sh-guides-chevron" aria-hidden="true" focusable="false" viewBox="0 0 12 8"><path d="M1 1.25 6 6.25 11 1.25"/></svg></summary>
+        <div class="sh-guides-menu">
+          <a href="/glossary/"><b>All Terms</b><small>The full glossary, 18 categories</small></a>
+          <a href="/glossary/trope/"><b>Tropes</b><small>Story dynamics you love</small></a>
           <a href="/glossary/warning/"><b>Content Warnings</b><small>Check before chapter one</small></a>
+          <a href="/glossary/kink/"><b>Kinks &amp; Heat</b><small>What the tags actually mean</small></a>
+          <a href="/glossary/subgenre/"><b>Subgenres &amp; Settings</b><small>Fae courts to space operas</small></a>
+          <a href="/glossary/"><b>Browse all 18 categories →</b></a>
         </div>
       </details>
       <a href="/bookshelf"${on('shelf')}>My Bookshelf</a>
-      <a href="/stores"${on('stores')}>Find a Store</a>
-      <a href="/scan"${on('scan')}>Scan</a>
-      <a href="/search" class="sh-drawer-only${active.add ? ' on' : ''}">Add a Book</a>`;
+      <details class="sh-guides${active.more ? ' on' : ''}">
+        <summary><span class="sh-guides-label">More</span><svg class="sh-guides-chevron" aria-hidden="true" focusable="false" viewBox="0 0 12 8"><path d="M1 1.25 6 6.25 11 1.25"/></svg></summary>
+        <div class="sh-guides-menu">
+          <a href="/search"><b>Add a Book</b><small>Search &amp; submit a title</small></a>
+          <a href="/scan"><b>Scan a Barcode</b><small>Shelf it from the shop floor</small></a>
+          <a href="/stores"><b>Find a Store</b><small>Indie shops near you</small></a>
+          <a href="/roadmap/"><b>Roadmap</b><small>What we're building next</small></a>
+          <a href="/about.html"><b>About</b><small>Why smutHub exists</small></a>
+          <a href="/contact.html"><b>Contact</b><small>Reach the team</small></a>
+        </div>
+      </details>`;
 
-    const guides = nav.querySelector('.sh-guides');
-    if(guides){
+    // Header dropdowns (Guides · Glossary · More). Same behaviour applied to each:
+    // hover-open on desktop, one open at a time, click-outside / Escape to close.
+    const dropdowns = [...nav.querySelectorAll('.sh-guides')];
+    dropdowns.forEach(dd => {
       let hoverCloseTimer;
-      guides.addEventListener('mouseenter', () => {
+      dd.addEventListener('mouseenter', () => {
         if(window.innerWidth <= 880) return;
         clearTimeout(hoverCloseTimer);
-        guides.open = true;
+        dropdowns.forEach(o => { if(o !== dd) o.open = false; });
+        dd.open = true;
       });
-      guides.addEventListener('mouseleave', () => {
+      dd.addEventListener('mouseleave', () => {
         if(window.innerWidth <= 880) return;
         clearTimeout(hoverCloseTimer);
-        hoverCloseTimer = setTimeout(() => { guides.open = false; }, 140);
+        hoverCloseTimer = setTimeout(() => { dd.open = false; }, 140);
       });
-      document.addEventListener('click', e => { if(guides.open && !guides.contains(e.target)) guides.open = false; });
-      document.addEventListener('keydown', e => { if(e.key === 'Escape' && guides.open){ guides.open = false; guides.querySelector('summary').focus(); } });
       // Close the dropdown the instant a destination is chosen — desktop nav is
       // immediate, and on mobile it stops the panel lingering over the page.
-      guides.querySelectorAll('.sh-guides-menu a').forEach(a => {
-        a.addEventListener('click', () => { guides.open = false; });
+      dd.querySelectorAll('.sh-guides-menu a').forEach(a => {
+        a.addEventListener('click', () => { dd.open = false; });
       });
-    }
+    });
+    document.addEventListener('click', e => { dropdowns.forEach(dd => { if(dd.open && !dd.contains(e.target)) dd.open = false; }); });
+    document.addEventListener('keydown', e => { if(e.key === 'Escape'){ dropdowns.forEach(dd => { if(dd.open){ dd.open = false; dd.querySelector('summary').focus(); } }); } });
     renderNavAccount();
   }
 
@@ -666,9 +688,9 @@
     burger.textContent='☰';
     const setOpen=(open)=>{
       links.classList.toggle('sh-open',open);
-      // Collapse the nested Guides submenu when the drawer closes, so it never
-      // reopens already-expanded next time.
-      if(!open){ const d=links.querySelector('.sh-guides[open]'); if(d) d.open=false; }
+      // Collapse any open nested submenus when the drawer closes, so they never
+      // reopen already-expanded next time.
+      if(!open){ links.querySelectorAll('.sh-guides[open]').forEach(d => { d.open=false; }); }
       burger.textContent=open?'✕':'☰'; burger.setAttribute('aria-expanded',open?'true':'false');
     };
     burger.addEventListener('click',(e)=>{
