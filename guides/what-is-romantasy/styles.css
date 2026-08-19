@@ -56,17 +56,27 @@ a { color: inherit; }
 }
 .login-button { justify-self: end; cursor: pointer; }
 .authbox { display: flex; align-items: center; justify-content: flex-end; flex: none; }
+/* Section sub-nav lives INSIDE the header as a second row, so auth.js's
+   auto-hide carries it: header + rail slide away on scroll-down and return on
+   scroll-up as one unit — never a separate floating bar. */
 .guide-rail {
-  min-height: 49px; padding: 0 clamp(1.2rem, 4vw, 4.25rem); display: flex; align-items: center;
-  justify-content: space-between; border-bottom: 1px solid var(--line); font-size: .66rem;
-  text-transform: uppercase; letter-spacing: .18em; color: var(--paper-dim);
+  min-height: 44px; padding: .35rem clamp(1.2rem, 4vw, 4.25rem); display: flex; align-items: center;
+  justify-content: space-between; gap: 1rem 1.6rem; flex-wrap: wrap;
+  border-top: 1px solid var(--line); font-size: .66rem;
+  text-transform: uppercase; letter-spacing: .16em; color: var(--paper-dim);
 }
-.guide-rail__crumb { display: flex; align-items: center; gap: .8rem; }
+.guide-rail__crumb { display: flex; align-items: center; gap: .6rem; }
 .guide-rail__crumb a { color: inherit; text-decoration: none; }
 .guide-rail__crumb a:hover { color: var(--paper); }
 .guide-rail__crumb i { color: var(--rose); }
-.guide-rail a { text-decoration: none; font-weight: 800; }
-.guide-rail a span { color: var(--rose); padding-left: .45rem; }
+.guide-rail__crumb b { color: var(--paper); font-weight: 700; }
+.guide-rail__sections { display: flex; align-items: center; gap: 1.1rem 1.4rem; flex-wrap: wrap; }
+.guide-rail__sections a { color: var(--paper-dim); text-decoration: none; font-weight: 800; padding-bottom: 2px; border-bottom: 2px solid transparent; transition: color .18s, border-color .18s; }
+.guide-rail__sections a:hover { color: var(--paper); }
+.guide-rail__sections a.is-active { color: var(--paper); border-bottom-color: var(--rose); }
+.quick-definition, #field-notes, #spectrum, #atlas, #tropes, #trail { scroll-margin-top: 124px; }
+@media (max-width: 880px) { .quick-definition, #field-notes, #spectrum, #atlas, #tropes, #trail { scroll-margin-top: 104px; } }
+@media (max-width: 520px) { .guide-rail__sections { display: none; } }
 
 .hero {
   min-height: min(780px, calc(100vh - 123px)); display: grid; grid-template-columns: 1.05fr .95fr;
