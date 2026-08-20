@@ -1,19 +1,16 @@
 # ════════════════════════════════════════════════════════════════════
-#  PUBLIC — full indexing enabled at launch.
+#  smutHub robots.txt — PUBLIC, full indexing.
 #
-#  History: pre-launch this file gated the major search crawlers to two
-#  gift-guide URLs while the site was in early release. That block has been
-#  removed. The whole public surface is now crawlable; admin tooling stays out.
+#  Cloudflare's Managed robots.txt prepends the crawler groups ABOVE this
+#  file in production: `User-agent: * / Allow: /` for search, plus its
+#  AI-crawler Content-Signal directives (ai-train=no, etc.). To avoid a
+#  second, duplicate `User-agent: *` group, this origin file declares NO
+#  group of its own — it only points crawlers at the sitemap.
+#
+#  Admin tooling (/admin.html, /catalog-admin.html) is kept out of the index
+#  via `X-Robots-Tag: noindex` response headers (see _headers), which is
+#  stronger than a robots Disallow: Google fetches the page, sees the noindex,
+#  and drops it — whereas a Disallow can leave a bare URL indexed.
 # ════════════════════════════════════════════════════════════════════
 
-# Cloudflare Managed robots.txt prepends a global `User-agent: * / Allow: /`
-# group in production, plus its AI-crawler Content-Signal directives. The group
-# below is the origin's own public rule and keeps admin pages out of the index.
-User-agent: *
-Allow: /
-Disallow: /admin.html
-Disallow: /catalog-admin.html
-
-# Canonical XML sitemap Google + Bing want. The gift-guide URLs that used to
-# live in a separate sitemap-gift-guides.xml are now folded into sitemap.xml.
 Sitemap: https://smuthub.ca/sitemap.xml
