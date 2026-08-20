@@ -1,5 +1,9 @@
 // smutHub — Cloudflare Workers static-assets config.
-// Deploy from THIS folder with:  npx wrangler deploy
+//
+// DEPLOY BY PUSHING TO `main` — Cloudflare auto-deploys the branch. Do NOT use
+// `npx wrangler deploy`: it uploads the working dir, but the next push to main
+// auto-deploys from git and overwrites it, drifting git out of sync with live.
+// Commit + push is the only durable path.
 //
 // Every deploy uploads a complete manifest of this directory: files that were
 // deleted or renamed locally stop being served, so old copies of pages can't

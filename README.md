@@ -79,11 +79,20 @@ manifest, deleted or renamed files stop being served — there's no separate
 "deploy folder" to drift out of sync, and `.assetsignore` keeps docs, SQL, and
 tooling off the live site.
 
-To deploy manually from this folder instead:
+**Deploy by committing and pushing to `main` — that is the canonical path.**
 
 ```sh
-npx wrangler deploy
+git add -A && git commit -m "…" && git push origin main
 ```
+
+> ⚠️ **Do not deploy with `npx wrangler deploy`.** It uploads your working
+> directory straight to the Worker, but it is **not** the source of truth — the
+> next push to `main` auto-deploys from git and **overwrites it**, silently
+> reverting anything you only wrangler-deployed and leaving git out of sync with
+> what's live. (This bit us once: a wrangler-deployed robots.txt cleanup was
+> reverted by an unrelated push minutes later.) Anything you want to stay live
+> must be **committed and pushed**. Treat `wrangler deploy` as a throwaway
+> preview only, and never on top of uncommitted changes you care about.
 
 If a deploy ever looks stale, `_headers` forces edge + browser revalidation
 (`no-cache`), so a normal reload after a successful deploy is enough.

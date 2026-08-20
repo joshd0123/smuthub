@@ -20,7 +20,12 @@ Work top to bottom. Steps 1–4 are the launch itself; 5–8 are verification.
 
 ---
 
-## Pre-deploy checks — run before **every** `wrangler deploy`
+> **Deploy = commit + push to `main`** (Cloudflare auto-deploys the branch).
+> Don't `npx wrangler deploy` — the next push overwrites it and drifts git out
+> of sync with live. The `wrangler deploy` commands below are historical (the
+> one-time domain attach); today, ship by pushing to `main`.
+
+## Pre-deploy checks — run before **every** deploy (push to `main`)
 
 Quick gate so a new release can't ship with dead CTAs or broken links. Takes ~2 min.
 
