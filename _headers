@@ -17,4 +17,15 @@
   # Content Security Policy — REPORT-ONLY: logs violations to the console, blocks nothing.
   # To enforce, rename this header to "Content-Security-Policy". 'unsafe-inline' is
   # required by the inline scripts/styles/handlers; the rest is a tight host allow-list.
-  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://analytics.smuthub.ca https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://kufpvbmwrtcciamdomhp.supabase.co wss://kufpvbmwrtcciamdomhp.supabase.co https://analytics.smuthub.ca https://static.cloudflareinsights.com https://www.googleapis.com https://openlibrary.org https://covers.openlibrary.org https://api.web3forms.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://analytics.smuthub.ca https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://kufpvbmwrtcciamdomhp.supabase.co wss://kufpvbmwrtcciamdomhp.supabase.co https://analytics.smuthub.ca https://static.cloudflareinsights.com https://www.googleapis.com https://openlibrary.org https://covers.openlibrary.org https://api.web3forms.com https://nominatim.openstreetmap.org https://overpass-api.de https://overpass.kumi.systems; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
+
+# Keep admin tooling out of the search index. X-Robots-Tag noindex is stronger
+# than a robots.txt Disallow: Google can still fetch the page and SEE the
+# noindex, which guarantees de-indexing (a Disallow only blocks the fetch and
+# can leave a bare URL indexed). This replaces the old robots.txt Disallow rules
+# for these two pages, so robots.txt no longer needs its own User-agent group.
+/admin.html
+  X-Robots-Tag: noindex, nofollow
+
+/catalog-admin.html
+  X-Robots-Tag: noindex, nofollow
