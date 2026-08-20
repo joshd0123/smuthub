@@ -39,6 +39,16 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://smuthub.ca/guides/best-romantasy-books-2026/</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://smuthub.ca/guides/best-romantasy-books-2026/assets/romantasy-card-panorama-v1.jpg</image:loc>
+      <image:title>The best romantasy books of 2026 so far</image:title>
+    </image:image>
+  </url>
   <!-- Romantasy gift guides. Parent /guides/romantasy-gift-ideas/ is noindex and
        intentionally omitted; only these two leaf pages are indexable. Migrated
        here from the retired sitemap-gift-guides.xml when full crawling opened. -->
