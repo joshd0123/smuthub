@@ -1032,16 +1032,42 @@
   // stays on runSearch() so we don't fire an event on every keystroke.
   function trackAndSearch(){ const q=$('q').value.trim(); if(q && window.SH) SH.track('search',{ q:q.slice(0,80) }); runSearch(); }
 
+  // Tier order is deliberate: your shelf, then our own catalog, and only then
+  // the outside world. Short queries never reach an external API — Open Library
+  // answers "a" with heraldry treatises and protein-receptor textbooks, which is
+  // never a useful smutHub result.
+  const MIN_WORLD_Q = 3;
+
   async function runSearch(){
     const q = $('q').value.trim();
     if (!q){ $('results').classList.remove('show'); return; }
 
     const ql = q.toLowerCase();
-    // 1) shelf matches (instant — already in memory)
-    const onShelf = myShelf.filter(b =>
+    const qre = new RegExp('\\b' + ql.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
+    const matches = b =>
       (b.title||'').toLowerCase().includes(ql) ||
-      (b.author||'').toLowerCase().includes(ql)
-    ).slice(0,5);
+      (b.author||'').toLowerCase().includes(ql);
+    // A one- or two-letter query substring-matches half the catalog, so rank
+    // title/word-start hits above mid-word ones and let the slice keep the best.
+    const rank = b => {
+      const t = (b.title||'').toLowerCase(), a = (b.author||'').toLowerCase();
+      if (t.startsWith(ql)) return 0;
+      if (qre.test(t)) return 1;
+      if (a.startsWith(ql) || qre.test(a)) return 2;
+      return 3;
+    };
+
+    // 1) shelf matches (instant — already in memory)
+    const onShelf = myShelf.filter(matches).sort((x,y)=>rank(x)-rank(y)).slice(0,5);
+    const shelfKeys = new Set(myShelf.map(b=>b.book_key||b.key));
+
+    // 2) our own catalog — served from the index the dashboard already loaded,
+    //    so this costs no extra request.
+    await getCatalogIndex();
+    const inCatalog = (_catalogBySlug ? [..._catalogBySlug.values()] : [])
+      .filter(b => matches(b) && !shelfKeys.has(b.slug))
+      .sort((x,y)=>rank(x)-rank(y))
+      .slice(0,6);
 
     let html = '';
     if (onShelf.length){
@@ -1057,7 +1083,29 @@
         }).join('') + `</div>`;
     }
 
-    // 2) Open Library results (filter out books already on shelf)
+    if (inCatalog.length){
+      html += `<div class="rgroup"><h4>📖 In the smutHub catalog</h4>` +
+        inCatalog.map(b=>{
+          const cov = coverSrc(b);
+          const spice = Math.max(0, Math.min(5, Number(b.spice_level)||0));
+          return `<div class="rrow" onclick="location.href='${bookPath(b.slug)}'">
+            <div class="rcov">${cov?`<img src="${cov}" alt="" onerror="this.style.display='none'">`:esc(b.title)}</div>
+            <div class="rinfo"><div class="t">${esc(b.title)}</div><div class="a">by ${esc(b.author||'Unknown')}</div></div>
+            <span class="rstat none">${spice?'🌶️'.repeat(spice):'view'}</span>
+          </div>`;
+        }).join('') + `</div>`;
+    }
+
+    // 3) Out in the world — a genuine fallback, not a default. If the shelf or
+    //    the catalog already answered, or the query is too short to mean
+    //    anything, we never ask an external API.
+    if (!(q.length >= MIN_WORLD_Q && !onShelf.length && !inCatalog.length)){
+      if (!html) html = `<div class="rgroup"><div style="color:var(--muted);font-size:.85rem;padding:8px 4px">No matches on your shelf or in the catalog${q.length < MIN_WORLD_Q ? ' — keep typing to search further afield.' : '.'}</div></div>`;
+      $('results').innerHTML = html;
+      $('results').classList.add('show');
+      return;
+    }
+
     html += `<div class="rgroup"><h4>🔍 Out in the world</h4><div id="olres" style="color:var(--muted);font-size:.85rem;padding:8px 4px">Searching…</div></div>`;
     $('results').innerHTML = html;
     $('results').classList.add('show');
@@ -1065,8 +1113,9 @@
     try{
       let docs = await gBooks(q);
       if(!docs.length) docs = await oLib(q);
-      const shelfKeys = new Set(myShelf.map(b=>b.book_key||b.key));
-      docs = docs.filter(b=>!shelfKeys.has(b.key)).slice(0,5);
+      // These APIs pad their results with loosely-related titles, so keep only
+      // rows that actually match what was typed.
+      docs = docs.filter(b=>!shelfKeys.has(b.key) && matches(b)).slice(0,5);
       if (!docs.length){
         $('olres').innerHTML = `<div style="color:var(--muted);font-size:.85rem;padding:8px 4px">No new results — looks like you've covered it.</div>`;
         return;
