@@ -69,11 +69,97 @@
   .logo{display:inline-flex;align-items:center;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-decoration:none;color:var(--cream)}
   .logo .box{background:var(--grad);color:#1a0c10;padding:.05em .42em;border-radius:.42em;margin-left:.12em;box-shadow:0 6px 18px -6px rgba(255,61,118,.7)}
   header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,7,8,.72);border-bottom:1px solid var(--line)}
+  .featured-guide-bar{
+    display:block;
+    position:relative;
+    overflow:hidden;
+    isolation:isolate;
+    color:var(--cream);
+    text-decoration:none;
+    background:linear-gradient(96deg,#32101f 0%,#641a39 48%,#3a1123 100%);
+    border-bottom:1px solid rgba(244,232,227,.13);
+    transition:filter .2s ease;
+  }
+  .featured-guide-bar::before{
+    content:"";
+    position:absolute;
+    z-index:-2;
+    inset:-70% -12%;
+    background:
+      radial-gradient(circle at 18% 52%,rgba(255,171,64,.28),transparent 19%),
+      radial-gradient(circle at 55% 42%,rgba(255,91,136,.3),transparent 23%),
+      radial-gradient(circle at 84% 58%,rgba(255,214,190,.16),transparent 18%);
+    filter:blur(7px);
+    animation:featuredGuideGlow 12s ease-in-out infinite alternate;
+    will-change:transform;
+  }
+  .featured-guide-bar::after{
+    content:"";
+    position:absolute;
+    z-index:-1;
+    top:-120%;
+    bottom:-120%;
+    left:-24%;
+    width:18%;
+    background:linear-gradient(90deg,transparent,rgba(255,238,224,.13),transparent);
+    transform:skewX(-18deg);
+    animation:featuredGuideSheen 9s ease-in-out infinite;
+    will-change:transform;
+  }
+  @keyframes featuredGuideGlow{
+    from{transform:translate3d(-2.5%,0,0) scale(1)}
+    to{transform:translate3d(3.5%,-2%,0) scale(1.07)}
+  }
+  @keyframes featuredGuideSheen{
+    0%,35%{transform:translate3d(0,0,0) skewX(-18deg);opacity:0}
+    48%{opacity:1}
+    64%,100%{transform:translate3d(720%,0,0) skewX(-18deg);opacity:0}
+  }
+  .featured-guide-bar:hover{filter:brightness(1.1)}
+  .featured-guide-bar:focus-visible{outline:2px solid #ffd1dc;outline-offset:-3px}
+  .featured-guide-inner{
+    position:relative;
+    z-index:1;
+    max-width:1180px;
+    min-height:36px;
+    margin:0 auto;
+    padding:6px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+  }
+  .featured-guide-kicker{
+    color:#ffb2c4;
+    font-size:.66rem;
+    font-weight:800;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    white-space:nowrap;
+  }
+  .featured-guide-divider{width:1px;height:13px;background:rgba(244,232,227,.28)}
+  .featured-guide-title{font-family:'Fraunces';font-size:.92rem;line-height:1.1;white-space:nowrap}
+  .featured-guide-title em{color:#ffd1dc;font-weight:400}
+  .featured-guide-cta{margin-left:6px;color:#ffd1dc;font-size:.72rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+  .featured-guide-cta span{display:inline-block;margin-left:5px;transition:transform .2s ease}
+  .featured-guide-bar:hover .featured-guide-cta span{transform:translateX(3px)}
+  @media(prefers-reduced-motion:reduce){
+    .featured-guide-bar,.featured-guide-cta span{transition:none}
+    .featured-guide-bar::before,.featured-guide-bar::after{animation:none}
+  }
   .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:12px;flex-wrap:wrap}
   .navlinks{display:flex;gap:18px}
   .navlinks a{color:var(--muted);font-weight:500;font-size:.92rem;text-decoration:none;transition:color .2s}
   .navlinks a.on,.navlinks a:hover{color:var(--cream)}
   @media(max-width:680px){.navlinks{gap:12px;font-size:.85rem}}
+  @media(max-width:560px){
+    .featured-guide-inner{min-height:34px;padding:6px 14px;gap:8px}
+    .featured-guide-kicker{display:none}
+    .featured-guide-divider{display:none}
+    .featured-guide-title{font-size:.86rem}
+    .featured-guide-cta{margin-left:0;font-size:0;letter-spacing:0}
+    .featured-guide-cta span{margin-left:0;font-size:.9rem}
+  }
   .authbox{display:flex;align-items:center;gap:8px}
 
   /* ---------- HERO ---------- */
@@ -223,6 +309,14 @@
 <body>
 
 <header>
+  <a class="featured-guide-bar" href="/guides/best-romantasy-books-2026/" aria-label="Read the best romantasy books of 2026 so far">
+    <span class="featured-guide-inner">
+      <span class="featured-guide-kicker">The 2026 list</span>
+      <span class="featured-guide-divider" aria-hidden="true"></span>
+      <span class="featured-guide-title">Top books of 2026 <em>so far</em></span>
+      <span class="featured-guide-cta">See the list <span aria-hidden="true">→</span></span>
+    </span>
+  </a>
   <div class="nav wrap">
     <a href="index.html" class="logo">smut<span class="box">Hub</span></a>
     <nav class="navlinks">
